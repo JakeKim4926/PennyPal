@@ -1,6 +1,8 @@
-package com.example.demo.domain;
+package com.ssafy.pennypal.domain.member.entity;
 
-import com.example.demo.common.BaseEntity;
+import com.ssafy.pennypal.domain.market.entity.OrderInfo;
+import com.ssafy.pennypal.domain.team.entity.Team;
+import com.ssafy.pennypal.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

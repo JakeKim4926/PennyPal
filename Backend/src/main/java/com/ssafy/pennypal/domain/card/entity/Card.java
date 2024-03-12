@@ -1,4 +1,4 @@
-package com.example.demo.domain;
+package com.ssafy.pennypal.domain.card.entity;
 
 
 import jakarta.persistence.*;

@@ -1,4 +1,4 @@
-package com.example.demo.common;
+package com.ssafy.pennypal.global.common;
 
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;

@@ -1,4 +1,4 @@
-package com.example.demo.domain;
+package com.ssafy.pennypal.domain.mission.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
