@@ -35,12 +35,11 @@ public class Team extends BaseEntity {
     @Column(name = "team_leader_id")
     private Long teamLeaderId;                                  // 팀장 Id
 
-//    @OneToMany(
-//            mappedBy = "member",
-//            cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REMOVE},
-//            fetch = FetchType.LAZY
-//    )
-//    private List<Member> members;                              // 팀 구성원
-
-
+    @OneToMany(
+            mappedBy = "team",
+            cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REMOVE},
+            fetch = FetchType.LAZY
+    )
+    private List<Member> members;                              // 팀 구성원
 }
+

@@ -21,7 +21,7 @@ public class Card {
     @Column(name = "card_id")
     private Long cardId;                                        // 카드 Id
 
-    @Column(name = "card_name", insertable=false, updatable=false)
+    @Column(name = "card_name", insertable = false, updatable = false)
     private String cardName;                                    // 카드명
 
     // 체크카드 or 신용카드
@@ -41,7 +41,7 @@ public class Card {
 
     @Column(name = "card_category")
     private String cardCategory;                                // 카드 카테고리 ( 추천용 )
-                                                                // 혜택에서 직접 추출(?)
+    // 혜택에서 직접 추출(?)
 
     private List<String> cardBenefits = new ArrayList<>();      // 카드 혜택
 }

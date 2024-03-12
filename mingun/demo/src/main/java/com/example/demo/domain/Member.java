@@ -44,17 +44,19 @@ public class Member extends BaseEntity {
     @Column(name = "member_most_category")
     private String memberMostCategory;                          // 사용자 최대 지출 카테고리
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REMOVE}
+    )
     @JoinColumn(name = "team_id")
     private Team team;                                          // 사용자가 참여한 팀
 
 
-//
-//    @OneToMany(
-//            fetch = FetchType.LAZY,
-//            cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REMOVE},
-//            mappedBy = "orderInfo"
-//    )
-//    private List<OrderInfo> orderInfos = new ArrayList<>();     // 주문목록 조회
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REMOVE},
+            mappedBy = "memberId" // Correct mappedBy to refer to the property in OrderInfo
+    )
+    private List<OrderInfo> orderInfos = new ArrayList<>();     // 주문목록 조회
     // 나중에 또 수정
 }
