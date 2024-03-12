@@ -37,5 +37,5 @@ out/
 .vscode/
 
 ### ENV, DOKCER###
-.env
-Dockerfile
+/.env
+/Dockerfile
