@@ -1,12 +1,19 @@
 spring:
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/pennypal?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-    username: root
-    password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${MYSQL_DATASOURCE_URL}
+    username: ${MYSQL_DATASOURCE_USERNAME}
+    password: ${MYSQL_DATASOURCE_PASSWORD}
 
-  jpa:
-    database: mysql
-    database-platform: org.hibernate.dialect.MySQLDialect
-    show-sql: true
-    hibernate.ddl-auto: update
+---
+spring:
+  profiles:
+    active: prods
+---
+spring:
+  profiles:
+    active: dev
+---
+spring:
+  profiles:
+    active: local
