@@ -5,7 +5,7 @@ module.exports = () => {
     const isDevMod = process.env.NODE_ENV === "dev";
 
     return {
-        entry: "./src/index.tsx",
+        entry: "./src/main.tsx",
         output: {
             filename: "bundle.js",
             path: path.resolve(__dirname, "dist"),
@@ -31,6 +31,15 @@ module.exports = () => {
                                 "tsconfig.json"
                             ),
                         },
+                    },
+                },
+
+                // js loader
+                {
+                    test: /\.(js|jsx)$/,
+                    exclude: /node_modules/,
+                    use: {
+                        loader: "babel-loader",
                     },
                 },
 
