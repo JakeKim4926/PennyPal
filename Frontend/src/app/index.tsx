@@ -16,6 +16,7 @@ import { TeamInfo } from '../pages/teamInfo';
 import { Team } from '../pages/team';
 import React from 'react';
 import { Navigate } from 'react-router-dom';
+import '../style/main.scss';
 
 export function App() {
     return (
