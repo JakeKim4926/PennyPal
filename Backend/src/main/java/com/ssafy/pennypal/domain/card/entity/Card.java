@@ -21,27 +21,37 @@ public class Card {
     @Column(name = "card_id")
     private Long cardId;                                        // 카드 Id
 
+    // 체크카드 or 신용카드
+    @Column(name = "card_type")
+    private String cardType;                                    // 체크카드/신용카드 여부
+
+    @Column(name = "card_company")
+    private String cardCompany;                                 // 카드 회사명
+
     @Column(name = "card_name", insertable = false, updatable = false)
     private String cardName;                                    // 카드명
 
-    // 체크카드 or 신용카드
-    @Column(name = "card_is_check")
-    private Boolean isCheck;                                    // 체크카드/신용카드 여부
+    @Column(name = "card_benefit_type")
+    private String cardBenefitType;                             // 카드 보상 타입
 
-    @Column(name = "card_name")
-    private String cardCompany;                                 // 카드 회사명
+    @Column(name = "card_img")
+    private String  cardImg;                                    // 카드 이미지 url
 
-    // 국내 연회비
+    @Column(name = "card_top_category")
+    private String  cardTopCategory;                            // 카드 혜택 top3
+
+    @Column(name = "card_category")
+    private String  cardCategory;                               // 카드 혜택
+
+    @Column(name = "card_required")
+    private Integer cardRequired;                               // 전월 실적
+
     @Column(name = "card_domestic")
     private Integer cardDomestic;                               // 국내 연회비
 
-    // 해외 연회비
     @Column(name = "card_abroad")
     private Integer cardAbroad;                                 // 해외 연회비
 
-    @Column(name = "card_category")
-    private String cardCategory;                                // 카드 카테고리 ( 추천용 )
-    // 혜택에서 직접 추출(?)
-
+    private List<String> cardTopBenefits = new ArrayList<>();   // 카드 top3 혜택
     private List<String> cardBenefits = new ArrayList<>();      // 카드 혜택
 }
