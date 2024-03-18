@@ -15,10 +15,12 @@ import { SignUp } from '../pages/signup';
 import { TeamInfo } from '../pages/teamInfo';
 import { Team } from '../pages/team';
 import React from 'react';
+import { Navigate } from 'react-router-dom';
 
 export function App() {
     return (
         <Routes>
+            <Route path="/" element={<Navigate to="/main" />} />
             <Route path="/expenditure" element={<Expenditure />} />
             <Route path="/finance" element={<Finance />} />
             <Route path="/landing" element={<Landing />} />
