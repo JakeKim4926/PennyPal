@@ -1,9 +1,13 @@
 package com.ssafy.pennypal.bank.controller;
 
 
+import com.ssafy.pennypal.bank.dto.service.common.CommonHeaderRequestDTO;
+import com.ssafy.pennypal.bank.dto.service.common.CommonHeaderResponseDTO;
 import com.ssafy.pennypal.bank.dto.service.request.UserAccountRequestServiceDTO;
+import com.ssafy.pennypal.bank.dto.service.response.UserAccountListResponseServiceDTO;
 import com.ssafy.pennypal.bank.dto.service.response.UserAccountResponseServiceDTO;
 import com.ssafy.pennypal.bank.dto.service.response.UserAccountResponseServicePayLoadDTO;
+import com.ssafy.pennypal.bank.dto.service.response.UserBankAccountsResponseServiceDTO;
 import com.ssafy.pennypal.bank.service.api.IBankServiceAPI;
 import com.ssafy.pennypal.bank.service.db.IBankServiceDB;
 import com.ssafy.pennypal.common.RestDocsSupport;
@@ -11,6 +15,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
+
+import java.util.List;
 
 import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.given;
@@ -152,12 +158,117 @@ public class BankControllerTest extends RestDocsSupport {
 
     @DisplayName("사용자 계좌 조회")
     @Test
-    void 사용자_계좌_조회() {
+    void 사용자_계좌_조회() throws Exception {
         // given
+        UserAccountRequestServiceDTO userAccountRequestServiceDTO = UserAccountRequestServiceDTO.builder()
+                .apiKey("82d37624494f4092bf96d5f4dbb634c4")
+                .userEmail("mine702@naver.com")
+                .build();
 
+        given(bankServiceAPI.getUserAccount(any(UserAccountRequestServiceDTO.class)))
+                .willReturn(UserAccountResponseServiceDTO.builder()
+                        .code("succeed")
+                        .payload(
+                                UserAccountResponseServicePayLoadDTO.builder()
+                                        .userEmail("mine702@naver.com")
+                                        .userName("mine702")
+                                        .institutionCode("001")
+                                        .userKey("13cefdcf-494f-4092-bf96-d5f4dbb634c4")
+                                        .created("2024-03-04T12:41:30.921299+09:00")
+                                        .modified("2024-03-04T12:41:30.921299+09:00")
+                                        .build()
+                        )
+                        .now("2024-03-18T15:35:34.504746+09:00")
+                        .build());
+
+        given(bankServiceAPI.getUserAccountList(any(CommonHeaderRequestDTO.class)))
+                .willReturn(UserBankAccountsResponseServiceDTO.builder()
+                        .header(
+                                CommonHeaderResponseDTO.builder()
+                                        .responseCode("H0000")
+                                        .responseMessage("정상처리 되었습니다.")
+                                        .apiName("inquireAccountList")
+                                        .transmissionDate("20240101")
+                                        .transmissionTime("121212")
+                                        .institutionCode("00100")
+                                        .apiKey("82d37624494f4092bf96d5f4dbb634c4")
+                                        .apiServiceCode("inquireAccountList")
+                                        .institutionTransactionUniqueNo("20240215121212123468")
+                                        .build()
+                        )
+                        .REC(
+                                List.of(
+                                        UserAccountListResponseServiceDTO.builder()
+                                                .bankCode("001")
+                                                .bankName("한국은행")
+                                                .userName("test")
+                                                .accountNo("0016826085496269")
+                                                .accountName("한국은행 수시입출금")
+                                                .accountTypeCode("1")
+                                                .accountTypeName("수시입출금")
+                                                .accountCreatedDate("20240304")
+                                                .accountExpiryDate("20290304")
+                                                .dailyTransferLimit("1000000000000")
+                                                .oneTimeTransferLimit("1000000000000")
+                                                .accountBalance("0")
+                                                .build(),
+
+                                        UserAccountListResponseServiceDTO.builder()
+                                                .bankCode("002")
+                                                .bankName("산업은행")
+                                                .userName("test")
+                                                .accountNo("0028889135848149")
+                                                .accountName("산업은행 수시입출금")
+                                                .accountTypeCode("1")
+                                                .accountTypeName("수시입출금")
+                                                .accountCreatedDate("20240304")
+                                                .accountExpiryDate("20290304")
+                                                .dailyTransferLimit("1000000000000")
+                                                .oneTimeTransferLimit("1000000000000")
+                                                .accountBalance("0")
+                                                .build()
+                                )
+                        )
+                        .build());
         // when
-
         // then
+        mockMvc.perform(
+                        get("/bank/api/user/account/{userEmail}", userAccountRequestServiceDTO.getUserEmail())
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("get-bank-account",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                responseFields(
+                                        fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                                .description("코드"),
+                                        fieldWithPath("status").type(JsonFieldType.STRING)
+                                                .description("상태"),
+                                        fieldWithPath("message").type(JsonFieldType.STRING)
+                                                .description("메시지"),
+                                        fieldWithPath("data").type(JsonFieldType.OBJECT)
+                                                .description("응답 데이터"),
+                                        fieldWithPath("data.header").type(JsonFieldType.OBJECT)
+                                                .description("응답 데이터 헤더"),
+                                        fieldWithPath("data.header.responseCode").type(JsonFieldType.STRING)
+                                                .description("응답 코드"),
+                                        fieldWithPath("data.header.responseMessage").type(JsonFieldType.STRING)
+                                                .description("응답 메시지"),
+                                        fieldWithPath("data.rec").type(JsonFieldType.ARRAY)
+                                                .description("응답 데이터 REC"),
+                                        fieldWithPath("data.rec[].bankCode").type(JsonFieldType.STRING)
+                                                .description("응답 데이터 은행 코드"),
+                                        fieldWithPath("data.rec[].bankName").type(JsonFieldType.STRING)
+                                                .description("응답 데이터 은행 이름"),
+                                        fieldWithPath("data.rec[].accountNo").type(JsonFieldType.STRING)
+                                                .description("응답 데이터 계좌 번호")
+                                )
+                        )
+                );
+
+
     }
 
 }
