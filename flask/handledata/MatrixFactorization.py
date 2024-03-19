@@ -2,6 +2,7 @@ import numpy as np
 from tqdm import trange
 from sklearn.metrics import mean_squared_error
 
+
 class MatrixFactorization:
     # --k 300 --lr 0.01 --beta 0.01 --n_epochs 100
 
@@ -17,10 +18,10 @@ class MatrixFactorization:
 
         self.pred_matrix = None
         self.card_bias = None
+        self.user_bias = None
         self.user = None
         self.card = None
         self.total_mean = None
-        self.user_bias = None
 
         # convert ndArray
         self.sparse_matrix = sparse_matrix.fillna(0).to_numpy()
@@ -91,9 +92,9 @@ class MatrixFactorization:
         idx, jdx = self.sparse_matrix.to_numpy().nonzero()
         origin, expect = [], []
 
-        for i, j in zip(idx, jdx):                          # card i 에대한 user j의 유사도
-            origin.append(self.sparse_matrix.iloc[i,j])     # 원본 행렬
-            expect.append(self.pred_matrix.iloc[i,j])       # 예측 행렬
+        for i, j in zip(idx, jdx):  # card i 에대한 user j의 유사도
+            origin.append(self.sparse_matrix.iloc[i, j])  # 원본 행렬
+            expect.append(self.pred_matrix.iloc[i, j])  # 예측 행렬
 
         error = mean_squared_error(origin, expect)
         return np.sqrt(error)
@@ -104,4 +105,3 @@ class MatrixFactorization:
             for u in range(self.user_n):
                 pred_matrix[c, u] = self.predict(c, u)
         return pred_matrix
-
