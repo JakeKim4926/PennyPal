@@ -1,0 +1,32 @@
+@import '@/style/abstract/variables';
+
+.header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: $bright;
+    width: 50%;
+    height: 80px;
+
+    &__container{
+        display: flex;
+        justify-content: center;
+        background-color: $bright;
+    }
+
+    &__menubar{
+        display: flex;
+        gap: 40px;
+        align-items: center;
+    }
+
+    &__logo{
+        img{
+            width: 180px;
+        }
+    }
+
+    
+}
+
+

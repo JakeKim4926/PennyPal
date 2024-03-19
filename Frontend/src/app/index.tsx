@@ -15,24 +15,28 @@ import { Test } from '../pages/test/ui/Test';
 import { Navigate } from 'react-router-dom';
 
 import '@/style/main.scss';
+import { Header } from '../shared';
 
 export function App() {
     return (
-        <Routes>
-            <Route path="/" element={<Navigate to="/test" />} />
-            <Route path="/expenditure" element={<Expenditure />} />
-            <Route path="/finance" element={<Finance />} />
-            <Route path="/landing" element={<Landing />} />
-            <Route path="/main" element={<Main />} />
-            <Route path="/market" element={<Market />} />
-            <Route path="/mission" element={<Mission />} />
-            <Route path="/my-page" element={<MyPage />} />
-            <Route path="/ranking" element={<Ranking />} />
-            <Route path="/signin" element={<SignIn />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/team-info" element={<TeamInfo />} />
-            <Route path="/team" element={<Team />} />
-            <Route path="/test" element={<Test />} />
-        </Routes>
+        <>
+            <Header />
+            <Routes>
+                <Route path="/" element={<Navigate to="/test" />} />
+                <Route path="/expenditure" element={<Expenditure />} />
+                <Route path="/finance" element={<Finance />} />
+                <Route path="/landing" element={<Landing />} />
+                <Route path="/main" element={<Main />} />
+                <Route path="/market" element={<Market />} />
+                <Route path="/mission" element={<Mission />} />
+                <Route path="/my-page" element={<MyPage />} />
+                <Route path="/ranking" element={<Ranking />} />
+                <Route path="/signin" element={<SignIn />} />
+                <Route path="/signup" element={<SignUp />} />
+                <Route path="/team-info" element={<TeamInfo />} />
+                <Route path="/team" element={<Team />} />
+                <Route path="/test" element={<Test />} />
+            </Routes>
+        </>
     );
 }
