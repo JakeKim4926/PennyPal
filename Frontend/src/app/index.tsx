@@ -1,6 +1,3 @@
-// 페이지스
-// 라우터
-// 프로바이더
 import { Routes, Route } from 'react-router-dom';
 import { Expenditure } from '../pages/expenditure';
 import { Finance } from '../pages/finance';
@@ -14,14 +11,15 @@ import { SignIn } from '../pages/signin';
 import { SignUp } from '../pages/signup';
 import { TeamInfo } from '../pages/teamInfo';
 import { Team } from '../pages/team';
-import React from 'react';
+import { Test } from '../pages/test/ui/Test';
 import { Navigate } from 'react-router-dom';
-import '../style/main.scss';
+
+import '@/style/main.scss';
 
 export function App() {
     return (
         <Routes>
-            <Route path="/" element={<Navigate to="/main" />} />
+            <Route path="/" element={<Navigate to="/test" />} />
             <Route path="/expenditure" element={<Expenditure />} />
             <Route path="/finance" element={<Finance />} />
             <Route path="/landing" element={<Landing />} />
@@ -34,6 +32,7 @@ export function App() {
             <Route path="/signup" element={<SignUp />} />
             <Route path="/team-info" element={<TeamInfo />} />
             <Route path="/team" element={<Team />} />
+            <Route path="/test" element={<Test />} />
         </Routes>
     );
 }
