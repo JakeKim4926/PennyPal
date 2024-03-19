@@ -1,5 +1,50 @@
 @import './abstract/variables.scss';
 
-.main{
+// FONTS
+@font-face {
+    font-family: 'Wanted-ExtraBold';
+    src: url('@/style/fonts/WantedSans-ExtraBold.ttf');
+}
+
+@font-face {
+    font-family: 'Wanted-Bold';
+    src: url('@/style/fonts/WantedSans-Bold.ttf');
+}
+
+@font-face {
+    font-family: 'Wanted-Medium';
+    src: url('@/style/fonts/WantedSans-Medium.ttf');
+}
+
+@font-face {
+    font-family: 'Wanted-Regular';
+    src: url('@/style/fonts/WantedSans-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Star';
+    font-style: normal;
+    font-weight: 400;   
+    src: url('@/style/fonts/Star.ttf');
+}
+
+.medium{
+    width: 300px;
+}
+
+// 백그라운드 컬러
+.color-main{
+    background-color: $main;
+}
+
+.color-sub{
     background-color: $sub;
+}
+
+.color-main{
+    background-color: $main;
+}
+
+.color-main{
+    background-color: $main;
 }
