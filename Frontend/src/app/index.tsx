@@ -15,6 +15,7 @@ import { Test } from '../pages/test/ui/Test';
 import { Navigate } from 'react-router-dom';
 
 import '@/style/main.scss';
+import { Nav } from '../shared';
 import { Header } from '../shared';
 
 export function App() {
@@ -37,6 +38,7 @@ export function App() {
                 <Route path="/team" element={<Team />} />
                 <Route path="/test" element={<Test />} />
             </Routes>
+            <Nav />
         </>
     );
 }
