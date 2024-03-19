@@ -1,4 +1,4 @@
-package com.ssafy.pennypal.bank.service;
+package com.ssafy.pennypal.bank.service.api;
 
 import com.ssafy.pennypal.bank.dto.service.request.UserAccountRequestServiceDTO;
 import com.ssafy.pennypal.bank.dto.service.response.UserAccountResponseServiceDTO;
@@ -13,7 +13,7 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class BankServiceImpl implements IBankService {
+public class BankServiceAPIImpl implements IBankServiceAPI {
 
     private static final String SSAFY_BANK_API_SERVER = System.getenv("SSAFY_BANK_API_SERVER");
 

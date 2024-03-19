@@ -11,14 +11,14 @@ import lombok.ToString;
 @NoArgsConstructor
 public class UserAccountResponseControllerDTO {
 
-    private String userId;
+    private String userEmail;
     private String userKey;
     private String created;
     private String modified;
 
     @Builder
-    public UserAccountResponseControllerDTO(String userId, String userKey, String created, String modified) {
-        this.userId = userId;
+    public UserAccountResponseControllerDTO(String userEmail, String userKey, String created, String modified) {
+        this.userEmail = userEmail;
         this.userKey = userKey;
         this.created = created;
         this.modified = modified;
@@ -26,7 +26,7 @@ public class UserAccountResponseControllerDTO {
 
     public static UserAccountResponseControllerDTO of(UserAccountResponseServiceDTO serviceDTO) {
         return UserAccountResponseControllerDTO.builder()
-                .userId(serviceDTO.getPayload().getUserId())
+                .userEmail(serviceDTO.getPayload().getUserEmail())
                 .userKey(serviceDTO.getPayload().getUserKey())
                 .created(serviceDTO.getPayload().getCreated())
                 .modified(serviceDTO.getPayload().getModified())

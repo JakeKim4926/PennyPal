@@ -5,16 +5,15 @@ import lombok.*;
 @Getter
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserAccountRequestServiceDTO {
-
-    private String apiKey;
+public class UserApiKeyRequestDTO {
 
     private String userEmail;
 
-    @Builder
-    private UserAccountRequestServiceDTO(String apiKey, String userEmail) {
-        this.apiKey = apiKey;
-        this.userEmail = userEmail;
-    }
+    private String userKey;
 
+    @Builder
+    public UserApiKeyRequestDTO(String userEmail, String userKey) {
+        this.userEmail = userEmail;
+        this.userKey = userKey;
+    }
 }
