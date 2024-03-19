@@ -1,23 +1,31 @@
 import pandas as pd
 
 
-class SetCardCategory:
+class SaveCardCategory:
 
     def __init__(self):
-        self.benefit_df = None
+        self.category_column_df = None
         self.extract_categories = set()
-        self.data = None
+        self.data_df = None
+        self.file_path = "../../../static/data/result/"
 
-    def load_data(self):
-        file_path = "../static/data/result/card_db.csv"
+    def load_card_data(self):
+        try:
+            # DataFrame으로 데이터 불러오기
+            self.data_df = pd.read_csv(self.file_path + "card_db.csv")
+        except FileNotFoundError:
+            print("Error: 'card_db.csv' 파일을 찾을 수 없습니다.")
 
-        # DataFrame으로 데이터 불러오기
-        self.data = pd.read_csv(file_path)
+    def load_categorized_data(self):
+        try:
+            self.category_column_df = pd.read_csv(self.file_path + "categories.csv")
+        except FileNotFoundError:
+            print("Error: 'categories.csv' 파일을 찾을 수 없습니다.")
 
     def extract_category_from_csv(self):
         # 중복을 제거한 카테고리를 저장할 집합
         # 각 행의 card_category 값을 확인하여 중복을 제거한 후 extract_categories 집합에 추가
-        for category_row in self.data['card_category']:
+        for category_row in self.data_df['card_category']:
             if pd.isnull(category_row):  # 빈 값인 경우 건너뜀
                 continue
             # 만약 값이 숫자라면 문자열로 변환하여 처리
@@ -29,7 +37,7 @@ class SetCardCategory:
                 if category != '':
                     self.extract_categories.add(category)
 
-        for category_row in self.data['card_top_category']:
+        for category_row in self.data_df['card_top_category']:
             if pd.isnull(category_row):  # 빈 값인 경우 건너뜀
                 continue
             # 만약 값이 숫자라면 문자열로 변환하여 처리
@@ -41,10 +49,11 @@ class SetCardCategory:
                 if category != '':
                     self.extract_categories.add(category)
 
-        print("after add top category")
-        print(self.extract_categories)
-        print("=======================")
-    def set_category(self):
+        # print("after add top category")
+        # print(self.extract_categories)
+        # print("=======================")
+
+    def save_category(self):
         # 카테고리 딕셔너리
         categories = {
             "communication": ['통신', 'KT', 'SKT', 'LGU+'],
@@ -67,21 +76,25 @@ class SetCardCategory:
         # 카테고리를 담은 리스트
         category_list = []
         for key, values in categories.items():
-            for value in values:
-                category_list.append((key, value))
+            category_list.append((key, ','.join(values)))
 
         # DataFrame 생성
-        self.benefit_df = pd.DataFrame(category_list, columns=['category', 'benefit'])
+        benefit_df = pd.DataFrame(category_list, columns=['category', 'benefit'])
 
-
+        benefit_df.to_csv(self.file_path + 'categories.csv', index=False, encoding="utf-8")
+        benefit_df.to_excel(self.file_path + 'categories.xlsx', index=False)
 
 if __name__ == '__main__':
-    set_card_category = SetCardCategory()
+    set_card_category = SaveCardCategory()
 
-    # 카드 데이터 로드
-    set_card_category.load_data()
+    # # 카드 데이터 로드
+    # set_card_category.load_card_data()
+    #
+    # # 카드 혜택 내 키워드 추출
+    # set_card_category.extract_category_from_csv()
+    # 카테고리 저장
+    # set_card_category.save_category()
 
-    # 카드 혜택 내 키워드 추출
-    set_card_category.extract_category_from_csv()
-
-
+    # 카테고리 데이터로드하여 출력
+    set_card_category.load_categorized_data()
+    print(set_card_category.category_coliumn_df)
