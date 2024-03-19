@@ -3,12 +3,11 @@ package com.ssafy.pennypal.domain.team.entity;
 import com.ssafy.pennypal.domain.member.entity.Member;
 import com.ssafy.pennypal.global.common.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -25,7 +24,7 @@ public class Team extends BaseEntity {
     private String teamName;                                    // 팀 이름
 
     @Column(name = "team_people_number")
-    private Integer teamPeopleNumber;                           // 팀 인원
+    private Integer teamPeopleNumber;                           // 팀 현재 인원
 
     @Column(name = "team_score")
     private Integer teamScore;                                  // 팀 점수
@@ -42,5 +41,22 @@ public class Team extends BaseEntity {
             fetch = FetchType.LAZY
     )
     private List<Member> members;                              // 팀 구성원
+
+    @Column(name = "team_info")
+    private String teamInfo;                                   // 팀 한줄소개
+
+    @Builder
+    private Team(String teamName, Boolean teamIsAutoConfirm, Long teamLeaderId, String teamInfo) {
+        this.teamName = teamName;
+        this.teamPeopleNumber = 1;
+        this.teamScore = 0;
+        this.teamIsAutoConfirm = teamIsAutoConfirm;
+        this.teamLeaderId = teamLeaderId;
+        this.members = new ArrayList<>();
+        this.teamInfo = teamInfo;
+    }
+
+
+
 }
 
