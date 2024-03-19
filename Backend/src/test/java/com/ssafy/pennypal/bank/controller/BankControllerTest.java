@@ -4,7 +4,8 @@ package com.ssafy.pennypal.bank.controller;
 import com.ssafy.pennypal.bank.dto.service.request.UserAccountRequestServiceDTO;
 import com.ssafy.pennypal.bank.dto.service.response.UserAccountResponseServiceDTO;
 import com.ssafy.pennypal.bank.dto.service.response.UserAccountResponseServicePayLoadDTO;
-import com.ssafy.pennypal.bank.service.IBankService;
+import com.ssafy.pennypal.bank.service.api.IBankServiceAPI;
+import com.ssafy.pennypal.bank.service.db.IBankServiceDB;
 import com.ssafy.pennypal.common.RestDocsSupport;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,11 +26,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class BankControllerTest extends RestDocsSupport {
 
-    private final IBankService bankService = mock(IBankService.class);
+    private final IBankServiceAPI bankServiceAPI = mock(IBankServiceAPI.class);
+    private final IBankServiceDB bankServiceDB = mock(IBankServiceDB.class);
 
     @Override
     protected Object initController() {
-        return new BankController(bankService);
+        return new BankController(bankServiceAPI, bankServiceDB);
     }
 
     @DisplayName("사용자 계정 생성")
@@ -38,15 +40,15 @@ public class BankControllerTest extends RestDocsSupport {
         // given
         UserAccountRequestServiceDTO userAccountRequestServiceDTO = UserAccountRequestServiceDTO.builder()
                 .apiKey("82d37624494f4092bf96d5f4dbb634c4")
-                .userId("mine702@naver.com")
+                .userEmail("mine702@naver.com")
                 .build();
 
-        given(bankService.createUserAccount(any(UserAccountRequestServiceDTO.class)))
+        given(bankServiceAPI.createUserAccount(any(UserAccountRequestServiceDTO.class)))
                 .willReturn(UserAccountResponseServiceDTO.builder()
                         .code("succeed")
                         .payload(
                                 UserAccountResponseServicePayLoadDTO.builder()
-                                        .userId("mine702@naver.com")
+                                        .userEmail("mine702@naver.com")
                                         .userName("mine702")
                                         .institutionCode("001")
                                         .userKey("13cefdcf-494f-4092-bf96-d5f4dbb634c4")
@@ -59,7 +61,7 @@ public class BankControllerTest extends RestDocsSupport {
         // when
         // then
         mockMvc.perform(
-                        post("/bank/api/user/api/key/{userId}", userAccountRequestServiceDTO.getUserId())
+                        post("/bank/api/user/api/key/{userEmail}", userAccountRequestServiceDTO.getUserEmail())
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
@@ -76,8 +78,8 @@ public class BankControllerTest extends RestDocsSupport {
                                                 .description("메시지"),
                                         fieldWithPath("data").type(JsonFieldType.OBJECT)
                                                 .description("응답 데이터"),
-                                        fieldWithPath("data.userId").type(JsonFieldType.STRING)
-                                                .description("유저 ID"),
+                                        fieldWithPath("data.userEmail").type(JsonFieldType.STRING)
+                                                .description("유저 Email"),
                                         fieldWithPath("data.userKey").type(JsonFieldType.STRING)
                                                 .description("유저 API 키"),
                                         fieldWithPath("data.created").type(JsonFieldType.STRING)
@@ -96,15 +98,15 @@ public class BankControllerTest extends RestDocsSupport {
         // given
         UserAccountRequestServiceDTO userAccountRequestServiceDTO = UserAccountRequestServiceDTO.builder()
                 .apiKey("82d37624494f4092bf96d5f4dbb634c4")
-                .userId("mine702@naver.com")
+                .userEmail("mine702@naver.com")
                 .build();
 
-        given(bankService.getUserAccount(any(UserAccountRequestServiceDTO.class)))
+        given(bankServiceAPI.getUserAccount(any(UserAccountRequestServiceDTO.class)))
                 .willReturn(UserAccountResponseServiceDTO.builder()
                         .code("succeed")
                         .payload(
                                 UserAccountResponseServicePayLoadDTO.builder()
-                                        .userId("mine702@naver.com")
+                                        .userEmail("mine702@naver.com")
                                         .userName("mine702")
                                         .institutionCode("001")
                                         .userKey("13cefdcf-494f-4092-bf96-d5f4dbb634c4")
@@ -117,7 +119,7 @@ public class BankControllerTest extends RestDocsSupport {
         // when
         // then
         mockMvc.perform(
-                        get("/bank/api/user/api/key/{userId}", userAccountRequestServiceDTO.getUserId())
+                        get("/bank/api/user/api/key/{userEmail}", userAccountRequestServiceDTO.getUserEmail())
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
@@ -134,8 +136,8 @@ public class BankControllerTest extends RestDocsSupport {
                                                 .description("메시지"),
                                         fieldWithPath("data").type(JsonFieldType.OBJECT)
                                                 .description("응답 데이터"),
-                                        fieldWithPath("data.userId").type(JsonFieldType.STRING)
-                                                .description("유저 ID"),
+                                        fieldWithPath("data.userEmail").type(JsonFieldType.STRING)
+                                                .description("유저 Email"),
                                         fieldWithPath("data.userKey").type(JsonFieldType.STRING)
                                                 .description("유저 API 키"),
                                         fieldWithPath("data.created").type(JsonFieldType.STRING)
