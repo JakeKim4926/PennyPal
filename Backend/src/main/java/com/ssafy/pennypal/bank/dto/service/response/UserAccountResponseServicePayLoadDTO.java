@@ -1,16 +1,13 @@
 package com.ssafy.pennypal.bank.dto.service.response;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @ToString
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserAccountResponseServicePayLoadDTO {
 
-    private String userId;
+    private String userEmail;
     private String userName;
     private String institutionCode;
     private String userKey;
@@ -18,8 +15,8 @@ public class UserAccountResponseServicePayLoadDTO {
     private String modified;
 
     @Builder
-    public UserAccountResponseServicePayLoadDTO(String userId, String userName, String institutionCode, String userKey, String created, String modified) {
-        this.userId = userId;
+    public UserAccountResponseServicePayLoadDTO(String userEmail, String userName, String institutionCode, String userKey, String created, String modified) {
+        this.userEmail = userEmail;
         this.userName = userName;
         this.institutionCode = institutionCode;
         this.userKey = userKey;

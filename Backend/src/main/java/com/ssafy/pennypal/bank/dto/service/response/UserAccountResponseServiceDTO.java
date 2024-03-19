@@ -1,13 +1,10 @@
 package com.ssafy.pennypal.bank.dto.service.response;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @ToString
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserAccountResponseServiceDTO {
     private String code;
 
