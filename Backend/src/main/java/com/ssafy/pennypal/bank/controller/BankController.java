@@ -17,8 +17,8 @@ public class BankController {
 
     private final IBankService bankService;
 
-    @PostMapping("/user/account/{userId}")
-    public ApiResponse<UserAccountResponseControllerDTO> createUserAccount(@PathVariable String userId) {
+    @PostMapping("/user/api/key/{userId}")
+    public ApiResponse<UserAccountResponseControllerDTO> createUserApiKey(@PathVariable String userId) {
         UserAccountRequestServiceDTO userAccountRequestServiceDTO = UserAccountRequestServiceDTO.builder()
                 .apiKey(SSAFY_BANK_API_KEY)
                 .userId(userId)
@@ -31,8 +31,8 @@ public class BankController {
         return ApiResponse.ok(userAccountResponseControllerDTO);
     }
 
-    @GetMapping("/user/account/{userId}")
-    public ApiResponse<UserAccountResponseControllerDTO> getUserAccount(@PathVariable String userId) {
+    @GetMapping("/user/api/key/{userId}")
+    public ApiResponse<UserAccountResponseControllerDTO> getUserApiKey(@PathVariable String userId) {
         UserAccountRequestServiceDTO userAccountRequestServiceDTO = UserAccountRequestServiceDTO.builder()
                 .apiKey(SSAFY_BANK_API_KEY)
                 .userId(userId)
@@ -43,5 +43,10 @@ public class BankController {
         );
 
         return ApiResponse.ok(userAccountResponseControllerDTO);
+    }
+
+    @GetMapping("/user/account/{userId}")
+    public void getAccountList() {
+
     }
 }

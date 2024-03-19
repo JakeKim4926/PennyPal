@@ -59,7 +59,7 @@ public class BankControllerTest extends RestDocsSupport {
         // when
         // then
         mockMvc.perform(
-                        post("/bank/api/user/account/{userId}", userAccountRequestServiceDTO.getUserId())
+                        post("/bank/api/user/api/key/{userId}", userAccountRequestServiceDTO.getUserId())
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
@@ -117,7 +117,7 @@ public class BankControllerTest extends RestDocsSupport {
         // when
         // then
         mockMvc.perform(
-                        get("/bank/api/user/account/{userId}", userAccountRequestServiceDTO.getUserId())
+                        get("/bank/api/user/api/key/{userId}", userAccountRequestServiceDTO.getUserId())
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
