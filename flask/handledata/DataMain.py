@@ -1,7 +1,8 @@
 import numpy as np
+from numpy import dot
+from numpy.linalg import norm
 
 # 카드 데이터 및 유저 데이터 전처리
-
 
 # 카테고리 속성 값 할당
 
@@ -9,7 +10,7 @@ import numpy as np
 
 # 유사도 계산
 def calculate_similarity(user_vector, card_vector):
-    return np.dot(user_vector, card_vector) / (np.linalg.norm(user_vector) * np.linalg.norm(card_vector))
+    return dot(user_vector, card_vector) / (norm(user_vector) * norm(card_vector))
 
 # 추천
 def recommend_cards(user_vector, card_vectors, top_n=4):
