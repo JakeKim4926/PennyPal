@@ -1,6 +1,6 @@
 package com.ssafy.pennypal.domain.member.entity;
 
-import com.ssafy.pennypal.domain.market.entity.OrderInfo;
+import com.ssafy.pennypal.domain.market.entity.Order;
 import com.ssafy.pennypal.domain.team.entity.Team;
 import com.ssafy.pennypal.global.common.BaseEntity;
 import jakarta.persistence.*;
@@ -59,6 +59,6 @@ public class Member extends BaseEntity {
             cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REMOVE},
             mappedBy = "memberId" // Correct mappedBy to refer to the property in OrderInfo
     )
-    private List<OrderInfo> orderInfos = new ArrayList<>();     // 주문목록 조회
+    private List<Order> orders = new ArrayList<>();     // 주문목록 조회
     // 나중에 또 수정
 }
