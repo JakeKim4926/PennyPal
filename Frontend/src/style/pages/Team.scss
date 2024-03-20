@@ -1,0 +1,16 @@
+@import '@/style/abstract/fonts';
+@import '@/style/abstract/variables';
+
+.team{
+    width: $CONTENT_WIDTH_RATIO;
+    height: 100%;
+    background-color: $main;
+
+    &__container{
+        background-color: $black;
+        height: 100%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+}

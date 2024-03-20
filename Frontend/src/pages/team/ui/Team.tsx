@@ -1,3 +1,7 @@
 export function Team() {
-    return <div>Team</div>;
+    return (
+        <div className="team__container">
+            <div className="team"></div>
+        </div>
+    );
 }
