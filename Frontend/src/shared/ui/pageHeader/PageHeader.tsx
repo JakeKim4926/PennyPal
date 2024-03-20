@@ -22,7 +22,7 @@ export function PageHeader({ page }: PageHeaderProps) {
 
         finance: {
             title: 'FINANCE',
-            description: '금융',
+            description: '소비도, 투자도, 저축도 현명하게.',
         },
 
         expenditure: {
@@ -32,12 +32,12 @@ export function PageHeader({ page }: PageHeaderProps) {
 
         ranking: {
             title: 'RANKING',
-            description: '랭킹',
+            description: '열심히 달려보아요, 우리.',
         },
 
         market: {
-            title: 'MARKET',
-            description: '마켓',
+            title: 'POINT MARKET',
+            description: '개처럼 모았으니 정승같이 써보아요.',
         },
 
         test: {
