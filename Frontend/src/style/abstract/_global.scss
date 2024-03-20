@@ -16,8 +16,8 @@ body{
 }
 
 .container{
-    padding-top: 80px;   
-    padding-bottom: 80px;
+    padding-top: $HEADER_HEIGHT;   
+    padding-bottom: $NAV_HEIGHT;
 }
 
 .background{

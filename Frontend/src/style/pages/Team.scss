@@ -1,0 +1,20 @@
+@import '@/style/abstract/fonts';
+@import '@/style/abstract/variables';
+@import '@/style/abstract/global';
+
+.team{
+    width: $CONTENT_WIDTH_RATIO;
+    height: 100%;
+    
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    
+    &__container{
+        background-color: $black;
+        height: 100%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+}

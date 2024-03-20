@@ -15,5 +15,6 @@ module.exports = {
     ignorePatterns: ['.eslintrc.js', 'webpack.config.js'],
     rules: {
         '@typescript-eslint/strict-boolean-expressions': 0,
+        'react/react-in-jsx-scope': 'off',
     },
 };
