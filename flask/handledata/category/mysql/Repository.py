@@ -56,31 +56,43 @@ class Repository:
 
     def create_insert_card_query(self):
         for _, row in self.category_csv.iterrows():
+            category_id = index + 1  # 인덱스는 0부터 시작하므로 1을 더합니다.
+
+            # Category_id를 가지는 Category 객체 조회
+            category = session.query(Category).filter_by(category_id=category_id).first()
+
+            # Category_id를 찾지 못한 경우 처리
+            if category is None:
+                print(f"No category found for category_id {category_id}. Skipping insertion for this row.")
+                continue
+
             query = f"""
-                    INSERT INTO Card (
-                        card_type,
-                        card_company,
-                        card_name,
-                        card_benefit_type,
-                        card_img,
-                        card_top_category,
-                        card_category,
-                        card_required,
-                        card_domestic,
-                        card_abroad
-                    ) VALUES (
-                        '{row['card_type']}',
-                        '{row['card_company']}',
-                        '{row['card_name']}',
-                        '{row['card_benefit_type']}',
-                        '{row['card_img']}',
-                        '{row['card_top_category']}',
-                        '{row['card_category']}',
-                        {int(row['card_required'])},
-                        {int(row['card_domestic'])},
-                        {int(row['card_abroad'])}
-                    );
-                """
+                INSERT INTO Card (
+                    card_type,
+                    card_company,
+                    card_name,
+                    card_benefit_type,
+                    card_img,
+                    card_top_category,
+                    card_category,
+                    card_required,
+                    card_domestic,
+                    card_abroad,
+                    category_id
+                ) VALUES (
+                    '{row['card_type']}',
+                    '{row['card_company']}',
+                    '{row['card_name']}',
+                    '{row['card_benefit_type']}',
+                    '{row['card_img']}',
+                    '{row['card_top_category']}',
+                    '{row['card_category']}',
+                    {int(row['card_required'])},
+                    {int(row['card_domestic'])},
+                    {int(row['card_abroad'])},
+                    {category_id}  -- 외래키 category_id 값
+                );
+            """
             self.insert_card_queries.append(query)
 
     def select_category(self):

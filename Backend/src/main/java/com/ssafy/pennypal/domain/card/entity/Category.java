@@ -48,4 +48,7 @@ public class Category {
 
     @Column(name = "category_others")
     String categoryOthers;
+
+    @OneToOne(mappedBy = "category")
+    private Card card;
 }
