@@ -1,7 +1,7 @@
 package com.ssafy.pennypal.domain.member.entity;
 
 import com.querydsl.core.annotations.QueryProjection;
-import com.ssafy.pennypal.domain.market.entity.OrderInfo;
+import com.ssafy.pennypal.domain.market.entity.Order;
 import com.ssafy.pennypal.domain.team.entity.Team;
 import com.ssafy.pennypal.global.common.BaseEntity;
 import jakarta.persistence.*;
@@ -68,7 +68,7 @@ public class Member extends BaseEntity {
 
     @Builder
     @QueryProjection
-    public Member(String memberEmail, String memberPassword, String memberName, String memberNickname, LocalDateTime memberBirthDate, Integer memberPoint, String memberMostCategory, Team team, List<OrderInfo> orderInfos, String memberBankApi) {
+    public Member(String memberEmail, String memberPassword, String memberName, String memberNickname, LocalDateTime memberBirthDate, Integer memberPoint, String memberMostCategory, Team team, List<Order> orders, String memberBankApi) {
         this.memberEmail = memberEmail;
         this.memberPassword = memberPassword;
         this.memberName = memberName;
@@ -77,7 +77,7 @@ public class Member extends BaseEntity {
         this.memberPoint = memberPoint;
         this.memberMostCategory = memberMostCategory;
         this.team = team;
-        this.orderInfos = orderInfos;
+        this.orders = orders;
         this.memberBankApi = memberBankApi;
     }
 

@@ -12,6 +12,16 @@ from numpy.linalg import norm
 def calculate_similarity(user_vector, card_vector):
     return dot(user_vector, card_vector) / (norm(user_vector) * norm(card_vector))
 
+def get_user_vector():
+    vector = np.array([])
+
+    return vector
+
+def get_card_vector():
+    vector = np.array([])
+
+    return vector
+
 # 추천
 def recommend_cards(user_vector, card_vectors, top_n=4):
     similarities = [(i, calculate_similarity(user_vector, card_vector)) for i, card_vector in enumerate(card_vectors)]
