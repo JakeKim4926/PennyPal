@@ -5,8 +5,11 @@
 .team{
     width: $CONTENT_WIDTH_RATIO;
     height: 100%;
-    background-color: $main;
-
+    
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    
     &__container{
         background-color: $black;
         height: 100%;

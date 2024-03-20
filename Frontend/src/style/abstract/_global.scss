@@ -1,4 +1,5 @@
 @import '@/style/abstract/variables';
+@import '@/style/abstract/fonts';
 
 * {
     margin: 0;
@@ -7,6 +8,7 @@
     text-decoration: none;
     list-style: none;
     color: $black;
+    font-family: 'Wanted-Bold';
 }
 
 body{
@@ -16,4 +18,8 @@ body{
 .container{
     padding-top: $HEADER_HEIGHT;   
     padding-bottom: $NAV_HEIGHT;
+}
+
+.background{
+    position: fixed;
 }

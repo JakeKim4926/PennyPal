@@ -8,8 +8,16 @@ $dark: #404040;
 $bright: #FCFCFC;
 $light: #EEEEEE;
 
+// 전체 레이아웃
 $BODY_MIN_WIDTH: 1200px;
 $CONTENT_WIDTH_RATIO: 50%;
+
+// 헤더, 네브 사이즈
+$HEADER_HEIGHT: 80px;
+$NAV_HEIGHT: 80px;
+
+// 모서리
+$RADIUS: 20px;
 
 // HEADER
 $HEADER_HEIGHT: 80px;

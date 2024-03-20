@@ -1,0 +1,91 @@
+@import '@/style/abstract/variables';
+@import '@/style/abstract/fonts';
+
+.teamTeamInfo {
+    width: 100%;
+    padding: 20px;
+    background-color: $bright;
+    border-radius: $RADIUS;
+    font-size: 30px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    div {
+        font-family: 'Esa-Bold';
+    }
+
+    &__title {
+        &-text{
+            font-family: 'Wanted-ExtraBlack';
+            letter-spacing: 3px;
+            font-size: 12px;
+        }
+    }
+
+    &__top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        &-name {
+            display: flex;
+            gap: 10px;
+
+            div {
+                font-size: 40px;
+            }
+
+            &-head {
+
+                div {
+                    font-family: 'Esa-Light';
+                    display: flex;
+                    font-size: 20px;
+                }
+
+                display: flex;
+                align-items: center;
+                gap: 3px;
+            }
+        }
+    }
+
+    &__middle {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    &__bottom {
+        display: flex;
+        justify-content: center;
+
+        &-button {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            border: none;
+            background-color: $dark;
+            padding: 5px;
+
+            &:hover {
+                cursor: pointer;
+            }
+
+
+            &-abc {
+                fill: $bright;
+            }
+
+            div {
+                color: white;
+                font-family: 'Esa-Light';
+            }
+            font-size: 25px;
+
+        }
+    }
+}
