@@ -10,12 +10,13 @@ $HEADER_HEIGHT: 80px;
     height: $HEADER_HEIGHT;
 
     &__container{
+        width: 100%;
+        min-width: $BODY_MIN_WIDTH;
         display: flex;
         justify-content: center;
         background-color: $bright;
         position: fixed;
         top: 0;
-        width: 100%;
     }
 
     &__menubar{
