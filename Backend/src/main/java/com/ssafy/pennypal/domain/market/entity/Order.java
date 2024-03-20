@@ -7,15 +7,17 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class OrderInfo extends BaseEntity {
+public class Order extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "order_info_id")
-    private Long orderInfoId;                                   // 주문정보 Id
+    @Column(name = "order_id")
+    private Long orderId;                                   // 주문 Id
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -26,11 +28,14 @@ public class OrderInfo extends BaseEntity {
             cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REMOVE}
     )
     @JoinColumn(name = "product_id")
-    private Product productId;                                // 주문 상품
+    private Product productId;                                  // 주문 상품
 
     @Column(name = "buy_quantity")
-    private Integer buyQuantity;                                // 상품 주문 갯수
+    private Integer buyQuantity;                                // 주문 수량
 
-    //금액이 수정 될 수 있잖어
-    private Integer price;                                  // 상품 가격
+    @Column(name = "product_price")
+    private Integer price;                                      // 주문 가격
+
+    @Column(name = "order_date")
+    private LocalDateTime orderDate;                            // 주문 날짜 및 시간
 }
