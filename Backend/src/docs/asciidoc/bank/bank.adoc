@@ -1,0 +1,8 @@
+[[Bank-API]]
+=== Create Account
+
+include::api/createAccount.adoc[]
+
+=== Get Account
+
+include::api/getAccount.adoc[]

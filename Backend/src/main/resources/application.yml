@@ -5,12 +5,6 @@ spring:
     username: ${MYSQL_DATASOURCE_USERNAME}
     password: ${MYSQL_DATASOURCE_PASSWORD}
 
-  jpa:
-    database: mysql
-    database-platform: org.hibernate.dialect.MySQLDialect
-    show-sql: true
-    hibernate.ddl-auto: create
-
 ---
 spring:
   profiles:
