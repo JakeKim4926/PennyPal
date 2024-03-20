@@ -88,4 +88,21 @@
 
         }
     }
+
+    .unit {
+        font-size: 27px;
+        font-family: 'Esa-Light';
+    }
+
+    .subtitle{
+        font-size: 30px;
+        color: $dark;
+        font-family: 'Esa-Medium';
+    }
+
+    .value {
+        font-size: 42px;
+        letter-spacing: -3px;
+    }
 }
+

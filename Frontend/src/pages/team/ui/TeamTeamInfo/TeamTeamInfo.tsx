@@ -30,27 +30,31 @@ export function TeamTeamInfo({ hasTeam = false }: TeamTeamInfoProps) {
                         <div>{teamInfo.head}</div>
                     </div>
                 </div>
-                <div className="teamTeamInfo__top-ranking">주간 랭킹 {teamInfo.ranking}위</div>
+                <div className="teamTeamInfo__top-ranking">
+                    주간 랭킹 {teamInfo.ranking}
+                    <span className="unit">위</span>
+                </div>
             </div>
             <div className="teamTeamInfo__middle">
                 <div className="teamTeamInfo__middle-prev">
-                    <div className="teamTeamInfo__middle-prev-title">지난주</div>
-                    <div className="teamTeamInfo__middle-prev-value">
+                    <div className="teamTeamInfo__middle-prev-title subtitle">지난주</div>
+                    <div className="teamTeamInfo__middle-prev-value value">
                         {teamInfo.prev}
-                        <span>원</span>
+                        <span className="unit">원</span>
                     </div>
                 </div>
                 <div className="teamTeamInfo__middle-pres">
-                    <div className="teamTeamInfo__middle-pres-title">이번주</div>
-                    <div className="teamTeamInfo__middle-pres-value">
+                    <div className="teamTeamInfo__middle-pres-title subtitle">이번주</div>
+                    <div className="teamTeamInfo__middle-pres-value value">
                         {teamInfo.pres}
-                        <span>원</span>
+                        <span className="unit">원</span>
                     </div>
                 </div>
                 <div className="teamTeamInfo__middle-ratio">
-                    <div className="teamTeamInfo__middle-ratio-title">절감률</div>
-                    <div className="teamTeamInfo__middle-ratio-value">
-                        {((teamInfo.pres / teamInfo.prev) * 100).toFixed(1)}%
+                    <div className="teamTeamInfo__middle-ratio-title subtitle">절감률</div>
+                    <div className="teamTeamInfo__middle-ratio-value value">
+                        {((teamInfo.pres / teamInfo.prev) * 100).toFixed(1)}
+                        <span className="unit">%</span>
                     </div>
                 </div>
             </div>
