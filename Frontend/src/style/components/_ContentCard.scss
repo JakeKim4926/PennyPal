@@ -1,0 +1,17 @@
+@import '@/style/abstract/variables';
+@import '@/style/abstract/fonts';
+
+.contentCard {
+    width: 100%;
+    padding: 20px;
+    background-color: $bright;
+    border-radius: $RADIUS;
+
+    &__title {
+        &-text {
+            font-family: 'Wanted-ExtraBlack';
+            letter-spacing: 3px;
+            font-size: 12px;
+        }
+    }
+}
