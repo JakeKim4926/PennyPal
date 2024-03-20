@@ -6,3 +6,11 @@ include::api/createAccount.adoc[]
 === Get Account
 
 include::api/getAccount.adoc[]
+
+=== Get Bank Account
+
+include::api/getBankAccount.adoc[]
+
+=== Get Bank Account Transaction
+
+include::api/getBankAccountTransaction.adoc[]

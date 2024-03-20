@@ -1,28 +1,40 @@
 package com.ssafy.pennypal.bank.service.db;
 
+import com.ssafy.pennypal.bank.dto.service.request.UserApiKeyRequestDTO;
+import com.ssafy.pennypal.domain.member.entity.Member;
 import com.ssafy.pennypal.domain.member.repository.IMemberRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @SpringBootTest
+@Transactional
 class BankServiceDBImplTest {
-    private final IMemberRepository memberRepository;
 
-    public BankServiceDBImplTest(IMemberRepository memberRepository) {
-        this.memberRepository = memberRepository;
-    }
+    @Autowired
+    private IMemberRepository memberRepository;
 
-    @DisplayName("사용자 은행 API 키 를 발급 받았을때 Member Entity 에 값이 잘 들어 가는가")
+    @Autowired
+    private IBankServiceDB bankServiceDB;
+
+    @DisplayName("Member Entity 에 KEY 값이 잘 들어 가는가")
     @Test
-    void 사용자_은행_API() {
+    void Member_Entity_KEY() {
         // given
-
+        UserApiKeyRequestDTO userApiKeyRequestDTO = UserApiKeyRequestDTO.builder()
+                .userKey("1234567890")
+                .userEmail("mine702@naver.com")
+                .build();
         // when
-
+        bankServiceDB.InsertUserKey(userApiKeyRequestDTO);
         // then
+        Member member = memberRepository.findByMemberEmail(userApiKeyRequestDTO.getUserEmail());
+        Assertions.assertThat(member.getMemberBankApi()).isEqualTo(userApiKeyRequestDTO.getUserKey());
     }
 
 }

@@ -1,4 +1,4 @@
-[[product-create]]
+[[get-account]]
 ==== HTTP Request
 
 include::{snippets}/get-account/http-request.adoc[]

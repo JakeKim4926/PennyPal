@@ -29,4 +29,7 @@ public class Product extends BaseEntity {
 
     @Column(name = "product_quantity")
     private Integer productQuantity;                            // 상품 수량
+
+    @Column(name = "product_category")
+    private String productCategory;                             // 상품 카테고리
 }
