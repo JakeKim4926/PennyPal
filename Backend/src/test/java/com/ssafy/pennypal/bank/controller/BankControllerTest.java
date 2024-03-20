@@ -1,13 +1,12 @@
 package com.ssafy.pennypal.bank.controller;
 
 
+import com.ssafy.pennypal.bank.dto.controller.request.AccountTransactionRequestDTO;
 import com.ssafy.pennypal.bank.dto.service.common.CommonHeaderRequestDTO;
 import com.ssafy.pennypal.bank.dto.service.common.CommonHeaderResponseDTO;
+import com.ssafy.pennypal.bank.dto.service.request.AccountTransactionRequestServiceDTO;
 import com.ssafy.pennypal.bank.dto.service.request.UserAccountRequestServiceDTO;
-import com.ssafy.pennypal.bank.dto.service.response.UserAccountListResponseServiceDTO;
-import com.ssafy.pennypal.bank.dto.service.response.UserAccountResponseServiceDTO;
-import com.ssafy.pennypal.bank.dto.service.response.UserAccountResponseServicePayLoadDTO;
-import com.ssafy.pennypal.bank.dto.service.response.UserBankAccountsResponseServiceDTO;
+import com.ssafy.pennypal.bank.dto.service.response.*;
 import com.ssafy.pennypal.bank.service.api.IBankServiceAPI;
 import com.ssafy.pennypal.bank.service.db.IBankServiceDB;
 import com.ssafy.pennypal.common.RestDocsSupport;
@@ -23,8 +22,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -267,8 +265,151 @@ public class BankControllerTest extends RestDocsSupport {
                                 )
                         )
                 );
+    }
 
+    @DisplayName("사용자 계좌 거래 내역 조회")
+    @Test
+    void 사용자_계좌_거래내역_조회() throws Exception {
 
+        // given
+        AccountTransactionRequestDTO requestDTO = AccountTransactionRequestDTO.builder()
+                .userEmail("mine702@naver.com")
+                .bankCode("001")
+                .transactionType("A")
+                .accountNo("0014375203694183")
+                .startDate("20240101")
+                .endDate("20241231")
+                .build();
+
+        given(bankServiceAPI.getUserAccount(any(UserAccountRequestServiceDTO.class)))
+                .willReturn(UserAccountResponseServiceDTO.builder()
+                        .code("succeed")
+                        .payload(
+                                UserAccountResponseServicePayLoadDTO.builder()
+                                        .userEmail("mine702@naver.com")
+                                        .userName("mine702")
+                                        .institutionCode("001")
+                                        .userKey("13cefdcf-494f-4092-bf96-d5f4dbb634c4")
+                                        .created("2024-03-04T12:41:30.921299+09:00")
+                                        .modified("2024-03-04T12:41:30.921299+09:00")
+                                        .build()
+                        )
+                        .now("2024-03-18T15:35:34.504746+09:00")
+                        .build());
+
+        given(bankServiceAPI.getUserAccountTransaction(any(AccountTransactionRequestServiceDTO.class)))
+                .willReturn(AccountTransactionListResponseServiceDTO.builder()
+                        .header(
+                                CommonHeaderResponseDTO.builder()
+                                        .responseCode("H0000")
+                                        .responseMessage("정상처리 되었습니다.")
+                                        .apiName("inquireAccountTransactionHistory")
+                                        .transmissionDate("20240101")
+                                        .transmissionTime("121212")
+                                        .institutionCode("00100")
+                                        .apiKey("82d37624494f4092bf96d5f4dbb634c4")
+                                        .apiServiceCode("inquireAccountTransactionHistory")
+                                        .institutionTransactionUniqueNo("20240215121212123454")
+                                        .build()
+                        )
+                        .REC(
+                                AccountTransactionRecResponseDTO.builder()
+                                        .totalCount("3")
+                                        .list(
+                                                List.of(
+                                                        AccountTransactionResponseServiceDTO.builder()
+                                                                .transactionUniqueNo("107")
+                                                                .transactionDate("20240304")
+                                                                .transactionTime("130324")
+                                                                .transactionType("1")
+                                                                .transactionTypeName("입금")
+                                                                .transactionBalance("10000000")
+                                                                .transactionAfterBalance("10000000")
+                                                                .transactionSummary("입금합니다")
+                                                                .build(),
+                                                        AccountTransactionResponseServiceDTO.builder()
+                                                                .transactionUniqueNo("108")
+                                                                .transactionDate("20240304")
+                                                                .transactionTime("130435")
+                                                                .transactionType("2")
+                                                                .transactionTypeName("출금")
+                                                                .transactionBalance("1000000")
+                                                                .transactionAfterBalance("9000000")
+                                                                .transactionSummary("출금합니다")
+                                                                .build(),
+                                                        AccountTransactionResponseServiceDTO.builder()
+                                                                .transactionUniqueNo("109")
+                                                                .transactionDate("20240304")
+                                                                .transactionTime("130640")
+                                                                .transactionType("2")
+                                                                .transactionTypeName("출금(이체)")
+                                                                .transactionAccountNo("0028889135848149")
+                                                                .transactionBalance("1000000")
+                                                                .transactionAfterBalance("8000000")
+                                                                .transactionSummary("출금이체 계좌")
+                                                                .build()
+                                                )
+                                        )
+                                        .build()
+                        )
+                        .build());
+        // when
+        // then
+        mockMvc.perform(
+                        get("/bank/api/user/account/transaction")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(requestDTO))
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("get-bank-account-transaction",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                requestFields(
+                                        fieldWithPath("userEmail").type(JsonFieldType.STRING)
+                                                .description("사용자 이메일"),
+                                        fieldWithPath("bankCode").type(JsonFieldType.STRING)
+                                                .description("조회 하고 싶은 은행 코드 번호"),
+                                        fieldWithPath("transactionType").type(JsonFieldType.STRING)
+                                                .description("거래 내역 조회 정보"),
+                                        fieldWithPath("accountNo").type(JsonFieldType.STRING)
+                                                .description("거래 내역 조회 계좌 번호"),
+                                        fieldWithPath("startDate").type(JsonFieldType.STRING)
+                                                .description("시작 날짜"),
+                                        fieldWithPath("endDate").type(JsonFieldType.STRING)
+                                                .description("종료 날짜")
+                                ),
+                                responseFields(
+                                        fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                                .description("코드"),
+                                        fieldWithPath("status").type(JsonFieldType.STRING)
+                                                .description("상태"),
+                                        fieldWithPath("message").type(JsonFieldType.STRING)
+                                                .description("메시지"),
+                                        fieldWithPath("data").type(JsonFieldType.OBJECT)
+                                                .description("응답 데이터"),
+                                        fieldWithPath("data.header").type(JsonFieldType.OBJECT)
+                                                .description("응답 데이터 헤더"),
+                                        fieldWithPath("data.header.responseCode").type(JsonFieldType.STRING)
+                                                .description("응답 코드"),
+                                        fieldWithPath("data.header.responseMessage").type(JsonFieldType.STRING)
+                                                .description("응답 메시지"),
+                                        fieldWithPath("data.rec").type(JsonFieldType.ARRAY)
+                                                .description("응답 데이터 REC"),
+                                        fieldWithPath("data.rec[].transactionUniqueNo").type(JsonFieldType.STRING)
+                                                .description("응답 데이터 계좌 내역 유일번호"),
+                                        fieldWithPath("data.rec[].transactionDate").type(JsonFieldType.STRING)
+                                                .description("응답 데이터 계좌 내역 날짜"),
+                                        fieldWithPath("data.rec[].transactionType").type(JsonFieldType.STRING)
+                                                .description("응답 데이터 계좌 내역 입 출금 조회"),
+                                        fieldWithPath("data.rec[].transactionSummary").type(JsonFieldType.STRING)
+                                                .description("응답 데이터 계좌 내역 문구"),
+                                        fieldWithPath("data.rec[].transactionAccountNo").type(JsonFieldType.STRING)
+                                                .description("응답 데이터 출금 이체 계좌 번호")
+                                                .optional()
+                                )
+                        )
+                );
     }
 
 }

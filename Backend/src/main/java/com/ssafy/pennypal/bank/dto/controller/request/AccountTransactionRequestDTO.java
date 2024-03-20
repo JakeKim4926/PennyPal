@@ -1,10 +1,7 @@
 package com.ssafy.pennypal.bank.dto.controller.request;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.validation.annotation.Validated;
 
 @Getter
@@ -31,6 +28,7 @@ public class AccountTransactionRequestDTO {
     @NotBlank(message = "종료 날짜를 입력해 주세요")
     private String endDate;
 
+    @Builder
     public AccountTransactionRequestDTO(String userEmail, String bankCode, String transactionType, String accountNo, String startDate, String endDate) {
         this.userEmail = userEmail;
         this.bankCode = bankCode;

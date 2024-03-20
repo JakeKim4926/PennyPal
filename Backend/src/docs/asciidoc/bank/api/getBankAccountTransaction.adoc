@@ -1,0 +1,10 @@
+[[get-bank-account-transaction]]
+==== HTTP Request
+
+include::{snippets}/get-bank-account-transaction/http-request.adoc[]
+include::{snippets}/get-bank-account-transaction/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/get-bank-account-transaction/http-response.adoc[]
+include::{snippets}/get-bank-account-transaction/response-fields.adoc[]

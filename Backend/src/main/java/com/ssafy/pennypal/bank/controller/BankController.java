@@ -121,7 +121,7 @@ public class BankController {
         return ApiResponse.ok(userAccountsResponseControllerDTO);
     }
 
-    @GetMapping("/user/account")
+    @GetMapping("/user/account/transaction")
     public ApiResponse<Object> getAccountTransaction(@RequestBody @Validated AccountTransactionRequestDTO requestDTO, BindingResult result) {
         ApiResponse<Object> validationResponse = getValidationErrorResponse(result);
         if (validationResponse != null)

@@ -15,9 +15,10 @@ public class AccountTransactionResponseServiceDTO {
     private String transactionBalance;
     private String transactionAfterBalance;
     private String transactionSummary;
+    private String transactionAccountNo;
 
     @Builder
-    public AccountTransactionResponseServiceDTO(String transactionUniqueNo, String transactionDate, String transactionTime, String transactionType, String transactionTypeName, String transactionBalance, String transactionAfterBalance, String transactionSummary) {
+    public AccountTransactionResponseServiceDTO(String transactionUniqueNo, String transactionDate, String transactionTime, String transactionType, String transactionTypeName, String transactionBalance, String transactionAfterBalance, String transactionSummary, String transactionAccountNo) {
         this.transactionUniqueNo = transactionUniqueNo;
         this.transactionDate = transactionDate;
         this.transactionTime = transactionTime;
@@ -26,5 +27,6 @@ public class AccountTransactionResponseServiceDTO {
         this.transactionBalance = transactionBalance;
         this.transactionAfterBalance = transactionAfterBalance;
         this.transactionSummary = transactionSummary;
+        this.transactionAccountNo = transactionAccountNo;
     }
 }
