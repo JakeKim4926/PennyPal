@@ -13,11 +13,17 @@
 
 body{
     min-width: $BODY_MIN_WIDTH;
+    overflow: hidden;
 }
 
 .container{
-    padding-top: $HEADER_HEIGHT;   
-    padding-bottom: $NAV_HEIGHT;
+    margin-top: $HEADER_HEIGHT;   
+    overflow-y: scroll;
+    height: calc(100vh - ($HEADER_HEIGHT + $NAV_HEIGHT));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
 }
 
 .background{
