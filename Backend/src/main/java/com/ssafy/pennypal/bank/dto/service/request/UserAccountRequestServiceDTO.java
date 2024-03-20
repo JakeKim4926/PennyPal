@@ -9,12 +9,12 @@ public class UserAccountRequestServiceDTO {
 
     private String apiKey;
 
-    private String userEmail;
+    private String userId;
 
     @Builder
-    private UserAccountRequestServiceDTO(String apiKey, String userEmail) {
+    private UserAccountRequestServiceDTO(String apiKey, String userId) {
         this.apiKey = apiKey;
-        this.userEmail = userEmail;
+        this.userId = userId;
     }
 
 }
