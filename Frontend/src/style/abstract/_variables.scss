@@ -9,21 +9,18 @@ $bright: #FCFCFC;
 $light: #EEEEEE;
 
 // 전체 레이아웃
-$BODY_MIN_WIDTH: 1200px;
+// $BODY_MIN_WIDTH: 1200px;
+$BODY_MIN_WIDTH: 1400px;
+
+
 $CONTENT_WIDTH_RATIO: 50%;
 
 // 헤더, 네브 사이즈
-$HEADER_HEIGHT: 80px;
-$NAV_HEIGHT: 80px;
+$HEADER_HEIGHT: 60px;
+$NAV_HEIGHT: 60px;
 
 // 모서리
 $RADIUS: 20px;
-
-// HEADER
-$HEADER_HEIGHT: 80px;
-
-// NAV
-$NAV_HEIGHT: 80px;
 
 // RESPONSIBLE
 // 모바일

@@ -13,7 +13,7 @@ export function Header() {
                     </Link>
                 </div>
                 <div className="header__menubar">
-                    <Menubar size={25} />
+                    <Menubar size={22} />
                 </div>
             </div>
         </div>
