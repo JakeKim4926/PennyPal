@@ -1,0 +1,3 @@
+[[Team-API]]
+=== 팀 생성
+include::api/createTeam.adoc[]
