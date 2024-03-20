@@ -23,6 +23,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @ActiveProfiles("test")
 @SpringBootTest
+@Transactional
 class TeamServiceTest {
 
     @Autowired
@@ -82,36 +83,30 @@ class TeamServiceTest {
     }
 
     // todo
-//    @DisplayName("팀을 만드는 유저가 이미 다른 팀의 구성원이라면 예외가 발생한다.")
-//    @Test
-//    void memberCanHaveOneTeam(){
-//        // given
-//        Member member1 = createMember("member1@pennypal.site", "짠1", LocalDateTime.now());
-//        Member member2 = createMember("member2@pennypal.site", "짠2", LocalDateTime.now());
-//
-//        memberRepository.saveAll(List.of(member1, member2));
-//
-//        TeamCreateServiceRequest request1 = createServiceRequest("팀이름3", true, member1.getMemberId(),"팀소개");
-//        TeamCreateServiceRequest request2 = createServiceRequest("팀이름4", false, member2.getMemberId(),"팀소개");
-//
-//        teamService.createTeam(request1);
-//        teamService.createTeam(request2);
-//
-//        Team team = Team.builder()
-//                .teamName(request2.getTeamName())
-//                .teamIsAutoConfirm(request2.getTeamIsAutoConfirm())
-//                .teamLeaderId(request2.getTeamLeaderId())
-//                .teamInfo(request2.getTeamInfo())
-//                .build();
-//
-////        TeamCreateServiceRequest request3 = createServiceRequest("팀이름3", true, member1.getMemberId(),"팀소개");
-//
-//        // when, then
-//        assertThatThrownBy(() -> member1.setTeam(team))
-//                .isInstanceOf(IllegalArgumentException.class)
-//                .hasMessage("한 개의 팀에만 가입 가능합니다.");
-//
-//    }
+    @DisplayName("팀을 만드는 유저가 이미 다른 팀의 구성원이라면 예외가 발생한다.")
+    @Test
+    void memberCanHaveOneTeam(){
+        // given
+        Member member1 = createMember("member1@pennypal.site", "짠1", LocalDateTime.now());
+        Member member2 = createMember("member2@pennypal.site", "짠2", LocalDateTime.now());
+
+        memberRepository.saveAll(List.of(member1, member2));
+
+        TeamCreateServiceRequest request1 = createServiceRequest("팀이름3", true, member1.getMemberId(),"팀소개");
+        TeamCreateServiceRequest request2 = createServiceRequest("팀이름4", false, member2.getMemberId(),"팀소개");
+
+        teamService.createTeam(request1);
+        teamService.createTeam(request2);
+
+
+        TeamCreateServiceRequest request3 = createServiceRequest("팀이름5", true, member1.getMemberId(),"팀소개");
+
+        // when, then
+        assertThatThrownBy(() -> teamService.createTeam(request3))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("한 개의 팀에만 가입 가능합니다.");
+
+    }
 
 
     private Member createMember(String memberEmail, String memberNickname, LocalDateTime memberBirthDate){
