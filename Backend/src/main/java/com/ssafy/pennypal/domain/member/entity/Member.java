@@ -84,4 +84,8 @@ public class Member extends BaseEntity {
     public void setMemberBankApi(String memberBankApi) {
         this.memberBankApi = memberBankApi;
     }
+
+    public void setTeam(Team team) {
+        this.team = team;
+    }
 }
