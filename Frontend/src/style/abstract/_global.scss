@@ -1,4 +1,5 @@
 @import '@/style/abstract/variables';
+@import '@/style/abstract/fonts';
 
 * {
     margin: 0;
@@ -7,13 +8,24 @@
     text-decoration: none;
     list-style: none;
     color: $black;
+    font-family: 'Wanted-Bold';
 }
 
 body{
     min-width: $BODY_MIN_WIDTH;
+    overflow: hidden;
 }
 
 .container{
-    padding-top: 80px;   
-    padding-bottom: 80px;
+    margin-top: $HEADER_HEIGHT;   
+    overflow-y: scroll;
+    height: calc(100vh - ($HEADER_HEIGHT + $NAV_HEIGHT));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+}
+
+.background{
+    position: fixed;
 }
