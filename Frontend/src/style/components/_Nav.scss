@@ -1,0 +1,32 @@
+@import '@/style/abstract/variables';   
+
+
+.nav{
+    display: flex;
+    height:  80px;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+
+    &__container{
+        width: 100%;
+        background-color: $bright;
+        position: fixed;
+        bottom: 0;
+        display: flex;
+        justify-content: center;
+        min-width: $BODY_MIN_WIDTH;
+    }
+
+    &__items{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+
+        div {
+            font-family: 'Wanted-Bold';
+            text-align: center;
+        }
+    }
+}

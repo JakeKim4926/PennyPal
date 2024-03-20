@@ -1,0 +1,14 @@
+@import '@/style/abstract/variables';
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    list-style: none;
+    color: $black;
+}
+
+body{
+    min-width: $BODY_MIN_WIDTH;
+}
