@@ -1,5 +1,29 @@
 @import '@/style/abstract/variables';
 
 .pageHeader{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 30px;
+    padding-bottom: 30px;
     
+    background-color: $bright;
+    background-image: url('@/style/abstract/background.svg') ;
+    background-repeat: repeat;
+    background-size: 90%;
+
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+
+    &__title {
+        font-family: 'Wanted-Black';
+        font-size: 30px;
+        letter-spacing: 10px;
+    }
+
+    &__description {
+        font-family: 'Wanted-Regular';
+    }
+
 }

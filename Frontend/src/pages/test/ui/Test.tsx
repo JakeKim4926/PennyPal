@@ -8,7 +8,7 @@ export function Test() {
     return (
         <div className="container test__container">
             <div className="test">
-                <PageHeader />
+                <PageHeader page="test" />
                 <TestComp1 />
                 <TestComp2 />
             </div>
