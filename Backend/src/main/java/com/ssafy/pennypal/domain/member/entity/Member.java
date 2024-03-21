@@ -53,18 +53,21 @@ public class Member extends BaseEntity {
     @JoinColumn(name = "team_id")
     private Team team;                                          // 사용자가 참여한 팀
 
-
     @OneToMany(
             fetch = FetchType.LAZY,
             cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REMOVE},
             mappedBy = "memberId" // Correct mappedBy to refer to the property in OrderInfo
     )
-    private List<Order> orders = new ArrayList<>();     // 주문목록 조회
+    private List<Order> orders = new ArrayList<>();              // 주문목록 조회
     // 나중에 또 수정
 
     //0319 김민건 수정 사용자 계정 생성
     @Column(name = "member_bank_api")
     private String memberBankApi;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "waiting_team")
+    private Team waitingTeam;                                   // 사용자가 가입 요청한 팀
 
     @Builder
     @QueryProjection

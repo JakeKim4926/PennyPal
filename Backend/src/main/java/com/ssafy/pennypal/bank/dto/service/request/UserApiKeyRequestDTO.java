@@ -7,13 +7,13 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserApiKeyRequestDTO {
 
-    private String userEmail;
+    private String userId;
 
     private String userKey;
 
     @Builder
-    public UserApiKeyRequestDTO(String userEmail, String userKey) {
-        this.userEmail = userEmail;
+    public UserApiKeyRequestDTO(String userId, String userKey) {
+        this.userId = userId;
         this.userKey = userKey;
     }
 }
