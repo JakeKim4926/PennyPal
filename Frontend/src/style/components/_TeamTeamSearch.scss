@@ -1,0 +1,33 @@
+@import '@/style/abstract/variables';
+
+.teamTeamSearch {
+
+    &__searchBar {
+        display: flex;
+        justify-content: center;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        gap: 10px;
+
+        &-input {
+            font-size: 20px;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid $gray
+        }
+
+        &-submit {
+            background-color: transparent;
+            padding: 3px;
+            border: 1px solid $gray;
+            border-radius: 4px;
+        }
+    }
+
+    &__teamList {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+}

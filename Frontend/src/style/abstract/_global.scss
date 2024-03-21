@@ -18,7 +18,7 @@ body{
 
 .container{
     margin-top: $HEADER_HEIGHT;   
-    overflow-y: scroll;
+    overflow-y: auto;
     height: calc(100vh - ($HEADER_HEIGHT + $NAV_HEIGHT));
     display: flex;
     flex-direction: column;
