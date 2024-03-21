@@ -59,7 +59,7 @@ export function TeamTeamInfo({ hasTeam = false }: TeamTeamInfoProps) {
                 </div>
             </div>
             <div className="teamTeamInfo__bottom">
-                <button className="teamTeamInfo__bottom-button">
+                <button className="teamTeamInfo__bottom-button button">
                     <svg width="40" height="41" viewBox="0 0 40 41" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
                             className="teamTeamInfo__bottom-button-abc"

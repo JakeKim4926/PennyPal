@@ -54,17 +54,7 @@
             width: 50px;
             height: 100%;
             padding: 5px;
-            box-shadow: 0 3px 3px $gray;
-            transition: box-shadow 0.1s;
 
-            &:hover {
-                box-shadow: 0 2px 1px $gray;
-                cursor: pointer;
-            }
-
-            &:active {
-                box-shadow: 0 1px 1px $gray;
-            }
         }
     }
 }

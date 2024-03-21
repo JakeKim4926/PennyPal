@@ -1,8 +1,7 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
-import { RootState } from '../../../../app/appProvider';
-import { openApply } from '../../model/openModal';
+import { openApplyModal } from '../../model/openApplyModal';
+
 type TeamTeamListItemProps = {
     name: string;
     head: number;
@@ -28,9 +27,9 @@ export function TeamTeamListItem({ name, head, leader, description }: TeamTeamLi
             </div>
             <div className="teamTeamListItem__apply">
                 <button
-                    className="teamTeamListItem__apply-button"
+                    className="teamTeamListItem__apply-button button"
                     onClick={() => {
-                        dispatch(openApply({ value: '123' }));
+                        dispatch(openApplyModal({ value: '123' }));
                     }}
                 >
                     가입신청
