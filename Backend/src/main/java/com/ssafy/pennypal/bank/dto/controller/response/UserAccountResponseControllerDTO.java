@@ -26,7 +26,7 @@ public class UserAccountResponseControllerDTO {
 
     public static UserAccountResponseControllerDTO of(UserAccountResponseServiceDTO serviceDTO) {
         return UserAccountResponseControllerDTO.builder()
-                .userEmail(serviceDTO.getPayload().getUserEmail())
+                .userEmail(serviceDTO.getPayload().getUserId())
                 .userKey(serviceDTO.getPayload().getUserKey())
                 .created(serviceDTO.getPayload().getCreated())
                 .modified(serviceDTO.getPayload().getModified())

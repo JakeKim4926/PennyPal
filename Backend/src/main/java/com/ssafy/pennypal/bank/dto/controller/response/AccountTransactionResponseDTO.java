@@ -29,6 +29,7 @@ public class AccountTransactionResponseDTO {
                         .transactionUniqueNo(serviceListDTO.getTransactionUniqueNo())
                         .transactionDate(serviceListDTO.getTransactionDate())
                         .transactionType(serviceListDTO.getTransactionType())
+                        .transactionBalance(serviceListDTO.getTransactionBalance())
                         .transactionSummary(serviceListDTO.getTransactionSummary())
                         .transactionAccountNo(serviceListDTO.getTransactionAccountNo())
                         .build())

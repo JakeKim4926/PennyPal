@@ -1,4 +1,3 @@
-[[Bank-API]]
 === Create Account
 
 include::api/createAccount.adoc[]
