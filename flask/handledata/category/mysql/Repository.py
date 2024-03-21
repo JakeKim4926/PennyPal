@@ -12,10 +12,10 @@ class Repository:
         # Access to mysql
         self.mydb = mysql.connector.connect(
             host=os.getenv("MYSQL_DATASOURCE_ADDRESS"),
-            user = os.getenv("MYSQL_DATASOURCE_USERNAME"),
-            password = os.getenv("MYSQL_DATASOURCE_PASSWORD"),
-            port = os.getenv("MYSQL_DATASOURCE_PORT"),
-            database = os.getenv("MYSQL_DATASOURCE_DATABASE"),
+            user=os.getenv("MYSQL_DATASOURCE_USERNAME"),
+            password=os.getenv("MYSQL_DATASOURCE_PASSWORD"),
+            port=os.getenv("MYSQL_DATASOURCE_PORT"),
+            database=os.getenv("MYSQL_DATASOURCE_DATABASE"),
         )
 
         self.file_path = '../../../static/data/result/'
@@ -29,14 +29,14 @@ class Repository:
         self.insert_category_queries = []
         self.insert_card_queries = []
         # 커서 생성
-        self.mycursor = self.mydb.cursor()
+        self.my_cursor = self.mydb.cursor()
 
     def create_insert_category_query(self):
 
         for _, row in self.category_csv.iterrows():
             category_values = ", ".join(map(str, row[self.category_csv.columns[10:]]))
             query = f"""
-                INSERT INTO Category (
+                INSERT INTO category (
                     category_shopping,
                     category_culture,
                     category_transportation,
@@ -55,19 +55,20 @@ class Repository:
             self.insert_category_queries.append(query)
 
     def create_insert_card_query(self):
-        for _, row in self.category_csv.iterrows():
+        for index, row in self.category_csv.iterrows():
             category_id = index + 1  # 인덱스는 0부터 시작하므로 1을 더합니다.
 
-            # Category_id를 가지는 Category 객체 조회
-            category = session.query(Category).filter_by(category_id=category_id).first()
+            query = "SELECT * FROM category WHERE category_id={}".format(category_id)
+
+            b_result = self.select_execute(query)
 
             # Category_id를 찾지 못한 경우 처리
-            if category is None:
+            if not b_result:
                 print(f"No category found for category_id {category_id}. Skipping insertion for this row.")
                 continue
 
             query = f"""
-                INSERT INTO Card (
+                INSERT INTO card (
                     card_type,
                     card_company,
                     card_name,
@@ -95,26 +96,28 @@ class Repository:
             """
             self.insert_card_queries.append(query)
 
-    def select_category(self):
-        query = "SELECT * FROM Category"
+    def select_execute(self,query):
+        self.my_cursor.execute(query)
+        print("비어있어용")
 
-        # 생성된 쿼리 출력
-        for query in self.insert_category_queries:
-            print(query)
+        result = self.my_cursor.fetchall()
+        if not result:
+            print("결과가 비어있습니다.")
+            return False
 
-    def select_card(self):
-        query = "SELECT * FROM Category"
+        for x in result:
+            print(x)
 
-        # 생성된 쿼리 출력
-        for query in self.insert_card_queries:
-            print(query)
+        return True
 
 
 if __name__ == '__main__':
     sql = Repository()
 
+    sql.select_card()
+
     # sql.create_insert_category_query()
     # sql.select_category()
 
-    sql.create_insert_card_query()
-    sql.select_card()
+    # sql.create_insert_card_query()
+    # sql.select_card()
