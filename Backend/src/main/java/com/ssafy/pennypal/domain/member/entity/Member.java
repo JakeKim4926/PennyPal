@@ -5,10 +5,7 @@ import com.ssafy.pennypal.domain.market.entity.Order;
 import com.ssafy.pennypal.domain.team.entity.Team;
 import com.ssafy.pennypal.global.common.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -66,7 +63,7 @@ public class Member extends BaseEntity {
     private String memberBankApi;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "waiting_team")
+    @JoinColumn(name = "waiting_list")
     private Team waitingTeam;                                   // 사용자가 가입 요청한 팀
 
     @Builder

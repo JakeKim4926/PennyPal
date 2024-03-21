@@ -4,14 +4,20 @@ import com.ssafy.pennypal.domain.member.entity.Member;
 import com.ssafy.pennypal.domain.member.repository.IMemberRepository;
 import com.ssafy.pennypal.domain.team.dto.request.TeamCreateRequest;
 import com.ssafy.pennypal.domain.team.dto.request.TeamCreateServiceRequest;
+import com.ssafy.pennypal.domain.team.dto.request.TeamJoinServiceRequest;
 import com.ssafy.pennypal.domain.team.dto.response.TeamCreateResponse;
 import com.ssafy.pennypal.domain.team.dto.response.TeamJoinResponse;
+import com.ssafy.pennypal.domain.team.dto.response.TeamMemberDetailResponse;
 import com.ssafy.pennypal.domain.team.entity.Team;
 import com.ssafy.pennypal.domain.team.repository.ITeamRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -42,9 +48,6 @@ public class TeamService {
                 .teamLeaderId(request.getTeamLeaderId())
                 .build();
 
-        // 생성된 팀 구성원에 유저 추가
-        team.getMembers().add(member);
-
         // 팀 저장
         Team savedTeam = teamRepository.save(team);
 
@@ -52,18 +55,24 @@ public class TeamService {
         member.setTeam(team);
         memberRepository.save(member);
 
-        return TeamCreateResponse.of(savedTeam);
+        List<TeamMemberDetailResponse> memberDetails = team.getMembers().stream()
+                .filter(Objects::nonNull) // null이 아닌 멤버만 처리
+                .map(m -> new TeamMemberDetailResponse(
+                        m.getMemberNickname()))
+                .collect(Collectors.toList());
+
+        return TeamCreateResponse.of(savedTeam, memberDetails);
     }
 
-    public TeamJoinResponse joinTeam(Long teamId, Long memberId){
+    public TeamJoinResponse joinTeam(TeamJoinServiceRequest request){
 
         // 팀 정보 가져오기
-        Team team = teamRepository.findByTeamId(teamId);
+        Team team = teamRepository.findByTeamId(request.getTeamId());
 
         if(team != null){
 
             // 유저 정보 조회
-            Member member = memberRepository.findByMemberId(memberId);
+            Member member = memberRepository.findByMemberId(request.getMemberId());
 
             // 팀 인원 6명이면 예외 발생
             if(team.getMembers().size() == 6){
@@ -71,13 +80,13 @@ public class TeamService {
             }
 
             // 팀 구성원에 포함 돼 있는지 확인
-                if(team.getMembers().contains(member)){
-                    throw new IllegalArgumentException("이미 가입한 팀입니다.");
+            if(team.getMembers().contains(member)){
+                throw new IllegalArgumentException("이미 가입한 팀입니다.");
+            }else{
+                // 이미 다른 팀의 구성원인지 확인
+                if(member.getTeam() != null){
+                    throw new IllegalArgumentException("이미 가입된 팀이 있습니다.");
                 }
-
-            // 이미 다른 팀의 구성원인지 확인
-            if(member.getTeam() != null){
-                throw new IllegalArgumentException("이미 가입된 팀이 있습니다.");
             }
 
             // 팀 자동승인 여부에 따라...
@@ -85,6 +94,8 @@ public class TeamService {
                 // 자동 승인이라면 바로 추가
                 team.getMembers().add(member);
                 member.setTeam(team);
+                teamRepository.save(team);
+                memberRepository.save(member);
             }else{
                 // 수동 승인이라면 대기 리스트에 추가하고 예외 던져주기
                 team.getWaitingList().add(member);
@@ -94,7 +105,20 @@ public class TeamService {
         } else {
             throw new IllegalArgumentException("팀 정보를 찾을 수 없습니다.");
             }
-        return TeamJoinResponse.of(team);
+
+        List<TeamMemberDetailResponse> memberDetails = team.getMembers().stream()
+                .filter(Objects::nonNull) // null이 아닌 멤버만 처리
+                .map(member -> new TeamMemberDetailResponse(
+                        member.getMemberNickname()))
+                .collect(Collectors.toList());
+
+        return TeamJoinResponse.builder()
+                .teamName(team.getTeamName())
+                .teamInfo(team.getTeamInfo())
+                .teamScore(team.getTeamScore())
+                .teamLeaderId(team.getTeamLeaderId())
+                .members(memberDetails)
+                .build();
     }
 
 }
