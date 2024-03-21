@@ -96,6 +96,7 @@ public class BankControllerTest extends RestDocsSupport {
 
     }
 
+
     @DisplayName("사용자 계정 조회")
     @Test
     void 사용자_계정_조회() throws Exception {
