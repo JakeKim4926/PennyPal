@@ -28,8 +28,13 @@ export function usePenny() {
             }
         }
 
-        let answer = 0;
-        return answer;
+        return (
+            <>
+                <span className="spend spend-prev">{prev}</span>
+                <span className="spend spend-post">{post}</span>
+                <span className="unit">원</span>
+            </>
+        );
     }
 
     return {

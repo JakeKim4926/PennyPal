@@ -8,11 +8,11 @@ export function TeamInfoMember() {
         { id: 3, nickname: '팀원3', isLeader: false, spend: 1000290 },
     ];
     return (
-        <div className="contentCard">
-            <div className="contentCard__title">
-                <div className="contentCard__title-text">MEMBERS</div>
+        <div className="contentCard teamInfoMember">
+            <div className="contentCard__title teamInfoMember__title">
+                <div className="contentCard__title-text teamInfoMember__title_text">MEMBERS</div>
             </div>
-            <div>
+            <div className="teamInfoMember__itemList">
                 {member.map((it) => (
                     <TeamInfoMemberItem nickname={it.nickname} isLeader={it.isLeader} spend={it.spend} key={it.id} />
                 ))}
