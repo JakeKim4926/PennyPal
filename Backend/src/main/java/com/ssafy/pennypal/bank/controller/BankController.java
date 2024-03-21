@@ -4,10 +4,10 @@ import com.ssafy.pennypal.bank.dto.controller.request.AccountTransactionRequestD
 import com.ssafy.pennypal.bank.dto.controller.response.AccountTransactionResponseDTO;
 import com.ssafy.pennypal.bank.dto.controller.response.UserAccountResponseControllerDTO;
 import com.ssafy.pennypal.bank.dto.controller.response.UserAccountsResponseControllerDTO;
+import com.ssafy.pennypal.bank.dto.controller.response.UserCreateAccountControllerDTO;
 import com.ssafy.pennypal.bank.dto.dummy.DummyTransactionSummary;
 import com.ssafy.pennypal.bank.dto.service.common.CommonHeaderRequestDTO;
 import com.ssafy.pennypal.bank.dto.service.request.*;
-import com.ssafy.pennypal.bank.dto.service.response.UserBankAccountResponseServiceDTO;
 import com.ssafy.pennypal.bank.service.api.IBankServiceAPI;
 import com.ssafy.pennypal.bank.service.db.IBankServiceDB;
 import com.ssafy.pennypal.global.common.api.ApiResponse;
@@ -25,7 +25,7 @@ import java.util.stream.IntStream;
 
 @Slf4j
 @RestController
-@RequestMapping("bank/api")
+@RequestMapping("api/bank")
 @RequiredArgsConstructor
 public class BankController {
     private static final String SSAFY_BANK_API_KEY = System.getenv("SSAFY_BANK_API_KEY");
@@ -50,7 +50,7 @@ public class BankController {
         return null;
     }
 
-    @PostMapping("/user/api/key/{userEmail}")
+    @PostMapping("/user/key/{userEmail}")
     public ApiResponse<Object> createUserApiKey(@PathVariable String userEmail) {
 
         UserAccountRequestServiceDTO userAccountRequestServiceDTO = UserAccountRequestServiceDTO.builder()
@@ -80,7 +80,9 @@ public class BankController {
                 .accountTypeUniqueNo("001-1-81fe2deafd1943")
                 .build();
 
-        UserBankAccountResponseServiceDTO userBankAccount = bankServiceAPI.createUserBankAccount(userBankAccountRequestServiceDTO);
+        UserCreateAccountControllerDTO userBankAccount = UserCreateAccountControllerDTO.of(
+                bankServiceAPI.createUserBankAccount(userBankAccountRequestServiceDTO)
+        );
 
         CommonHeaderRequestDTO commonHeaderRequestDTO2 = CommonHeaderRequestDTO.builder()
                 .apiName("receivedTransferAccountNumber")
@@ -118,7 +120,7 @@ public class BankController {
         return ApiResponse.ok(userAccountResponseControllerDTO);
     }
 
-    @GetMapping("/user/api/key/{userEmail}")
+    @GetMapping("/user/key/{userEmail}")
     public ApiResponse<Object> getUserApiKey(@PathVariable String userEmail) {
         UserAccountRequestServiceDTO userAccountRequestServiceDTO = UserAccountRequestServiceDTO.builder()
                 .apiKey(SSAFY_BANK_API_KEY)
@@ -150,8 +152,12 @@ public class BankController {
                 .userKey(userAccountResponseControllerDTO.getUserKey())
                 .build();
 
+        GetUserAccountListServiceRequestDTO getUserAccountListServiceRequestDTO = GetUserAccountListServiceRequestDTO.builder()
+                .header(commonHeaderRequestDTO)
+                .build();
+
         UserAccountsResponseControllerDTO userAccountsResponseControllerDTO = UserAccountsResponseControllerDTO.of(
-                bankServiceAPI.getUserAccountList(commonHeaderRequestDTO)
+                bankServiceAPI.getUserAccountList(getUserAccountListServiceRequestDTO)
         );
 
         return ApiResponse.ok(userAccountsResponseControllerDTO);
@@ -217,10 +223,12 @@ public class BankController {
                 .header(commonHeaderRequestDTO)
                 .accountTypeUniqueNo("004-1-74fe2deafd3277")
                 .build();
-        // 여기 수정 해야되 controller 에 넘기기 맞게 해더만 변경 하면 될듯
-        UserBankAccountResponseServiceDTO userBankAccount = bankServiceAPI.createUserBankAccount(userBankAccountRequestServiceDTO);
 
-        return ApiResponse.ok(userBankAccount);
+        UserCreateAccountControllerDTO userCreateAccountControllerDTO = UserCreateAccountControllerDTO.of(
+                bankServiceAPI.createUserBankAccount(userBankAccountRequestServiceDTO)
+        );
+
+        return ApiResponse.ok(userCreateAccountControllerDTO);
     }
 
     public String generateRandomAmount() {
