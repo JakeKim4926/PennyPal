@@ -5,12 +5,12 @@ spring:
     username: ${MYSQL_DATASOURCE_USERNAME}
     password: ${MYSQL_DATASOURCE_PASSWORD}
 
-logging:
-  level:
-    org:
-      springframework:
-        web.client.RestTemplate: DEBUG
-        http: DEBUG
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        web.client.RestTemplate: DEBUG
+#        http: DEBUG
 
 ---
 spring:

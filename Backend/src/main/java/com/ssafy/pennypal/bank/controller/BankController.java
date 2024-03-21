@@ -98,8 +98,6 @@ public class BankController {
 
         bankServiceAPI.accountDeposit(accountDepositServiceDTO);
 
-        log.info("account = {}", userBankAccount.getREC().getAccountNo());
-
         IntStream.range(0, 10).forEach(i -> {
             CommonHeaderRequestDTO commonHeaderRequestDTO3 = CommonHeaderRequestDTO.builder()
                     .apiName("drawingTransfer")
@@ -195,6 +193,34 @@ public class BankController {
         );
 
         return ApiResponse.ok(accountTransactionResponseDTO);
+    }
+
+    @PostMapping("/user/stock/account/{userEmail}")
+    public ApiResponse<Object> createStockAccount(@PathVariable String userEmail) {
+
+        UserAccountRequestServiceDTO userAccountRequestServiceDTO = UserAccountRequestServiceDTO.builder()
+                .apiKey(SSAFY_BANK_API_KEY)
+                .userId(userEmail)
+                .build();
+
+        UserAccountResponseControllerDTO userAccountResponseControllerDTO = UserAccountResponseControllerDTO.of(
+                bankServiceAPI.getUserAccount(userAccountRequestServiceDTO)
+        );
+
+        CommonHeaderRequestDTO commonHeaderRequestDTO = CommonHeaderRequestDTO.builder()
+                .apiName("openAccount")
+                .apiKey(SSAFY_BANK_API_KEY)
+                .userKey(userAccountResponseControllerDTO.getUserKey())
+                .build();
+
+        UserBankAccountRequestServiceDTO userBankAccountRequestServiceDTO = UserBankAccountRequestServiceDTO.builder()
+                .header(commonHeaderRequestDTO)
+                .accountTypeUniqueNo("004-1-74fe2deafd3277")
+                .build();
+        // 여기 수정 해야되 controller 에 넘기기 맞게 해더만 변경 하면 될듯
+        UserBankAccountResponseServiceDTO userBankAccount = bankServiceAPI.createUserBankAccount(userBankAccountRequestServiceDTO);
+
+        return ApiResponse.ok(userBankAccount);
     }
 
     public String generateRandomAmount() {
