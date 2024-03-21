@@ -67,7 +67,7 @@ def json_to_dataframe(strPath):
 
 if __name__ == '__main__':
     # you can type path here
-    json_file = '../static/data/origin/credit_card.json'
+    json_file = '../../../static/data/origin/credit_card.json'
 
     json_to_dataframe(json_file)
     print("done")

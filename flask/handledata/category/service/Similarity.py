@@ -1,24 +1,26 @@
 import numpy as np
 import pandas as pd
+import json
 from numpy import dot
 from numpy.linalg import norm
 
 from handledata.category.dao import Repository
 
-
-# 카드 데이터 및 유저 데이터 전처리
-
-# 카테고리 속성 값 할당
-
-# 유저의 카테고리 값 설정
-
 class Similarity(object):
-    def __init__(self):
+    _instance = None
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+            cls._instance.initialize()
+        return cls._instance
+
+    def initialize(self):
         self.card_df = None
         self.file_path = "../../../static/data/result/"
         self.card_dict = {}
-        self.user_vector = np.array([0.2, 0.1, 0.1, 0.05, 0.1, 0.05, 0.1, 0.1, 0.1, 0.1, 0])
         self.repository = Repository.Repository()
+        self.card_result = None
+        self.user_vector = np.array([0.2, 0.2, 0.1, 0, 0.1, 0, 0.1, 0.1, 0.1, 0.1, 0])
 
     def calculate_similarity(self, card_vector):
         if norm(self.user_vector) * norm(card_vector) == 0:
@@ -27,8 +29,7 @@ class Similarity(object):
         return dot(self.user_vector, card_vector) / (norm(self.user_vector) * norm(card_vector))
 
     def load_card_category(self):
-        # query = 'SELECT category_shopping,category_culture,category_transportation,category_car,category_food,category_education,category_housing_communication,category_travel,category_medical,category_financial_insurance,category_others FROM penny_pal.category;'
-        query = 'SELECT* FROM category'
+        query = 'SELECT * FROM category'
         # Repository.select_execute(query)
         result = self.repository.select_execute(query)
 
@@ -38,8 +39,6 @@ class Similarity(object):
             vector = np.array(item[1:], dtype=float)  # 나머지 원소를 NumPy 배열로 변환
             self.card_dict[index] = vector  # 인덱스를 키로 하고 NumPy 배열을 값으로 사전에 추가
 
-        # 결과 출력
-        # print(self.card_dict)
 
     # 추천
     def recommend_cards(self, top_n=4):
@@ -57,19 +56,33 @@ class Similarity(object):
 
         # 유사도를 내림차순으로 정렬
         similarities.sort(key=lambda x: x[1], reverse=True)
+        top_n_similarities = similarities[:top_n]
 
-        # you need to get the name from index
-        print(similarities[:top_n])
-        return similarities[:top_n]
-# 유사도 계산
+        cards_data = []
+        # Iterate over sorted similarities and construct and execute SQL queries
+        for similarity in top_n_similarities:
+            category_id = similarity[0]
+            query = 'SELECT card_company, card_name, card_top_category, card_img FROM card WHERE category_id = {}'.format(category_id)
+            query_result = self.repository.select_execute(query)
+
+            # change it as a json
+
+            for card_tuple in query_result:
+                card_data = {
+                    'cardCompany': card_tuple[0],
+                    'cardName': card_tuple[1],
+                    'cardTopCategory': card_tuple[2],
+                    'cardImg': card_tuple[3]
+                }
+                cards_data.append(card_data)
+
+        self.card_result = json.dumps(cards_data, ensure_ascii=False)
+
+    def get_json(self):
+        self.load_card_category()
+        self.recommend_cards()
+
+        return self.card_result
 
 
-if __name__ == '__main__':
-    sim = Similarity()
 
-    sim.load_card_category()
-    sim.recommend_cards()
-
-    # 유저의 카테고리 값과 카드의 속성 값으로 유사도 계산 및 추천 수행
-    # recommended_cards = recommend_cards(user_vector, card_vectors)
-    # print(recommended_cards)
