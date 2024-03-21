@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 type TeamTeamInfoProps = {
     hasTeam: boolean;
@@ -8,6 +9,8 @@ export function TeamTeamInfo({ hasTeam = false }: TeamTeamInfoProps) {
     if (!hasTeam) {
         return <div>팀 없음</div>;
     }
+
+    const navigate = useNavigate();
 
     const teamInfo = {
         name: '팀명123456',
@@ -59,7 +62,7 @@ export function TeamTeamInfo({ hasTeam = false }: TeamTeamInfoProps) {
                 </div>
             </div>
             <div className="teamTeamInfo__bottom">
-                <button className="teamTeamInfo__bottom-button">
+                <button className="teamTeamInfo__bottom-button button" onClick={() => navigate('/team-info')}>
                     <svg width="40" height="41" viewBox="0 0 40 41" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
                             className="teamTeamInfo__bottom-button-abc"

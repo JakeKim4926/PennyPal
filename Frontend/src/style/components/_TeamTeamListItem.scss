@@ -1,0 +1,60 @@
+@import '@/style/abstract/variables';
+@import '@/style/abstract/fonts';
+
+.teamTeamListItem {
+    display: flex;
+    justify-content: space-between;
+    background-color: $light;
+    padding: 10px;
+    box-shadow: 0px 3px 2px $gray;
+    border: 2px solid $black;
+    border-radius: 10px;
+
+    &__info {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        &-first {
+            display: flex;
+            align-items: end;
+            vertical-align: bottom;
+            
+            &-name {
+                font-size: 35px;
+                font-family: 'Esa-Bold';
+            }
+            
+            gap: 10px;
+
+            &-head {
+
+                div {
+                    font-family: 'Esa-Light';
+                    display: flex;
+                    font-size: 15px;
+                }
+
+                display: flex;
+                align-items: center;
+                gap: 3px;
+            }
+        }
+
+        &-desc {
+            font-family: 'Esa-Light';
+            font-size: 20px;
+        }
+    }
+
+    &__apply {
+
+        &-button {
+            font-size: 20px;
+            width: 50px;
+            height: 100%;
+            padding: 5px;
+
+        }
+    }
+}
