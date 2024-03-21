@@ -28,12 +28,12 @@ class BankServiceDBImplTest {
         // given
         UserApiKeyRequestDTO userApiKeyRequestDTO = UserApiKeyRequestDTO.builder()
                 .userKey("1234567890")
-                .userEmail("mine702@naver.com")
+                .userId("mine702@naver.com")
                 .build();
         // when
         bankServiceDB.InsertUserKey(userApiKeyRequestDTO);
         // then
-        Member member = memberRepository.findByMemberEmail(userApiKeyRequestDTO.getUserEmail());
+        Member member = memberRepository.findByMemberEmail(userApiKeyRequestDTO.getUserId());
         Assertions.assertThat(member.getMemberBankApi()).isEqualTo(userApiKeyRequestDTO.getUserKey());
     }
 

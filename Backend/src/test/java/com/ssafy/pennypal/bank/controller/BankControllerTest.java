@@ -46,7 +46,7 @@ public class BankControllerTest extends RestDocsSupport {
         // given
         UserAccountRequestServiceDTO userAccountRequestServiceDTO = UserAccountRequestServiceDTO.builder()
                 .apiKey("82d37624494f4092bf96d5f4dbb634c4")
-                .userEmail("mine702@naver.com")
+                .userId("mine702@naver.com")
                 .build();
 
         given(bankServiceAPI.createUserAccount(any(UserAccountRequestServiceDTO.class)))
@@ -54,7 +54,7 @@ public class BankControllerTest extends RestDocsSupport {
                         .code("succeed")
                         .payload(
                                 UserAccountResponseServicePayLoadDTO.builder()
-                                        .userEmail("mine702@naver.com")
+                                        .userId("mine702@naver.com")
                                         .userName("mine702")
                                         .institutionCode("001")
                                         .userKey("13cefdcf-494f-4092-bf96-d5f4dbb634c4")
@@ -67,7 +67,7 @@ public class BankControllerTest extends RestDocsSupport {
 
         given(bankServiceAPI.createUserBankAccount(any(UserBankAccountRequestServiceDTO.class)))
                 .willReturn(UserBankAccountResponseServiceDTO.builder()
-                        .header(
+                        .Header(
                                 CommonHeaderResponseDTO.builder()
                                         .responseCode("H0000")
                                         .responseMessage("정상처리 되었습니다.")
@@ -91,7 +91,7 @@ public class BankControllerTest extends RestDocsSupport {
         // when
         // then
         mockMvc.perform(
-                        post("/bank/api/user/api/key/{userEmail}", userAccountRequestServiceDTO.getUserEmail())
+                        post("/bank/api/user/api/key/{userEmail}", userAccountRequestServiceDTO.getUserId())
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
@@ -129,7 +129,7 @@ public class BankControllerTest extends RestDocsSupport {
         // given
         UserAccountRequestServiceDTO userAccountRequestServiceDTO = UserAccountRequestServiceDTO.builder()
                 .apiKey("82d37624494f4092bf96d5f4dbb634c4")
-                .userEmail("mine702@naver.com")
+                .userId("mine702@naver.com")
                 .build();
 
         given(bankServiceAPI.getUserAccount(any(UserAccountRequestServiceDTO.class)))
@@ -137,7 +137,7 @@ public class BankControllerTest extends RestDocsSupport {
                         .code("succeed")
                         .payload(
                                 UserAccountResponseServicePayLoadDTO.builder()
-                                        .userEmail("mine702@naver.com")
+                                        .userId("mine702@naver.com")
                                         .userName("mine702")
                                         .institutionCode("001")
                                         .userKey("13cefdcf-494f-4092-bf96-d5f4dbb634c4")
@@ -150,7 +150,7 @@ public class BankControllerTest extends RestDocsSupport {
         // when
         // then
         mockMvc.perform(
-                        get("/bank/api/user/api/key/{userEmail}", userAccountRequestServiceDTO.getUserEmail())
+                        get("/bank/api/user/api/key/{userEmail}", userAccountRequestServiceDTO.getUserId())
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
@@ -187,7 +187,7 @@ public class BankControllerTest extends RestDocsSupport {
         // given
         UserAccountRequestServiceDTO userAccountRequestServiceDTO = UserAccountRequestServiceDTO.builder()
                 .apiKey("82d37624494f4092bf96d5f4dbb634c4")
-                .userEmail("mine702@naver.com")
+                .userId("mine702@naver.com")
                 .build();
 
         given(bankServiceAPI.getUserAccount(any(UserAccountRequestServiceDTO.class)))
@@ -195,7 +195,7 @@ public class BankControllerTest extends RestDocsSupport {
                         .code("succeed")
                         .payload(
                                 UserAccountResponseServicePayLoadDTO.builder()
-                                        .userEmail("mine702@naver.com")
+                                        .userId("mine702@naver.com")
                                         .userName("mine702")
                                         .institutionCode("001")
                                         .userKey("13cefdcf-494f-4092-bf96-d5f4dbb634c4")
@@ -258,7 +258,7 @@ public class BankControllerTest extends RestDocsSupport {
         // when
         // then
         mockMvc.perform(
-                        get("/bank/api/user/account/{userEmail}", userAccountRequestServiceDTO.getUserEmail())
+                        get("/bank/api/user/account/{userEmail}", userAccountRequestServiceDTO.getUserId())
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
@@ -313,7 +313,7 @@ public class BankControllerTest extends RestDocsSupport {
                         .code("succeed")
                         .payload(
                                 UserAccountResponseServicePayLoadDTO.builder()
-                                        .userEmail("mine702@naver.com")
+                                        .userId("mine702@naver.com")
                                         .userName("mine702")
                                         .institutionCode("001")
                                         .userKey("13cefdcf-494f-4092-bf96-d5f4dbb634c4")
