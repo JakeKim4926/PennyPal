@@ -10,8 +10,6 @@ type TeamTeamListItemProps = {
 };
 
 export function TeamTeamListItem({ name, head, leader, description }: TeamTeamListItemProps) {
-    const dispatch = useDispatch();
-
     return (
         <div className="teamTeamListItem">
             <div className="teamTeamListItem__info">
@@ -26,15 +24,23 @@ export function TeamTeamListItem({ name, head, leader, description }: TeamTeamLi
                 <div className="teamTeamListItem__info-desc">{description}</div>
             </div>
             <div className="teamTeamListItem__apply">
-                <button
-                    className="teamTeamListItem__apply-button button"
-                    onClick={() => {
-                        dispatch(openApplyModal({ value: '123' }));
-                    }}
-                >
-                    가입신청
-                </button>
+                <ApplyButton />
             </div>
         </div>
+    );
+}
+
+function ApplyButton() {
+    const dispatch = useDispatch();
+
+    return (
+        <button
+            className="teamTeamListItem__apply-button button"
+            onClick={() => {
+                dispatch(openApplyModal({ value: '123' }));
+            }}
+        >
+            가입신청
+        </button>
     );
 }

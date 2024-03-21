@@ -54,6 +54,7 @@ body{
     &:hover {
         box-shadow: 0 2px 2px $black;
         transform: translateY(1px);
+        cursor: pointer;
     }
     
     &:active {

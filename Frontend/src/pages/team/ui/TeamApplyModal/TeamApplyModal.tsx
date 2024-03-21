@@ -6,6 +6,7 @@ export function TeamApplyModal() {
             <div className="teamApplyModal">
                 <div className="teamApplyModal__top">
                     <div className="teamApplyModal__top-title">가입 신청하기</div>
+                    <button className="teamApplyModal__top-button"></button>
                 </div>
                 <div className="teamApplyModal__middle">
                     <div className="teamApplyModal__middle-content"></div>
