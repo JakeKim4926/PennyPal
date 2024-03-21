@@ -1,6 +1,7 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { openApplyModal } from '../../model/openApplyModal';
+import { createGroup } from '../../model/createGroup';
 
 type TeamTeamListItemProps = {
     name: string;
@@ -32,12 +33,23 @@ export function TeamTeamListItem({ name, head, leader, description }: TeamTeamLi
 
 function ApplyButton() {
     const dispatch = useDispatch();
+    const dto = {
+        teamName: '팀이름',
+        teamIsAutoConfirm: false,
+        teamLeaderId: 1,
+        teamInfo: '팀소개',
+    };
 
     return (
         <button
             className="teamTeamListItem__apply-button button"
-            onClick={() => {
-                dispatch(openApplyModal({ value: '123' }));
+            // onClick={() => {
+            //     dispatch(openApplyModal({ value: '123' }));
+            // }}
+            onClick={async () => {
+                const a = await createGroup(dto);
+                console.log(a);
+                console.log(process.env);
             }}
         >
             가입신청
