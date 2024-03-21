@@ -17,37 +17,37 @@ public class Category {
     Long categoryId;
 
     @Column(name = "category_shopping")
-    String categoryShopping;
+    Double categoryShopping;
 
     @Column(name = "category_culture")
-    String categoryCulture;
+    Double categoryCulture;
 
     @Column(name = "category_transportation")
-    String categoryTransportation;
+    Double categoryTransportation;
 
     @Column(name = "category_car")
-    String categoryCar;
+    Double categoryCar;
 
     @Column(name = "category_food")
-    String categoryFood;
+    Double categoryFood;
 
     @Column(name = "category_education")
-    String categoryEducation;
+    Double categoryEducation;
 
     @Column(name = "category_housing_communication")
-    String categoryHousingCommunication;
+    Double categoryHousingCommunication;
 
     @Column(name = "category_travel")
-    String categoryTravel;
+    Double categoryTravel;
 
     @Column(name = "category_medical")
-    String categoryMedical;
+    Double categoryMedical;
 
     @Column(name = "category_financial_insurance")
-    String categoryFinancialInsurance;
+    Double categoryFinancialInsurance;
 
     @Column(name = "category_others")
-    String categoryOthers;
+    Double categoryOthers;
 
     @OneToOne(mappedBy = "category")
     private Card card;

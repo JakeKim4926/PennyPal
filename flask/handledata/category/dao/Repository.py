@@ -3,13 +3,20 @@ import pandas as pd
 import os
 from dotenv import load_dotenv
 
-
 class Repository:
-    def __init__(self):
+    _instance = None
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+            cls._instance.initialize()
+        return cls._instance
+
+    def initialize(self):
         # .env 파일에서 환경 변수 로드
         load_dotenv()
 
-        # Access to mysql
+        # Access to dao
         self.mydb = mysql.connector.connect(
             host=os.getenv("MYSQL_DATASOURCE_ADDRESS"),
             user=os.getenv("MYSQL_DATASOURCE_USERNAME"),
@@ -21,20 +28,20 @@ class Repository:
         self.file_path = '../../../static/data/result/'
 
         try:
-            self.category_csv = pd.read_csv(self.file_path + 'sample.csv')
+            self.category_csv = pd.read_csv(self.file_path + 'final_card_data.csv')
         except FileNotFoundError:
             print("파일의 경로를 확인해주세요")
 
         # insertQuery
-        self.insert_category_queries = []
-        self.insert_card_queries = []
+        self.insert_queries = []
         # 커서 생성
         self.my_cursor = self.mydb.cursor()
 
     def create_insert_category_query(self):
 
-        for _, row in self.category_csv.iterrows():
-            category_values = ", ".join(map(str, row[self.category_csv.columns[10:]]))
+        for index, row in self.category_csv.iterrows():
+
+            category_values = ", ".join(map(lambda x: str(float(x)), row[self.category_csv.columns[10:]]))
             query = f"""
                 INSERT INTO category (
                     category_shopping,
@@ -52,7 +59,9 @@ class Repository:
                     {category_values}
                 );
             """
-            self.insert_category_queries.append(query)
+            self.insert_queries.append(query)
+
+        self.insert_execute()
 
     def create_insert_card_query(self):
         for index, row in self.category_csv.iterrows():
@@ -91,33 +100,33 @@ class Repository:
                     {int(row['card_required'])},
                     {int(row['card_domestic'])},
                     {int(row['card_abroad'])},
-                    {category_id}  -- 외래키 category_id 값
+                    {category_id}
                 );
             """
-            self.insert_card_queries.append(query)
+            self.insert_queries.append(query)
+            if (index + 1) % 300 == 0 or len(self.category_csv) - 1:
+                self.insert_execute()
 
-    def select_execute(self,query):
+    def select_execute(self, query):
         self.my_cursor.execute(query)
-        print("비어있어용")
 
         result = self.my_cursor.fetchall()
         if not result:
             print("결과가 비어있습니다.")
             return False
 
-        for x in result:
-            print(x)
+        return result
 
-        return True
+    def insert_execute(self):
+        for query in self.insert_queries:
+            try:
+                self.my_cursor.execute(query)
+            except Exception as e:
+                print(f"Error occurred while executing query: {query}")
+                print(f"Error details: {str(e)}")
+            # else:
+            #     print("Query executed successfully.")
 
-
-if __name__ == '__main__':
-    sql = Repository()
-
-    sql.select_card()
-
-    # sql.create_insert_category_query()
-    # sql.select_category()
-
-    # sql.create_insert_card_query()
-    # sql.select_card()
+        self.mydb.commit()
+        self.insert_queries = []
+        print('Insert - query executed successfully.')
