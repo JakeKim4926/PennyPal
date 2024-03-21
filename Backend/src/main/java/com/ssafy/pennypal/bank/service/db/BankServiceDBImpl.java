@@ -21,7 +21,8 @@ public class BankServiceDBImpl implements IBankServiceDB {
     @Override
     @Transactional
     public void InsertUserKey(UserApiKeyRequestDTO userApiKeyRequestDTO) {
-        Member member = memberRepository.findByMemberEmail(userApiKeyRequestDTO.getUserEmail());
+        log.info("userApiKeyRequestDTO = {}", userApiKeyRequestDTO);
+        Member member = memberRepository.findByMemberEmail(userApiKeyRequestDTO.getUserId());
         member.setMemberBankApi(userApiKeyRequestDTO.getUserKey());
     }
 }

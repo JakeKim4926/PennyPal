@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserAccountResponseServicePayLoadDTO {
 
-    private String userEmail;
+    private String userId;
     private String userName;
     private String institutionCode;
     private String userKey;
@@ -15,8 +15,8 @@ public class UserAccountResponseServicePayLoadDTO {
     private String modified;
 
     @Builder
-    public UserAccountResponseServicePayLoadDTO(String userEmail, String userName, String institutionCode, String userKey, String created, String modified) {
-        this.userEmail = userEmail;
+    public UserAccountResponseServicePayLoadDTO(String userId, String userName, String institutionCode, String userKey, String created, String modified) {
+        this.userId = userId;
         this.userName = userName;
         this.institutionCode = institutionCode;
         this.userKey = userKey;
