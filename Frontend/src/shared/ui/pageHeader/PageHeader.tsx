@@ -20,6 +20,11 @@ export function PageHeader({ page }: PageHeaderProps) {
             description: '함께할 팀을 찾아보아요.',
         },
 
+        teamInfo: {
+            title: 'TEAM',
+            description: '내가 소속된 팀의 정보입니다.',
+        },
+
         finance: {
             title: 'FINANCE',
             description: '소비도, 투자도, 저축도 현명하게.',
@@ -51,7 +56,7 @@ export function PageHeader({ page }: PageHeaderProps) {
             <div>
                 <img src={`assets/image/${page}.svg`} width={150} />
             </div>
-            <div className="pageHeader__title">{items[page].title}</div>
+            <div className="pageHeader__title">{[...items[page].title].join(' ')}</div>
             <div className="pageHeader__description">{items[page].description}</div>
         </div>
     );
