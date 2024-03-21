@@ -99,6 +99,7 @@ public class TeamService {
             }else{
                 // 수동 승인이라면 대기 리스트에 추가하고 예외 던져주기
                 team.getWaitingList().add(member);
+                member.setWaitingTeam(team);
                 throw new IllegalArgumentException("가입 요청이 완료되었습니다.");
             }
 

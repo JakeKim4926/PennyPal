@@ -88,4 +88,8 @@ public class Member extends BaseEntity {
     public void setTeam(Team team) {
         this.team = team;
     }
+
+    public void setWaitingTeam(Team waitingTeam) {
+        this.waitingTeam = waitingTeam;
+    }
 }

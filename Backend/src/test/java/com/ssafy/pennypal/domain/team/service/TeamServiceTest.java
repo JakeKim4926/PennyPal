@@ -190,10 +190,10 @@ class TeamServiceTest {
 
     }
 
-    // todo : assertThat 부분 확실하게 만들기
+    // todo : assertThat 닉네임 검색 완성하기
     @DisplayName("팀의 가입 승인 방식이 자동이라면 바로 가입되며, 해당 팀의 구성원은 1명 늘어난다.")
     @Test
-    void TeamIsAutoConfirm(){
+    void TeamIsAutoConfirmTrue(){
         // given
         Member member1 = createMember("member1@pennypal.site", "짠1", LocalDateTime.now());
         Member member2 = createMember("member2@pennypal.site", "짠2", LocalDateTime.now());
@@ -218,15 +218,28 @@ class TeamServiceTest {
 //                .containsExactlyInAnyOrder("짠1", "짠2");
     }
 
-    // todo
     @DisplayName("팀의 가입 승인 방식이 자동이 아니라면 팀의 가입 대기 리스트에 유저 정보가 들어가고, 예외가 발생한다.")
     @Test
-    void test(){
+    void TeamIsAutoConfirmFalse(){
         // given
+        Member member1 = createMember("member1@pennypal.site", "짠1", LocalDateTime.now());
+        Member member2 = createMember("member2@pennypal.site", "짠2", LocalDateTime.now());
+        memberRepository.saveAll(List.of(member1, member2));
 
-        // when
+        TeamCreateServiceRequest createRequest = createServiceRequest("팀이름1", false, member1.getMemberId(),"팀소개");
+        TeamCreateResponse savedTeam = teamService.createTeam(createRequest);
 
-        // then
+        Team findedTeam = teamRepository.findByTeamName(savedTeam.getTeamName());
+
+        TeamJoinServiceRequest joinRequest = joinServiceRequest(findedTeam.getTeamId(), member2.getMemberId());
+
+        // when, then
+        assertThatThrownBy(() -> teamService.joinTeam(joinRequest))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("가입 요청이 완료되었습니다.");
+        assertThat(findedTeam.getWaitingList()).hasSize(1);
+        assertThat(findedTeam.getWaitingList().get(0).getMemberId()).isEqualTo(member2.getMemberId());
+        assertThat(member2.getWaitingTeam().getTeamId()).isEqualTo(findedTeam.getTeamId());
 
     }
 
