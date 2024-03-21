@@ -1,0 +1,9 @@
+[[get-account-transfer]]
+==== HTTP Request
+
+include::{snippets}/get-account-transfer/http-request.adoc[]
+include::{snippets}/get-account-transfer/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/get-account-transfer/http-response.adoc[]

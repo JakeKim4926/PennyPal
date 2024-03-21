@@ -17,3 +17,11 @@ include::api/getBankAccountTransaction.adoc[]
 === 사용자 주식(증권) 계좌 발급
 
 include::api/getBankStockAccount.adoc[]
+
+=== 사용자 계좌 이체
+
+include::api/getAccountTransfer.adoc[]
+
+=== 주식 구매
+
+include::api/getAccountDrawingTransfer.adoc[]

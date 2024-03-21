@@ -143,6 +143,15 @@ public class BankServiceAPIImpl implements IBankServiceAPI {
         } catch (RestClientException e) {
             throw new UserApiKeyException("계좌가 존재 하지 않습니다", e);
         }
+    }
 
+    @Override
+    public void accountTransfer(AccountTransferServiceRequestDTO accountTransferServiceRequestDTO) {
+        String url = SSAFY_BANK_API_SERVER + "edu/account/accountTransfer";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<AccountTransferServiceRequestDTO> request = new HttpEntity<>(accountTransferServiceRequestDTO, headers);
+
+        restTemplate.postForObject(url, request, Object.class);
     }
 }

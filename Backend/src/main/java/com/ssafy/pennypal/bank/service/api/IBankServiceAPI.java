@@ -20,4 +20,6 @@ public interface IBankServiceAPI {
     void accountDeposit(AccountDepositServiceDTO accountDepositServiceDTO);
 
     void accountWithdrawal(DrawingTransferRequestServiceDTO drawingTransferRequestServiceDTO);
+
+    void accountTransfer(AccountTransferServiceRequestDTO accountTransferServiceRequestDTO);
 }
