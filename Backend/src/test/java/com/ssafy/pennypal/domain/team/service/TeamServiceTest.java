@@ -237,9 +237,59 @@ class TeamServiceTest {
         assertThatThrownBy(() -> teamService.joinTeam(joinRequest))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("가입 요청이 완료되었습니다.");
-        assertThat(findedTeam.getWaitingList()).hasSize(1);
-        assertThat(findedTeam.getWaitingList().get(0).getMemberId()).isEqualTo(member2.getMemberId());
-        assertThat(member2.getWaitingTeam().getTeamId()).isEqualTo(findedTeam.getTeamId());
+        assertThat(findedTeam.getTeamWaitingList()).hasSize(1);
+        assertThat(findedTeam.getTeamWaitingList().get(0).getMemberId()).isEqualTo(member2.getMemberId());
+        assertThat(member2.getMemberWaitingTeam().getTeamId()).isEqualTo(findedTeam.getTeamId());
+
+    }
+
+    // note : 작업 중
+//    @DisplayName("이번주 지출 총액이 지난주 지출 총액보다 크다면 절약 점수는 0이다.")
+//    @Test
+//    void getMembersExpenses(){
+//        // given
+//
+//        /**
+//         * 멤버, 팀 생성, 팀 가입
+//         */
+//        Member member1 = createMember2(1000.0, 23000.0, 5.0);
+//        Member member2 = createMember2(10000.0, 16000.0, 4.0);
+//        memberRepository.saveAll(List.of(member1, member2));
+//
+//        TeamCreateServiceRequest createRequest = createServiceRequest("팀이름1", true, member1.getMemberId(),"팀소개");
+//        TeamCreateResponse savedTeam = teamService.createTeam(createRequest);
+//
+//        Team findedTeam = teamRepository.findByTeamName(savedTeam.getTeamName());
+//        TeamJoinServiceRequest joinRequest = joinServiceRequest(findedTeam.getTeamId(), member2.getMemberId());
+//        teamService.joinTeam(joinRequest);
+//
+//        // when
+//        teamService.calculateTeamScore(findedTeam.getTeamId());
+//
+//        // then
+//        assertThat(findedTeam.getTeamScore()).isEqualTo(0);
+//
+//    }
+
+    @DisplayName("팀원이 4명 미만이라면 계산하지 않는다.")
+    @Test
+    void test(){
+        // given
+
+        // when
+
+        // then
+
+    }
+
+    @DisplayName("팀 점수가 같은 팀이 있다면 ....")
+    @Test
+    void test2(){
+        // given
+
+        // when
+
+        // then
 
     }
 
@@ -275,6 +325,14 @@ class TeamServiceTest {
         return TeamJoinServiceRequest.builder()
                 .teamId(teamId)
                 .memberId(memberId)
+                .build();
+    }
+
+    private Member createMember2(Double memberLastWeekTotalExpenses, Double memberThisWeekTotalExpenses, Double memberAttendance){
+        return Member.builder()
+                .memberLastWeekExpenses(memberLastWeekTotalExpenses)
+                .memberThisWeekExpenses(memberThisWeekTotalExpenses)
+                .memberAttendance(memberAttendance)
                 .build();
     }
 }

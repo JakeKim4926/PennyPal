@@ -19,7 +19,7 @@ class TeamTest {
         Member member2 = createMember("member2@pennypal.site", "짠2", LocalDateTime.now());
 
         // when
-        Team team1 = createTeam("팀이름1", true, member1.getMemberId(), "팀소개1", member1);
+        Team team1 = createTeam("팀이름1", true, member1.getMemberId(), "팀소개1");
 
         // then
         assertThat(team1.getTeamScore()).isEqualTo(0);
@@ -34,7 +34,7 @@ class TeamTest {
         Member member2 = createMember("member2@pennypal.site", "짠2", LocalDateTime.now());
 
         // when
-        Team team1 = createTeam("팀이름1", true, member1.getMemberId(), "팀소개1", member1);
+        Team team1 = createTeam("팀이름1", true, member1.getMemberId(), "팀소개1");
 
         // then
         assertThat(team1.getMembers().size()).isEqualTo(1);
@@ -58,7 +58,7 @@ class TeamTest {
     /**
      * createTeam method
      */
-    private Team createTeam(String teamName, Boolean teamIsAutoConfirm, Long teamLeaderId, String teamInfo, Member member){
+    private Team createTeam(String teamName, Boolean teamIsAutoConfirm, Long teamLeaderId, String teamInfo){
         return Team.builder()
                 .teamName(teamName)
                 .teamIsAutoConfirm(teamIsAutoConfirm)
