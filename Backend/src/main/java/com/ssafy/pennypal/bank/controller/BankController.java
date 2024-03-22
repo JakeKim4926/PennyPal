@@ -1,13 +1,15 @@
 package com.ssafy.pennypal.bank.controller;
 
+import com.ssafy.pennypal.bank.dto.controller.request.AccountDrawingTransferControllerDTO;
 import com.ssafy.pennypal.bank.dto.controller.request.AccountTransactionRequestDTO;
+import com.ssafy.pennypal.bank.dto.controller.request.AccountTransferRequestDTO;
 import com.ssafy.pennypal.bank.dto.controller.response.AccountTransactionResponseDTO;
 import com.ssafy.pennypal.bank.dto.controller.response.UserAccountResponseControllerDTO;
 import com.ssafy.pennypal.bank.dto.controller.response.UserAccountsResponseControllerDTO;
+import com.ssafy.pennypal.bank.dto.controller.response.UserCreateAccountControllerDTO;
 import com.ssafy.pennypal.bank.dto.dummy.DummyTransactionSummary;
 import com.ssafy.pennypal.bank.dto.service.common.CommonHeaderRequestDTO;
 import com.ssafy.pennypal.bank.dto.service.request.*;
-import com.ssafy.pennypal.bank.dto.service.response.UserBankAccountResponseServiceDTO;
 import com.ssafy.pennypal.bank.service.api.IBankServiceAPI;
 import com.ssafy.pennypal.bank.service.db.IBankServiceDB;
 import com.ssafy.pennypal.global.common.api.ApiResponse;
@@ -25,7 +27,7 @@ import java.util.stream.IntStream;
 
 @Slf4j
 @RestController
-@RequestMapping("bank/api")
+@RequestMapping("api/bank")
 @RequiredArgsConstructor
 public class BankController {
     private static final String SSAFY_BANK_API_KEY = System.getenv("SSAFY_BANK_API_KEY");
@@ -50,7 +52,7 @@ public class BankController {
         return null;
     }
 
-    @PostMapping("/user/api/key/{userEmail}")
+    @PostMapping("/user/key/{userEmail}")
     public ApiResponse<Object> createUserApiKey(@PathVariable String userEmail) {
 
         UserAccountRequestServiceDTO userAccountRequestServiceDTO = UserAccountRequestServiceDTO.builder()
@@ -80,7 +82,9 @@ public class BankController {
                 .accountTypeUniqueNo("001-1-81fe2deafd1943")
                 .build();
 
-        UserBankAccountResponseServiceDTO userBankAccount = bankServiceAPI.createUserBankAccount(userBankAccountRequestServiceDTO);
+        UserCreateAccountControllerDTO userBankAccount = UserCreateAccountControllerDTO.of(
+                bankServiceAPI.createUserBankAccount(userBankAccountRequestServiceDTO)
+        );
 
         CommonHeaderRequestDTO commonHeaderRequestDTO2 = CommonHeaderRequestDTO.builder()
                 .apiName("receivedTransferAccountNumber")
@@ -118,16 +122,9 @@ public class BankController {
         return ApiResponse.ok(userAccountResponseControllerDTO);
     }
 
-    @GetMapping("/user/api/key/{userEmail}")
+    @GetMapping("/user/key/{userEmail}")
     public ApiResponse<Object> getUserApiKey(@PathVariable String userEmail) {
-        UserAccountRequestServiceDTO userAccountRequestServiceDTO = UserAccountRequestServiceDTO.builder()
-                .apiKey(SSAFY_BANK_API_KEY)
-                .userId(userEmail)
-                .build();
-
-        UserAccountResponseControllerDTO userAccountResponseControllerDTO = UserAccountResponseControllerDTO.of(
-                bankServiceAPI.getUserAccount(userAccountRequestServiceDTO)
-        );
+        UserAccountResponseControllerDTO userAccountResponseControllerDTO = getUserBankApi(userEmail);
 
         return ApiResponse.ok(userAccountResponseControllerDTO);
     }
@@ -135,14 +132,7 @@ public class BankController {
     @GetMapping("/user/account/{userEmail}")
     public ApiResponse<Object> getAccountList(@PathVariable String userEmail) {
 
-        UserAccountRequestServiceDTO userAccountRequestServiceDTO = UserAccountRequestServiceDTO.builder()
-                .apiKey(SSAFY_BANK_API_KEY)
-                .userId(userEmail)
-                .build();
-
-        UserAccountResponseControllerDTO userAccountResponseControllerDTO = UserAccountResponseControllerDTO.of(
-                bankServiceAPI.getUserAccount(userAccountRequestServiceDTO)
-        );
+        UserAccountResponseControllerDTO userAccountResponseControllerDTO = getUserBankApi(userEmail);
 
         CommonHeaderRequestDTO commonHeaderRequestDTO = CommonHeaderRequestDTO.builder()
                 .apiName("inquireAccountList")
@@ -150,8 +140,12 @@ public class BankController {
                 .userKey(userAccountResponseControllerDTO.getUserKey())
                 .build();
 
+        GetUserAccountListServiceRequestDTO getUserAccountListServiceRequestDTO = GetUserAccountListServiceRequestDTO.builder()
+                .header(commonHeaderRequestDTO)
+                .build();
+
         UserAccountsResponseControllerDTO userAccountsResponseControllerDTO = UserAccountsResponseControllerDTO.of(
-                bankServiceAPI.getUserAccountList(commonHeaderRequestDTO)
+                bankServiceAPI.getUserAccountList(getUserAccountListServiceRequestDTO)
         );
 
         return ApiResponse.ok(userAccountsResponseControllerDTO);
@@ -163,14 +157,7 @@ public class BankController {
         if (validationResponse != null)
             return validationResponse;
 
-        UserAccountRequestServiceDTO userAccountRequestServiceDTO = UserAccountRequestServiceDTO.builder()
-                .apiKey(SSAFY_BANK_API_KEY)
-                .userId(requestDTO.getUserEmail())
-                .build();
-
-        UserAccountResponseControllerDTO userAccountResponseControllerDTO = UserAccountResponseControllerDTO.of(
-                bankServiceAPI.getUserAccount(userAccountRequestServiceDTO)
-        );
+        UserAccountResponseControllerDTO userAccountResponseControllerDTO = getUserBankApi(requestDTO.getUserEmail());
 
         CommonHeaderRequestDTO commonHeaderRequestDTO = CommonHeaderRequestDTO.builder()
                 .apiName("inquireAccountTransactionHistory")
@@ -198,14 +185,7 @@ public class BankController {
     @PostMapping("/user/stock/account/{userEmail}")
     public ApiResponse<Object> createStockAccount(@PathVariable String userEmail) {
 
-        UserAccountRequestServiceDTO userAccountRequestServiceDTO = UserAccountRequestServiceDTO.builder()
-                .apiKey(SSAFY_BANK_API_KEY)
-                .userId(userEmail)
-                .build();
-
-        UserAccountResponseControllerDTO userAccountResponseControllerDTO = UserAccountResponseControllerDTO.of(
-                bankServiceAPI.getUserAccount(userAccountRequestServiceDTO)
-        );
+        UserAccountResponseControllerDTO userAccountResponseControllerDTO = getUserBankApi(userEmail);
 
         CommonHeaderRequestDTO commonHeaderRequestDTO = CommonHeaderRequestDTO.builder()
                 .apiName("openAccount")
@@ -217,10 +197,77 @@ public class BankController {
                 .header(commonHeaderRequestDTO)
                 .accountTypeUniqueNo("004-1-74fe2deafd3277")
                 .build();
-        // 여기 수정 해야되 controller 에 넘기기 맞게 해더만 변경 하면 될듯
-        UserBankAccountResponseServiceDTO userBankAccount = bankServiceAPI.createUserBankAccount(userBankAccountRequestServiceDTO);
 
-        return ApiResponse.ok(userBankAccount);
+        UserCreateAccountControllerDTO userCreateAccountControllerDTO = UserCreateAccountControllerDTO.of(
+                bankServiceAPI.createUserBankAccount(userBankAccountRequestServiceDTO)
+        );
+
+        return ApiResponse.ok(userCreateAccountControllerDTO);
+    }
+
+    @PostMapping("/user/accountTransfer")
+    public ApiResponse<Object> accountTransfer(@RequestBody @Validated AccountTransferRequestDTO accountTransferRequestDTO, BindingResult result) {
+        ApiResponse<Object> validationResponse = getValidationErrorResponse(result);
+        if (validationResponse != null)
+            return validationResponse;
+
+        UserAccountResponseControllerDTO userAccountResponseControllerDTO = getUserBankApi(accountTransferRequestDTO.getUserEmail());
+
+        CommonHeaderRequestDTO accountTransfer = CommonHeaderRequestDTO.builder()
+                .apiName("accountTransfer")
+                .apiKey(SSAFY_BANK_API_KEY)
+                .userKey(userAccountResponseControllerDTO.getUserKey())
+                .build();
+
+        AccountTransferServiceRequestDTO accountTransferServiceRequestDTO = AccountTransferServiceRequestDTO.builder()
+                .header(accountTransfer)
+                .depositBankCode(accountTransferRequestDTO.getDepositBankCode())
+                .depositAccountNo(accountTransferRequestDTO.getDepositAccountNo())
+                .depositTransactionSummary(accountTransferRequestDTO.getDepositTransactionSummary())
+                .transactionBalance(accountTransferRequestDTO.getTransactionBalance())
+                .withdrawalBankCode(accountTransferRequestDTO.getWithdrawalBankCode())
+                .withdrawalAccountNo(accountTransferRequestDTO.getWithdrawalAccountNo())
+                .withdrawalTransactionSummary(accountTransferRequestDTO.getWithdrawalTransactionSummary())
+                .build();
+
+        bankServiceAPI.accountTransfer(accountTransferServiceRequestDTO);
+
+        return ApiResponse.ok(null);
+    }
+
+    @PostMapping("user/drawingTransfer")
+    private ApiResponse<Object> AccountDrawingTransfer(@RequestBody @Validated AccountDrawingTransferControllerDTO accountDrawingTransferControllerDTO) {
+        UserAccountResponseControllerDTO userAccountResponseControllerDTO = getUserBankApi(accountDrawingTransferControllerDTO.getUserEmail());
+
+        CommonHeaderRequestDTO commonHeaderRequestDTO = CommonHeaderRequestDTO.builder()
+                .apiName("drawingTransfer")
+                .apiKey(SSAFY_BANK_API_KEY)
+                .userKey(userAccountResponseControllerDTO.getUserKey())
+                .build();
+
+        DrawingTransferRequestServiceDTO drawingTransferRequestServiceDTO = DrawingTransferRequestServiceDTO.builder()
+                .header(commonHeaderRequestDTO)
+                .bankCode(accountDrawingTransferControllerDTO.getBankCode())
+                .accountNo(accountDrawingTransferControllerDTO.getAccountNo())
+                .transactionBalance(accountDrawingTransferControllerDTO.getTransactionBalance())
+                .transactionSummary(accountDrawingTransferControllerDTO.getTransactionSummary())
+                .build();
+        
+        bankServiceAPI.accountWithdrawal(drawingTransferRequestServiceDTO);
+
+        return ApiResponse.ok(null);
+    }
+
+    //common method
+    private UserAccountResponseControllerDTO getUserBankApi(String userEmail) {
+        UserAccountRequestServiceDTO userAccountRequestServiceDTO = UserAccountRequestServiceDTO.builder()
+                .apiKey(SSAFY_BANK_API_KEY)
+                .userId(userEmail)
+                .build();
+
+        return UserAccountResponseControllerDTO.of(
+                bankServiceAPI.getUserAccount(userAccountRequestServiceDTO)
+        );
     }
 
     public String generateRandomAmount() {

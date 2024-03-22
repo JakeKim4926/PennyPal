@@ -1,5 +1,6 @@
 package com.ssafy.pennypal.bank.dto.service.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ssafy.pennypal.bank.dto.service.common.CommonHeaderRequestDTO;
 import lombok.*;
 
@@ -7,6 +8,8 @@ import lombok.*;
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AccountTransactionRequestServiceDTO {
+
+    @JsonProperty("Header")
     private CommonHeaderRequestDTO Header;
 
     private String bankCode;

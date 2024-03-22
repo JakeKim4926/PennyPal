@@ -7,7 +7,6 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -42,9 +41,9 @@ public class Team extends BaseEntity {
     @Column(name = "team_info")
     private String teamInfo;                                   // 팀 한줄소개
 
-    @OneToMany(mappedBy = "waitingTeam", cascade = CascadeType.ALL)
-    @Column(name = "waiting_list")
-    private List<Member> waitingList = new ArrayList<>();      // 가입 승인 대기 리스트
+    @OneToMany(mappedBy = "memberWaitingTeam", cascade = CascadeType.ALL)
+    @Column(name = "team_waiting_list")
+    private List<Member> TeamWaitingList = new ArrayList<>();      // 가입 승인 대기 리스트
 
     @Builder
     private Team(String teamName, Boolean teamIsAutoConfirm, Long teamLeaderId, String teamInfo, Member member) {
@@ -56,7 +55,8 @@ public class Team extends BaseEntity {
         this.teamInfo = teamInfo;
     }
 
-
-
+    public void setTeamScore(Integer teamScore) {
+        this.teamScore = teamScore;
+    }
 }
 

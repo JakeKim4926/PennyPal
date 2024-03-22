@@ -1,0 +1,9 @@
+[[get-bank-stock-account]]
+==== HTTP Request
+
+include::{snippets}/get-bank-stock-account/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/get-bank-stock-account/http-response.adoc[]
+include::{snippets}/get-bank-stock-account/response-fields.adoc[]

@@ -10,5 +10,5 @@ import org.springframework.stereotype.Repository;
 public interface IOrderRepository extends JpaRepository<Order, Long> {
 
     // 사용자별 구매 내역 조회
-    Page<Order> findByMemberId(Long memberId, Pageable pageable);
+    Page<Order> findByMemberMemberId(Long memberId, Pageable pageable);
 }

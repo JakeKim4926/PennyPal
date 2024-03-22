@@ -1,5 +1,6 @@
 package com.ssafy.pennypal.bank.dto.service.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ssafy.pennypal.bank.dto.service.common.CommonHeaderResponseDTO;
 import lombok.*;
 
@@ -11,8 +12,10 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserBankAccountsResponseServiceDTO {
 
+    @JsonProperty("Header")
     private CommonHeaderResponseDTO Header;
 
+    @JsonProperty("REC")
     private List<UserAccountListResponseServiceDTO> REC = new ArrayList<>();
 
     @Builder

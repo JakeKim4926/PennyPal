@@ -13,8 +13,5 @@ public interface IProductRepository extends JpaRepository<Product, Long> {
     Page<Product> findByProductCategory(String category, Pageable pageable);
 
     // 상품명 또는 브랜드를 기준으로 검색
-//    Page<Product> findByProductNameContainingOrProductBrandContaining(String productName, String productBrand, Pageable pageable);
-//
-//    // 상품명과 카테고리를 기준으로 검색
-//    Page<Product> findByProductNameContainingAndProductCategory(String productName, String category, Pageable pageable);
+    Page<Product> findByProductNameContainingOrProductBrandContaining(String productName, String productBrand, Pageable pageable);
 }
