@@ -102,72 +102,78 @@ export function SignUpForm() {
             <div>
                 <p>E-mail</p>
                 <div className="input-container">
+                    <img src="assets/image/icons_mini/Email.svg" />
                     <input type="text" placeholder="이메일" onChange={(e) => handleChange(e, 'email')} />
-                    {emailValid === true ? (
-                        <p>유효한 이메일입니다.</p>
-                    ) : emailValid === false ? (
-                        <p>유효하지 않은 이메일입니다.</p>
-                    ) : null}
                 </div>
+                {emailValid === true ? (
+                    <p>유효한 이메일입니다.</p>
+                ) : emailValid === false ? (
+                    <p>유효하지 않은 이메일입니다.</p>
+                ) : null}
             </div>
             <div>
                 <p>Password</p>
                 <div className="input-container">
+                    <img src="assets/image/icons_mini/password.svg" />
                     <input type="password" placeholder="패스워드" onChange={(e) => handleChange(e, 'password')} />
-                    {passwordValid === true ? (
-                        <p>유효한 패스워드입니다.</p>
-                    ) : passwordValid === false ? (
-                        <p>유효하지 않은 패스워드입니다.</p>
-                    ) : null}
                 </div>
+                {passwordValid === true ? (
+                    <p>유효한 패스워드입니다.</p>
+                ) : passwordValid === false ? (
+                    <p>유효하지 않은 패스워드입니다.</p>
+                ) : null}
             </div>
             <div>
                 <p>Password Check</p>
                 <div className="input-container">
+                    <img src="assets/image/icons_mini/password.svg" />
                     <input
                         type="password"
                         placeholder="패스워드 확인"
                         onChange={(e) => handleChange(e, 'confirmPassword')}
                     />
-                    {confirmPasswordValid === true ? (
-                        <p>패스워드가 일치합니다.</p>
-                    ) : confirmPasswordValid === false ? (
-                        <p>패스워드가 일치하지 않습니다.</p>
-                    ) : null}
                 </div>
+                {confirmPasswordValid === true ? (
+                    <p>패스워드가 일치합니다.</p>
+                ) : confirmPasswordValid === false ? (
+                    <p>패스워드가 일치하지 않습니다.</p>
+                ) : null}
             </div>
             <div>
                 <p>Name</p>
                 <div className="input-container">
+                    <img src="assets/image/icons_mini/User.svg" />
                     <input type="text" placeholder="이름" onChange={(e) => handleChange(e, 'name')} />
-                    {nameValid === true ? (
-                        <p>유효한 이름입니다.</p>
-                    ) : nameValid === false ? (
-                        <p>유효하지 않은 이름입니다.</p>
-                    ) : null}
                 </div>
+                {nameValid === true ? (
+                    <p>유효한 이름입니다.</p>
+                ) : nameValid === false ? (
+                    <p>유효하지 않은 이름입니다.</p>
+                ) : null}
             </div>
             <div>
                 <p>Birthdate</p>
                 <div className="input-container">
+                    <img src="assets/image/icons_mini/BirthDate.svg" />
                     <input type="text" placeholder="생일" onChange={(e) => handleChange(e, 'birthday')} />
-                    {birthdayValid === true ? (
-                        <p>유효한 생일입니다.</p>
-                    ) : birthdayValid === false ? (
-                        <p>유효하지 않은 생일입니다.</p>
-                    ) : null}
                 </div>
+                {birthdayValid === true ? (
+                    <p>유효한 생일입니다.</p>
+                ) : birthdayValid === false ? (
+                    <p>유효하지 않은 생일입니다.</p>
+                ) : null}
             </div>
             <div>
                 <p>Nickname</p>
                 <div className="input-container">
+                    <img src="assets/image/icons_mini/Name.svg" />
                     <input type="text" placeholder="닉네임" onChange={(e) => handleChange(e, 'nickName')} />
-                    {nickNameValid === true ? (
-                        <p>유효한 닉네임입니다.</p>
-                    ) : nickNameValid === false ? (
-                        <p>유효하지 않은 닉네임입니다.</p>
-                    ) : null}
                 </div>
+                {nickNameValid === true ? (
+                    <p>유효한 닉네임입니다.</p>
+                ) : nickNameValid === false ? (
+                    <p>유효하지 않은 닉네임입니다.</p>
+                ) : null}
             </div>
             <div className="nextButton">
                 <Button child={'NEXT'} color={'light'} onClick={handleNext} />
