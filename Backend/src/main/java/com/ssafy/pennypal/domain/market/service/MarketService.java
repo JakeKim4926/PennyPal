@@ -1,9 +1,14 @@
 package com.ssafy.pennypal.domain.market.service;
 
-import com.ssafy.pennypal.domain.market.dto.OrderDTO;
-import com.ssafy.pennypal.domain.market.dto.ProductDTO;
+import com.ssafy.pennypal.domain.market.dto.request.OrderRequestDTO;
+import com.ssafy.pennypal.domain.market.dto.response.OrderResponseDTO;
+import com.ssafy.pennypal.domain.market.dto.response.ProductResponseDTO;
+import com.ssafy.pennypal.domain.market.entity.Order;
+import com.ssafy.pennypal.domain.market.entity.Product;
 import com.ssafy.pennypal.domain.market.repository.IOrderRepository;
 import com.ssafy.pennypal.domain.market.repository.IProductRepository;
+import com.ssafy.pennypal.domain.member.entity.Member;
+import com.ssafy.pennypal.domain.member.repository.IMemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,31 +22,60 @@ public class MarketService {
 
     private final IProductRepository productRepository;
     private final IOrderRepository orderRepository;
+    private final IMemberRepository memberRepository;
 
-    public Page<ProductDTO> listAllProducts(Pageable pageable) {
-        return productRepository.findAll(pageable).map(ProductDTO::new);
+    // 전체 상품 조회
+    public Page<ProductResponseDTO> listAllProducts(Pageable pageable) {
+        return productRepository.findAll(pageable).map(ProductResponseDTO::new);
     }
 
-    public Page<ProductDTO> listProductsByCategory(String category, Pageable pageable) {
-        return productRepository.findByProductCategory(category, pageable).map(ProductDTO::new);
+    // 카테고리별 조회
+    public Page<ProductResponseDTO> listProductsByCategory(String category, Pageable pageable) {
+        return productRepository.findByProductCategory(category, pageable).map(ProductResponseDTO::new);
     }
 
-//    public Page<ProductDTO> searchProducts(String keyword, String category, Pageable pageable) {
-//        if (category != null && !category.isEmpty()) {
-//            return productRepository.findByProductNameContainingAndProductCategory(keyword, category, pageable).map(ProductDTO::new);
-//        } else {
-//            return productRepository.findByProductNameContainingOrProductBrandContaining(keyword, keyword, pageable).map(ProductDTO::new);
-//        }
-//    }
+    // 상품 검색
+    public Page<ProductResponseDTO> searchProducts(String keyword, String category, Pageable pageable) {
+        return productRepository.findByProductNameContainingOrProductBrandContaining(keyword, keyword, pageable).map(ProductResponseDTO::new);
+    }
 
+    // 상품 상세 조회
+    public ProductResponseDTO getProductDetails(Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("Product not found"));
+        return new ProductResponseDTO(product);
+    }
+
+
+    // 상품 구매
     @Transactional
-    public String purchaseProduct(OrderDTO orderRequest) {
-        // 상품 조회, 재고 확인, 주문 생성 등 구현 필요
-        // 예시 코드이므로 실제 구현에는 주문 로직이 포함되어야 함
-        return "Order processed";
+    public void createOrder(OrderRequestDTO orderRequest) {
+        // 사용자 확인
+        Member member = memberRepository.findById(orderRequest.getMember().getMemberId())
+                .orElseThrow(() -> new IllegalArgumentException("Member not found"));
+        // 상품 확인
+        Product product = productRepository.findById(orderRequest.getProduct().getProductId())
+                .orElseThrow(() -> new IllegalArgumentException("Product not found"));
+
+        // 주문 총액 계산
+        Integer priceSum = product.getProductPrice() * orderRequest.getBuyQuantity();
+
+        // 사용자의 보유 포인트 확인
+        if (member.getMemberPoint() < priceSum)
+            throw new IllegalArgumentException("Not enough points");
+        else {
+            // 포인트 차감
+            member.setMemberPoint(member.getMemberPoint() - priceSum);
+
+            // 주문 생성 및 저장
+            Order order = orderRequest.createOrder(member, product);
+            orderRepository.save(order);
+        }
     }
 
-    public Page<OrderDTO> listOrders(Pageable pageable) {
-        return orderRepository.findAll(pageable).map(OrderDTO::new);
+    // 사용자 구매 내역 조회
+    public Page<OrderResponseDTO> listOrdersByMemberId(Long memberId, Pageable pageable) {
+        Page<Order> orders = orderRepository.findByMemberMemberId(memberId, pageable);
+        return orders.map(OrderResponseDTO::new);
     }
 }
