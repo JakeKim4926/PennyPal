@@ -37,6 +37,7 @@ public class Member extends BaseEntity {
     private LocalDateTime memberBirthDate;                      // 사용자 생일 YYYY-MM-DD (1995-12-06)
 
     // 사용자 보상 포인트
+    @Setter
     @Column(name = "member_point")
     private Integer memberPoint;                                // 사용자 포인트
 
@@ -53,7 +54,7 @@ public class Member extends BaseEntity {
     @OneToMany(
             fetch = FetchType.LAZY,
             cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REMOVE},
-            mappedBy = "memberId" // Correct mappedBy to refer to the property in OrderInfo
+            mappedBy = "member" // Correct mappedBy to refer to the property in OrderInfo
     )
     private List<Order> orders = new ArrayList<>();              // 주문목록 조회
     // 나중에 또 수정
