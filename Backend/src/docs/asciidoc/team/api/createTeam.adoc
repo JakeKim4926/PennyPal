@@ -1,0 +1,10 @@
+[[create-team]]
+==== HTTP Request
+
+include::{snippets}/create-team/http-request.adoc[]
+include::{snippets}/create-team/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/create-team/http-response.adoc[]
+include::{snippets}/create-team/response-fields.adoc[]

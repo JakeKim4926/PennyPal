@@ -1,0 +1,36 @@
+@import '@/style/abstract/variables';
+
+.header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 50%;
+    height: $HEADER_HEIGHT;
+
+    &__container{
+        width: 100%;
+        min-width: $BODY_MIN_WIDTH;
+        display: flex;
+        justify-content: center;
+        background-color: $bright;
+        position: fixed;
+        top: 0;
+        z-index: 1;
+    }
+
+    &__menubar{
+        display: flex;
+        gap: 40px;
+        align-items: center;
+    }
+
+    &__logo{
+        img{
+            width: 180px;
+        }
+    }
+
+    
+}
+
+

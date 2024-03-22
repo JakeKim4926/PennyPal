@@ -12,3 +12,11 @@ endif::[]
 [[Product-API]]
 == Product API
 
+<<<<<<< HEAD
+include::bank/bank.adoc[]
+
+== Team API
+
+include::team/team.adoc[]
+=======
+>>>>>>> 4eb97082de348a0696b880410be112211b711ff2
