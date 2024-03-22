@@ -1,0 +1,35 @@
+@import '@/style/abstract/fonts';
+
+
+.teamInfoMemberItem {
+    box-shadow: 0 3px 3px $gray;
+    width: 300px;
+    border-radius: 10px;
+    padding: 10px;
+
+    &__top {
+        font-size: 25px;
+    }
+
+    &__bottom {
+        
+        &-spend {
+            text-align: end;
+
+            .spend {
+                font-size: 40px;
+                font-family: 'Digit';
+                
+                &-prev {
+                    color: $line;
+                }
+
+            }
+            .unit {
+                font-size: 25px;
+            }
+        }
+
+    }
+
+}

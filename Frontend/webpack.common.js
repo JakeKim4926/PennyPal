@@ -1,20 +1,22 @@
-const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
+const path = require('path');
+const webpack = require('webpack');
+const dotenv = require('dotenv');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+dotenv.config();
 
 module.exports = () => {
-    const isDevMod = process.env.NODE_ENV === "dev";
-
     return {
-        entry: "./src/index.tsx",
+        entry: './src/main.tsx',
         output: {
-            filename: "bundle.js",
-            path: path.resolve(__dirname, "dist"),
+            filename: 'bundle.js',
+            path: path.resolve(__dirname, 'dist'),
             clean: true,
         },
         resolve: {
-            extensions: [".ts", ".tsx", ".js", ".jsx"],
+            extensions: ['.ts', '.tsx', '.js', '.jsx'],
             alias: {
-                // 절대경로 설정
+                '@': path.resolve(__dirname, './src/'),
+                '#': path.resolve(__dirname, '/'),
             },
         },
 
@@ -24,32 +26,41 @@ module.exports = () => {
                 {
                     test: /\.(ts|tsx)$/,
                     use: {
-                        loader: "ts-loader",
+                        loader: 'ts-loader',
                         options: {
-                            configFile: path.resolve(
-                                __dirname,
-                                "tsconfig.json"
-                            ),
+                            configFile: path.resolve(__dirname, 'tsconfig.json'),
                         },
+                    },
+                },
+
+                // js loader
+                {
+                    test: /\.(js|jsx)$/,
+                    exclude: /node_modules/,
+                    use: {
+                        loader: 'babel-loader',
                     },
                 },
 
                 // css(scss) loader
                 {
                     test: /\.s[ac]ss$/,
-                    use: ["style-loader", "css-loader", "sass-loader"],
+                    use: ['style-loader', 'css-loader', 'sass-loader'],
                 },
 
                 // asset loader
                 {
                     test: /\.(png|svg|jpg|jpeg|gif)$/i,
-                    type: "asset/resource",
+                    type: 'asset/resource',
                 },
             ],
         },
         plugins: [
             new HtmlWebpackPlugin({
-                template: "public/index.html",
+                template: 'public/index.html',
+            }),
+            new webpack.DefinePlugin({
+                'process.env': JSON.stringify(process.env),
             }),
         ],
     };
