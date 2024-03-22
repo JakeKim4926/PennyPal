@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const dotenv = require('dotenv');
+const CopyPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 dotenv.config();
 
@@ -19,7 +20,6 @@ module.exports = () => {
                 '#': path.resolve(__dirname, '/'),
             },
         },
-
         module: {
             rules: [
                 //ts loader
@@ -62,6 +62,7 @@ module.exports = () => {
             new webpack.DefinePlugin({
                 'process.env': JSON.stringify(process.env),
             }),
+            new CopyPlugin({ patterns: [{ from: 'public/assets', to: 'assets/' }] }),
         ],
     };
 };
