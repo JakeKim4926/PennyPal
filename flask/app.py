@@ -15,6 +15,10 @@ def recommend_card():
         error_message = "[Error] can't connect mysql or error happened during extract recommendation: {}".format(e)
         return jsonify({"error": error_message}), 500
 
+@app.route("/")
+def default_message():
+    return "Success to load flask"
+
 if __name__ == '__main__':
     app.run()
 
