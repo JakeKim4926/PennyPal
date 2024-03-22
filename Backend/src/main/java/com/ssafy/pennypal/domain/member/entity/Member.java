@@ -51,7 +51,6 @@ public class Member extends BaseEntity {
     @JoinColumn(name = "team_id")
     private Team team;                                          // 사용자가 참여한 팀
 
-
     @OneToMany(
             fetch = FetchType.LAZY,
             cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REMOVE},
