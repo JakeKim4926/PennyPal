@@ -5,31 +5,37 @@ import com.ssafy.pennypal.domain.team.entity.Team;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.List;
+
 @Getter
 public class TeamCreateResponse {
 
-    private String teamName;                                    // 팀 이름
+    private String teamName;
 
-    private Boolean teamIsAutoConfirm;                          // 자동 가입 승인 여부 (true = 자동 / false = 수동)
+    private String teamInfo;
 
-    private Long teamLeaderId;                                  // 팀장 Id
+    private Integer teamScore;
 
-    private String teamInfo;                                    // 팀 한줄소개
+    private Long teamLeaderId;
+
+    private List<TeamMemberDetailResponse> members;
 
     @Builder
-    private TeamCreateResponse(String teamName, Boolean teamIsAutoConfirm, Long teamLeaderId, String teamInfo) {
+    public TeamCreateResponse(String teamName, String teamInfo, Integer teamScore, Long teamLeaderId, List<TeamMemberDetailResponse> members) {
         this.teamName = teamName;
-        this.teamIsAutoConfirm = teamIsAutoConfirm;
-        this.teamLeaderId = teamLeaderId;
         this.teamInfo = teamInfo;
+        this.teamScore = teamScore;
+        this.teamLeaderId = teamLeaderId;
+        this.members = members;
     }
 
-    public static TeamCreateResponse of(Team team){
+    public static TeamCreateResponse of(Team team, List<TeamMemberDetailResponse> memberDetails){
         return TeamCreateResponse.builder()
                 .teamName(team.getTeamName())
-                .teamIsAutoConfirm(team.getTeamIsAutoConfirm())
-                .teamLeaderId(team.getTeamLeaderId())
                 .teamInfo(team.getTeamInfo())
+                .teamScore(team.getTeamScore())
+                .teamLeaderId(team.getTeamLeaderId())
+                .members(memberDetails)
                 .build();
 
     }

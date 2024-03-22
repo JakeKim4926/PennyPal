@@ -3,6 +3,7 @@ package com.ssafy.pennypal.domain.team.service;
 import com.ssafy.pennypal.domain.member.entity.Member;
 import com.ssafy.pennypal.domain.member.repository.IMemberRepository;
 import com.ssafy.pennypal.domain.team.dto.request.TeamCreateServiceRequest;
+import com.ssafy.pennypal.domain.team.dto.request.TeamJoinServiceRequest;
 import com.ssafy.pennypal.domain.team.dto.response.TeamCreateResponse;
 import com.ssafy.pennypal.domain.team.dto.response.TeamJoinResponse;
 import com.ssafy.pennypal.domain.team.entity.Team;
@@ -133,8 +134,10 @@ class TeamServiceTest {
             member.setTeam(savedTeam);
         }
 
+        TeamJoinServiceRequest joinRequest = joinServiceRequest(savedTeam.getTeamId(), members.get(6).getMemberId());
+
         // when, then
-        assertThatThrownBy(() -> teamService.joinTeam(savedTeam.getTeamId(), members.get(6).getMemberId()))
+        assertThatThrownBy(() -> teamService.joinTeam(joinRequest))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("팀 인원이 가득 찼습니다.");
 
@@ -152,8 +155,11 @@ class TeamServiceTest {
 
         team.getMembers().add(member);
 
+
+        TeamJoinServiceRequest joinRequest = joinServiceRequest(team.getTeamId(), member.getMemberId());
+
         // when, then
-        assertThatThrownBy(() -> teamService.joinTeam(team.getTeamId(), member.getMemberId()))
+        assertThatThrownBy(() -> teamService.joinTeam(joinRequest))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("이미 가입한 팀입니다.");
     }
@@ -175,38 +181,117 @@ class TeamServiceTest {
         team1.getMembers().add(member3);
         member3.setTeam(team1);
 
+        TeamJoinServiceRequest joinRequest = joinServiceRequest(team2.getTeamId(), member3.getMemberId());
+
         // when, then
-        assertThatThrownBy(() -> teamService.joinTeam(team2.getTeamId(), member3.getMemberId()))
+        assertThatThrownBy(() -> teamService.joinTeam(joinRequest))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("이미 가입된 팀이 있습니다.");
 
     }
 
-//    @DisplayName("팀의 가입 승인 방식이 자동이라면 바로 가입되며, 해당 팀의 구성원은 1명 늘어난다.")
+    // todo : assertThat 닉네임 검색 완성하기
+    @DisplayName("팀의 가입 승인 방식이 자동이라면 바로 가입되며, 해당 팀의 구성원은 1명 늘어난다.")
+    @Test
+    void TeamIsAutoConfirmTrue(){
+        // given
+        Member member1 = createMember("member1@pennypal.site", "짠1", LocalDateTime.now());
+        Member member2 = createMember("member2@pennypal.site", "짠2", LocalDateTime.now());
+        memberRepository.saveAll(List.of(member1, member2));
+
+        TeamCreateServiceRequest createRequest = createServiceRequest("팀이름1", true, member1.getMemberId(),"팀소개");
+        TeamCreateResponse savedTeam = teamService.createTeam(createRequest);
+
+        Team findedTeam = teamRepository.findByTeamName(savedTeam.getTeamName());
+
+        TeamJoinServiceRequest joinRequest = joinServiceRequest(findedTeam.getTeamId(), member2.getMemberId());
+
+        // when
+        TeamJoinResponse response = teamService.joinTeam(joinRequest);
+        Team updatedTeam = teamRepository.findByTeamName("팀이름1");
+
+        //then
+        assertThat(updatedTeam.getTeamName()).isEqualTo("팀이름1");
+        assertThat(updatedTeam.getMembers()).hasSize(2);
+//        assertThat(updatedTeam.getMembers())
+//                .extracting(Member::getMemberNickname)
+//                .containsExactlyInAnyOrder("짠1", "짠2");
+    }
+
+    @DisplayName("팀의 가입 승인 방식이 자동이 아니라면 팀의 가입 대기 리스트에 유저 정보가 들어가고, 예외가 발생한다.")
+    @Test
+    void TeamIsAutoConfirmFalse(){
+        // given
+        Member member1 = createMember("member1@pennypal.site", "짠1", LocalDateTime.now());
+        Member member2 = createMember("member2@pennypal.site", "짠2", LocalDateTime.now());
+        memberRepository.saveAll(List.of(member1, member2));
+
+        TeamCreateServiceRequest createRequest = createServiceRequest("팀이름1", false, member1.getMemberId(),"팀소개");
+        TeamCreateResponse savedTeam = teamService.createTeam(createRequest);
+
+        Team findedTeam = teamRepository.findByTeamName(savedTeam.getTeamName());
+
+        TeamJoinServiceRequest joinRequest = joinServiceRequest(findedTeam.getTeamId(), member2.getMemberId());
+
+        // when, then
+        assertThatThrownBy(() -> teamService.joinTeam(joinRequest))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("가입 요청이 완료되었습니다.");
+        assertThat(findedTeam.getTeamWaitingList()).hasSize(1);
+        assertThat(findedTeam.getTeamWaitingList().get(0).getMemberId()).isEqualTo(member2.getMemberId());
+        assertThat(member2.getMemberWaitingTeam().getTeamId()).isEqualTo(findedTeam.getTeamId());
+
+    }
+
+    // note : 작업 중
+//    @DisplayName("이번주 지출 총액이 지난주 지출 총액보다 크다면 절약 점수는 0이다.")
 //    @Test
-//    void TeamIsAutoConfirm(){
+//    void getMembersExpenses(){
 //        // given
-//        Member member1 = createMember("member1@pennypal.site", "짠1", LocalDateTime.now());
-//        Member member2 = createMember("member1@pennypal.site", "짠2", LocalDateTime.now());
+//
+//        /**
+//         * 멤버, 팀 생성, 팀 가입
+//         */
+//        Member member1 = createMember2(1000.0, 23000.0, 5.0);
+//        Member member2 = createMember2(10000.0, 16000.0, 4.0);
 //        memberRepository.saveAll(List.of(member1, member2));
 //
-//        Team team = createTeam("팀이름1", true, member1.getMemberId(), "팀소개1", member1);
-//        teamRepository.save(team);
+//        TeamCreateServiceRequest createRequest = createServiceRequest("팀이름1", true, member1.getMemberId(),"팀소개");
+//        TeamCreateResponse savedTeam = teamService.createTeam(createRequest);
 //
+//        Team findedTeam = teamRepository.findByTeamName(savedTeam.getTeamName());
+//        TeamJoinServiceRequest joinRequest = joinServiceRequest(findedTeam.getTeamId(), member2.getMemberId());
+//        teamService.joinTeam(joinRequest);
 //
 //        // when
-//        TeamJoinResponse response = teamService.joinTeam(team.getTeamId(), member2.getMemberId());
+//        teamService.calculateTeamScore(findedTeam.getTeamId());
 //
-//        //then
-//        assertThat(response.getTeamName()).isEqualTo("팀이름1");
-//        assertThat(response.getMembers()).hasSize(2)
-//                .extracting("memberNickname", "memberEmail")
-//                .containsExactlyInAnyOrder(
-//                        tuple("짠1", "member1@pennypal.site"),
-//                        tuple("짠2", "member2@pennypal.site")
-//                );
+//        // then
+//        assertThat(findedTeam.getTeamScore()).isEqualTo(0);
 //
 //    }
+
+    @DisplayName("팀원이 4명 미만이라면 계산하지 않는다.")
+    @Test
+    void test(){
+        // given
+
+        // when
+
+        // then
+
+    }
+
+    @DisplayName("팀 점수가 같은 팀이 있다면 ....")
+    @Test
+    void test2(){
+        // given
+
+        // when
+
+        // then
+
+    }
 
     private Member createMember(String memberEmail, String memberNickname, LocalDateTime memberBirthDate){
         return Member.builder()
@@ -236,4 +321,18 @@ class TeamServiceTest {
                 .build();
     }
 
+    private TeamJoinServiceRequest joinServiceRequest(Long teamId, Long memberId){
+        return TeamJoinServiceRequest.builder()
+                .teamId(teamId)
+                .memberId(memberId)
+                .build();
+    }
+
+    private Member createMember2(Double memberLastWeekTotalExpenses, Double memberThisWeekTotalExpenses, Double memberAttendance){
+        return Member.builder()
+                .memberLastWeekExpenses(memberLastWeekTotalExpenses)
+                .memberThisWeekExpenses(memberThisWeekTotalExpenses)
+                .memberAttendance(memberAttendance)
+                .build();
+    }
 }

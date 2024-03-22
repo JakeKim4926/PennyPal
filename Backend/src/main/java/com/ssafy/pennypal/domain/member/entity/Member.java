@@ -5,10 +5,7 @@ import com.ssafy.pennypal.domain.market.entity.Order;
 import com.ssafy.pennypal.domain.team.entity.Team;
 import com.ssafy.pennypal.global.common.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -66,12 +63,26 @@ public class Member extends BaseEntity {
     private String memberBankApi;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "waiting_team")
-    private Team waitingTeam;                                   // 사용자가 가입 요청한 팀
+    @JoinColumn(name = "team_waiting_list")
+    private Team memberWaitingTeam;                                   // 사용자가 가입 요청한 팀
+
+    @Column(name = "member_last_week_expenses")
+    private Double memberLastWeekExpenses;                           // 지난 주 지출 총액
+
+    @Column(name = "member_this_week_expenses")
+    private Double memberThisWeekExpenses;                            // 이번 주 지출 총액
+
+    @Column(name = "member_attendance")
+    private Double memberAttendance;                                 // 이번 주 출석 횟수
 
     @Builder
     @QueryProjection
-    public Member(String memberEmail, String memberPassword, String memberName, String memberNickname, LocalDateTime memberBirthDate, Integer memberPoint, String memberMostCategory, Team team, List<Order> orders, String memberBankApi) {
+    public Member(
+            String memberEmail, String memberPassword, String memberName, String memberNickname,
+            LocalDateTime memberBirthDate, Integer memberPoint, String memberMostCategory, Team team,
+            List<Order> orders, String memberBankApi, Team memberWaitingTeam, Double memberLastWeekExpenses,
+            Double memberThisWeekExpenses, Double memberAttendance
+    ) {
         this.memberEmail = memberEmail;
         this.memberPassword = memberPassword;
         this.memberName = memberName;
@@ -82,7 +93,12 @@ public class Member extends BaseEntity {
         this.team = team;
         this.orders = orders;
         this.memberBankApi = memberBankApi;
+        this.memberWaitingTeam = memberWaitingTeam;
+        this.memberLastWeekExpenses = memberLastWeekExpenses;
+        this.memberThisWeekExpenses = memberThisWeekExpenses;
+        this.memberAttendance = memberAttendance;
     }
+
 
     public void setMemberBankApi(String memberBankApi) {
         this.memberBankApi = memberBankApi;
@@ -90,5 +106,9 @@ public class Member extends BaseEntity {
 
     public void setTeam(Team team) {
         this.team = team;
+    }
+
+    public void setMemberWaitingTeam(Team waitingTeam) {
+        this.memberWaitingTeam = waitingTeam;
     }
 }
