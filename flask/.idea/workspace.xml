@@ -43,37 +43,37 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Flask server.Flask (app.py).executor": "Run",
-    "Python.CardService.executor": "Run",
-    "Python.DataMain.executor": "Run",
-    "Python.JsonToCsv.executor": "Run",
-    "Python.Repository (1).executor": "Run",
-    "Python.SaveCardCategory.executor": "Run",
-    "Python.SetCardCategory (1).executor": "Run",
-    "Python.SetCardCategory.executor": "Run",
-    "Python.Similarity.executor": "Run",
-    "Python.main.executor": "Run",
-    "Python.mysql.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "feature/BE-data",
-    "last_opened_file_path": "C:/S10P22B108/flask/handledata",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Flask server.Flask (app.py).executor&quot;: &quot;Run&quot;,
+    &quot;Python.CardService.executor&quot;: &quot;Run&quot;,
+    &quot;Python.DataMain.executor&quot;: &quot;Run&quot;,
+    &quot;Python.JsonToCsv.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Repository (1).executor&quot;: &quot;Run&quot;,
+    &quot;Python.SaveCardCategory.executor&quot;: &quot;Run&quot;,
+    &quot;Python.SetCardCategory (1).executor&quot;: &quot;Run&quot;,
+    &quot;Python.SetCardCategory.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Similarity.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;Python.mysql.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/BE-data&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/S10P22B108/flask/handledata&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "mysql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\S10P22B108\flask\handledata" />
@@ -89,7 +89,7 @@
       <recent name="C:\S10P22B108\flask\handledata\category\cardcategory" />
     </key>
   </component>
-  <component name="RunManager" selected="Flask server.Flask (app.py)">
+  <component name="RunManager" selected="Python.flaskProject">
     <configuration name="CardService" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="flaskProject" />
       <option name="ENV_FILES" value="" />
@@ -182,6 +182,29 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="flaskProject" type="PythonConfigurationType" factoryName="Python">
+      <module name="flaskProject" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/app.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="Flask (app.py)" type="Python.FlaskServer" temporary="true" nameIsGenerated="true">
       <module name="flaskProject" />
       <option name="target" value="$PROJECT_DIR$/app.py" />
@@ -217,6 +240,7 @@
     <list>
       <item itemvalue="Flask server.flaskProject" />
       <item itemvalue="Flask server.Flask (app.py)" />
+      <item itemvalue="Python.flaskProject" />
       <item itemvalue="Python.CardService" />
       <item itemvalue="Python.Similarity" />
       <item itemvalue="Python.Repository (1)" />
