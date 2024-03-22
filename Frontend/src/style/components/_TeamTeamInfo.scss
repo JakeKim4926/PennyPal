@@ -12,16 +12,27 @@
     flex-direction: column;
     gap: 10px;
 
-    div {
-        font-family: 'Esa-Bold';
+    &__title {
+        
+        &-text {
+            display: flex;
+            justify-content: space-between;
+            
+            &-button {
+                $padding: 3px;
+                letter-spacing: 3px;
+                padding-left: $padding + 4px;
+                padding-right: $padding;
+
+                color: $bright;
+                background-color: black;
+                border-radius: 5px;
+            }
+        }
     }
 
-    &__title {
-        &-text{
-            font-family: 'Wanted-ExtraBlack';
-            letter-spacing: 3px;
-            font-size: 12px;
-        }
+    div {
+        font-family: 'Esa-Bold';
     }
 
     &__top {

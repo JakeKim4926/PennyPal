@@ -9,9 +9,12 @@ export function TeamInformation() {
         pres: 400000,
     };
     return (
-        <div className="teamTeamInfo">
-            <div className="teamTeamInfo__title">
-                <div className="teamTeamInfo__title-text">TEAM INFO</div>
+        <div className="teamTeamInfo contentCard">
+            <div className="teamTeamInfo__title contentCard__title">
+                <div className="teamTeamInfo__title-text contentCard__title-text">
+                    <div>TEAM INFO</div>
+                    <button className="teamTeamInfo__title-text-button button">SETTING</button>
+                </div>
             </div>
             <div className="teamTeamInfo__top">
                 <div className="teamTeamInfo__top-name">
