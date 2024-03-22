@@ -1,7 +1,7 @@
 ifndef::snippets[]
 :snippets: ../../build/generated-snippets
 endif::[]
-= CafeKiosk REST API 문서
+= B108 REST API 문서
 :doctype: book
 :icons: font
 :source-highlighter: highlightjs
@@ -9,14 +9,11 @@ endif::[]
 :toclevels: 2
 :sectlinks:
 
-[[Product-API]]
-== Product API
+[[Bank-API]]
+== Bank API
 
-<<<<<<< HEAD
 include::bank/bank.adoc[]
 
 == Team API
 
 include::team/team.adoc[]
-=======
->>>>>>> 4eb97082de348a0696b880410be112211b711ff2

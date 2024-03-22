@@ -1,22 +1,11 @@
 package com.ssafy.pennypal.domain.member.entity;
 
-<<<<<<< HEAD
 import com.querydsl.core.annotations.QueryProjection;
 import com.ssafy.pennypal.domain.market.entity.Order;
 import com.ssafy.pennypal.domain.team.entity.Team;
 import com.ssafy.pennypal.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
-=======
-import com.ssafy.pennypal.domain.market.entity.OrderInfo;
-import com.ssafy.pennypal.domain.team.entity.Team;
-import com.ssafy.pennypal.global.common.BaseEntity;
-import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
->>>>>>> 4eb97082de348a0696b880410be112211b711ff2
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -25,7 +14,6 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class Member extends BaseEntity {
 
     @Id
@@ -63,6 +51,7 @@ public class Member extends BaseEntity {
     @JoinColumn(name = "team_id")
     private Team team;                                          // 사용자가 참여한 팀
 
+
     @OneToMany(
             fetch = FetchType.LAZY,
             cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REMOVE},
@@ -70,7 +59,6 @@ public class Member extends BaseEntity {
     )
     private List<Order> orders = new ArrayList<>();              // 주문목록 조회
     // 나중에 또 수정
-<<<<<<< HEAD
 
     //0319 김민건 수정 사용자 계정 생성
     @Column(name = "member_bank_api")
@@ -125,6 +113,4 @@ public class Member extends BaseEntity {
     public void setMemberWaitingTeam(Team waitingTeam) {
         this.memberWaitingTeam = waitingTeam;
     }
-=======
->>>>>>> 4eb97082de348a0696b880410be112211b711ff2
 }
