@@ -69,12 +69,8 @@
             gap: 10px;
             border: none;
             background-color: $dark;
-            padding: 5px;
-
-            &:hover {
-                cursor: pointer;
-            }
-
+            padding: 10px;
+            border-radius: 5px;
 
             &-abc {
                 fill: $bright;

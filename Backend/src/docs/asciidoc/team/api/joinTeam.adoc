@@ -1,0 +1,10 @@
+[[join-team]]
+==== HTTP Request
+
+include::{snippets}/join-team/http-request.adoc[]
+include::{snippets}/join-team/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/join-team/http-response.adoc[]
+include::{snippets}/join-team/response-fields.adoc[]

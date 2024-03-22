@@ -18,7 +18,7 @@ body{
 
 .container{
     margin-top: $HEADER_HEIGHT;   
-    overflow-y: scroll;
+    overflow-y: auto;
     height: calc(100vh - ($HEADER_HEIGHT + $NAV_HEIGHT));
     display: flex;
     flex-direction: column;
@@ -28,4 +28,37 @@ body{
 
 .background{
     position: fixed;
+}
+
+.modalContainer{
+    width: 100vw;
+    height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 2;
+    background-color: $modalbg;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.button {
+    box-shadow: 0 3px 2px $black;
+    transition-property: box-shadow, transform;
+    transition-duration: 0.1s;
+
+    &:hover {
+        box-shadow: 0 2px 2px $black;
+        transform: translateY(1px);
+        cursor: pointer;
+    }
+    
+    &:active {
+        box-shadow: 0 1px 1px $black;
+        transform: translateY(3px);
+    }
 }

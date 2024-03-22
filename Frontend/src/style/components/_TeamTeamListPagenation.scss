@@ -1,0 +1,37 @@
+
+.teamTeamListPagenation{
+    display: flex;
+    justify-content: center;
+
+    &__value {
+        display: flex;
+        gap: 10px;
+
+        button {
+            border: none;
+            background-color: transparent;
+            font-size: 20px;
+            font-family: 'Wanted-Medium';
+
+            &:hover {
+                cursor: pointer;
+            }
+        }
+
+        &-wrapper {
+            display: flex;
+            gap: 20px;
+
+            button {
+                color: $dark;
+            }
+        }
+    }
+
+    .selected {
+        font-family: 'Wanted-Bold';
+        font-size: 24px;
+        color: $dark;
+        
+    }
+}

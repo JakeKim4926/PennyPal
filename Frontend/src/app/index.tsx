@@ -1,4 +1,4 @@
-import { Nav } from '../shared';
+import { ModalSpace, Nav } from '../shared';
 import { Header } from '../shared';
 import { AppRoutes } from './AppRoutes';
 
@@ -9,6 +9,7 @@ export function App() {
         <>
             <Header />
             <AppRoutes />
+            <ModalSpace />
             <Nav />
         </>
     );

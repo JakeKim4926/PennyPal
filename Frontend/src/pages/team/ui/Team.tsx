@@ -2,7 +2,7 @@ import { useLocation } from 'react-router-dom';
 import { PageHeader } from '../../../shared';
 import { TeamTeamInfo } from './TeamTeamInfo/TeamTeamInfo';
 import { TeamTeamSearch } from './TeamTeamSearch/TeamTeamSearch';
-
+import { TeamApplyModal } from './TeamApplyModal/TeamApplyModal';
 export function Team() {
     const page = useLocation();
 

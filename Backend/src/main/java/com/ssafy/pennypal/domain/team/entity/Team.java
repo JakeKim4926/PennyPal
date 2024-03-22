@@ -3,11 +3,9 @@ package com.ssafy.pennypal.domain.team.entity;
 import com.ssafy.pennypal.domain.member.entity.Member;
 import com.ssafy.pennypal.global.common.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -24,9 +22,6 @@ public class Team extends BaseEntity {
     @Column(name = "team_name")
     private String teamName;                                    // 팀 이름
 
-    @Column(name = "team_people_number")
-    private Integer teamPeopleNumber;                           // 팀 인원
-
     @Column(name = "team_score")
     private Integer teamScore;                                  // 팀 점수
 
@@ -41,6 +36,27 @@ public class Team extends BaseEntity {
             cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REMOVE},
             fetch = FetchType.LAZY
     )
-    private List<Member> members;                              // 팀 구성원
+    private List<Member> members = new ArrayList<>();          // 팀 구성원
+
+    @Column(name = "team_info")
+    private String teamInfo;                                   // 팀 한줄소개
+
+    @OneToMany(mappedBy = "memberWaitingTeam", cascade = CascadeType.ALL)
+    @Column(name = "team_waiting_list")
+    private List<Member> TeamWaitingList = new ArrayList<>();      // 가입 승인 대기 리스트
+
+    @Builder
+    private Team(String teamName, Boolean teamIsAutoConfirm, Long teamLeaderId, String teamInfo, Member member) {
+        this.teamName = teamName;
+        this.teamScore = 0;
+        this.teamIsAutoConfirm = teamIsAutoConfirm;
+        this.teamLeaderId = teamLeaderId;
+        this.members.add(member);
+        this.teamInfo = teamInfo;
+    }
+
+    public void setTeamScore(Integer teamScore) {
+        this.teamScore = teamScore;
+    }
 }
 

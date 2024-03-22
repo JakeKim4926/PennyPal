@@ -1,0 +1,5 @@
+[[Team-API]]
+=== 2.1 팀 생성
+include::api/createTeam.adoc[]
+=== 2.5 팀 가입
+include::api/joinTeam.adoc[]
