@@ -5,6 +5,13 @@ spring:
     username: root
     password: 108
 
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        web.client.RestTemplate: DEBUG
+#        http: DEBUG
+
 ---
 spring:
   profiles:

@@ -6,6 +6,7 @@ import com.ssafy.pennypal.bank.dto.service.common.CommonHeaderRequestDTO;
 import com.ssafy.pennypal.bank.dto.service.common.CommonHeaderResponseDTO;
 import com.ssafy.pennypal.bank.dto.service.request.AccountTransactionRequestServiceDTO;
 import com.ssafy.pennypal.bank.dto.service.request.UserAccountRequestServiceDTO;
+import com.ssafy.pennypal.bank.dto.service.request.UserBankAccountRequestServiceDTO;
 import com.ssafy.pennypal.bank.dto.service.response.*;
 import com.ssafy.pennypal.bank.service.api.IBankServiceAPI;
 import com.ssafy.pennypal.bank.service.db.IBankServiceDB;
@@ -41,10 +42,11 @@ public class BankControllerTest extends RestDocsSupport {
     @DisplayName("사용자 계정 생성")
     @Test
     void 사용자_계정_생성() throws Exception {
+
         // given
         UserAccountRequestServiceDTO userAccountRequestServiceDTO = UserAccountRequestServiceDTO.builder()
                 .apiKey("82d37624494f4092bf96d5f4dbb634c4")
-                .userEmail("mine702@naver.com")
+                .userId("mine702@naver.com")
                 .build();
 
         given(bankServiceAPI.createUserAccount(any(UserAccountRequestServiceDTO.class)))
@@ -52,7 +54,7 @@ public class BankControllerTest extends RestDocsSupport {
                         .code("succeed")
                         .payload(
                                 UserAccountResponseServicePayLoadDTO.builder()
-                                        .userEmail("mine702@naver.com")
+                                        .userId("mine702@naver.com")
                                         .userName("mine702")
                                         .institutionCode("001")
                                         .userKey("13cefdcf-494f-4092-bf96-d5f4dbb634c4")
@@ -62,10 +64,34 @@ public class BankControllerTest extends RestDocsSupport {
                         )
                         .now("2024-03-18T15:35:34.504746+09:00")
                         .build());
+
+        given(bankServiceAPI.createUserBankAccount(any(UserBankAccountRequestServiceDTO.class)))
+                .willReturn(UserBankAccountResponseServiceDTO.builder()
+                        .Header(
+                                CommonHeaderResponseDTO.builder()
+                                        .responseCode("H0000")
+                                        .responseMessage("정상처리 되었습니다.")
+                                        .apiName("openAccount")
+                                        .transmissionDate("20240101")
+                                        .transmissionTime("121212")
+                                        .institutionCode("00100")
+                                        .apiKey("82d37624494f4092bf96d5f4dbb634c4")
+                                        .apiServiceCode("openAccount")
+                                        .institutionTransactionUniqueNo("20240215121212123452")
+                                        .build()
+                        )
+                        .REC(
+                                UserBankAccountResponseRECServiceDTO.builder()
+                                        .bankCode("001")
+                                        .accountNo("0016826085496269")
+                                        .build()
+                        )
+                        .build());
+
         // when
         // then
         mockMvc.perform(
-                        post("/bank/api/user/api/key/{userEmail}", userAccountRequestServiceDTO.getUserEmail())
+                        post("/bank/api/user/api/key/{userEmail}", userAccountRequestServiceDTO.getUserId())
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
@@ -96,13 +122,14 @@ public class BankControllerTest extends RestDocsSupport {
 
     }
 
+
     @DisplayName("사용자 계정 조회")
     @Test
     void 사용자_계정_조회() throws Exception {
         // given
         UserAccountRequestServiceDTO userAccountRequestServiceDTO = UserAccountRequestServiceDTO.builder()
                 .apiKey("82d37624494f4092bf96d5f4dbb634c4")
-                .userEmail("mine702@naver.com")
+                .userId("mine702@naver.com")
                 .build();
 
         given(bankServiceAPI.getUserAccount(any(UserAccountRequestServiceDTO.class)))
@@ -110,7 +137,7 @@ public class BankControllerTest extends RestDocsSupport {
                         .code("succeed")
                         .payload(
                                 UserAccountResponseServicePayLoadDTO.builder()
-                                        .userEmail("mine702@naver.com")
+                                        .userId("mine702@naver.com")
                                         .userName("mine702")
                                         .institutionCode("001")
                                         .userKey("13cefdcf-494f-4092-bf96-d5f4dbb634c4")
@@ -123,7 +150,7 @@ public class BankControllerTest extends RestDocsSupport {
         // when
         // then
         mockMvc.perform(
-                        get("/bank/api/user/api/key/{userEmail}", userAccountRequestServiceDTO.getUserEmail())
+                        get("/bank/api/user/api/key/{userEmail}", userAccountRequestServiceDTO.getUserId())
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
@@ -160,7 +187,7 @@ public class BankControllerTest extends RestDocsSupport {
         // given
         UserAccountRequestServiceDTO userAccountRequestServiceDTO = UserAccountRequestServiceDTO.builder()
                 .apiKey("82d37624494f4092bf96d5f4dbb634c4")
-                .userEmail("mine702@naver.com")
+                .userId("mine702@naver.com")
                 .build();
 
         given(bankServiceAPI.getUserAccount(any(UserAccountRequestServiceDTO.class)))
@@ -168,7 +195,7 @@ public class BankControllerTest extends RestDocsSupport {
                         .code("succeed")
                         .payload(
                                 UserAccountResponseServicePayLoadDTO.builder()
-                                        .userEmail("mine702@naver.com")
+                                        .userId("mine702@naver.com")
                                         .userName("mine702")
                                         .institutionCode("001")
                                         .userKey("13cefdcf-494f-4092-bf96-d5f4dbb634c4")
@@ -231,7 +258,7 @@ public class BankControllerTest extends RestDocsSupport {
         // when
         // then
         mockMvc.perform(
-                        get("/bank/api/user/account/{userEmail}", userAccountRequestServiceDTO.getUserEmail())
+                        get("/bank/api/user/account/{userEmail}", userAccountRequestServiceDTO.getUserId())
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
@@ -286,7 +313,7 @@ public class BankControllerTest extends RestDocsSupport {
                         .code("succeed")
                         .payload(
                                 UserAccountResponseServicePayLoadDTO.builder()
-                                        .userEmail("mine702@naver.com")
+                                        .userId("mine702@naver.com")
                                         .userName("mine702")
                                         .institutionCode("001")
                                         .userKey("13cefdcf-494f-4092-bf96-d5f4dbb634c4")
@@ -402,6 +429,8 @@ public class BankControllerTest extends RestDocsSupport {
                                                 .description("응답 데이터 계좌 내역 날짜"),
                                         fieldWithPath("data.rec[].transactionType").type(JsonFieldType.STRING)
                                                 .description("응답 데이터 계좌 내역 입 출금 조회"),
+                                        fieldWithPath("data.rec[].transactionBalance").type(JsonFieldType.STRING)
+                                                .description("응답 데이터 계좌 내역 금액"),
                                         fieldWithPath("data.rec[].transactionSummary").type(JsonFieldType.STRING)
                                                 .description("응답 데이터 계좌 내역 문구"),
                                         fieldWithPath("data.rec[].transactionAccountNo").type(JsonFieldType.STRING)

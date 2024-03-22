@@ -37,7 +37,7 @@ class TeamTest {
         Team team1 = createTeam("팀이름1", true, member1.getMemberId(), "팀소개1");
 
         // then
-        assertThat(team1.getTeamPeopleNumber()).isEqualTo(1);
+        assertThat(team1.getMembers().size()).isEqualTo(1);
 
     }
 

@@ -52,6 +52,11 @@ public class Card {
     @Column(name = "card_abroad")
     private Integer cardAbroad;                                 // 해외 연회비
 
+    // 카드와 카테고리는 1:1 관계
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", unique = true)
+    private Category category;                                  // 카드의 카테고리
+
     private List<String> cardTopBenefits = new ArrayList<>();   // 카드 top3 혜택
     private List<String> cardBenefits = new ArrayList<>();      // 카드 혜택
 }
