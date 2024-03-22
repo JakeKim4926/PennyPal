@@ -1,10 +1,12 @@
 package com.ssafy.pennypal.bank.controller;
 
 
+import com.ssafy.pennypal.bank.dto.controller.request.AccountDrawingTransferControllerDTO;
 import com.ssafy.pennypal.bank.dto.controller.request.AccountTransactionRequestDTO;
-import com.ssafy.pennypal.bank.dto.service.common.CommonHeaderRequestDTO;
+import com.ssafy.pennypal.bank.dto.controller.request.AccountTransferRequestDTO;
 import com.ssafy.pennypal.bank.dto.service.common.CommonHeaderResponseDTO;
 import com.ssafy.pennypal.bank.dto.service.request.AccountTransactionRequestServiceDTO;
+import com.ssafy.pennypal.bank.dto.service.request.GetUserAccountListServiceRequestDTO;
 import com.ssafy.pennypal.bank.dto.service.request.UserAccountRequestServiceDTO;
 import com.ssafy.pennypal.bank.dto.service.request.UserBankAccountRequestServiceDTO;
 import com.ssafy.pennypal.bank.dto.service.response.*;
@@ -91,7 +93,7 @@ public class BankControllerTest extends RestDocsSupport {
         // when
         // then
         mockMvc.perform(
-                        post("/bank/api/user/api/key/{userEmail}", userAccountRequestServiceDTO.getUserId())
+                        post("/api/bank/user/key/{userEmail}", userAccountRequestServiceDTO.getUserId())
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
@@ -150,7 +152,7 @@ public class BankControllerTest extends RestDocsSupport {
         // when
         // then
         mockMvc.perform(
-                        get("/bank/api/user/api/key/{userEmail}", userAccountRequestServiceDTO.getUserId())
+                        get("/api/bank/user/key/{userEmail}", userAccountRequestServiceDTO.getUserId())
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
@@ -206,7 +208,7 @@ public class BankControllerTest extends RestDocsSupport {
                         .now("2024-03-18T15:35:34.504746+09:00")
                         .build());
 
-        given(bankServiceAPI.getUserAccountList(any(CommonHeaderRequestDTO.class)))
+        given(bankServiceAPI.getUserAccountList(any(GetUserAccountListServiceRequestDTO.class)))
                 .willReturn(UserBankAccountsResponseServiceDTO.builder()
                         .header(
                                 CommonHeaderResponseDTO.builder()
@@ -258,7 +260,7 @@ public class BankControllerTest extends RestDocsSupport {
         // when
         // then
         mockMvc.perform(
-                        get("/bank/api/user/account/{userEmail}", userAccountRequestServiceDTO.getUserId())
+                        get("/api/bank/user/account/{userEmail}", userAccountRequestServiceDTO.getUserId())
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
@@ -383,7 +385,7 @@ public class BankControllerTest extends RestDocsSupport {
         // when
         // then
         mockMvc.perform(
-                        get("/bank/api/user/account/transaction")
+                        get("/api/bank/user/account/transaction")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(requestDTO))
                 )
@@ -440,5 +442,233 @@ public class BankControllerTest extends RestDocsSupport {
                         )
                 );
     }
+
+    @DisplayName("주식 계좌 생성")
+    @Test
+    void 주식_계좌_생성() throws Exception {
+        // given
+        UserAccountRequestServiceDTO userAccountRequestServiceDTO = UserAccountRequestServiceDTO.builder()
+                .apiKey("82d37624494f4092bf96d5f4dbb634c4")
+                .userId("mine702@naver.com")
+                .build();
+
+        given(bankServiceAPI.getUserAccount(any(UserAccountRequestServiceDTO.class)))
+                .willReturn(UserAccountResponseServiceDTO.builder()
+                        .code("succeed")
+                        .payload(
+                                UserAccountResponseServicePayLoadDTO.builder()
+                                        .userId("mine702@naver.com")
+                                        .userName("mine702")
+                                        .institutionCode("001")
+                                        .userKey("13cefdcf-494f-4092-bf96-d5f4dbb634c4")
+                                        .created("2024-03-04T12:41:30.921299+09:00")
+                                        .modified("2024-03-04T12:41:30.921299+09:00")
+                                        .build()
+                        )
+                        .now("2024-03-18T15:35:34.504746+09:00")
+                        .build());
+
+        given(bankServiceAPI.createUserBankAccount(any(UserBankAccountRequestServiceDTO.class)))
+                .willReturn(
+                        UserBankAccountResponseServiceDTO.builder()
+                                .Header(
+                                        CommonHeaderResponseDTO.builder()
+                                                .responseCode("H0000")
+                                                .responseMessage("정상처리 되었습니다.")
+                                                .apiName("openAccount")
+                                                .transmissionDate("20240101")
+                                                .transmissionTime("121212")
+                                                .institutionCode("00100")
+                                                .apiKey("82d37624494f4092bf96d5f4dbb634c4")
+                                                .apiServiceCode("openAccount")
+                                                .institutionTransactionUniqueNo("20240215121212123454")
+                                                .build()
+                                )
+                                .REC(
+                                        UserBankAccountResponseRECServiceDTO.builder()
+                                                .bankCode("004")
+                                                .accountNo("0016826085496269")
+                                                .build()
+                                )
+                                .build());
+        // when
+        mockMvc.perform(
+                        post("/api/bank/user/stock/account/{userEmail}", userAccountRequestServiceDTO.getUserId())
+                                .contentType(MediaType.APPLICATION_JSON)
+                ).andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("get-bank-stock-account",
+                                preprocessResponse(prettyPrint()),
+                                responseFields(
+                                        fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                                .description("코드"),
+                                        fieldWithPath("status").type(JsonFieldType.STRING)
+                                                .description("상태"),
+                                        fieldWithPath("message").type(JsonFieldType.STRING)
+                                                .description("메시지"),
+                                        fieldWithPath("data").type(JsonFieldType.OBJECT)
+                                                .description("응답 데이터"),
+                                        fieldWithPath("data.header").type(JsonFieldType.OBJECT)
+                                                .description("응답 데이터 헤더"),
+                                        fieldWithPath("data.header.responseCode").type(JsonFieldType.STRING)
+                                                .description("응답 코드"),
+                                        fieldWithPath("data.header.responseMessage").type(JsonFieldType.STRING)
+                                                .description("응답 메시지"),
+                                        fieldWithPath("data.rec").type(JsonFieldType.OBJECT)
+                                                .description("응답 데이터 REC"),
+                                        fieldWithPath("data.rec.bankCode").type(JsonFieldType.STRING)
+                                                .description("응답 데이터 계좌 은행 코드"),
+                                        fieldWithPath("data.rec.accountNo").type(JsonFieldType.STRING)
+                                                .description("응답 데이터 계좌 번호")
+                                )
+                        )
+                );
+        // then
+    }
+
+    @DisplayName("사용자 계좌 이체")
+    @Test
+    void 사용자_계좌_이체() throws Exception {
+        // given
+        AccountTransferRequestDTO accountTransferRequestDTO = AccountTransferRequestDTO.builder()
+                .userEmail("mine702@naver.com")
+                .depositBankCode("004")
+                .depositAccountNo("0028889135848149")
+                .depositTransactionSummary("입금이체 계좌")
+                .transactionBalance("10000")
+                .withdrawalBankCode("001")
+                .withdrawalAccountNo("0016826085496269")
+                .withdrawalTransactionSummary("출금이체 계좌")
+                .build();
+
+        given(bankServiceAPI.getUserAccount(any(UserAccountRequestServiceDTO.class)))
+                .willReturn(UserAccountResponseServiceDTO.builder()
+                        .code("succeed")
+                        .payload(
+                                UserAccountResponseServicePayLoadDTO.builder()
+                                        .userId("mine702@naver.com")
+                                        .userName("mine702")
+                                        .institutionCode("001")
+                                        .userKey("13cefdcf-494f-4092-bf96-d5f4dbb634c4")
+                                        .created("2024-03-04T12:41:30.921299+09:00")
+                                        .modified("2024-03-04T12:41:30.921299+09:00")
+                                        .build()
+                        )
+                        .now("2024-03-18T15:35:34.504746+09:00")
+                        .build());
+
+        // when
+        mockMvc.perform(
+                        post("/api/bank/user/accountTransfer")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(accountTransferRequestDTO))
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("get-account-transfer",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                requestFields(
+                                        fieldWithPath("userEmail").type(JsonFieldType.STRING)
+                                                .description("유저 이메일"),
+                                        fieldWithPath("depositBankCode").type(JsonFieldType.STRING)
+                                                .description("입금 계좌 은행 코드"),
+                                        fieldWithPath("depositAccountNo").type(JsonFieldType.STRING)
+                                                .description("입금 계좌 번호"),
+                                        fieldWithPath("transactionBalance").type(JsonFieldType.STRING)
+                                                .description("계좌이체 금액"),
+                                        fieldWithPath("withdrawalBankCode").type(JsonFieldType.STRING)
+                                                .description("입금 계좌 은행 코드"),
+                                        fieldWithPath("withdrawalAccountNo").type(JsonFieldType.STRING)
+                                                .description("출금 계좌 번호"),
+                                        fieldWithPath("depositTransactionSummary").type(JsonFieldType.STRING)
+                                                .description("입금 문구")
+                                                .optional(),
+                                        fieldWithPath("withdrawalTransactionSummary").type(JsonFieldType.STRING)
+                                                .description("출금 문구")
+                                                .optional()
+
+                                ),
+                                responseFields(
+                                        fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                                .description("코드"),
+                                        fieldWithPath("status").type(JsonFieldType.STRING)
+                                                .description("상태"),
+                                        fieldWithPath("message").type(JsonFieldType.STRING)
+                                                .description("메시지"),
+                                        fieldWithPath("data").type(JsonFieldType.NULL)
+                                                .description("응답 데이터")
+                                )
+                        )
+                );
+        // then
+    }
+
+    @DisplayName("사용자 주식 구매")
+    @Test
+    void 사용자_주식_구매() throws Exception {
+        // given
+        AccountDrawingTransferControllerDTO accountDrawingTransferControllerDTO = AccountDrawingTransferControllerDTO.builder()
+                .userEmail("mine702@naver.com")
+                .bankCode("004")
+                .accountNo("0013386179553277")
+                .transactionBalance("34000")
+                .transactionSummary("에스케이 하이닉스")
+                .build();
+
+        given(bankServiceAPI.getUserAccount(any(UserAccountRequestServiceDTO.class)))
+                .willReturn(UserAccountResponseServiceDTO.builder()
+                        .code("succeed")
+                        .payload(
+                                UserAccountResponseServicePayLoadDTO.builder()
+                                        .userId("mine702@naver.com")
+                                        .userName("mine702")
+                                        .institutionCode("001")
+                                        .userKey("13cefdcf-494f-4092-bf96-d5f4dbb634c4")
+                                        .created("2024-03-04T12:41:30.921299+09:00")
+                                        .modified("2024-03-04T12:41:30.921299+09:00")
+                                        .build()
+                        )
+                        .now("2024-03-18T15:35:34.504746+09:00")
+                        .build());
+
+        // when
+        mockMvc.perform(
+                        post("/api/bank/user/drawingTransfer")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(accountDrawingTransferControllerDTO))
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("get-account-drawing-transfer",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                requestFields(
+                                        fieldWithPath("userEmail").type(JsonFieldType.STRING)
+                                                .description("유저 이메일"),
+                                        fieldWithPath("bankCode").type(JsonFieldType.STRING)
+                                                .description("출금 계좌 은행 코드"),
+                                        fieldWithPath("accountNo").type(JsonFieldType.STRING)
+                                                .description("출금 계좌 번호"),
+                                        fieldWithPath("transactionBalance").type(JsonFieldType.STRING)
+                                                .description("출금 금액"),
+                                        fieldWithPath("transactionSummary").type(JsonFieldType.STRING)
+                                                .description("구매 아이템")
+                                ),
+                                responseFields(
+                                        fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                                .description("코드"),
+                                        fieldWithPath("status").type(JsonFieldType.STRING)
+                                                .description("상태"),
+                                        fieldWithPath("message").type(JsonFieldType.STRING)
+                                                .description("메시지"),
+                                        fieldWithPath("data").type(JsonFieldType.NULL)
+                                                .description("응답 데이터")
+                                )
+                        )
+                );
+        // then
+    }
+
 
 }

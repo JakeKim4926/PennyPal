@@ -1,6 +1,5 @@
 package com.ssafy.pennypal.bank.service.api;
 
-import com.ssafy.pennypal.bank.dto.service.common.CommonHeaderRequestDTO;
 import com.ssafy.pennypal.bank.dto.service.request.*;
 import com.ssafy.pennypal.bank.dto.service.response.AccountTransactionListResponseServiceDTO;
 import com.ssafy.pennypal.bank.dto.service.response.UserAccountResponseServiceDTO;
@@ -14,11 +13,13 @@ public interface IBankServiceAPI {
 
     UserBankAccountResponseServiceDTO createUserBankAccount(UserBankAccountRequestServiceDTO userBankAccountRequestServiceDTO);
 
-    UserBankAccountsResponseServiceDTO getUserAccountList(CommonHeaderRequestDTO commonHeaderRequestDTO);
+    UserBankAccountsResponseServiceDTO getUserAccountList(GetUserAccountListServiceRequestDTO getUserAccountListServiceRequestDTO);
 
     AccountTransactionListResponseServiceDTO getUserAccountTransaction(AccountTransactionRequestServiceDTO accountTransactionRequestServiceDTO);
 
     void accountDeposit(AccountDepositServiceDTO accountDepositServiceDTO);
 
     void accountWithdrawal(DrawingTransferRequestServiceDTO drawingTransferRequestServiceDTO);
+
+    void accountTransfer(AccountTransferServiceRequestDTO accountTransferServiceRequestDTO);
 }

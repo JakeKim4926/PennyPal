@@ -1,0 +1,9 @@
+[[get-account-drawing-transfer]]
+==== HTTP Request
+
+include::{snippets}/get-account-drawing-transfer/http-request.adoc[]
+include::{snippets}/get-account-drawing-transfer/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/get-account-drawing-transfer/http-response.adoc[]
