@@ -11,7 +11,6 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class Team extends BaseEntity {
 
     @Id
@@ -22,6 +21,7 @@ public class Team extends BaseEntity {
     @Column(name = "team_name")
     private String teamName;                                    // 팀 이름
 
+    @Setter
     @Column(name = "team_score")
     private Integer teamScore;                                  // 팀 점수
 
@@ -41,9 +41,23 @@ public class Team extends BaseEntity {
     @Column(name = "team_info")
     private String teamInfo;                                   // 팀 한줄소개
 
-    @OneToMany(mappedBy = "memberWaitingTeam", cascade = CascadeType.ALL)
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            mappedBy = "memberWaitingTeam",
+            cascade = CascadeType.ALL
+    )
     @Column(name = "team_waiting_list")
-    private List<Member> TeamWaitingList = new ArrayList<>();      // 가입 승인 대기 리스트
+    private List<Member> TeamWaitingList = new ArrayList<>();  // 가입 승인 대기 리스트
+
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            mappedBy = "team",
+            cascade = CascadeType.ALL
+    )
+    @Setter
+    @Column(name = "team_rank_histories")
+    private List<TeamRankHistory> TeamRankHistories = new ArrayList<>();               // 랭킹 내역
+
 
     @Builder
     private Team(String teamName, Boolean teamIsAutoConfirm, Long teamLeaderId, String teamInfo, Member member) {
@@ -55,8 +69,5 @@ public class Team extends BaseEntity {
         this.teamInfo = teamInfo;
     }
 
-    public void setTeamScore(Integer teamScore) {
-        this.teamScore = teamScore;
-    }
 }
 

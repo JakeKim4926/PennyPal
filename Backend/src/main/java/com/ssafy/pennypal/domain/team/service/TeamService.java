@@ -1,22 +1,39 @@
 package com.ssafy.pennypal.domain.team.service;
 
+import com.ssafy.pennypal.bank.dto.service.common.CommonHeaderRequestDTO;
+import com.ssafy.pennypal.bank.dto.service.request.AccountTransactionRequestServiceDTO;
+import com.ssafy.pennypal.bank.dto.service.request.GetUserAccountListServiceRequestDTO;
+import com.ssafy.pennypal.bank.dto.service.response.AccountTransactionListResponseServiceDTO;
+import com.ssafy.pennypal.bank.dto.service.response.AccountTransactionResponseServiceDTO;
+import com.ssafy.pennypal.bank.dto.service.response.UserAccountListResponseServiceDTO;
+import com.ssafy.pennypal.bank.dto.service.response.UserBankAccountsResponseServiceDTO;
+import com.ssafy.pennypal.bank.service.api.BankServiceAPIImpl;
 import com.ssafy.pennypal.domain.member.entity.Member;
+import com.ssafy.pennypal.domain.member.entity.Expense;
 import com.ssafy.pennypal.domain.member.repository.IMemberRepository;
 import com.ssafy.pennypal.domain.team.dto.request.TeamCreateServiceRequest;
 import com.ssafy.pennypal.domain.team.dto.request.TeamJoinServiceRequest;
-import com.ssafy.pennypal.domain.team.dto.response.TeamCreateResponse;
-import com.ssafy.pennypal.domain.team.dto.response.TeamJoinResponse;
-import com.ssafy.pennypal.domain.team.dto.response.TeamMemberDetailResponse;
+import com.ssafy.pennypal.domain.team.dto.response.*;
 import com.ssafy.pennypal.domain.team.entity.Team;
+import com.ssafy.pennypal.domain.team.entity.TeamRankHistory;
+import com.ssafy.pennypal.domain.team.repository.ITeamRankHistoryRepository;
 import com.ssafy.pennypal.domain.team.repository.ITeamRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static java.lang.Integer.parseInt;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +42,18 @@ public class TeamService {
 
     private final ITeamRepository teamRepository;
     private final IMemberRepository memberRepository;
+    private final ITeamRankHistoryRepository teamRankHistoryRepository;
+
+    private static final String SSAFY_BANK_API_KEY = System.getenv("SSAFY_BANK_API_KEY");
+    private final BankServiceAPIImpl bankServiceAPI;
+
+    private static final LocalDate TODAY = LocalDate.now();
+    private static final LocalDate MONDAY_OF_THIS_WEEK = TODAY.with(DayOfWeek.MONDAY);
+    private static final LocalDate MONDAY_OF_LAST_WEEK = MONDAY_OF_THIS_WEEK.minusDays(7);
+    private static final LocalDate SUNDAY_OF_LAST_WEEK = MONDAY_OF_THIS_WEEK.minusDays(1);
+    private static final LocalDate SUNDAY_OF_THIS_WEEK = TODAY.with(DayOfWeek.SUNDAY);
+    private static final LocalDate MONDAY_OF_NEXT_WEEK = MONDAY_OF_THIS_WEEK.plusDays(7);
+    private static final LocalDate SUNDAY_OF_TWO_LAST_WEEK = SUNDAY_OF_THIS_WEEK.minusDays(14);
 
     @Transactional
     public TeamCreateResponse createTeam(TeamCreateServiceRequest request) {
@@ -101,7 +130,7 @@ public class TeamService {
                 // 수동 승인이라면 대기 리스트에 추가하고 예외 던져주기
                 team.getTeamWaitingList().add(member);
                 member.setMemberWaitingTeam(team);
-                throw new IllegalArgumentException("가입 요청이 완료되었습니다.");
+                throw new IllegalArgumentException("가입 요청 완료 메시지를 위한 에러 발생");
             }
 
         } else {
@@ -124,54 +153,215 @@ public class TeamService {
     }
 
     @Transactional
-    public Integer calculateTeamScore(Long teamId) {
+    public void calculateTeamScore() {
 
-        Team team = teamRepository.findByTeamId(teamId);
+        List<Team> teams = teamRepository.findAll();
 
-        // 팀원들의 지난 주와 이번 주 지출 내역을 모두 더하기
-        Double lastWeekTotalExpenses = team.getMembers().stream()
-                .filter(Objects::nonNull)
-                .mapToDouble(Member::getMemberLastWeekExpenses)
-                .sum();
-        Double thisWeekTotalExpenses = team.getMembers().stream()
-                .filter(Objects::nonNull)
-                .mapToDouble(Member::getMemberThisWeekExpenses)
-                .sum();
+        for (Team team : teams) {
 
-        // 팀원들의 출석 횟수 모두 더하기
-        Double totalAttendance = team.getMembers().stream()
-                .filter(Objects::nonNull)
-                .mapToDouble(Member::getMemberAttendance)
-                .sum();
+            // 4인 미만인 팀은 점수를 계산하지 않는다.
+            if(team.getMembers().size() < 4){
+                throw new IllegalArgumentException("4인 미만인 팀은 랭킹 경쟁에서 제외됩니다.");
+            }else {
 
-        // 절약 점수 계산
-        Integer savingScore = calculateSavingScore(lastWeekTotalExpenses, thisWeekTotalExpenses);
+                //팀 점수 초기화
+                int teamScore = 0;
 
-        // 출석 점수 계산
-        Integer attendanceScore = calculateAttendanceScore(totalAttendance, team.getMembers().size());
+                List<Member> members = team.getMembers().stream()
+                        .filter(Objects::nonNull)
+                        .toList();
 
+                // 멤버의 계좌 목록 조회
+                for (Member member : members) {
 
-        // 팀 점수 저장
-        team.setTeamScore(savingScore + attendanceScore);
+                    String memberBankApi = member.getMemberBankApi();
 
-        return savingScore + attendanceScore;
+                    // 공통 헤더 정보 설정
+                    CommonHeaderRequestDTO commonHeaderRequestDTO = CommonHeaderRequestDTO.builder()
+                            .apiName("inquireAccountList")
+                            .apiKey(SSAFY_BANK_API_KEY)
+                            .userKey(memberBankApi)
+                            .build();
+
+                    // 계좌 목록 조회 요청 객체 생성
+                    GetUserAccountListServiceRequestDTO requestDTO = GetUserAccountListServiceRequestDTO.builder()
+                            .header(commonHeaderRequestDTO)
+                            .build();
+
+                    // 계좌 목록 조회 API 호출
+                    UserBankAccountsResponseServiceDTO responseDTO = bankServiceAPI.getUserAccountList(requestDTO);
+
+                    // 각 계좌의 지난 주, 이번 주 거래 내역 조회
+                    for (UserAccountListResponseServiceDTO account : responseDTO.getREC()) {
+                        // 계좌 거래 내역 조회를 위한 요청 객체 생성
+                        AccountTransactionRequestServiceDTO transactionRequestDTO = AccountTransactionRequestServiceDTO.builder()
+                                .header(commonHeaderRequestDTO)
+                                .bankCode(account.getBankCode()) // 은행 코드
+                                .accountNo(account.getAccountNo()) // 계좌 번호
+                                .startDate(TODAY.format(DateTimeFormatter.ofPattern("yyyyMMdd")))
+                                .endDate(SUNDAY_OF_THIS_WEEK.format(DateTimeFormatter.ofPattern("yyyyMMdd")))
+                                .transactionType("D") // 출금 내역만
+                                .orderByType("default")
+                                .build();
+
+                        // 계좌 거래 내역 조회 API 호출
+                        AccountTransactionListResponseServiceDTO transactionListResponseDTO = bankServiceAPI.getUserAccountTransaction(transactionRequestDTO);
+
+                        // 유저의 2주 동안의 지출 날짜, 지출 금액을 리스트로 담기
+                        List<Expense> allExpenses = new ArrayList<>();
+
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMdd");
+
+                        for (AccountTransactionResponseServiceDTO transaction : transactionListResponseDTO.getREC().getList()) {
+                            allExpenses.add(new Expense(LocalDate.parse(transaction.getTransactionDate(), formatter),
+                                    parseInt(transaction.getTransactionBalance()), member));
+                        }
+
+                        // 지난 주 , 이번 주 거래 내역 구분해서 저장
+                        calculateLastWeekExpenses(allExpenses);
+                        calculateThisWeekExpenses(allExpenses);
+                    }
+
+                } // member
+
+                // 팀원들의 지난 주와 이번 주 지출 내역을 모두 더하기
+                Double lastWeekTotalExpenses = team.getMembers().stream()
+                        .filter(Objects::nonNull)
+                        .flatMap(member -> member.getMemberExpensesOfLastWeek().stream()) // 지난 주 지출 내역을 가져옴
+                        .mapToDouble(Expense::getExpenseAmount) // 지출 금액을 가져와서 double 형태로 매핑
+                        .sum();
+
+                Double thisWeekTotalExpenses = team.getMembers().stream()
+                        .filter(Objects::nonNull)
+                        .flatMap(member -> member.getMemberExpensesOfThisWeek().stream()) // 이번 주 지출 내역을 가져옴
+                        .mapToDouble(Expense::getExpenseAmount) // 지출 금액을 가져와서 double 형태로 매핑
+                        .sum();
+
+                // 팀원들의 출석 횟수 모두 더하기
+                Double totalAttendance = team.getMembers().stream()
+                        .filter(Objects::nonNull)
+                        .mapToDouble(Member::getMemberAttendance)
+                        .sum();
+
+                // 절약 점수 계산
+                Integer savingScore = calculateSavingScore(lastWeekTotalExpenses, thisWeekTotalExpenses);
+
+                // 출석 점수 계산
+                Integer attendanceScore = calculateAttendanceScore(totalAttendance, team.getMembers().size());
+
+                // 팀 점수 저장
+                team.setTeamScore(savingScore + attendanceScore);
+            }
+        }
 
     }
 
-    /**
-     * 정렬된 팀 리스트를 반환
-     */
-    public List<Team> rankTeams(){
+    @Transactional
+    public List<TeamRankResponse> RankTeamScore(){
 
-        List<Team> teamList = teamRepository.findAll();
+        List<Team> teams = teamRepository.findAll();
 
-        return teamList.stream()
-                .sorted(Comparator.comparing(Team::getTeamScore).reversed())
+        // 현재 날짜
+        LocalDate today = LocalDate.now();
+
+        // 팀 점수에 따라 내림차순 정렬
+        List<TeamRankResponse> rankedTeams = teams.stream()
+                .map(team -> new TeamRankResponse(team.getTeamId(), team.getTeamName(), team.getTeamScore(), 0))
+                .sorted(Comparator.comparing(TeamRankResponse::getTeamScore).reversed())
+                .collect(Collectors.toList());
+
+        // 등수 계산
+        int rankNum = 1;
+        int previousScore = rankedTeams.isEmpty() ? 0 : rankedTeams.get(0).getTeamScore();
+        int sameScoreCount = 1;
+
+        for (int i = 0; i < rankedTeams.size(); i++) {
+            TeamRankResponse currentTeamResponse = rankedTeams.get(i);
+            Team currentTeam = teams.stream()
+                    .filter(t -> t.getTeamId().equals(currentTeamResponse.getTeamId()))
+                    .findFirst()
+                    .orElse(null);
+
+            if (currentTeam == null) continue;
+
+            if (currentTeamResponse.getTeamScore() == previousScore) {
+                currentTeamResponse.setTeamRankNum(rankNum);
+            } else {
+                rankNum += sameScoreCount;
+                currentTeamResponse.setTeamRankNum(rankNum);
+                sameScoreCount = 0;
+            }
+            sameScoreCount++;
+            previousScore = currentTeamResponse.getTeamScore();
+
+            // 팀 랭킹 기록 생성 및 저장
+            TeamRankHistory newRankHistory = TeamRankHistory.builder()
+                    .team(currentTeam)
+                    .rankDate(today)
+                    .rankNum(rankNum)
+                    .build();
+
+            currentTeam.getTeamRankHistories().add(newRankHistory);
+            teamRepository.save(currentTeam);
+        }
+
+        return rankedTeams;
+    }
+
+    public List<TeamRankHistoryResponse> rankHistoriesForWeeks(){
+
+        List<Team> teams = teamRepository.findAll();
+
+        return teams.stream()
+                .flatMap(team -> team.getTeamRankHistories().stream())
+                .filter(history -> history.getRankDate().isEqual(MONDAY_OF_THIS_WEEK)) // 이번주 월요일에 해당하는 기록만 필터링
+                .map(history -> new TeamRankHistoryResponse(history.getTeam().getTeamName(), history.getRankDate(),history.getRankNum()))
                 .collect(Collectors.toList());
     }
 
+    @Transactional
+    public List<TeamRankResponse> RankTeamRealTimeScore(){
 
-    private Integer calculateSavingScore(Double lastWeekTotalExpenses, Double thisWeekTotalExpenses) {
+        List<Team> teams = teamRepository.findAll();
+
+        // 팀 점수에 따라 내림차순 정렬
+        List<TeamRankResponse> rankedTeams = teams.stream()
+                .map(team -> new TeamRankResponse(team.getTeamId(), team.getTeamName(), team.getTeamScore(), 0))
+                .sorted(Comparator.comparing(TeamRankResponse::getTeamScore).reversed())
+                .collect(Collectors.toList());
+
+        // 등수 계산
+        int rankNum = 1;
+        int previousScore = rankedTeams.isEmpty() ? 0 : rankedTeams.get(0).getTeamScore();
+        int sameScoreCount = 1;
+
+        for (int i = 0; i < rankedTeams.size(); i++) {
+            TeamRankResponse currentTeamResponse = rankedTeams.get(i);
+            Team currentTeam = teams.stream()
+                    .filter(t -> t.getTeamId().equals(currentTeamResponse.getTeamId()))
+                    .findFirst()
+                    .orElse(null);
+
+            if (currentTeam == null) continue;
+
+            if (currentTeamResponse.getTeamScore() == previousScore) {
+                currentTeamResponse.setTeamRankNum(rankNum);
+            } else {
+                rankNum += sameScoreCount;
+                currentTeamResponse.setTeamRankNum(rankNum);
+                sameScoreCount = 0;
+            }
+            sameScoreCount++;
+            previousScore = currentTeamResponse.getTeamScore();
+
+            teamRepository.save(currentTeam);
+        }
+
+        return rankedTeams;
+    }
+
+
+    private int calculateSavingScore(Double lastWeekTotalExpenses, Double thisWeekTotalExpenses) {
 
         // 이번주 지출이 지난주 지출과 같거나 크다면 절약점수는 0
         if (thisWeekTotalExpenses >= lastWeekTotalExpenses) {
@@ -183,9 +373,39 @@ public class TeamService {
         }
     }
 
-    private Integer calculateAttendanceScore(Double totalAttendance, Integer memberCount) {
-        double savingScore = ((double)totalAttendance / (memberCount * 7)) * 100;
+    private int calculateAttendanceScore(Double totalAttendance, Integer memberCount) {
+        double savingScore = ((double) totalAttendance / (memberCount * 7)) * 100;
         return (int) savingScore;
+    }
+
+    public List<Expense> calculateThisWeekExpenses(List<Expense> allExpenses) {
+
+        List<Expense> expensesOfThisWeek = new ArrayList<>();
+
+        for (Expense expense : allExpenses) {
+            LocalDate expenseDate = expense.getExpenseDate();
+            // 지난주 일요일 이후 ~ 다음주 월요일 이전 : 이번주 월~일요일
+            if (expenseDate.isAfter(SUNDAY_OF_LAST_WEEK) && expenseDate.isBefore(MONDAY_OF_NEXT_WEEK)) {
+                expensesOfThisWeek.add(expense);
+            }
+        }
+
+        return expensesOfThisWeek;
+    }
+
+    public List<Expense> calculateLastWeekExpenses(List<Expense> allExpenses) {
+
+        List<Expense> expensesOfLastWeek = new ArrayList<>();
+
+        for (Expense expense : allExpenses) {
+            LocalDate expenseDate = expense.getExpenseDate();
+            // 지지난주 일요일 이후 ~ 이번주 월요일 이전 : 지난주 월~일요일
+            if (expenseDate.isAfter(SUNDAY_OF_TWO_LAST_WEEK) && expenseDate.isBefore(MONDAY_OF_THIS_WEEK)) {
+                expensesOfLastWeek.add(expense);
+            }
+        }
+
+        return expensesOfLastWeek;
     }
 
 }
