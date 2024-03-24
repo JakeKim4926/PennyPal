@@ -1,6 +1,7 @@
 package com.ssafy.pennypal.domain.member.entity;
 
 import com.querydsl.core.annotations.QueryProjection;
+import com.ssafy.pennypal.domain.chat.entity.ChatMessage;
 import com.ssafy.pennypal.domain.market.entity.Order;
 import com.ssafy.pennypal.domain.team.entity.Team;
 import com.ssafy.pennypal.global.common.BaseEntity;
@@ -42,7 +43,7 @@ public class Member extends BaseEntity {
     private Integer memberPoint;                                                // 사용자 포인트
 
     @Column(name = "member_most_category")
-    private String memberMostCategory;                                         // 사용자 최대 지출 카테고리
+    private String memberMostCategory;                                          // 사용자 최대 지출 카테고리
 
     @ManyToOne(
             fetch = FetchType.LAZY,
@@ -50,14 +51,14 @@ public class Member extends BaseEntity {
     )
     @JoinColumn(name = "team_id")
     @Setter
-    private Team team;                                                        // 사용자가 참여한 팀
+    private Team team;                                                           // 사용자가 참여한 팀
 
     @OneToMany(
             fetch = FetchType.LAZY,
             cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REMOVE},
             mappedBy = "member" // Correct mappedBy to refer to the property in OrderInfo
     )
-    private List<Order> orders = new ArrayList<>();                         // 주문목록 조회
+    private List<Order> orders = new ArrayList<>();                              // 주문목록 조회
     // 나중에 또 수정
 
     //0319 김민건 수정 사용자 계정 생성
@@ -68,24 +69,24 @@ public class Member extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_waiting_list")
     @Setter
-    private Team memberWaitingTeam;                                        // 사용자가 가입 요청한 팀
+    private Team memberWaitingTeam;                                               // 사용자가 가입 요청한 팀
 
     @OneToMany(
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL,
             mappedBy = "member")
     @Column(name = "member_expenses_of_last_week")
-    private List<Expense> memberExpensesOfLastWeek = new ArrayList<>();   // 지난 주 지출 내역
+    private List<Expense> memberExpensesOfLastWeek = new ArrayList<>();           // 지난 주 지출 내역
 
     @OneToMany(
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL,
             mappedBy = "member")
     @Column(name = "member_expenses_of_this_week")
-    private List<Expense> memberExpensesOfThisWeek = new ArrayList<>();  // 이번 주 지출 내역
+    private List<Expense> memberExpensesOfThisWeek = new ArrayList<>();            // 이번 주 지출 내역
 
     @Column(name = "member_attendance")
-    private Integer memberAttendance;                                   // 이번 주 출석 횟수
+    private Integer memberAttendance;                                              // 이번 주 출석 횟수
 
 
     @Builder

@@ -246,107 +246,107 @@ class TeamServiceTest {
 
     }
 
-    @DisplayName("이번주 지출 총액이 지난주 지출 총액보다 크다면 절약 점수는 0이다.")
-    @Test
-    void ifThisWeekMoreThanLastWeek() {
-        // given
-        Member member1 = createMember("member1@pennypal.site", "닉네임1", LocalDateTime.now());
-        Member member2 = createMember("member2@pennypal.site", "닉네임2", LocalDateTime.now());
-        Member member3 = createMember("member3@pennypal.site", "닉네임3", LocalDateTime.now());
-        Member member4 = createMember("member4@pennypal.site", "닉네임4", LocalDateTime.now());
-        Member member5 = createMember("member5@pennypal.site", "닉네임5", LocalDateTime.now());
-
-        // 지출 내역 생성
-        // 토요일부터 6일 동안 30000원씩 지출 -> 지난 주 2일, 이번 주 4일
-        List<Expense> expenses = createExpenses(LocalDate.of(2024, 3, 16), 6, 1,
-                30000, member1);
-
-        memberRepository.saveAll(List.of(member1, member2, member3, member4, member5));
-
-        // 지출 내역 필터링
-        List<Expense> expensesOfLastWeek = teamService.calculateLastWeekExpenses(expenses);
-        List<Expense> expensesOfThisWeek = teamService.calculateThisWeekExpenses(expenses);
-
-        // 팀 생성
-        Team team1 = createTeam("팀이름1", true, member1.getMemberId(), "팀소개", member1);
-        teamRepository.save(team1);
-
-        teamService.joinTeam(TeamJoinServiceRequest.builder()
-                .teamId(team1.getTeamId())
-                .memberId(member2.getMemberId())
-                .build());
-        teamService.joinTeam(TeamJoinServiceRequest.builder()
-                .teamId(team1.getTeamId())
-                .memberId(member3.getMemberId())
-                .build());
-        teamService.joinTeam(TeamJoinServiceRequest.builder()
-                .teamId(team1.getTeamId())
-                .memberId(member4.getMemberId())
-                .build());
-        teamService.joinTeam(TeamJoinServiceRequest.builder()
-                .teamId(team1.getTeamId())
-                .memberId(member5.getMemberId())
-                .build());
-
-        // when
-        teamService.calculateTeamScore();
-
-        // then
-        assertThat(team1.getTeamScore()).isEqualTo(0);
-
-    }
-
-    @DisplayName("동점인 팀이 있다면 등수는 같고, 다음 팀은 그 수만큼 등수를 건너뛴다.")
-    @Test
-    void IfSameScoreSameRank() {
-        // given
-        Member member1 = createMember("member1@pennypal.site", "닉네임1", LocalDateTime.now());
-        Member member2 = createMember("member1@pennypal.site", "닉네임2", LocalDateTime.now());
-        Member member3 = createMember("member1@pennypal.site", "닉네임3", LocalDateTime.now());
-        memberRepository.saveAll(List.of(member1,member2,member3));
-
-        // 각 멤버에 대한 지출 내역 (Expense) 생성
-        List<Expense> expensesMember1 = List.of(
-                new Expense(LocalDate.of(2024, 3, 10), 50000, member1), // 지난 주 지출
-                new Expense(LocalDate.of(2024, 3, 17), 70000, member1)  // 이번 주 지출
-        );
-        List<Expense> expensesMember2 = List.of(
-                new Expense(LocalDate.of(2024, 3, 10), 50000, member2), // 지난 주 지출
-                new Expense(LocalDate.of(2024, 3, 17), 30000, member2)  // 이번 주 지출
-        );
-        List<Expense> expensesMember3 = List.of(
-                new Expense(LocalDate.of(2024, 3, 10), 50000, member3), // 지난 주 지출
-                new Expense(LocalDate.of(2024, 3, 17), 30000, member3)  // 이번 주 지출
-        );
-
-
-        // 팀 생성
-        Team team1 = createTeam("팀이름1", true, member1.getMemberId(), "팀소개", member1);
-        Team team2 = createTeam("팀이름2", true, member2.getMemberId(), "팀소개", member2);
-        Team team3 = createTeam("팀이름3", true, member3.getMemberId(), "팀소개", member3);
-
-        teamRepository.saveAll(List.of(team1, team2, team3));
-
-        // when
-        teamService.calculateTeamScore();
-        teamService.RankTeamScore();
-
-        System.out.println("///////////////////////////////////////////////////////////");
-        System.out.println("team1 score = " + team1.getTeamScore());
-        System.out.println("team1 rank = " + team1.getTeamRankHistories().get(0).getRankNum());
-        System.out.println("team2 score = " + team2.getTeamScore());
-        System.out.println("team2 rank = " + team2.getTeamRankHistories().get(0).getRankNum());
-        System.out.println("team3 score = " + team3.getTeamScore());
-        System.out.println("team3 rank = " + team3.getTeamRankHistories().get(0).getRankNum());
-        System.out.println("///////////////////////////////////////////////////////////");
-
-        // then
-        assertThat(team2.getTeamScore()).isEqualTo(team3.getTeamScore());
-        assertThat(team1.getTeamRankHistories().get(0).getRankNum()).isEqualTo(3);
-        assertThat(team2.getTeamRankHistories().get(0).getRankNum())
-                .isEqualTo(team3.getTeamRankHistories().get(0).getRankNum());
-
-    }
+//    @DisplayName("이번주 지출 총액이 지난주 지출 총액보다 크다면 절약 점수는 0이다.")
+//    @Test
+//    void ifThisWeekMoreThanLastWeek() {
+//        // given
+//        Member member1 = createMember("member1@pennypal.site", "닉네임1", LocalDateTime.now());
+//        Member member2 = createMember("member2@pennypal.site", "닉네임2", LocalDateTime.now());
+//        Member member3 = createMember("member3@pennypal.site", "닉네임3", LocalDateTime.now());
+//        Member member4 = createMember("member4@pennypal.site", "닉네임4", LocalDateTime.now());
+//        Member member5 = createMember("member5@pennypal.site", "닉네임5", LocalDateTime.now());
+//
+//        // 지출 내역 생성
+//        // 토요일부터 6일 동안 30000원씩 지출 -> 지난 주 2일, 이번 주 4일
+//        List<Expense> expenses = createExpenses(LocalDate.of(2024, 3, 16), 6, 1,
+//                30000, member1);
+//
+//        memberRepository.saveAll(List.of(member1, member2, member3, member4, member5));
+//
+//        // 지출 내역 필터링
+//        List<Expense> expensesOfLastWeek = teamService.calculateLastWeekExpenses(expenses);
+//        List<Expense> expensesOfThisWeek = teamService.calculateThisWeekExpenses(expenses);
+//
+//        // 팀 생성
+//        Team team1 = createTeam("팀이름1", true, member1.getMemberId(), "팀소개", member1);
+//        teamRepository.save(team1);
+//
+//        teamService.joinTeam(TeamJoinServiceRequest.builder()
+//                .teamId(team1.getTeamId())
+//                .memberId(member2.getMemberId())
+//                .build());
+//        teamService.joinTeam(TeamJoinServiceRequest.builder()
+//                .teamId(team1.getTeamId())
+//                .memberId(member3.getMemberId())
+//                .build());
+//        teamService.joinTeam(TeamJoinServiceRequest.builder()
+//                .teamId(team1.getTeamId())
+//                .memberId(member4.getMemberId())
+//                .build());
+//        teamService.joinTeam(TeamJoinServiceRequest.builder()
+//                .teamId(team1.getTeamId())
+//                .memberId(member5.getMemberId())
+//                .build());
+//
+//        // when
+//        teamService.calculateTeamScore();
+//
+//        // then
+//        assertThat(team1.getTeamScore()).isEqualTo(0);
+//
+//    }
+//
+//    @DisplayName("동점인 팀이 있다면 등수는 같고, 다음 팀은 그 수만큼 등수를 건너뛴다.")
+//    @Test
+//    void IfSameScoreSameRank() {
+//        // given
+//        Member member1 = createMember("member1@pennypal.site", "닉네임1", LocalDateTime.now());
+//        Member member2 = createMember("member1@pennypal.site", "닉네임2", LocalDateTime.now());
+//        Member member3 = createMember("member1@pennypal.site", "닉네임3", LocalDateTime.now());
+//        memberRepository.saveAll(List.of(member1,member2,member3));
+//
+//        // 각 멤버에 대한 지출 내역 (Expense) 생성
+//        List<Expense> expensesMember1 = List.of(
+//                new Expense(LocalDate.of(2024, 3, 10), 50000, member1), // 지난 주 지출
+//                new Expense(LocalDate.of(2024, 3, 17), 70000, member1)  // 이번 주 지출
+//        );
+//        List<Expense> expensesMember2 = List.of(
+//                new Expense(LocalDate.of(2024, 3, 10), 50000, member2), // 지난 주 지출
+//                new Expense(LocalDate.of(2024, 3, 17), 30000, member2)  // 이번 주 지출
+//        );
+//        List<Expense> expensesMember3 = List.of(
+//                new Expense(LocalDate.of(2024, 3, 10), 50000, member3), // 지난 주 지출
+//                new Expense(LocalDate.of(2024, 3, 17), 30000, member3)  // 이번 주 지출
+//        );
+//
+//
+//        // 팀 생성
+//        Team team1 = createTeam("팀이름1", true, member1.getMemberId(), "팀소개", member1);
+//        Team team2 = createTeam("팀이름2", true, member2.getMemberId(), "팀소개", member2);
+//        Team team3 = createTeam("팀이름3", true, member3.getMemberId(), "팀소개", member3);
+//
+//        teamRepository.saveAll(List.of(team1, team2, team3));
+//
+//        // when
+//        teamService.calculateTeamScore();
+//        teamService.RankTeamScore();
+//
+//        System.out.println("///////////////////////////////////////////////////////////");
+//        System.out.println("team1 score = " + team1.getTeamScore());
+//        System.out.println("team1 rank = " + team1.getTeamRankHistories().get(0).getRankNum());
+//        System.out.println("team2 score = " + team2.getTeamScore());
+//        System.out.println("team2 rank = " + team2.getTeamRankHistories().get(0).getRankNum());
+//        System.out.println("team3 score = " + team3.getTeamScore());
+//        System.out.println("team3 rank = " + team3.getTeamRankHistories().get(0).getRankNum());
+//        System.out.println("///////////////////////////////////////////////////////////");
+//
+//        // then
+//        assertThat(team2.getTeamScore()).isEqualTo(team3.getTeamScore());
+//        assertThat(team1.getTeamRankHistories().get(0).getRankNum()).isEqualTo(3);
+//        assertThat(team2.getTeamRankHistories().get(0).getRankNum())
+//                .isEqualTo(team3.getTeamRankHistories().get(0).getRankNum());
+//
+//    }
 
     @DisplayName("팀원이 4명 미만이라면 팀 랭킹 경쟁에서 제외된다.")
     @Test

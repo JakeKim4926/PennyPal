@@ -17,33 +17,33 @@ public class Team extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "team_id")
-    private Long teamId;                                        // 팀 Id
+    private Long teamId;                                                                // 팀 Id
 
     @Column(name = "team_name")
-    private String teamName;                                    // 팀 이름
+    private String teamName;                                                            // 팀 이름
 
     @Setter
     @Column(name = "team_score")
-    private Integer teamScore;                                  // 팀 점수
+    private Integer teamScore;                                                          // 팀 점수
 
     @Column(
             name = "team_is_auto_confirm",
             columnDefinition = "TINYINT(1)"
     )
-    private Boolean teamIsAutoConfirm;                          // 자동 가입 승인 여부 (true = 자동 / false = 수동)
+    private Boolean teamIsAutoConfirm;                                                  // 자동 가입 승인 여부 (true = 자동 / false = 수동)
 
     @Column(name = "team_leader_id")
-    private Long teamLeaderId;                                  // 팀장 Id
+    private Long teamLeaderId;                                                          // 팀장 Id
 
     @OneToMany(
             mappedBy = "team",
             cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REMOVE},
             fetch = FetchType.LAZY
     )
-    private List<Member> members = new ArrayList<>();          // 팀 구성원
+    private List<Member> members = new ArrayList<>();                                   // 팀 구성원
 
     @Column(name = "team_info")
-    private String teamInfo;                                   // 팀 한줄소개
+    private String teamInfo;                                                            // 팀 한줄소개
 
     @OneToMany(
             fetch = FetchType.LAZY,
@@ -51,7 +51,7 @@ public class Team extends BaseEntity {
             cascade = CascadeType.ALL
     )
     @Column(name = "team_waiting_list")
-    private List<Member> TeamWaitingList = new ArrayList<>();  // 가입 승인 대기 리스트
+    private List<Member> TeamWaitingList = new ArrayList<>();                           // 가입 승인 대기 리스트
 
     @OneToMany(
             fetch = FetchType.LAZY,
