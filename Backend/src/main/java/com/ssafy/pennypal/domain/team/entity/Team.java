@@ -4,6 +4,7 @@ import com.ssafy.pennypal.domain.member.entity.Member;
 import com.ssafy.pennypal.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +26,10 @@ public class Team extends BaseEntity {
     @Column(name = "team_score")
     private Integer teamScore;                                  // 팀 점수
 
-    @Column(name = "team_is_auto_confirm")
+    @Column(
+            name = "team_is_auto_confirm",
+            columnDefinition = "TINYINT(1)"
+    )
     private Boolean teamIsAutoConfirm;                          // 자동 가입 승인 여부 (true = 자동 / false = 수동)
 
     @Column(name = "team_leader_id")

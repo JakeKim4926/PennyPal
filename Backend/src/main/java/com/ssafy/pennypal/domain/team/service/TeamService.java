@@ -8,6 +8,7 @@ import com.ssafy.pennypal.bank.dto.service.response.AccountTransactionResponseSe
 import com.ssafy.pennypal.bank.dto.service.response.UserAccountListResponseServiceDTO;
 import com.ssafy.pennypal.bank.dto.service.response.UserBankAccountsResponseServiceDTO;
 import com.ssafy.pennypal.bank.service.api.BankServiceAPIImpl;
+import com.ssafy.pennypal.domain.member.dto.response.MemberExpensesDetailResponse;
 import com.ssafy.pennypal.domain.member.entity.Member;
 import com.ssafy.pennypal.domain.member.entity.Expense;
 import com.ssafy.pennypal.domain.member.repository.IMemberRepository;
@@ -19,14 +20,12 @@ import com.ssafy.pennypal.domain.team.entity.TeamRankHistory;
 import com.ssafy.pennypal.domain.team.repository.ITeamRankHistoryRepository;
 import com.ssafy.pennypal.domain.team.repository.ITeamRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -84,13 +83,24 @@ public class TeamService {
         member.setTeam(team);
         memberRepository.save(member);
 
-        List<TeamMemberDetailResponse> memberDetails = team.getMembers().stream()
-                .filter(Objects::nonNull) // null이 아닌 멤버만 처리
-                .map(m -> new TeamMemberDetailResponse(
-                        m.getMemberNickname()))
+        List<TeamMemberExpenseResponse> members = team.getMembers().stream()
+                .filter(Objects::nonNull)
+                .map(m -> {
+                    List<MemberExpensesDetailResponse> lastWeekExpenses = member.getMemberExpensesOfLastWeek().stream()
+                            .map(expense -> new MemberExpensesDetailResponse(expense.getExpenseDate(), expense.getExpenseAmount()))
+                            .collect(Collectors.toList());
+                    List<MemberExpensesDetailResponse> thisWeekExpenses = member.getMemberExpensesOfThisWeek().stream()
+                            .map(expense -> new MemberExpensesDetailResponse(expense.getExpenseDate(), expense.getExpenseAmount()))
+                            .collect(Collectors.toList());
+                    return new TeamMemberExpenseResponse(
+                            member.getMemberNickname(),
+                            lastWeekExpenses,
+                            thisWeekExpenses);
+                })
                 .collect(Collectors.toList());
 
-        return TeamCreateResponse.of(savedTeam, memberDetails);
+
+        return TeamCreateResponse.of(savedTeam, members);
     }
 
     @Transactional
@@ -137,18 +147,12 @@ public class TeamService {
             throw new IllegalArgumentException("팀 정보를 찾을 수 없습니다.");
         }
 
-        List<TeamMemberDetailResponse> memberDetails = team.getMembers().stream()
-                .filter(Objects::nonNull) // null이 아닌 멤버만 처리
-                .map(member -> new TeamMemberDetailResponse(
-                        member.getMemberNickname()))
-                .collect(Collectors.toList());
 
         return TeamJoinResponse.builder()
                 .teamName(team.getTeamName())
                 .teamInfo(team.getTeamInfo())
                 .teamScore(team.getTeamScore())
                 .teamLeaderId(team.getTeamLeaderId())
-                .members(memberDetails)
                 .build();
     }
 
@@ -161,7 +165,7 @@ public class TeamService {
 
             // 4인 미만인 팀은 점수를 계산하지 않는다.
             if(team.getMembers().size() < 4){
-                throw new IllegalArgumentException("4인 미만인 팀은 랭킹 경쟁에서 제외됩니다.");
+                continue;
             }else {
 
                 //팀 점수 초기화
@@ -198,16 +202,20 @@ public class TeamService {
                                 .header(commonHeaderRequestDTO)
                                 .bankCode(account.getBankCode()) // 은행 코드
                                 .accountNo(account.getAccountNo()) // 계좌 번호
-                                .startDate(TODAY.format(DateTimeFormatter.ofPattern("yyyyMMdd")))
+
+                                // LocalDate -> String
+                                .startDate(MONDAY_OF_LAST_WEEK.format(DateTimeFormatter.ofPattern("yyyyMMdd")))
                                 .endDate(SUNDAY_OF_THIS_WEEK.format(DateTimeFormatter.ofPattern("yyyyMMdd")))
+
                                 .transactionType("D") // 출금 내역만
                                 .orderByType("default")
                                 .build();
 
                         // 계좌 거래 내역 조회 API 호출
-                        AccountTransactionListResponseServiceDTO transactionListResponseDTO = bankServiceAPI.getUserAccountTransaction(transactionRequestDTO);
+                        AccountTransactionListResponseServiceDTO transactionListResponseDTO
+                                = bankServiceAPI.getUserAccountTransaction(transactionRequestDTO);
 
-                        // 유저의 2주 동안의 지출 날짜, 지출 금액을 리스트로 담기
+                        // 유저의 2주 동안의 지출 날짜, 지출 금액, 해당 유저를 리스트로 담기
                         List<Expense> allExpenses = new ArrayList<>();
 
                         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMdd");
@@ -271,12 +279,20 @@ public class TeamService {
                 .collect(Collectors.toList());
 
         // 등수 계산
+
+        // 등수
         int rankNum = 1;
+
+        // 이전 팀의 점수
         int previousScore = rankedTeams.isEmpty() ? 0 : rankedTeams.get(0).getTeamScore();
+
+        // 동점인 팀이 있는지?
         int sameScoreCount = 1;
 
         for (int i = 0; i < rankedTeams.size(); i++) {
             TeamRankResponse currentTeamResponse = rankedTeams.get(i);
+
+            // 순위를 매길 팀
             Team currentTeam = teams.stream()
                     .filter(t -> t.getTeamId().equals(currentTeamResponse.getTeamId()))
                     .findFirst()
@@ -285,16 +301,24 @@ public class TeamService {
             if (currentTeam == null) continue;
 
             if (currentTeamResponse.getTeamScore() == previousScore) {
+
+                // 이전 팀과 점수가 같다면, 같은 등수로 저장
                 currentTeamResponse.setTeamRankNum(rankNum);
+
             } else {
+                // 점수가 다르면, 이전에 동점이었던 팀 수 만큼 현재 팀의 등수는 내려감
                 rankNum += sameScoreCount;
                 currentTeamResponse.setTeamRankNum(rankNum);
                 sameScoreCount = 0;
             }
+
+            // 동점 팀 수 +1
             sameScoreCount++;
+
+            //다음 팀으로 넘어가기 전에 현재 팀의 점수 저장
             previousScore = currentTeamResponse.getTeamScore();
 
-            // 팀 랭킹 기록 생성 및 저장
+            // 팀 랭킹 기록 저장
             TeamRankHistory newRankHistory = TeamRankHistory.builder()
                     .team(currentTeam)
                     .rankDate(today)
@@ -312,6 +336,7 @@ public class TeamService {
 
         List<Team> teams = teamRepository.findAll();
 
+        // 월요일에 집계된 등수 리턴
         return teams.stream()
                 .flatMap(team -> team.getTeamRankHistories().stream())
                 .filter(history -> history.getRankDate().isEqual(MONDAY_OF_THIS_WEEK)) // 이번주 월요일에 해당하는 기록만 필터링
@@ -357,7 +382,72 @@ public class TeamService {
             teamRepository.save(currentTeam);
         }
 
+        // note : 주간 랭킹 집계와 다르게 팀 랭크 히스토리에 저장하지 않음!
+
         return rankedTeams;
+    }
+
+    public TeamDetailResponse detailTeamInfo(Long teamId) {
+
+        Team team = teamRepository.findByTeamId(teamId);
+
+        int size = team.getTeamRankHistories().size() - 1;
+
+        List<TeamMemberExpenseResponse> members = team.getMembers().stream()
+                .filter(Objects::nonNull)
+                .map(member -> {
+                    List<MemberExpensesDetailResponse> lastWeekExpenses = member.getMemberExpensesOfLastWeek().stream()
+                            .map(expense -> new MemberExpensesDetailResponse(expense.getExpenseDate(), expense.getExpenseAmount()))
+                            .collect(Collectors.toList());
+                    List<MemberExpensesDetailResponse> thisWeekExpenses = member.getMemberExpensesOfThisWeek().stream()
+                            .map(expense -> new MemberExpensesDetailResponse(expense.getExpenseDate(), expense.getExpenseAmount()))
+                            .collect(Collectors.toList());
+                    return new TeamMemberExpenseResponse(
+                            member.getMemberNickname(),
+                            lastWeekExpenses,
+                            thisWeekExpenses);
+                })
+                .collect(Collectors.toList());
+
+        return TeamDetailResponse.builder()
+                .teamId(team.getTeamId())
+                .teamName(team.getTeamName())
+                .teamLeaderId(team.getTeamLeaderId())
+                .teamInfo(team.getTeamInfo())
+                .teamScore(team.getTeamScore())
+                // todo : 지난주 랭킹 ? 실시간 랭킹 ?
+                .teamRankNum(team.getTeamRankHistories().get(size).getRankNum())
+                .members(members)
+                .build();
+
+    }
+
+    public List<TeamSearchResponse> searchTeamList(String teamName) {
+
+        List<Team> teams = null;
+
+
+        if(teamName == null){
+            teams = teamRepository.findAll();
+        }else{
+            teams = teamRepository.findByTeamNameContaining(teamName);
+        }
+
+        List<TeamSearchResponse> result = new ArrayList<>();
+        for(Team team : teams){
+            TeamSearchResponse build = TeamSearchResponse.builder()
+                    .teamId(team.getTeamId())
+                    .teamName(team.getTeamName())
+                    .teamMembersNum(team.getMembers().size())
+                    .teamLeaderNickname(team.getMembers().get(0).getMemberNickname())
+                    .teamIsAutoConfirm(team.getTeamIsAutoConfirm())
+                    .build();
+
+            result.add(build);
+        }
+
+        return result;
+
     }
 
 

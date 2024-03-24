@@ -2,33 +2,27 @@ package com.ssafy.pennypal.domain.team.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.pennypal.bank.service.api.BankServiceAPIImpl;
-import com.ssafy.pennypal.bank.service.api.IBankServiceAPI;
 import com.ssafy.pennypal.common.RestDocsSupport;
 import com.ssafy.pennypal.domain.member.entity.Member;
-import com.ssafy.pennypal.domain.member.repository.IMemberRepository;
 import com.ssafy.pennypal.domain.team.dto.request.TeamCreateRequest;
 import com.ssafy.pennypal.domain.team.dto.request.TeamCreateServiceRequest;
 import com.ssafy.pennypal.domain.team.dto.request.TeamJoinRequest;
 import com.ssafy.pennypal.domain.team.dto.request.TeamJoinServiceRequest;
 import com.ssafy.pennypal.domain.team.dto.response.*;
 import com.ssafy.pennypal.domain.team.entity.Team;
-import com.ssafy.pennypal.domain.team.entity.TeamRankHistory;
 import com.ssafy.pennypal.domain.team.service.TeamService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
@@ -69,7 +63,7 @@ public class TeamControllerTest extends RestDocsSupport {
                 .build();
 
         // Mock MemberDetailResponse 생성
-        TeamMemberDetailResponse mockMemberDetail = TeamMemberDetailResponse.builder()
+        TeamMemberExpenseResponse mockMemberDetail = TeamMemberExpenseResponse.builder()
                 .memberNickname("팀원닉네임")
                 .build();
 
@@ -149,7 +143,7 @@ public class TeamControllerTest extends RestDocsSupport {
                 .build();
 
         // Mock MemberDetailResponse 생성
-        TeamMemberDetailResponse mockMemberDetail = TeamMemberDetailResponse.builder()
+        TeamMemberExpenseResponse mockMemberDetail = TeamMemberExpenseResponse.builder()
                 .memberNickname("팀원닉네임")
                 .build();
 
@@ -160,7 +154,6 @@ public class TeamControllerTest extends RestDocsSupport {
                         .teamInfo("팀 한줄소개")
                         .teamScore(100)
                         .teamLeaderId(1L)
-                        .members(Arrays.asList(mockMemberDetail, mockMemberDetail))
                         .build());
 
         mockMvc.perform(
@@ -195,12 +188,7 @@ public class TeamControllerTest extends RestDocsSupport {
                                 fieldWithPath("data.teamScore").type(JsonFieldType.NUMBER)
                                         .description("팀 포인트"),
                                 fieldWithPath("data.teamLeaderId").type(JsonFieldType.NUMBER)
-                                        .description("팀장 ID"),
-
-                                subsectionWithPath("data.members").type(JsonFieldType.ARRAY)
-                                        .description("팀 멤버 목록"),
-                                fieldWithPath("data.members[].memberNickname").type(JsonFieldType.STRING)
-                                        .description("멤버 닉네임")
+                                        .description("팀장 ID")
                         )
 
                 ));
@@ -211,7 +199,7 @@ public class TeamControllerTest extends RestDocsSupport {
 
     @DisplayName("팀 주간 랭킹 조회")
     @Test
-    void weeklyTeamRanking() throws Exception{
+    void weeklyTeamRanking() throws Exception {
         // given
         TeamRankHistoryResponse rankResponse1 = mock(TeamRankHistoryResponse.class);
         TeamRankHistoryResponse rankResponse2 = mock(TeamRankHistoryResponse.class);
@@ -239,11 +227,9 @@ public class TeamControllerTest extends RestDocsSupport {
         given(rankResponse3.getRankNum()).willReturn(2);
 
 
-
-
         mockMvc.perform(
-                get("/api/team/rank/weekly")
-                        .contentType(MediaType.APPLICATION_JSON)
+                        get("/api/team/rank/weekly")
+                                .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -306,7 +292,6 @@ public class TeamControllerTest extends RestDocsSupport {
         given(rankresponse3.getTeamRankNum()).willReturn(2);
 
 
-
         mockMvc.perform(
                         get("/api/team/rank/realtime")
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -341,6 +326,119 @@ public class TeamControllerTest extends RestDocsSupport {
         verify(teamService).RankTeamRealTimeScore();
 
 
+    }
+
+    @DisplayName("팀 상세 조회")
+    @Test
+    void detailTeamInfo() throws Exception {
+        // given
+        Team team = mock(Team.class);
+        TeamMemberExpenseResponse member = mock(TeamMemberExpenseResponse.class);
+
+        given(team.getTeamId()).willReturn(1L);
+        given(member.getMemberNickname()).willReturn("멤버 닉네임");
+
+        given(teamService.detailTeamInfo(anyLong()))
+                .willReturn(TeamDetailResponse.builder()
+                        .teamId(1L)
+                        .teamName("팀이름")
+                        .teamLeaderId(1L)
+                        .teamInfo("팀 한줄소개")
+                        .teamScore(150)
+                        .teamRankNum(1)
+                        .members(Arrays.asList(member, member))
+                        .build());
+
+        mockMvc.perform(
+                        get("/api/team/{teamId}", 1L)
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("detail-team",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+
+                                fieldWithPath("data").type(JsonFieldType.OBJECT)
+                                        .description("응답 데이터"),
+                                fieldWithPath("data.teamId").type(JsonFieldType.NUMBER)
+                                        .description("팀 ID"),
+                                fieldWithPath("data.teamName").type(JsonFieldType.STRING)
+                                        .description("팀 이름"),
+                                fieldWithPath("data.teamLeaderId").type(JsonFieldType.NUMBER)
+                                        .description("팀장 ID"),
+                                fieldWithPath("data.teamInfo").type(JsonFieldType.STRING)
+                                        .description("팀 한줄소개"),
+                                fieldWithPath("data.teamScore").type(JsonFieldType.NUMBER)
+                                        .description("팀 점수"),
+                                fieldWithPath("data.teamRankNum").type(JsonFieldType.NUMBER)
+                                        .description("팀 랭킹 등수"),
+
+                                subsectionWithPath("data.members").type(JsonFieldType.ARRAY)
+                                        .description("팀원"),
+                                subsectionWithPath("data.members[].memberLastWeekExpenses").type(JsonFieldType.ARRAY)
+                                        .description("팀원 지난주 지출 내역"),
+                                subsectionWithPath("data.members[].memberThisWeekExpenses").type(JsonFieldType.ARRAY)
+                                        .description("팀원 이번주 지출 내역")
+                        )
+
+                ));
+        verify(teamService).detailTeamInfo(anyLong());
+    }
+
+    @DisplayName("팀 전체 조회")
+    @Test
+    void searchTeamList() throws Exception {
+        // given
+        Team team = mock(Team.class);
+        TeamSearchResponse response = mock(TeamSearchResponse.class);
+
+        List<TeamSearchResponse> responses = new ArrayList<>();
+        responses.add(new TeamSearchResponse(1L, "teamName1", 3, "팀장닉네임1", true));
+        responses.add(new TeamSearchResponse(2L, "teamName2", 6, "팀장닉네임2", false));
+        responses.add(new TeamSearchResponse(3L, "teamName3", 4, "팀장닉네임3", true));
+        given(teamService.searchTeamList("nam")).willReturn(responses);
+
+        mockMvc.perform(
+                        get("/api/team?teamName=nam")
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("search-team-list",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+
+                                fieldWithPath("data").type(JsonFieldType.ARRAY)
+                                        .description("응답 데이터"),
+                                fieldWithPath("data.[].teamId").type(JsonFieldType.NUMBER)
+                                        .description("팀 ID"),
+                                fieldWithPath("data.[].teamName").type(JsonFieldType.STRING)
+                                        .description("팀 이름"),
+                                fieldWithPath("data.[].teamMembersNum").type(JsonFieldType.NUMBER)
+                                        .description("팀 멤버 수"),
+                                fieldWithPath("data.[].teamLeaderNickname").type(JsonFieldType.STRING)
+                                        .description("팀장 닉네임"),
+                                fieldWithPath("data.[].teamIsAutoConfirm").type(JsonFieldType.BOOLEAN)
+                                        .description("자동 가입 승인 여부")
+                        )
+                ));
+
+        verify(teamService).searchTeamList("nam");
     }
 
     private Member createMember(String memberEmail, String memberNickname, LocalDateTime memberBirthDate) {

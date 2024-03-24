@@ -1,19 +1,9 @@
 package com.ssafy.pennypal.domain.team.controller;
 
-import com.ssafy.pennypal.bank.dto.controller.response.UserAccountResponseControllerDTO;
-import com.ssafy.pennypal.bank.dto.service.common.CommonHeaderRequestDTO;
-import com.ssafy.pennypal.bank.dto.service.request.GetUserAccountListServiceRequestDTO;
 import com.ssafy.pennypal.bank.service.api.BankServiceAPIImpl;
-import com.ssafy.pennypal.bank.service.api.IBankServiceAPI;
-import com.ssafy.pennypal.bank.service.db.IBankServiceDB;
 import com.ssafy.pennypal.domain.team.dto.request.TeamCreateRequest;
 import com.ssafy.pennypal.domain.team.dto.request.TeamJoinRequest;
-import com.ssafy.pennypal.domain.team.dto.request.TeamJoinServiceRequest;
-import com.ssafy.pennypal.domain.team.dto.response.TeamCreateResponse;
-import com.ssafy.pennypal.domain.team.dto.response.TeamJoinResponse;
-import com.ssafy.pennypal.domain.team.dto.response.TeamRankHistoryResponse;
-import com.ssafy.pennypal.domain.team.dto.response.TeamRankResponse;
-import com.ssafy.pennypal.domain.team.entity.TeamRankHistory;
+import com.ssafy.pennypal.domain.team.dto.response.*;
 import com.ssafy.pennypal.domain.team.service.TeamService;
 import com.ssafy.pennypal.global.common.api.ApiResponse;
 import jakarta.validation.Valid;
@@ -41,7 +31,6 @@ public class TeamController {
         return ApiResponse.ok(teamService.createTeam(request.toServiceRequest()));
 
     }
-
 
     /**
      * note : 매주 월요일 오전 12시에 주간 랭킹 업데이트
@@ -77,7 +66,27 @@ public class TeamController {
     }
 
     /**
-     * note : 2.5 팀 가입
+     * note : 2.3 팀 전체 조회 + 검색 (팀이름)
+     */
+    @GetMapping
+    public ApiResponse<List<TeamSearchResponse>> searchTeamList(
+            @RequestParam(name = "teamName", required = false) String teamName
+    ){
+
+        return ApiResponse.ok(teamService.searchTeamList(teamName));
+    }
+
+    /**
+     * note : 2.4 팀 상세 조회
+     */
+    @GetMapping("/{teamId}")
+    public ApiResponse<TeamDetailResponse> detailTeamInfo(@PathVariable Long teamId){
+
+        return ApiResponse.ok(teamService.detailTeamInfo(teamId));
+    }
+
+    /**
+     * note : 2.5.2 팀 가입
      */
     @PostMapping("/{teamId}")
     public ApiResponse<TeamJoinResponse> joinTeam(@PathVariable Long teamId, Long memberId) {
