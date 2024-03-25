@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { Button } from '../../../shared';
 
 interface UserData {
@@ -105,11 +105,13 @@ export function SignUpForm() {
                     <img src="assets/image/icons_mini/Email.svg" />
                     <input type="text" placeholder="이메일" onChange={(e) => handleChange(e, 'email')} />
                 </div>
-                {emailValid === true ? (
-                    <p>유효한 이메일입니다.</p>
-                ) : emailValid === false ? (
-                    <p>유효하지 않은 이메일입니다.</p>
-                ) : null}
+                <div className="message-container">
+                    {emailValid === true ? (
+                        <p className="message-container--valid">유효한 이메일입니다.</p>
+                    ) : emailValid === false ? (
+                        <p className="message-container--invalid">유효하지 않은 이메일입니다.</p>
+                    ) : null}
+                </div>
             </div>
             <div>
                 <p>Password</p>
@@ -117,11 +119,13 @@ export function SignUpForm() {
                     <img src="assets/image/icons_mini/password.svg" />
                     <input type="password" placeholder="패스워드" onChange={(e) => handleChange(e, 'password')} />
                 </div>
-                {passwordValid === true ? (
-                    <p>유효한 패스워드입니다.</p>
-                ) : passwordValid === false ? (
-                    <p>유효하지 않은 패스워드입니다.</p>
-                ) : null}
+                <div className="message-container">
+                    {passwordValid === true ? (
+                        <p className="message-container--valid">유효한 패스워드입니다.</p>
+                    ) : passwordValid === false ? (
+                        <p className="message-container--invalid">유효하지 않은 패스워드입니다.</p>
+                    ) : null}
+                </div>
             </div>
             <div>
                 <p>Password Check</p>
@@ -133,11 +137,13 @@ export function SignUpForm() {
                         onChange={(e) => handleChange(e, 'confirmPassword')}
                     />
                 </div>
-                {confirmPasswordValid === true ? (
-                    <p>패스워드가 일치합니다.</p>
-                ) : confirmPasswordValid === false ? (
-                    <p>패스워드가 일치하지 않습니다.</p>
-                ) : null}
+                <div className="message-container">
+                    {confirmPasswordValid === true ? (
+                        <p className="message-container--valid">패스워드가 일치합니다.</p>
+                    ) : confirmPasswordValid === false ? (
+                        <p className="message-container--invalid">패스워드가 일치하지 않습니다.</p>
+                    ) : null}
+                </div>
             </div>
             <div>
                 <p>Name</p>
@@ -145,11 +151,13 @@ export function SignUpForm() {
                     <img src="assets/image/icons_mini/User.svg" />
                     <input type="text" placeholder="이름" onChange={(e) => handleChange(e, 'name')} />
                 </div>
-                {nameValid === true ? (
-                    <p>유효한 이름입니다.</p>
-                ) : nameValid === false ? (
-                    <p>유효하지 않은 이름입니다.</p>
-                ) : null}
+                <div className="message-container">
+                    {nameValid === true ? (
+                        <p className="message-container--valid">유효한 이름입니다.</p>
+                    ) : nameValid === false ? (
+                        <p className="message-container--invalid">유효하지 않은 이름입니다.</p>
+                    ) : null}
+                </div>
             </div>
             <div>
                 <p>Birthdate</p>
@@ -157,11 +165,13 @@ export function SignUpForm() {
                     <img src="assets/image/icons_mini/BirthDate.svg" />
                     <input type="text" placeholder="생일" onChange={(e) => handleChange(e, 'birthday')} />
                 </div>
-                {birthdayValid === true ? (
-                    <p>유효한 생일입니다.</p>
-                ) : birthdayValid === false ? (
-                    <p>유효하지 않은 생일입니다.</p>
-                ) : null}
+                <div className="message-container">
+                    {birthdayValid === true ? (
+                        <p className="message-container--valid">유효한 생일입니다.</p>
+                    ) : birthdayValid === false ? (
+                        <p className="message-container--invalid">유효하지 않은 생일입니다.</p>
+                    ) : null}
+                </div>
             </div>
             <div>
                 <p>Nickname</p>
@@ -169,11 +179,13 @@ export function SignUpForm() {
                     <img src="assets/image/icons_mini/Name.svg" />
                     <input type="text" placeholder="닉네임" onChange={(e) => handleChange(e, 'nickName')} />
                 </div>
-                {nickNameValid === true ? (
-                    <p>유효한 닉네임입니다.</p>
-                ) : nickNameValid === false ? (
-                    <p>유효하지 않은 닉네임입니다.</p>
-                ) : null}
+                <div className="message-container">
+                    {nickNameValid === true ? (
+                        <p className="message-container--valid">유효한 닉네임입니다.</p>
+                    ) : nickNameValid === false ? (
+                        <p className="message-container--invalid">유효하지 않은 닉네임입니다.</p>
+                    ) : null}
+                </div>
             </div>
             <div className="nextButton">
                 <Button child={'NEXT'} color={'light'} onClick={handleNext} />

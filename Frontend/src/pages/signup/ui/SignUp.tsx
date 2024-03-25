@@ -1,4 +1,5 @@
 import { SignUpForm } from './SignUpForm';
+import { Agreement } from './Agreement';
 
 export function SignUp() {
     return (
@@ -6,15 +7,14 @@ export function SignUp() {
             <div className="welcomebox">
                 <p className="welcomebox__text">WELCOME TO PENNYPAL !</p>
                 <div className="welcomebox__logo">
-                    <img src="assets/image/main-logo-colored.svg"/>
+                    <img src="assets/image/main-logo-colored.svg" />
                 </div>
                 <p className="welcomebox__singup">SIGN UP</p>
             </div>
-            <div className="signupForm">
-                <SignUpForm/>
+            <div className="signup-process container">
+                {/* <SignUpForm /> */}
+                <Agreement />
             </div>
         </div>
-        )
+    );
 }
-
-
