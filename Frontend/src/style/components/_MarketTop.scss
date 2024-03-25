@@ -1,0 +1,64 @@
+$BORDER_RADIUS: 10px; 
+$PADDING: 10px;
+$LETTER_SPACING: 2px;
+
+.marketTop {
+    display: flex;
+    justify-content: space-between;
+
+    div {
+        font-family: 'Wanted-Medium';
+        letter-spacing: $LETTER_SPACING;
+    }
+
+    &__point {
+        display: flex;
+        
+        &-title {
+            padding: $PADDING;
+            background-color: $gray;
+            border-top-left-radius: $BORDER_RADIUS;
+            border-bottom-left-radius: $BORDER_RADIUS;
+            color: $bright;
+        }
+        
+        &-value {
+            padding: $PADDING;
+            background-color: $bright;
+            border-top-right-radius: $BORDER_RADIUS;
+            border-bottom-right-radius: $BORDER_RADIUS;
+        }
+    }
+    
+    &__search {
+        display: flex;
+        
+        &-input {
+            background-color: $bright;
+            border: none;
+            padding: $PADDING;
+            border-top-left-radius: $BORDER_RADIUS;
+            border-bottom-left-radius: $BORDER_RADIUS;
+            font-size: 16px;
+        }
+        
+        &-button {
+            background-color: $gray;
+            border: none;
+            padding: $PADDING;
+            border-top-right-radius: $BORDER_RADIUS;
+            border-bottom-right-radius: $BORDER_RADIUS;
+            cursor: pointer;
+        }
+    }
+
+    &__record {
+        
+        &-item {
+            background-color: $gray;
+            padding: $PADDING;
+            border-radius: $BORDER_RADIUS;
+            color: $bright;
+        }
+    }
+}
