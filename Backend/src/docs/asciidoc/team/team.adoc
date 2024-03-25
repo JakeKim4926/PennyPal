@@ -1,5 +1,13 @@
 [[Team-API]]
 === 2.1 팀 생성
 include::api/createTeam.adoc[]
-=== 2.5 팀 가입
+=== 2.2 팀 주간 랭킹 조회
+include::api/weeklyTeamRanking.adoc[]
+=== 2.2.1 팀 실시간 랭킹 조회
+include::api/realtimeTeamRanking.adoc[]
+=== 2.3 팀 전체 조회
+include::api/searchTeamList.adoc[]
+=== 2.4 팀 상세 조회
+include::api/detailTeam.adoc[]
+=== 2.5.2 팀 가입
 include::api/joinTeam.adoc[]

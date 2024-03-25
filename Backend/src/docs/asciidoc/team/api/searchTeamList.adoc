@@ -1,0 +1,9 @@
+[[search-team-list]]
+==== HTTP Request
+
+include::{snippets}/search-team-list/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/search-team-list/http-response.adoc[]
+include::{snippets}/search-team-list/response-fields.adoc[]

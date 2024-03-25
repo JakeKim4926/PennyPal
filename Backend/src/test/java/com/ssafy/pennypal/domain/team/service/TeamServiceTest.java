@@ -1,5 +1,6 @@
 package com.ssafy.pennypal.domain.team.service;
 
+import com.ssafy.pennypal.domain.member.entity.Expense;
 import com.ssafy.pennypal.domain.member.entity.Member;
 import com.ssafy.pennypal.domain.member.repository.IMemberRepository;
 import com.ssafy.pennypal.domain.team.dto.request.TeamCreateServiceRequest;
@@ -16,6 +17,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,13 +48,13 @@ class TeamServiceTest {
 
     @DisplayName("팀을 만드는 유저의 아이디를 사용하여 팀을 생성한다.")
     @Test
-    void createTeam(){
+    void createTeam() {
         // given
         Member member1 = createMember("member1@pennypal.site", "짠1", LocalDateTime.now());
 
         memberRepository.save(member1);
 
-        TeamCreateServiceRequest request = createServiceRequest("팀이름1", true, member1.getMemberId(),"팀소개");
+        TeamCreateServiceRequest request = createServiceRequest("팀이름1", true, member1.getMemberId(), "팀소개");
 
         // when
         TeamCreateResponse teamResponse = teamService.createTeam(request);
@@ -65,15 +68,15 @@ class TeamServiceTest {
 
     @DisplayName("이미 존재하는 팀명이라면 예외가 발생한다.")
     @Test
-    void teamNameCannotSame(){
+    void teamNameCannotSame() {
         // given
         Member member1 = createMember("member1@pennypal.site", "짠1", LocalDateTime.now());
         Member member2 = createMember("member2@pennypal.site", "짠2", LocalDateTime.now());
 
         memberRepository.saveAll(List.of(member1, member2));
 
-        TeamCreateServiceRequest request1 = createServiceRequest("팀이름2", true, member1.getMemberId(),"팀소개");
-        TeamCreateServiceRequest request2 = createServiceRequest("팀이름2", false, member2.getMemberId(),"팀소개");
+        TeamCreateServiceRequest request1 = createServiceRequest("팀이름2", true, member1.getMemberId(), "팀소개");
+        TeamCreateServiceRequest request2 = createServiceRequest("팀이름2", false, member2.getMemberId(), "팀소개");
 
         teamService.createTeam(request1);
 
@@ -86,21 +89,21 @@ class TeamServiceTest {
 
     @DisplayName("팀을 만드는 유저가 이미 다른 팀의 구성원이라면 예외가 발생한다.")
     @Test
-    void memberCanHaveOneTeam(){
+    void memberCanHaveOneTeam() {
         // given
         Member member1 = createMember("member1@pennypal.site", "짠1", LocalDateTime.now());
         Member member2 = createMember("member2@pennypal.site", "짠2", LocalDateTime.now());
 
         memberRepository.saveAll(List.of(member1, member2));
 
-        TeamCreateServiceRequest request1 = createServiceRequest("팀이름3", true, member1.getMemberId(),"팀소개");
-        TeamCreateServiceRequest request2 = createServiceRequest("팀이름4", false, member2.getMemberId(),"팀소개");
+        TeamCreateServiceRequest request1 = createServiceRequest("팀이름3", true, member1.getMemberId(), "팀소개");
+        TeamCreateServiceRequest request2 = createServiceRequest("팀이름4", false, member2.getMemberId(), "팀소개");
 
         teamService.createTeam(request1);
         teamService.createTeam(request2);
 
 
-        TeamCreateServiceRequest request3 = createServiceRequest("팀이름5", true, member1.getMemberId(),"팀소개");
+        TeamCreateServiceRequest request3 = createServiceRequest("팀이름5", true, member1.getMemberId(), "팀소개");
 
         // when, then
         assertThatThrownBy(() -> teamService.createTeam(request3))
@@ -112,7 +115,7 @@ class TeamServiceTest {
     // todo : refactoring
     @DisplayName("팀의 인원이 6명이라면 가입할 수 없다.")
     @Test
-    void teamMembersSizeMustBeLessThan6(){
+    void teamMembersSizeMustBeLessThan6() {
         // given
 
         // 유저 7명 생성, 저장
@@ -145,7 +148,7 @@ class TeamServiceTest {
 
     @DisplayName("해당 팀에 이미 가입되어 있으면 가입할 수 없다.")
     @Test
-    void cannotSignUpSameTeam(){
+    void cannotSignUpSameTeam() {
         // given
         Member member = createMember("member1@pennypal.site", "짠1", LocalDateTime.now());
         memberRepository.save(member);
@@ -166,7 +169,7 @@ class TeamServiceTest {
 
     @DisplayName("다른 팀에 가입 되어 있다면 가입할 수 없다.")
     @Test
-    void cannotSignUpAnotherTeam(){
+    void cannotSignUpAnotherTeam() {
         // given
         Member member1 = createMember("member1@pennypal.site", "짠1", LocalDateTime.now());
         Member member2 = createMember("member2@pennypal.site", "짠2", LocalDateTime.now());
@@ -193,13 +196,13 @@ class TeamServiceTest {
     // todo : assertThat 닉네임 검색 완성하기
     @DisplayName("팀의 가입 승인 방식이 자동이라면 바로 가입되며, 해당 팀의 구성원은 1명 늘어난다.")
     @Test
-    void TeamIsAutoConfirmTrue(){
+    void TeamIsAutoConfirmTrue() {
         // given
         Member member1 = createMember("member1@pennypal.site", "짠1", LocalDateTime.now());
         Member member2 = createMember("member2@pennypal.site", "짠2", LocalDateTime.now());
         memberRepository.saveAll(List.of(member1, member2));
 
-        TeamCreateServiceRequest createRequest = createServiceRequest("팀이름1", true, member1.getMemberId(),"팀소개");
+        TeamCreateServiceRequest createRequest = createServiceRequest("팀이름1", true, member1.getMemberId(), "팀소개");
         TeamCreateResponse savedTeam = teamService.createTeam(createRequest);
 
         Team findedTeam = teamRepository.findByTeamName(savedTeam.getTeamName());
@@ -220,13 +223,13 @@ class TeamServiceTest {
 
     @DisplayName("팀의 가입 승인 방식이 자동이 아니라면 팀의 가입 대기 리스트에 유저 정보가 들어가고, 예외가 발생한다.")
     @Test
-    void TeamIsAutoConfirmFalse(){
+    void TeamIsAutoConfirmFalse() {
         // given
         Member member1 = createMember("member1@pennypal.site", "짠1", LocalDateTime.now());
         Member member2 = createMember("member2@pennypal.site", "짠2", LocalDateTime.now());
         memberRepository.saveAll(List.of(member1, member2));
 
-        TeamCreateServiceRequest createRequest = createServiceRequest("팀이름1", false, member1.getMemberId(),"팀소개");
+        TeamCreateServiceRequest createRequest = createServiceRequest("팀이름1", false, member1.getMemberId(), "팀소개");
         TeamCreateResponse savedTeam = teamService.createTeam(createRequest);
 
         Team findedTeam = teamRepository.findByTeamName(savedTeam.getTeamName());
@@ -236,64 +239,144 @@ class TeamServiceTest {
         // when, then
         assertThatThrownBy(() -> teamService.joinTeam(joinRequest))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("가입 요청이 완료되었습니다.");
+                .hasMessage("가입 요청 완료 메시지를 위한 에러 발생");
         assertThat(findedTeam.getTeamWaitingList()).hasSize(1);
         assertThat(findedTeam.getTeamWaitingList().get(0).getMemberId()).isEqualTo(member2.getMemberId());
         assertThat(member2.getMemberWaitingTeam().getTeamId()).isEqualTo(findedTeam.getTeamId());
 
     }
 
-    // note : 작업 중
 //    @DisplayName("이번주 지출 총액이 지난주 지출 총액보다 크다면 절약 점수는 0이다.")
 //    @Test
-//    void getMembersExpenses(){
+//    void ifThisWeekMoreThanLastWeek() {
 //        // given
+//        Member member1 = createMember("member1@pennypal.site", "닉네임1", LocalDateTime.now());
+//        Member member2 = createMember("member2@pennypal.site", "닉네임2", LocalDateTime.now());
+//        Member member3 = createMember("member3@pennypal.site", "닉네임3", LocalDateTime.now());
+//        Member member4 = createMember("member4@pennypal.site", "닉네임4", LocalDateTime.now());
+//        Member member5 = createMember("member5@pennypal.site", "닉네임5", LocalDateTime.now());
 //
-//        /**
-//         * 멤버, 팀 생성, 팀 가입
-//         */
-//        Member member1 = createMember2(1000.0, 23000.0, 5.0);
-//        Member member2 = createMember2(10000.0, 16000.0, 4.0);
-//        memberRepository.saveAll(List.of(member1, member2));
+//        // 지출 내역 생성
+//        // 토요일부터 6일 동안 30000원씩 지출 -> 지난 주 2일, 이번 주 4일
+//        List<Expense> expenses = createExpenses(LocalDate.of(2024, 3, 16), 6, 1,
+//                30000, member1);
 //
-//        TeamCreateServiceRequest createRequest = createServiceRequest("팀이름1", true, member1.getMemberId(),"팀소개");
-//        TeamCreateResponse savedTeam = teamService.createTeam(createRequest);
+//        memberRepository.saveAll(List.of(member1, member2, member3, member4, member5));
 //
-//        Team findedTeam = teamRepository.findByTeamName(savedTeam.getTeamName());
-//        TeamJoinServiceRequest joinRequest = joinServiceRequest(findedTeam.getTeamId(), member2.getMemberId());
-//        teamService.joinTeam(joinRequest);
+//        // 지출 내역 필터링
+//        List<Expense> expensesOfLastWeek = teamService.calculateLastWeekExpenses(expenses);
+//        List<Expense> expensesOfThisWeek = teamService.calculateThisWeekExpenses(expenses);
+//
+//        // 팀 생성
+//        Team team1 = createTeam("팀이름1", true, member1.getMemberId(), "팀소개", member1);
+//        teamRepository.save(team1);
+//
+//        teamService.joinTeam(TeamJoinServiceRequest.builder()
+//                .teamId(team1.getTeamId())
+//                .memberId(member2.getMemberId())
+//                .build());
+//        teamService.joinTeam(TeamJoinServiceRequest.builder()
+//                .teamId(team1.getTeamId())
+//                .memberId(member3.getMemberId())
+//                .build());
+//        teamService.joinTeam(TeamJoinServiceRequest.builder()
+//                .teamId(team1.getTeamId())
+//                .memberId(member4.getMemberId())
+//                .build());
+//        teamService.joinTeam(TeamJoinServiceRequest.builder()
+//                .teamId(team1.getTeamId())
+//                .memberId(member5.getMemberId())
+//                .build());
 //
 //        // when
-//        teamService.calculateTeamScore(findedTeam.getTeamId());
+//        teamService.calculateTeamScore();
 //
 //        // then
-//        assertThat(findedTeam.getTeamScore()).isEqualTo(0);
+//        assertThat(team1.getTeamScore()).isEqualTo(0);
+//
+//    }
+//
+//    @DisplayName("동점인 팀이 있다면 등수는 같고, 다음 팀은 그 수만큼 등수를 건너뛴다.")
+//    @Test
+//    void IfSameScoreSameRank() {
+//        // given
+//        Member member1 = createMember("member1@pennypal.site", "닉네임1", LocalDateTime.now());
+//        Member member2 = createMember("member1@pennypal.site", "닉네임2", LocalDateTime.now());
+//        Member member3 = createMember("member1@pennypal.site", "닉네임3", LocalDateTime.now());
+//        memberRepository.saveAll(List.of(member1,member2,member3));
+//
+//        // 각 멤버에 대한 지출 내역 (Expense) 생성
+//        List<Expense> expensesMember1 = List.of(
+//                new Expense(LocalDate.of(2024, 3, 10), 50000, member1), // 지난 주 지출
+//                new Expense(LocalDate.of(2024, 3, 17), 70000, member1)  // 이번 주 지출
+//        );
+//        List<Expense> expensesMember2 = List.of(
+//                new Expense(LocalDate.of(2024, 3, 10), 50000, member2), // 지난 주 지출
+//                new Expense(LocalDate.of(2024, 3, 17), 30000, member2)  // 이번 주 지출
+//        );
+//        List<Expense> expensesMember3 = List.of(
+//                new Expense(LocalDate.of(2024, 3, 10), 50000, member3), // 지난 주 지출
+//                new Expense(LocalDate.of(2024, 3, 17), 30000, member3)  // 이번 주 지출
+//        );
+//
+//
+//        // 팀 생성
+//        Team team1 = createTeam("팀이름1", true, member1.getMemberId(), "팀소개", member1);
+//        Team team2 = createTeam("팀이름2", true, member2.getMemberId(), "팀소개", member2);
+//        Team team3 = createTeam("팀이름3", true, member3.getMemberId(), "팀소개", member3);
+//
+//        teamRepository.saveAll(List.of(team1, team2, team3));
+//
+//        // when
+//        teamService.calculateTeamScore();
+//        teamService.RankTeamScore();
+//
+//        System.out.println("///////////////////////////////////////////////////////////");
+//        System.out.println("team1 score = " + team1.getTeamScore());
+//        System.out.println("team1 rank = " + team1.getTeamRankHistories().get(0).getRankNum());
+//        System.out.println("team2 score = " + team2.getTeamScore());
+//        System.out.println("team2 rank = " + team2.getTeamRankHistories().get(0).getRankNum());
+//        System.out.println("team3 score = " + team3.getTeamScore());
+//        System.out.println("team3 rank = " + team3.getTeamRankHistories().get(0).getRankNum());
+//        System.out.println("///////////////////////////////////////////////////////////");
+//
+//        // then
+//        assertThat(team2.getTeamScore()).isEqualTo(team3.getTeamScore());
+//        assertThat(team1.getTeamRankHistories().get(0).getRankNum()).isEqualTo(3);
+//        assertThat(team2.getTeamRankHistories().get(0).getRankNum())
+//                .isEqualTo(team3.getTeamRankHistories().get(0).getRankNum());
 //
 //    }
 
-    @DisplayName("팀원이 4명 미만이라면 계산하지 않는다.")
+    @DisplayName("팀원이 4명 미만이라면 팀 랭킹 경쟁에서 제외된다.")
     @Test
-    void test(){
+    void excludeIfMemberSizeLessThan4() {
         // given
+        Member member1 = createMember("member1@pennypal.site", "닉네임1", LocalDateTime.now());
 
-        // when
+        // 지출 내역 생성
+        // 토요일부터 6일 동안 30000원씩 지출 -> 지난 주 2일, 이번 주 4일
+        List<Expense> expenses = createExpenses(LocalDate.of(2024, 3, 16), 6, 1,
+                30000, member1);
 
-        // then
+        memberRepository.save(member1);
+
+        // 지출 내역 필터링
+        List<Expense> expensesOfLastWeek = teamService.calculateLastWeekExpenses(expenses);
+        List<Expense> expensesOfThisWeek = teamService.calculateThisWeekExpenses(expenses);
+
+        // 팀 생성
+        Team team1 = createTeam("팀이름1", true, member1.getMemberId(), "팀소개", member1);
+
+        teamRepository.save(team1);
+
+        // when, then
+        assertThat(team1.getTeamScore()).isEqualTo(0);
 
     }
 
-    @DisplayName("팀 점수가 같은 팀이 있다면 ....")
-    @Test
-    void test2(){
-        // given
 
-        // when
-
-        // then
-
-    }
-
-    private Member createMember(String memberEmail, String memberNickname, LocalDateTime memberBirthDate){
+    private Member createMember(String memberEmail, String memberNickname, LocalDateTime memberBirthDate) {
         return Member.builder()
                 .memberEmail(memberEmail)
                 .memberPassword("1234")
@@ -303,7 +386,7 @@ class TeamServiceTest {
                 .build();
     }
 
-    private Team createTeam(String teamName, Boolean teamIsAutoConfirm, Long teamLeaderId, String teamInfo, Member member){
+    private Team createTeam(String teamName, Boolean teamIsAutoConfirm, Long teamLeaderId, String teamInfo, Member member) {
         return Team.builder()
                 .teamName(teamName)
                 .teamIsAutoConfirm(teamIsAutoConfirm)
@@ -312,7 +395,7 @@ class TeamServiceTest {
                 .build();
     }
 
-    private TeamCreateServiceRequest createServiceRequest(String teamName, Boolean teamIsAutoConfirm, Long teamLeaderId, String teamInfo){
+    private TeamCreateServiceRequest createServiceRequest(String teamName, Boolean teamIsAutoConfirm, Long teamLeaderId, String teamInfo) {
         return TeamCreateServiceRequest.builder()
                 .teamName(teamName)
                 .teamIsAutoConfirm(teamIsAutoConfirm)
@@ -321,18 +404,26 @@ class TeamServiceTest {
                 .build();
     }
 
-    private TeamJoinServiceRequest joinServiceRequest(Long teamId, Long memberId){
+    private TeamJoinServiceRequest joinServiceRequest(Long teamId, Long memberId) {
         return TeamJoinServiceRequest.builder()
                 .teamId(teamId)
                 .memberId(memberId)
                 .build();
     }
 
-    private Member createMember2(Double memberLastWeekTotalExpenses, Double memberThisWeekTotalExpenses, Double memberAttendance){
-        return Member.builder()
-                .memberLastWeekExpenses(memberLastWeekTotalExpenses)
-                .memberThisWeekExpenses(memberThisWeekTotalExpenses)
-                .memberAttendance(memberAttendance)
-                .build();
+    private List<Expense> createExpenses(LocalDate startDate, int numOfExpenses, int intervalDays, int expenseAmount, Member member) {
+        List<Expense> expenses = new ArrayList<>();
+
+        for (int i = 0; i < numOfExpenses; i++) {
+            LocalDate expenseDate = startDate.plusDays(i * intervalDays); // 지출일을 계산하여 설정
+            Expense expense = Expense.builder()
+                    .expenseDate(expenseDate)
+                    .expenseAmount(expenseAmount)
+                    .member(member)
+                    .build();
+            expenses.add(expense);
+        }
+
+        return expenses;
     }
 }

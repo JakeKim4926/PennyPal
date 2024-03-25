@@ -19,14 +19,12 @@ public class TeamJoinResponse {
 
     private Long teamLeaderId;
 
-    private List<TeamMemberDetailResponse> members;
 
     @Builder
-    private TeamJoinResponse(String teamName, String teamInfo, Integer teamScore, Long teamLeaderId, List<TeamMemberDetailResponse> members) {
+    private TeamJoinResponse(String teamName, String teamInfo, Integer teamScore, Long teamLeaderId) {
         this.teamName = teamName;
         this.teamInfo = teamInfo;
         this.teamScore = teamScore;
         this.teamLeaderId = teamLeaderId;
-        this.members = members;
     }
 }

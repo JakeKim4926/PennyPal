@@ -42,9 +42,7 @@ class TeamTest {
     }
 
 
-    /**
-     * createMember method
-     */
+
     private Member createMember(String memberEmail, String memberNickname, LocalDateTime memberBirthDate){
         return Member.builder()
                 .memberEmail(memberEmail)
@@ -55,9 +53,6 @@ class TeamTest {
                 .build();
     }
 
-    /**
-     * createTeam method
-     */
     private Team createTeam(String teamName, Boolean teamIsAutoConfirm, Long teamLeaderId, String teamInfo){
         return Team.builder()
                 .teamName(teamName)
