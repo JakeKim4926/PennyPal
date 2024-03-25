@@ -1,4 +1,7 @@
-@import "@/style/abstract/variables";
+// 원티드 웹폰트 URL
+@mixin wantedURL {
+  src: url("https://cdn.jsdelivr.net/gh/wanteddev/wanted-sans@v1.0.1/packages/wanted-sans/fonts/webfonts/variable/split/WantedSansVariable.min.css");
+}
 
 // 모바일 : 최소 '모바일'사이즈부터 ~ 최대 '모바일에서 태블릿'사이즈까지
 @mixin mobile {

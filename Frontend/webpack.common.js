@@ -45,6 +45,7 @@ module.exports = () => {
                 {
                     test: /\.s[ac]ss$/,
                     use: ['style-loader', 'css-loader', 'sass-loader'],
+                    include: path.resolve(__dirname, 'src'),
                 },
 
                 // asset loader
