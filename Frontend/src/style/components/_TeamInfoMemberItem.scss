@@ -1,6 +1,3 @@
-@import '@/style/abstract/fonts';
-
-
 .teamInfoMemberItem {
     box-shadow: 0 3px 3px $gray;
     width: 300px;
@@ -9,6 +6,28 @@
 
     &__top {
         font-size: 25px;
+    }
+
+    &__middle {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 70.4px;
+        padding: 10px;
+
+        &-button {
+            font-size: 30px;
+            letter-spacing: 5px;
+            background-color: transparent;
+            border: none;
+            color: $gray;
+            transition: color 0.2s;
+            cursor: pointer;
+
+            &:hover {
+                color: $black;
+            }
+        }
     }
 
     &__bottom {
