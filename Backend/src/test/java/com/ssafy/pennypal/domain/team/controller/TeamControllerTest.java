@@ -5,10 +5,7 @@ import com.ssafy.pennypal.bank.service.api.BankServiceAPIImpl;
 import com.ssafy.pennypal.common.RestDocsSupport;
 import com.ssafy.pennypal.domain.chat.service.ChatService;
 import com.ssafy.pennypal.domain.member.entity.Member;
-import com.ssafy.pennypal.domain.team.dto.request.TeamCreateRequest;
-import com.ssafy.pennypal.domain.team.dto.request.TeamCreateServiceRequest;
-import com.ssafy.pennypal.domain.team.dto.request.TeamJoinRequest;
-import com.ssafy.pennypal.domain.team.dto.request.TeamJoinServiceRequest;
+import com.ssafy.pennypal.domain.team.dto.request.*;
 import com.ssafy.pennypal.domain.team.dto.response.*;
 import com.ssafy.pennypal.domain.team.entity.Team;
 import com.ssafy.pennypal.domain.team.service.TeamService;
@@ -17,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.operation.QueryParameters;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.restdocs.request.ParameterDescriptor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -25,6 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
@@ -34,8 +33,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -413,17 +411,15 @@ public class TeamControllerTest extends RestDocsSupport {
         given(teamService.searchTeamList("name")).willReturn(responses);
 
         mockMvc.perform(
-                        get("/api/team")
-                                .param("keyword","name")
+                        get("/api/team?keyword=name")
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andDo(document("search-team-list",
-                        preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         queryParameters(
-                                parameterWithName("keyword").description("이름 검색 키워드")
+                                parameterWithName("keyword").description("검색할 키워드")
                         ),
                         responseFields(
                                 fieldWithPath("code").type(JsonFieldType.NUMBER)
@@ -449,6 +445,76 @@ public class TeamControllerTest extends RestDocsSupport {
                 ));
 
         verify(teamService).searchTeamList("name");
+    }
+
+    @DisplayName("팀 정보 수정")
+    @Test
+    void modifyTeamInfo() throws Exception {
+        Team team = mock(Team.class);
+
+        // request
+        given(team.getTeamId()).willReturn(10L);
+
+        TeamModifyRequest request = TeamModifyRequest.builder()
+                .memberId(100L)
+                .teamIsAutoConfirm(false)
+                .teamName("수정 전 팀이름")
+                .teamLeaderId(200L)
+                .teamInfo("팀 한줄소개")
+                .build();
+        TeamModifyResponse response = TeamModifyResponse.builder()
+                .teamName("수정 후 팀이름")
+                .teamLeaderId(200L)
+                .teamIsAutoConfirm(false)
+                .teamInfo("수정 후 팀 한줄소개")
+                .build();
+
+        given(teamService.modifyTeam(eq(10L), any(TeamModifyRequest.class))).willReturn(response);
+
+        mockMvc.perform(
+                        patch("/api/team/{teamId}", 10L)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(new ObjectMapper().writeValueAsString(request))
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("modify-team",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestFields(
+                                fieldWithPath("memberId").type(JsonFieldType.NUMBER)
+                                        .description("요청 보내는 유저 ID"),
+                                fieldWithPath("teamName").type(JsonFieldType.STRING)
+                                        .description("팀 이름"),
+                                fieldWithPath("teamIsAutoConfirm").type(JsonFieldType.BOOLEAN)
+                                        .description("자동가입 승인 여부"),
+                                fieldWithPath("teamLeaderId").type(JsonFieldType.NUMBER)
+                                        .description("팀장 ID"),
+                                fieldWithPath("teamInfo").type(JsonFieldType.STRING)
+                                        .description("팀 한줄소개")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+
+                                fieldWithPath("data").type(JsonFieldType.OBJECT)
+                                        .description("응답 데이터"),
+                                fieldWithPath("data.teamName").type(JsonFieldType.STRING)
+                                        .description("수정 후 팀 명"),
+                                fieldWithPath("data.teamLeaderId").type(JsonFieldType.NUMBER)
+                                        .description("수정 후 팀장 ID"),
+                                fieldWithPath("data.teamIsAutoConfirm").type(JsonFieldType.BOOLEAN)
+                                        .description("수정 후 자동 가입 승인 여부"),
+                                fieldWithPath("data.teamInfo").type(JsonFieldType.STRING)
+                                        .description("수정 후 팀 소개")
+                        )
+                ));
+        verify(teamService).modifyTeam(eq(10L), any(TeamModifyRequest.class));
+
     }
 
     private Member createMember(String memberEmail, String memberNickname, LocalDateTime memberBirthDate) {

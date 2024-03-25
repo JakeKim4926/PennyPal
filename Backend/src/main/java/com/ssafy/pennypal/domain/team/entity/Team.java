@@ -2,6 +2,7 @@ package com.ssafy.pennypal.domain.team.entity;
 
 import com.ssafy.pennypal.domain.chat.entity.ChatRoom;
 import com.ssafy.pennypal.domain.member.entity.Member;
+import com.ssafy.pennypal.domain.team.dto.request.TeamModifyRequest;
 import com.ssafy.pennypal.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -77,6 +78,27 @@ public class Team extends BaseEntity {
         this.teamLeaderId = teamLeaderId;
         this.members.add(member);
         this.teamInfo = teamInfo;
+    }
+
+    public static Team modifyTeam(Team team, TeamModifyRequest request){
+
+        if(request.getTeamName() != null){
+            team.teamName = request.getTeamName();
+        }
+
+        if(request.getTeamLeaderId() != null){
+            team.teamLeaderId = request.getTeamLeaderId();
+        }
+
+        if(request.getTeamIsAutoConfirm() != null){
+            team.teamIsAutoConfirm = request.getTeamIsAutoConfirm();
+        }
+
+        if(request.getTeamInfo() != null){
+            team.teamInfo = request.getTeamInfo();
+        }
+
+        return team;
     }
 
 }

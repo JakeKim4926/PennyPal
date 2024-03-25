@@ -14,6 +14,7 @@ import com.ssafy.pennypal.domain.member.entity.Expense;
 import com.ssafy.pennypal.domain.member.repository.IMemberRepository;
 import com.ssafy.pennypal.domain.team.dto.request.TeamCreateServiceRequest;
 import com.ssafy.pennypal.domain.team.dto.request.TeamJoinServiceRequest;
+import com.ssafy.pennypal.domain.team.dto.request.TeamModifyRequest;
 import com.ssafy.pennypal.domain.team.dto.response.*;
 import com.ssafy.pennypal.domain.team.entity.Team;
 import com.ssafy.pennypal.domain.team.entity.TeamRankHistory;
@@ -59,9 +60,9 @@ public class TeamService {
         // 유저 정보 가져오기
         Member member = memberRepository.findByMemberId(request.getTeamLeaderId());
 
-        if(member == null){
+        if (member == null) {
             throw new IllegalArgumentException("유저를 찾을 수 없습니다.");
-        }else {
+        } else {
 
             // 이미 존재하는 팀명이라면 예외 발생
             if (teamRepository.findByTeamName(request.getTeamName()) != null) {
@@ -169,9 +170,9 @@ public class TeamService {
         for (Team team : teams) {
 
             // 4인 미만인 팀은 점수를 계산하지 않는다.
-            if(team.getMembers().size() < 4){
+            if (team.getMembers().size() < 4) {
                 continue;
-            }else {
+            } else {
 
                 //팀 점수 초기화
                 int teamScore = 0;
@@ -270,7 +271,7 @@ public class TeamService {
     }
 
     @Transactional
-    public List<TeamRankResponse> RankTeamScore(){
+    public List<TeamRankResponse> RankTeamScore() {
 
         List<Team> teams = teamRepository.findAll();
 
@@ -337,7 +338,7 @@ public class TeamService {
         return rankedTeams;
     }
 
-    public List<TeamRankHistoryResponse> rankHistoriesForWeeks(){
+    public List<TeamRankHistoryResponse> rankHistoriesForWeeks() {
 
         List<Team> teams = teamRepository.findAll();
 
@@ -345,12 +346,12 @@ public class TeamService {
         return teams.stream()
                 .flatMap(team -> team.getTeamRankHistories().stream())
                 .filter(history -> history.getRankDate().isEqual(MONDAY_OF_THIS_WEEK)) // 이번주 월요일에 해당하는 기록만 필터링
-                .map(history -> new TeamRankHistoryResponse(history.getTeam().getTeamName(), history.getRankDate(),history.getRankNum()))
+                .map(history -> new TeamRankHistoryResponse(history.getTeam().getTeamName(), history.getRankDate(), history.getRankNum()))
                 .collect(Collectors.toList());
     }
 
     @Transactional
-    public List<TeamRankResponse> RankTeamRealTimeScore(){
+    public List<TeamRankResponse> RankTeamRealTimeScore() {
 
         List<Team> teams = teamRepository.findAll();
 
@@ -413,7 +414,7 @@ public class TeamService {
                 .collect(Collectors.toList());
 
         // 그 동안의 랭킹 내역이 없을 때
-        if(team.getTeamRankHistories() == null || team.getTeamRankHistories().isEmpty()){
+        if (team.getTeamRankHistories() == null || team.getTeamRankHistories().isEmpty()) {
 
             return TeamDetailResponse.builder()
                     .teamId(team.getTeamId())
@@ -425,7 +426,7 @@ public class TeamService {
                     .teamRankNum(0)
                     .members(members)
                     .build();
-        }else {
+        } else {
             int lastIndex = team.getTeamRankHistories().size() - 1;
 
             return TeamDetailResponse.builder()
@@ -445,14 +446,14 @@ public class TeamService {
 
         List<Team> teams = null;
 
-        if(teamName == null){
+        if (teamName == null) {
             teams = teamRepository.findAll();
-        }else{
+        } else {
             teams = teamRepository.findByTeamNameContaining(teamName);
         }
 
         List<TeamSearchResponse> result = new ArrayList<>();
-        for(Team team : teams){
+        for (Team team : teams) {
 
             // 팀 리더
             Member member = memberRepository.findByMemberId(team.getTeamLeaderId());
@@ -470,6 +471,32 @@ public class TeamService {
 
         return result;
 
+    }
+
+    @Transactional
+    public TeamModifyResponse modifyTeam(Long teamId, TeamModifyRequest request) {
+
+        Team team = teamRepository.findByTeamId(teamId);
+
+        // 팀장만 가능
+        if (team.getTeamLeaderId().equals(request.getMemberId())) {
+
+            team = Team.modifyTeam(team, request);
+
+            teamRepository.save(team);
+
+            TeamModifyResponse response = TeamModifyResponse.builder()
+                    .teamName(team.getTeamName())
+                    .teamLeaderId(team.getTeamLeaderId())
+                    .teamIsAutoConfirm(team.getTeamIsAutoConfirm())
+                    .teamInfo(team.getTeamInfo())
+                    .build();
+
+            return response;
+
+        } else {
+            throw new IllegalArgumentException("팀 정보 수정은 팀장만 가능합니다.");
+        }
     }
 
 

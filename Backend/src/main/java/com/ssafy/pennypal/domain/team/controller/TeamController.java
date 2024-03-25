@@ -4,6 +4,7 @@ import com.ssafy.pennypal.bank.service.api.BankServiceAPIImpl;
 import com.ssafy.pennypal.domain.chat.service.ChatService;
 import com.ssafy.pennypal.domain.team.dto.request.TeamCreateRequest;
 import com.ssafy.pennypal.domain.team.dto.request.TeamJoinRequest;
+import com.ssafy.pennypal.domain.team.dto.request.TeamModifyRequest;
 import com.ssafy.pennypal.domain.team.dto.response.*;
 import com.ssafy.pennypal.domain.team.service.TeamService;
 import com.ssafy.pennypal.global.common.api.ApiResponse;
@@ -91,6 +92,16 @@ public class TeamController {
     public ApiResponse<TeamDetailResponse> detailTeamInfo(@PathVariable Long teamId){
 
         return ApiResponse.ok(teamService.detailTeamInfo(teamId));
+    }
+
+    /**
+     * note : 2.5 팀 정보 수정
+     */
+    @PatchMapping("/{teamId}")
+    public ApiResponse<TeamModifyResponse> modifyTeam(@PathVariable("teamId") Long teamId,
+                                                      @RequestBody TeamModifyRequest request){
+
+        return ApiResponse.ok(teamService.modifyTeam(teamId, request));
     }
 
     /**
