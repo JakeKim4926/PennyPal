@@ -56,7 +56,7 @@ public class Member extends BaseEntity {
     @OneToMany(
             fetch = FetchType.LAZY,
             cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REMOVE},
-            mappedBy = "member" // Correct mappedBy to refer to the property in OrderInfo
+            mappedBy = "member"
     )
     private List<Order> orders = new ArrayList<>();                              // 주문목록 조회
     // 나중에 또 수정
