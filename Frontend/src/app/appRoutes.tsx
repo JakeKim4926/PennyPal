@@ -10,10 +10,9 @@ import { MyPage } from '../pages/myPage';
 import { Ranking } from '../pages/ranking';
 import { SignIn } from '../pages/signin';
 import { SignUp } from '../pages/signup';
-import { Team } from '../pages/team';
-import { TeamInfo } from '../pages/teamInfo';
 import { Test } from '../pages/test/ui/Test';
 import { Navigate } from 'react-router-dom';
+import { TeamRouting } from '../pages/teamRouting';
 
 export function AppRoutes() {
     return (
@@ -29,8 +28,7 @@ export function AppRoutes() {
             <Route path="ranking" element={<Ranking />} />
             <Route path="signin" element={<SignIn />} />
             <Route path="signup" element={<SignUp />} />
-            <Route path="team-info" element={<TeamInfo />} />
-            <Route path="team" element={<Team />} />
+            <Route path="team" element={<TeamRouting />} />
             <Route path="test" element={<Test />} />
         </Routes>
     );

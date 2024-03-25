@@ -52,7 +52,7 @@ function ApplyButton() {
                 console.log(process.env);
             }}
         >
-            가입신청
+            상세 정보
         </button>
     );
 }

@@ -1,0 +1,25 @@
+.teamCreateTeam {
+    overflow: hidden;
+
+    &__content {
+        height: 100px;
+        flex-direction: column;
+        display: flex;
+        font-size: 20px;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+
+        &-nextButton {
+            border: none;
+            font-size: 20px;
+            background-color: transparent;
+            color: $gray;
+            cursor: pointer;
+
+            &:hover {
+                color: $black;
+            }
+        }
+    }
+}
