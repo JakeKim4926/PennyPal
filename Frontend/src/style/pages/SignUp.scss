@@ -1,0 +1,37 @@
+@import '@/style/abstract/fonts';
+@import '@/style/abstract/variables';
+@import '@/style/abstract/global';
+
+  .input-container {
+    position: relative;
+    display: inline-block;
+    border-radius: $RADIUS;
+  }
+  
+  .input-container input {
+    padding-left: 40px; // SVG 이미지의 너비만큼 왼쪽에 여백 추가
+    font-size: 25px;
+    border-radius: $RADIUS;
+  }
+  
+  .input-container img {
+    position: absolute;
+    left: 10px; // 입력창 왼쪽에 위치 
+    top: 50%;
+    transform: translateY(-50%);
+
+  }
+  .message-container {
+    height: 20px; /* 고정된 높이 설정 */
+    overflow: hidden; /* 내용이 넘치는 경우 숨김 처리 */
+    &--valid {
+      color: rgb(99, 212, 99);
+    }
+    &--invalid {
+      color: rgb(236, 88, 88);
+    }
+  }
+  li {
+    list-style-type: disc; /* 원형으로 점을 표시합니다. */
+}
+  
