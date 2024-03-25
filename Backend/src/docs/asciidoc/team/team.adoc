@@ -15,3 +15,5 @@ include::api/modifyTeam.adoc[]
 include::api/joinTeam.adoc[]
 === 2.5.3 팀 탈퇴
 include::api/leaveTeam.adoc[]
+=== 2.6 팀 삭제
+include::api/deleteTeam.adoc[]

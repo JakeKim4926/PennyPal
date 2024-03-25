@@ -1,4 +1,4 @@
-package com.ssafy.pennypal.domain.team.dto.request;
+package com.ssafy.pennypal.domain.team.dto;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -7,13 +7,13 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class TeamLeaveRequest {
+public class SimpleTeamDto {
 
     private Long teamId;
     private Long memberId;
 
     @Builder
-    private TeamLeaveRequest(Long teamId, Long memberId) {
+    private SimpleTeamDto(Long teamId, Long memberId) {
         this.teamId = teamId;
         this.memberId = memberId;
     }

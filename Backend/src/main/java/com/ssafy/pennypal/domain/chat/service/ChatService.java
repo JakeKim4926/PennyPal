@@ -59,7 +59,8 @@ public class ChatService {
     public void inviteChatRoom(Long teamId, Long memberId) {
 
         Member member = getMember(memberId);
-        Team team = teamRepository.findByTeamId(teamId);
+        Team team = teamRepository.findByTeamId(teamId)
+                .orElseThrow(() -> new IllegalArgumentException("팀 정보를 찾을 수 없습니다."));
 
         ChatRoom chatRoom = team.getChatRoom();
 

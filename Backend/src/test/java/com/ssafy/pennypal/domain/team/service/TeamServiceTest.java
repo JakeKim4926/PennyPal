@@ -205,13 +205,15 @@ class TeamServiceTest {
         TeamCreateServiceRequest createRequest = createServiceRequest("팀이름20", true, member1.getMemberId(), "팀소개");
         TeamCreateResponse savedTeam = teamService.createTeam(createRequest);
 
-        Team findedTeam = teamRepository.findByTeamName(savedTeam.getTeamName());
+        Team findedTeam = teamRepository.findByTeamName(savedTeam.getTeamName())
+                .orElseThrow(() -> new IllegalArgumentException("팀 정보를 찾을 수 없습니다."));
 
         TeamJoinServiceRequest joinRequest = joinServiceRequest(findedTeam.getTeamId(), member2.getMemberId());
 
         // when
         TeamJoinResponse response = teamService.joinTeam(joinRequest);
-        Team updatedTeam = teamRepository.findByTeamName("팀이름20");
+        Team updatedTeam = teamRepository.findByTeamName("팀이름20")
+                .orElseThrow(() -> new IllegalArgumentException("팀 정보를 찾을 수 없습니다."));
 
         //then
         assertThat(updatedTeam.getTeamName()).isEqualTo("팀이름20");
@@ -232,7 +234,8 @@ class TeamServiceTest {
         TeamCreateServiceRequest createRequest = createServiceRequest("팀이름21", false, member1.getMemberId(), "팀소개");
         TeamCreateResponse savedTeam = teamService.createTeam(createRequest);
 
-        Team findedTeam = teamRepository.findByTeamName(savedTeam.getTeamName());
+        Team findedTeam = teamRepository.findByTeamName(savedTeam.getTeamName())
+                .orElseThrow(() -> new IllegalArgumentException("팀 정보를 찾을 수 없습니다."));
 
         TeamJoinServiceRequest joinRequest = joinServiceRequest(findedTeam.getTeamId(), member2.getMemberId());
 

@@ -6,6 +6,7 @@ import com.ssafy.pennypal.common.RestDocsSupport;
 import com.ssafy.pennypal.domain.chat.entity.ChatRoom;
 import com.ssafy.pennypal.domain.chat.service.ChatService;
 import com.ssafy.pennypal.domain.member.entity.Member;
+import com.ssafy.pennypal.domain.team.dto.SimpleTeamDto;
 import com.ssafy.pennypal.domain.team.dto.request.*;
 import com.ssafy.pennypal.domain.team.dto.response.*;
 import com.ssafy.pennypal.domain.team.entity.Team;
@@ -522,12 +523,12 @@ public class TeamControllerTest extends RestDocsSupport {
         ChatRoom chatRoom = mock(ChatRoom.class);
         Member member = mock(Member.class);
 
-        TeamLeaveRequest request = TeamLeaveRequest.builder()
+        SimpleTeamDto request = SimpleTeamDto.builder()
                 .teamId(10L)
                 .memberId(10L)
                 .build();
 
-        doNothing().when(teamService).leaveTeam(any(TeamLeaveRequest.class));
+        doNothing().when(teamService).leaveTeam(any(SimpleTeamDto.class));
 
         mockMvc.perform(post("/api/team/leave")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -550,13 +551,57 @@ public class TeamControllerTest extends RestDocsSupport {
                                 fieldWithPath("message").type(JsonFieldType.STRING)
                                         .description("메시지"),
 
-                                fieldWithPath("data").type(JsonFieldType.NULL)
-                                        .description("응답 데이터")
+                                fieldWithPath("data").type(JsonFieldType.STRING)
+                                        .description("탈퇴 완료 메시지")
                         )
 
                 ));
 
-        verify(teamService).leaveTeam(any(TeamLeaveRequest.class));
+        verify(teamService).leaveTeam(any(SimpleTeamDto.class));
+    }
+
+    @DisplayName("팀 삭제")
+    @Test
+    void deleteTeam() throws Exception{
+        Team team = mock(Team.class);
+        ChatRoom chatRoom = mock(ChatRoom.class);
+        Member member = mock(Member.class);
+
+        SimpleTeamDto request = SimpleTeamDto.builder()
+                .teamId(10L)
+                .memberId(10L)
+                .build();
+
+        doNothing().when(teamService).deleteTeam(any(SimpleTeamDto.class));
+
+        mockMvc.perform(delete("/api/team")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("delete-team",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestFields(
+                                fieldWithPath("teamId").type(JsonFieldType.NUMBER)
+                                        .description("팀 ID"),
+                                fieldWithPath("memberId").type(JsonFieldType.NUMBER)
+                                        .description("유저 ID")
+                        ),responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+
+                                fieldWithPath("data").type(JsonFieldType.STRING)
+                                        .description("삭제 완료 메시지")
+                        )
+
+                ));
+
+        verify(teamService).deleteTeam(any(SimpleTeamDto.class));
     }
 
     private Member createMember(String memberEmail, String memberNickname, LocalDateTime memberBirthDate) {
