@@ -33,14 +33,14 @@ export function TeamInformation() {
                 <div className="teamTeamInfo__middle-prev">
                     <div className="teamTeamInfo__middle-prev-title subtitle">지난주</div>
                     <div className="teamTeamInfo__middle-prev-value value">
-                        {teamInfo.prev}
+                        {teamInfo.prev.toLocaleString()}
                         <span className="unit">원</span>
                     </div>
                 </div>
                 <div className="teamTeamInfo__middle-pres">
                     <div className="teamTeamInfo__middle-pres-title subtitle">이번주</div>
                     <div className="teamTeamInfo__middle-pres-value value">
-                        {teamInfo.pres}
+                        {teamInfo.pres.toLocaleString()}
                         <span className="unit">원</span>
                     </div>
                 </div>
