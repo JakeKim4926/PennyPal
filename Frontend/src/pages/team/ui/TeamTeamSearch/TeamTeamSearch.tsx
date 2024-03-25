@@ -1,5 +1,5 @@
 import React from 'react';
-import { TeamTeamList } from '../TeamTeamList/TeamTeamList';
+import { TeamTeamList } from '@/pages/team/ui/TeamTeamList/TeamTeamList';
 
 export function TeamTeamSearch() {
     return (
