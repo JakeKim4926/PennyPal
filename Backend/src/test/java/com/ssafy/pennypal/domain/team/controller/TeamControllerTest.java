@@ -3,6 +3,7 @@ package com.ssafy.pennypal.domain.team.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.pennypal.bank.service.api.BankServiceAPIImpl;
 import com.ssafy.pennypal.common.RestDocsSupport;
+import com.ssafy.pennypal.domain.chat.service.ChatService;
 import com.ssafy.pennypal.domain.member.entity.Member;
 import com.ssafy.pennypal.domain.team.dto.request.TeamCreateRequest;
 import com.ssafy.pennypal.domain.team.dto.request.TeamCreateServiceRequest;
@@ -39,10 +40,11 @@ public class TeamControllerTest extends RestDocsSupport {
 
     private final BankServiceAPIImpl bankServiceAPI = mock(BankServiceAPIImpl.class);
     private final TeamService teamService = mock(TeamService.class);
+    private final ChatService chatService = mock(ChatService.class);
 
     @Override
     protected Object initController() {
-        return new TeamController(teamService, bankServiceAPI);
+        return new TeamController(teamService, chatService, bankServiceAPI);
     }
 
 

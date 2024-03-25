@@ -6,6 +6,8 @@ import com.ssafy.pennypal.domain.chat.repository.IChatMessageRepository;
 import com.ssafy.pennypal.domain.chat.repository.IChatRoomRepository;
 import com.ssafy.pennypal.domain.member.entity.Member;
 import com.ssafy.pennypal.domain.member.repository.IMemberRepository;
+import com.ssafy.pennypal.domain.team.entity.Team;
+import com.ssafy.pennypal.domain.team.repository.ITeamRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ public class ChatService {
     private final IMemberRepository memberRepository;
     private final IChatMessageRepository chatMessageRepository;
     private final IChatRoomRepository chatRoomRepository;
+    private final ITeamRepository teamRepository;
 
     private final SimpMessagingTemplate simpMessagingTemplate;
 
@@ -28,7 +31,7 @@ public class ChatService {
     @Transactional
     public void createChatRoom(Long memberId) {
 
-        Member member = memberRepository.findByMemberId(memberId);
+        Member member = getMember(memberId);
 
         ChatRoom newChatRoom = ChatRoom.builder()
                 .member(member)
@@ -38,6 +41,29 @@ public class ChatService {
         member.setChatRoom(newChatRoom);
     }
 
+    /**
+     * 팀 가입하면 팀 채팅방에 초대
+     */
+    @Transactional
+    public void inviteChatRoom(Long teamId, Long memberId){
+
+        Member member = getMember(memberId);
+        Team team = teamRepository.findByTeamId(teamId);
+
+        // 가입하려는 팀 팀장
+        Long teamLeaderId = team.getTeamLeaderId();
+        Member teamLeader = getMember(teamLeaderId);
+
+        // 가입하려는 팀의 채팅방
+        Long chatRoomId = teamLeader.getChatRoom().getChatRoomId();
+        ChatRoom chatRoom = chatRoomRepository.findByChatRoomId(chatRoomId);
+
+        // 유저 리스트에 추가, 유저 채팅방에 추가
+        chatRoom.getMembers().add(member);
+        member.setChatRoom(chatRoom);
+
+        chatRoomRepository.save(chatRoom);
+    }
 
     /**
      * 메시지 전송
@@ -49,6 +75,9 @@ public class ChatService {
 
         simpMessagingTemplate.convertAndSend(destination, request);
 
+    }
 
+    private Member getMember(Long memberId){
+        return memberRepository.findByMemberId(memberId);
     }
 }

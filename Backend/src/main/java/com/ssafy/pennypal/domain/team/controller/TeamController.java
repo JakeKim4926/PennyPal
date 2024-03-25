@@ -25,7 +25,7 @@ public class TeamController {
     private final BankServiceAPIImpl bankServiceAPI;
 
     /**
-     * note : 2.1 팀 생성
+     * note : 2.1 팀 생성 ( + 팀 채팅방 생성 )
      */
     @PostMapping("/create")
     public ApiResponse<TeamCreateResponse> createTeam(@Valid @RequestBody TeamCreateRequest request) {
@@ -94,7 +94,7 @@ public class TeamController {
     }
 
     /**
-     * note : 2.5.2 팀 가입
+     * note : 2.5.2 팀 가입 ( + 팀 채팅방 초대 )
      */
     @PostMapping("/{teamId}")
     public ApiResponse<TeamJoinResponse> joinTeam(@PathVariable Long teamId, Long memberId) {
@@ -104,7 +104,12 @@ public class TeamController {
                 .memberId(memberId)
                 .build();
 
-        return ApiResponse.ok(teamService.joinTeam(joinRequest.toServiceRequest()));
+        TeamJoinResponse result = teamService.joinTeam(joinRequest.toServiceRequest());
+
+        // 팀 채팅방 초대
+        chatService.inviteChatRoom(teamId, memberId);
+
+        return ApiResponse.ok(result);
 
     }
 

@@ -426,7 +426,6 @@ public class TeamService {
 
         List<Team> teams = null;
 
-
         if(teamName == null){
             teams = teamRepository.findAll();
         }else{
