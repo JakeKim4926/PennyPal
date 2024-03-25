@@ -3,6 +3,7 @@ package com.ssafy.pennypal.domain.team.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.pennypal.bank.service.api.BankServiceAPIImpl;
 import com.ssafy.pennypal.common.RestDocsSupport;
+import com.ssafy.pennypal.domain.chat.entity.ChatRoom;
 import com.ssafy.pennypal.domain.chat.service.ChatService;
 import com.ssafy.pennypal.domain.member.entity.Member;
 import com.ssafy.pennypal.domain.team.dto.request.*;
@@ -12,9 +13,7 @@ import com.ssafy.pennypal.domain.team.service.TeamService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.operation.QueryParameters;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.restdocs.request.ParameterDescriptor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -26,8 +25,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
@@ -515,6 +513,50 @@ public class TeamControllerTest extends RestDocsSupport {
                 ));
         verify(teamService).modifyTeam(eq(10L), any(TeamModifyRequest.class));
 
+    }
+
+    @DisplayName("팀 탈퇴")
+    @Test
+    void leaveTeam() throws Exception {
+        Team team = mock(Team.class);
+        ChatRoom chatRoom = mock(ChatRoom.class);
+        Member member = mock(Member.class);
+
+        TeamLeaveRequest request = TeamLeaveRequest.builder()
+                .teamId(10L)
+                .memberId(10L)
+                .build();
+
+        doNothing().when(teamService).leaveTeam(any(TeamLeaveRequest.class));
+
+        mockMvc.perform(post("/api/team/leave")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("leave-team",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestFields(
+                                fieldWithPath("teamId").type(JsonFieldType.NUMBER)
+                                        .description("팀 ID"),
+                                fieldWithPath("memberId").type(JsonFieldType.NUMBER)
+                                        .description("유저 ID")
+                                ),responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+
+                                fieldWithPath("data").type(JsonFieldType.NULL)
+                                        .description("응답 데이터")
+                        )
+
+                ));
+
+        verify(teamService).leaveTeam(any(TeamLeaveRequest.class));
     }
 
     private Member createMember(String memberEmail, String memberNickname, LocalDateTime memberBirthDate) {

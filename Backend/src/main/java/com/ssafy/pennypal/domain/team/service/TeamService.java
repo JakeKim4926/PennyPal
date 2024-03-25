@@ -8,12 +8,15 @@ import com.ssafy.pennypal.bank.dto.service.response.AccountTransactionResponseSe
 import com.ssafy.pennypal.bank.dto.service.response.UserAccountListResponseServiceDTO;
 import com.ssafy.pennypal.bank.dto.service.response.UserBankAccountsResponseServiceDTO;
 import com.ssafy.pennypal.bank.service.api.BankServiceAPIImpl;
+import com.ssafy.pennypal.domain.chat.entity.ChatRoom;
+import com.ssafy.pennypal.domain.chat.repository.IChatRoomRepository;
 import com.ssafy.pennypal.domain.member.dto.response.MemberExpensesDetailResponse;
 import com.ssafy.pennypal.domain.member.entity.Member;
 import com.ssafy.pennypal.domain.member.entity.Expense;
 import com.ssafy.pennypal.domain.member.repository.IMemberRepository;
 import com.ssafy.pennypal.domain.team.dto.request.TeamCreateServiceRequest;
 import com.ssafy.pennypal.domain.team.dto.request.TeamJoinServiceRequest;
+import com.ssafy.pennypal.domain.team.dto.request.TeamLeaveRequest;
 import com.ssafy.pennypal.domain.team.dto.request.TeamModifyRequest;
 import com.ssafy.pennypal.domain.team.dto.response.*;
 import com.ssafy.pennypal.domain.team.entity.Team;
@@ -43,6 +46,7 @@ public class TeamService {
     private final ITeamRepository teamRepository;
     private final IMemberRepository memberRepository;
     private final ITeamRankHistoryRepository teamRankHistoryRepository;
+    private final IChatRoomRepository chatRoomRepository;
 
     private static final String SSAFY_BANK_API_KEY = System.getenv("SSAFY_BANK_API_KEY");
     private final BankServiceAPIImpl bankServiceAPI;
@@ -497,6 +501,33 @@ public class TeamService {
         } else {
             throw new IllegalArgumentException("팀 정보 수정은 팀장만 가능합니다.");
         }
+    }
+
+    @Transactional
+    public void leaveTeam(TeamLeaveRequest request){
+
+        Team team = teamRepository.findByTeamId(request.getTeamId());
+        ChatRoom chatRoom = team.getChatRoom();
+        Member member = memberRepository.findByMemberId(request.getMemberId());
+
+        if(team.getTeamLeaderId().equals(member.getMemberId())){
+            throw new IllegalArgumentException("팀장은 팀을 탈퇴할 수 없습니다.");
+        }else{
+
+            // 팀, 채팅방에서 해당 유저 삭제
+            team.getMembers().remove(member);
+            chatRoom.getMembers().remove(member);
+
+            teamRepository.save(team);
+            chatRoomRepository.save(chatRoom);
+
+            // 유저 정보에서 팀, 채팅방 삭제
+            member.setTeam(null);
+            member.setChatRoom(null);
+
+            memberRepository.save(member);
+        }
+
     }
 
 

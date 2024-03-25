@@ -4,6 +4,7 @@ import com.ssafy.pennypal.bank.service.api.BankServiceAPIImpl;
 import com.ssafy.pennypal.domain.chat.service.ChatService;
 import com.ssafy.pennypal.domain.team.dto.request.TeamCreateRequest;
 import com.ssafy.pennypal.domain.team.dto.request.TeamJoinRequest;
+import com.ssafy.pennypal.domain.team.dto.request.TeamLeaveRequest;
 import com.ssafy.pennypal.domain.team.dto.request.TeamModifyRequest;
 import com.ssafy.pennypal.domain.team.dto.response.*;
 import com.ssafy.pennypal.domain.team.service.TeamService;
@@ -117,6 +118,18 @@ public class TeamController {
 
         return ApiResponse.ok(result);
 
+    }
+
+    /**
+     * note : 2.5.3 팀 탈퇴
+     * todo : 응답값 상의 후 수정
+     */
+    @PostMapping("leave")
+    public ApiResponse leaveTeam(@RequestBody TeamLeaveRequest request){
+
+        teamService.leaveTeam(request);
+
+        return ApiResponse.ok(null);
     }
 
 }
