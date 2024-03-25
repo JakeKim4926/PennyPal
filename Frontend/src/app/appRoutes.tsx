@@ -13,23 +13,25 @@ import { SignUp } from '../pages/signup';
 import { Test } from '../pages/test/ui/Test';
 import { Navigate } from 'react-router-dom';
 import { TeamRouting } from '../pages/teamRouting';
+import { Team } from '../pages/team';
+import { TeamInfo } from '../pages/teamInfo';
 
 export function AppRoutes() {
     return (
         <Routes>
             <Route path="/" element={<Navigate to="/main" />} />
             <Route path="/main" element={<Main />} />
-            <Route path="expenditure" element={<Expenditure />} />
-            <Route path="finance" element={<Finance />} />
-            <Route path="landing" element={<Landing />} />
-            <Route path="market" element={<Market />} />
-            <Route path="mission" element={<Mission />} />
-            <Route path="my-page" element={<MyPage />} />
-            <Route path="ranking" element={<Ranking />} />
-            <Route path="signin" element={<SignIn />} />
-            <Route path="signup" element={<SignUp />} />
-            <Route path="team" element={<TeamRouting />} />
-            <Route path="test" element={<Test />} />
+            <Route path="/expenditure" element={<Expenditure />} />
+            <Route path="/finance" element={<Finance />} />
+            <Route path="/landing" element={<Landing />} />
+            <Route path="/market" element={<Market />} />
+            <Route path="/mission" element={<Mission />} />
+            <Route path="/my-page" element={<MyPage />} />
+            <Route path="/ranking" element={<Ranking />} />
+            <Route path="/signin" element={<SignIn />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/team" element={<TeamRouting />} />
+            <Route path="/test" element={<Test />} />
         </Routes>
     );
 }
