@@ -107,8 +107,7 @@ public class Member extends BaseEntity {
     public Member(
             String memberEmail, String memberPassword, String memberName, String memberNickname,
             LocalDateTime memberBirthDate, Integer memberPoint, String memberMostCategory, Team team, List<Order> orders,
-            String memberBankApi, Team memberWaitingTeam, List<Expense> memberExpensesOfLastWeek,
-            List<Expense> memberExpensesOfThisWeek, Integer memberAttendance
+            String memberBankApi, Team memberWaitingTeam, Integer memberAttendance
     ) {
         this.memberEmail = memberEmail;
         this.memberPassword = memberPassword;
@@ -121,8 +120,6 @@ public class Member extends BaseEntity {
         this.orders = orders;
         this.memberBankApi = memberBankApi;
         this.memberWaitingTeam = memberWaitingTeam;
-        this.memberExpensesOfLastWeek = memberExpensesOfLastWeek;
-        this.memberExpensesOfThisWeek = memberExpensesOfThisWeek;
         this.memberAttendance = memberAttendance;
     }
 }

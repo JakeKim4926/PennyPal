@@ -2,11 +2,11 @@ package com.ssafy.pennypal.domain.chat.dto;
 
 import com.ssafy.pennypal.domain.chat.entity.ChatMessage;
 import com.ssafy.pennypal.domain.chat.entity.ChatRoom;
+import com.ssafy.pennypal.domain.member.dto.SimpleMemberDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

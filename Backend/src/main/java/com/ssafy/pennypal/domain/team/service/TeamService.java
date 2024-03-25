@@ -59,21 +59,26 @@ public class TeamService {
         // 유저 정보 가져오기
         Member member = memberRepository.findByMemberId(request.getTeamLeaderId());
 
-        // 이미 존재하는 팀명이라면 예외 발생
-        if (teamRepository.findByTeamName(request.getTeamName()) != null) {
-            throw new IllegalArgumentException("이미 사용 중인 팀명입니다.");
-        }
+        if(member == null){
+            throw new IllegalArgumentException("유저를 찾을 수 없습니다.");
+        }else {
 
-        // 유저가 포함된 팀 있는지 확인
-        if (member.getTeam() != null) {
-            throw new IllegalArgumentException("한 개의 팀에만 가입 가능합니다.");
-        }
+            // 이미 존재하는 팀명이라면 예외 발생
+            if (teamRepository.findByTeamName(request.getTeamName()) != null) {
+                throw new IllegalArgumentException("이미 사용 중인 팀명입니다.");
+            }
 
+            // 유저가 포함된 팀 있는지 확인
+            if (member.getTeam() != null) {
+                throw new IllegalArgumentException("한 개의 팀에만 가입 가능합니다.");
+            }
+        }
         // 팀 생성
         Team team = Team.builder()
                 .teamName(request.getTeamName())
                 .teamIsAutoConfirm(request.getTeamIsAutoConfirm())
                 .teamLeaderId(request.getTeamLeaderId())
+                .member(member)
                 .build();
 
         // 팀 저장
@@ -391,8 +396,6 @@ public class TeamService {
 
         Team team = teamRepository.findByTeamId(teamId);
 
-        int size = team.getTeamRankHistories().size() - 1;
-
         List<TeamMemberExpenseResponse> members = team.getMembers().stream()
                 .filter(Objects::nonNull)
                 .map(member -> {
@@ -409,17 +412,33 @@ public class TeamService {
                 })
                 .collect(Collectors.toList());
 
-        return TeamDetailResponse.builder()
-                .teamId(team.getTeamId())
-                .teamName(team.getTeamName())
-                .teamLeaderId(team.getTeamLeaderId())
-                .teamInfo(team.getTeamInfo())
-                .teamScore(team.getTeamScore())
-                // todo : 지난주 랭킹 ? 실시간 랭킹 ?
-                .teamRankNum(team.getTeamRankHistories().get(size).getRankNum())
-                .members(members)
-                .build();
+        // 그 동안의 랭킹 내역이 없을 때
+        if(team.getTeamRankHistories() == null || team.getTeamRankHistories().isEmpty()){
 
+            return TeamDetailResponse.builder()
+                    .teamId(team.getTeamId())
+                    .teamName(team.getTeamName())
+                    .teamLeaderId(team.getTeamLeaderId())
+                    .teamInfo(team.getTeamInfo())
+                    .teamScore(team.getTeamScore())
+                    // todo : 지난주 랭킹 ? 실시간 랭킹 ?
+                    .teamRankNum(0)
+                    .members(members)
+                    .build();
+        }else {
+            int lastIndex = team.getTeamRankHistories().size() - 1;
+
+            return TeamDetailResponse.builder()
+                    .teamId(team.getTeamId())
+                    .teamName(team.getTeamName())
+                    .teamLeaderId(team.getTeamLeaderId())
+                    .teamInfo(team.getTeamInfo())
+                    .teamScore(team.getTeamScore())
+                    // todo : 지난주 랭킹 ? 실시간 랭킹 ?
+                    .teamRankNum(team.getTeamRankHistories().get(lastIndex).getRankNum())
+                    .members(members)
+                    .build();
+        }
     }
 
     public List<TeamSearchResponse> searchTeamList(String teamName) {
@@ -434,11 +453,15 @@ public class TeamService {
 
         List<TeamSearchResponse> result = new ArrayList<>();
         for(Team team : teams){
+
+            // 팀 리더
+            Member member = memberRepository.findByMemberId(team.getTeamLeaderId());
+
             TeamSearchResponse build = TeamSearchResponse.builder()
                     .teamId(team.getTeamId())
                     .teamName(team.getTeamName())
                     .teamMembersNum(team.getMembers().size())
-                    .teamLeaderNickname(team.getMembers().get(0).getMemberNickname())
+                    .teamLeaderNickname(member.getMemberNickname())
                     .teamIsAutoConfirm(team.getTeamIsAutoConfirm())
                     .build();
 

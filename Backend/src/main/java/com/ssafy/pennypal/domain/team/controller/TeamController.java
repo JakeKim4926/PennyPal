@@ -78,7 +78,7 @@ public class TeamController {
      */
     @GetMapping
     public ApiResponse<List<TeamSearchResponse>> searchTeamList(
-            @RequestParam(name = "teamName", required = false) String teamName
+            @RequestParam(name = "keyword", required = false) String teamName
     ){
 
         return ApiResponse.ok(teamService.searchTeamList(teamName));
@@ -96,18 +96,13 @@ public class TeamController {
     /**
      * note : 2.5.2 팀 가입 ( + 팀 채팅방 초대 )
      */
-    @PostMapping("/{teamId}")
-    public ApiResponse<TeamJoinResponse> joinTeam(@PathVariable Long teamId, Long memberId) {
+    @PostMapping("/join")
+    public ApiResponse<TeamJoinResponse> joinTeam(@RequestBody TeamJoinRequest request) {
 
-        TeamJoinRequest joinRequest = TeamJoinRequest.builder()
-                .teamId(teamId)
-                .memberId(memberId)
-                .build();
-
-        TeamJoinResponse result = teamService.joinTeam(joinRequest.toServiceRequest());
+        TeamJoinResponse result = teamService.joinTeam(request.toServiceRequest());
 
         // 팀 채팅방 초대
-        chatService.inviteChatRoom(teamId, memberId);
+        chatService.inviteChatRoom(request.getTeamId(), request.getMemberId());
 
         return ApiResponse.ok(result);
 

@@ -3,7 +3,7 @@ package com.ssafy.pennypal.domain.chat.controller;
 import com.ssafy.pennypal.common.RestDocsSupport;
 import com.ssafy.pennypal.domain.chat.dto.ChatMessageDto;
 import com.ssafy.pennypal.domain.chat.dto.ChatRoomDto;
-import com.ssafy.pennypal.domain.chat.dto.SimpleMemberDto;
+import com.ssafy.pennypal.domain.member.dto.SimpleMemberDto;
 import com.ssafy.pennypal.domain.chat.entity.ChatMessage;
 import com.ssafy.pennypal.domain.chat.entity.ChatRoom;
 import com.ssafy.pennypal.domain.chat.service.ChatService;
@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -27,6 +26,8 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -66,7 +67,7 @@ public class ChatControllerTest extends RestDocsSupport {
         given(messageDto.getMessage()).willReturn("메시지 내용");
         given(messageDto.getCreatedAt()).willReturn(LocalDateTime.now());
 
-        given(chatService.enterChatRoom(anyLong()))
+        given(chatService.enterChatRoom(anyLong(), anyLong()))
                 .willReturn(ChatRoomDto.builder()
                         .chatRoomId(1L)
                         .members(members)
@@ -74,7 +75,9 @@ public class ChatControllerTest extends RestDocsSupport {
                         .build());
 
         mockMvc.perform(
-                        get("/api/chat/{chatRoomId}", 1L)
+                        get("/api/chat/enter")
+                                .param("chatRoomId", "1")
+                                .param("memberId", "2")
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
@@ -82,6 +85,10 @@ public class ChatControllerTest extends RestDocsSupport {
                 .andDo(document("enter-chat-room",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
+                        queryParameters(
+                                parameterWithName("chatRoomId").description("채팅방 ID"),
+                                parameterWithName("memberId").description("유저 ID")
+                        ),
                         responseFields(
                                 fieldWithPath("code").type(JsonFieldType.NUMBER)
                                         .description("코드"),
@@ -116,7 +123,7 @@ public class ChatControllerTest extends RestDocsSupport {
 
                 ));
 
-        verify(chatService).enterChatRoom(anyLong());
+        verify(chatService).enterChatRoom(anyLong(), anyLong());
     }
 
 }

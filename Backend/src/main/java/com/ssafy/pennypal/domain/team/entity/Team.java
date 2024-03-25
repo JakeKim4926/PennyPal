@@ -1,5 +1,6 @@
 package com.ssafy.pennypal.domain.team.entity;
 
+import com.ssafy.pennypal.domain.chat.entity.ChatRoom;
 import com.ssafy.pennypal.domain.member.entity.Member;
 import com.ssafy.pennypal.global.common.BaseEntity;
 import jakarta.persistence.*;
@@ -61,6 +62,11 @@ public class Team extends BaseEntity {
     @Setter
     @Column(name = "team_rank_histories")
     private List<TeamRankHistory> TeamRankHistories = new ArrayList<>();               // 랭킹 내역
+
+    @Setter
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "chat_room_id")
+    private ChatRoom chatRoom;
 
 
     @Builder

@@ -2,6 +2,7 @@
 ==== HTTP Request
 
 include::{snippets}/enter-chat-room/http-request.adoc[]
+include::{snippets}/enter-chat-room/query-parameters.adoc[]
 
 ==== HTTP Response
 

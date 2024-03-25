@@ -54,7 +54,7 @@ class TeamServiceTest {
 
         memberRepository.save(member1);
 
-        TeamCreateServiceRequest request = createServiceRequest("팀이름1", true, member1.getMemberId(), "팀소개");
+        TeamCreateServiceRequest request = createServiceRequest("팀이름111", true, member1.getMemberId(), "팀소개");
 
         // when
         TeamCreateResponse teamResponse = teamService.createTeam(request);
@@ -62,7 +62,7 @@ class TeamServiceTest {
         // then
         assertThat(teamResponse)
                 .extracting("teamLeaderId", "teamName")
-                .contains(member1.getMemberId(), "팀이름1");
+                .contains(member1.getMemberId(), "팀이름111");
 
     }
 
@@ -75,8 +75,8 @@ class TeamServiceTest {
 
         memberRepository.saveAll(List.of(member1, member2));
 
-        TeamCreateServiceRequest request1 = createServiceRequest("팀이름2", true, member1.getMemberId(), "팀소개");
-        TeamCreateServiceRequest request2 = createServiceRequest("팀이름2", false, member2.getMemberId(), "팀소개");
+        TeamCreateServiceRequest request1 = createServiceRequest("팀이름222", true, member1.getMemberId(), "팀소개");
+        TeamCreateServiceRequest request2 = createServiceRequest("팀이름222", false, member2.getMemberId(), "팀소개");
 
         teamService.createTeam(request1);
 
@@ -96,14 +96,14 @@ class TeamServiceTest {
 
         memberRepository.saveAll(List.of(member1, member2));
 
-        TeamCreateServiceRequest request1 = createServiceRequest("팀이름3", true, member1.getMemberId(), "팀소개");
-        TeamCreateServiceRequest request2 = createServiceRequest("팀이름4", false, member2.getMemberId(), "팀소개");
+        TeamCreateServiceRequest request1 = createServiceRequest("팀이름13", true, member1.getMemberId(), "팀소개");
+        TeamCreateServiceRequest request2 = createServiceRequest("팀이름14", false, member2.getMemberId(), "팀소개");
 
         teamService.createTeam(request1);
         teamService.createTeam(request2);
 
 
-        TeamCreateServiceRequest request3 = createServiceRequest("팀이름5", true, member1.getMemberId(), "팀소개");
+        TeamCreateServiceRequest request3 = createServiceRequest("팀이름15", true, member1.getMemberId(), "팀소개");
 
         // when, then
         assertThatThrownBy(() -> teamService.createTeam(request3))
@@ -127,7 +127,7 @@ class TeamServiceTest {
         memberRepository.saveAll(members.subList(0, 6));
 
         // 팀 생성, 저장
-        Team team = createTeam("팀이름1", true, members.get(0).getMemberId(), "팀소개1", members.get(0));
+        Team team = createTeam("팀이름16", true, members.get(0).getMemberId(), "팀소개1", members.get(0));
 
         Team savedTeam = teamRepository.save(team);
 
@@ -153,7 +153,7 @@ class TeamServiceTest {
         Member member = createMember("member1@pennypal.site", "짠1", LocalDateTime.now());
         memberRepository.save(member);
 
-        Team team = createTeam("팀이름1", true, 1L, "팀소개1", member);
+        Team team = createTeam("팀이름17", true, 1L, "팀소개1", member);
         teamRepository.save(team);
 
         team.getMembers().add(member);
@@ -176,8 +176,8 @@ class TeamServiceTest {
         Member member3 = createMember("member3@pennypal.site", "짠3", LocalDateTime.now());
         memberRepository.saveAll(List.of(member1, member2, member3));
 
-        Team team1 = createTeam("팀이름1", true, member1.getMemberId(), "팀소개1", member1);
-        Team team2 = createTeam("팀이름2", true, member2.getMemberId(), "팀소개2", member2);
+        Team team1 = createTeam("팀이름18", true, member1.getMemberId(), "팀소개1", member1);
+        Team team2 = createTeam("팀이름19", true, member2.getMemberId(), "팀소개2", member2);
         teamRepository.saveAll(List.of(team1, team2));
 
         // member3 -> team1 가입
@@ -202,7 +202,7 @@ class TeamServiceTest {
         Member member2 = createMember("member2@pennypal.site", "짠2", LocalDateTime.now());
         memberRepository.saveAll(List.of(member1, member2));
 
-        TeamCreateServiceRequest createRequest = createServiceRequest("팀이름1", true, member1.getMemberId(), "팀소개");
+        TeamCreateServiceRequest createRequest = createServiceRequest("팀이름20", true, member1.getMemberId(), "팀소개");
         TeamCreateResponse savedTeam = teamService.createTeam(createRequest);
 
         Team findedTeam = teamRepository.findByTeamName(savedTeam.getTeamName());
@@ -211,10 +211,10 @@ class TeamServiceTest {
 
         // when
         TeamJoinResponse response = teamService.joinTeam(joinRequest);
-        Team updatedTeam = teamRepository.findByTeamName("팀이름1");
+        Team updatedTeam = teamRepository.findByTeamName("팀이름20");
 
         //then
-        assertThat(updatedTeam.getTeamName()).isEqualTo("팀이름1");
+        assertThat(updatedTeam.getTeamName()).isEqualTo("팀이름20");
         assertThat(updatedTeam.getMembers()).hasSize(2);
 //        assertThat(updatedTeam.getMembers())
 //                .extracting(Member::getMemberNickname)
@@ -229,7 +229,7 @@ class TeamServiceTest {
         Member member2 = createMember("member2@pennypal.site", "짠2", LocalDateTime.now());
         memberRepository.saveAll(List.of(member1, member2));
 
-        TeamCreateServiceRequest createRequest = createServiceRequest("팀이름1", false, member1.getMemberId(), "팀소개");
+        TeamCreateServiceRequest createRequest = createServiceRequest("팀이름21", false, member1.getMemberId(), "팀소개");
         TeamCreateResponse savedTeam = teamService.createTeam(createRequest);
 
         Team findedTeam = teamRepository.findByTeamName(savedTeam.getTeamName());

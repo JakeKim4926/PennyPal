@@ -15,6 +15,7 @@ import com.ssafy.pennypal.domain.team.service.TeamService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.operation.QueryParameters;
 import org.springframework.restdocs.payload.JsonFieldType;
 
 import java.time.LocalDate;
@@ -31,6 +32,8 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -142,7 +145,7 @@ public class TeamControllerTest extends RestDocsSupport {
 
         TeamJoinRequest request = TeamJoinRequest.builder()
                 .teamId(1L)
-                .memberId(member.getMemberId())
+                .memberId(2L)
                 .build();
 
         // Mock MemberDetailResponse 생성
@@ -160,7 +163,7 @@ public class TeamControllerTest extends RestDocsSupport {
                         .build());
 
         mockMvc.perform(
-                        post("/api/team/{teamId}", 1L)
+                        post("/api/team/join")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(new ObjectMapper().writeValueAsString(request))
                 )
@@ -407,17 +410,21 @@ public class TeamControllerTest extends RestDocsSupport {
         responses.add(new TeamSearchResponse(1L, "teamName1", 3, "팀장닉네임1", true));
         responses.add(new TeamSearchResponse(2L, "teamName2", 6, "팀장닉네임2", false));
         responses.add(new TeamSearchResponse(3L, "teamName3", 4, "팀장닉네임3", true));
-        given(teamService.searchTeamList("nam")).willReturn(responses);
+        given(teamService.searchTeamList("name")).willReturn(responses);
 
         mockMvc.perform(
-                        get("/api/team?teamName=nam")
+                        get("/api/team")
+                                .param("keyword","name")
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
-                .andExpect(status().isOk())
                 .andDo(print())
+                .andExpect(status().isOk())
                 .andDo(document("search-team-list",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
+                        queryParameters(
+                                parameterWithName("keyword").description("이름 검색 키워드")
+                        ),
                         responseFields(
                                 fieldWithPath("code").type(JsonFieldType.NUMBER)
                                         .description("코드"),
@@ -441,7 +448,7 @@ public class TeamControllerTest extends RestDocsSupport {
                         )
                 ));
 
-        verify(teamService).searchTeamList("nam");
+        verify(teamService).searchTeamList("name");
     }
 
     private Member createMember(String memberEmail, String memberNickname, LocalDateTime memberBirthDate) {

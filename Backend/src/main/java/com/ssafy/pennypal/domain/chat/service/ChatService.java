@@ -36,31 +36,32 @@ public class ChatService {
     public void createChatRoom(Long memberId) {
 
         Member member = getMember(memberId);
+        Team team = member.getTeam();
 
         ChatRoom newChatRoom = ChatRoom.builder()
                 .member(member)
+                .team(team)
                 .build();
 
         chatRoomRepository.save(newChatRoom);
+
+        team.setChatRoom(newChatRoom);
+        teamRepository.save(team);
+
         member.setChatRoom(newChatRoom);
+        memberRepository.save(member);
     }
 
     /**
      * 팀 가입하면 팀 채팅방에 초대
      */
     @Transactional
-    public void inviteChatRoom(Long teamId, Long memberId){
+    public void inviteChatRoom(Long teamId, Long memberId) {
 
         Member member = getMember(memberId);
         Team team = teamRepository.findByTeamId(teamId);
 
-        // 가입하려는 팀 팀장
-        Long teamLeaderId = team.getTeamLeaderId();
-        Member teamLeader = getMember(teamLeaderId);
-
-        // 가입하려는 팀의 채팅방
-        Long chatRoomId = teamLeader.getChatRoom().getChatRoomId();
-        ChatRoom chatRoom = chatRoomRepository.findByChatRoomId(chatRoomId);
+        ChatRoom chatRoom = team.getChatRoom();
 
         // 유저 리스트에 추가, 유저 채팅방에 추가
         chatRoom.getMembers().add(member);
@@ -72,14 +73,20 @@ public class ChatService {
     /**
      * 채팅방 입장
      */
-    public ChatRoomDto enterChatRoom(Long chatRoomId){
+    public ChatRoomDto enterChatRoom(Long chatRoomId, Long memberId) {
 
         ChatRoom chatRoom = chatRoomRepository.findByChatRoomId(chatRoomId);
-
-        // chatRoomId로 메시지들을 조회하는 메소드가 있다고 가정
         List<ChatMessage> chatMessages = chatMessageRepository.findByChatRoomId(chatRoomId);
 
-        return ChatRoomDto.convertToChatRoomDto(chatRoom, chatMessages);
+        Member member = getMember(memberId); // 채팅방에 들어가려고 시도하는 유저
+        List<Member> enableMembers = chatRoom.getMembers(); // 채팅방에 입장 가능한 유저 목록
+
+        if (enableMembers.contains(member)) {
+            return ChatRoomDto.convertToChatRoomDto(chatRoom, chatMessages);
+        }else{
+            throw new IllegalArgumentException("해당 팀 채팅에 접근 권한이 없습니다.");
+        }
+
     }
 
     /**
@@ -94,7 +101,7 @@ public class ChatService {
 
     }
 
-    private Member getMember(Long memberId){
+    private Member getMember(Long memberId) {
         return memberRepository.findByMemberId(memberId);
     }
 }

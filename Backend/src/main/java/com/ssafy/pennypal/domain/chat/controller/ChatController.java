@@ -2,6 +2,7 @@ package com.ssafy.pennypal.domain.chat.controller;
 
 import com.ssafy.pennypal.domain.chat.dto.ChatRoomDto;
 import com.ssafy.pennypal.domain.chat.dto.request.ChattingRequest;
+import com.ssafy.pennypal.domain.chat.dto.request.EnterChatRoomRequest;
 import com.ssafy.pennypal.domain.chat.service.ChatService;
 import com.ssafy.pennypal.global.common.api.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -19,9 +20,10 @@ public class ChatController {
     /**
      * note : 2.7.2 참여 중인 채팅방 상세 조회
      */
-    @GetMapping("/{chatRoomId}")
-    public ApiResponse<ChatRoomDto> enterChatRoom(@PathVariable Long chatRoomId){
-        return ApiResponse.ok(chatService.enterChatRoom(chatRoomId));
+    @GetMapping("/enter")
+    public ApiResponse<ChatRoomDto> enterChatRoom(@RequestParam("chatRoomId") Long chatRoomId,
+                                                  @RequestParam("memberId") Long memberId){
+        return ApiResponse.ok(chatService.enterChatRoom(chatRoomId, memberId));
     }
 
     /**

@@ -1,7 +1,6 @@
-package com.ssafy.pennypal.domain.chat.dto;
+package com.ssafy.pennypal.domain.member.dto;
 
 import com.ssafy.pennypal.domain.member.entity.Member;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
