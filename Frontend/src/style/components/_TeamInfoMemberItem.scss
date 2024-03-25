@@ -33,6 +33,7 @@
     &__bottom {
         
         &-spend {
+            user-select: none;
             text-align: end;
 
             .spend {
@@ -41,6 +42,10 @@
                 
                 &-prev {
                     color: $line;
+                }
+
+                &-post {
+                    margin-right: 4px;
                 }
 
             }
