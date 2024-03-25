@@ -1,0 +1,17 @@
+.marketCategory {
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+
+    &__item {
+        cursor: pointer;
+
+        &__icon {
+    
+        }
+    
+        &__title {
+    
+        }
+    }
+}
