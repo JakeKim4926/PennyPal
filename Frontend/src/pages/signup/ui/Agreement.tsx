@@ -1,15 +1,20 @@
 import { useState } from 'react';
 import { Button } from '../../../shared';
 import React from 'react';
+import { useDispatch } from 'react-redux';
+import { setSignUpStep } from '../model/signUpStepReducer';
 
 export function Agreement() {
     const [isChecked, setIsChecked] = useState(false);
-
+    const dispatch = useDispatch();
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setIsChecked(e.target.checked);
     };
     const handleNext = () => {
-        console.log('다음으로 넘어가는거 구현!!');
+        // 회원가입 요청 API
+
+        // 리덕스 상태관리 다음으로 넘어감.
+        dispatch(setSignUpStep(2));
     };
 
     return (

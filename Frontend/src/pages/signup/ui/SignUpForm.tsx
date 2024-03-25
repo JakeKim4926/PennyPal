@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { Button } from '../../../shared';
+import { useDispatch } from 'react-redux';
+import { setSignUpStep } from '../model/signUpStepReducer';
 
 interface UserData {
     email: string;
@@ -11,6 +13,8 @@ interface UserData {
 }
 
 export function SignUpForm() {
+    const dispatch = useDispatch();
+
     const [userData, setUserData] = useState<UserData>({
         email: '',
         password: '',
@@ -85,13 +89,13 @@ export function SignUpForm() {
                 break;
         }
     }
-
     const handleNext = () => {
         const allFieldsValid =
             emailValid && passwordValid && confirmPasswordValid && nameValid && birthdayValid && nickNameValid;
 
         if (allFieldsValid) {
-            console.log('다음으로 넘어가는거 구현!!');
+            dispatch(setSignUpStep(1));
+            // 리덕스 상태관리로 다음 창으로 이동.
         } else {
             console.error('입력한 값이 유효하지 않습니다.');
         }
@@ -188,7 +192,7 @@ export function SignUpForm() {
                 </div>
             </div>
             <div className="nextButton">
-                <Button child={'NEXT'} color={'light'} onClick={handleNext} />
+                <Button child={'NEXT'} color={'color-main'} onClick={handleNext} />
             </div>
         </div>
     );
