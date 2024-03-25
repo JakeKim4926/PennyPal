@@ -12,16 +12,27 @@
     flex-direction: column;
     gap: 10px;
 
-    div {
-        font-family: 'Esa-Bold';
+    &__title {
+        
+        &-text {
+            display: flex;
+            justify-content: space-between;
+            
+            &-button {
+                $padding: 3px;
+                letter-spacing: 3px;
+                padding-left: $padding + 4px;
+                padding-right: $padding;
+
+                color: $bright;
+                background-color: black;
+                border-radius: 5px;
+            }
+        }
     }
 
-    &__title {
-        &-text{
-            font-family: 'Wanted-ExtraBlack';
-            letter-spacing: 3px;
-            font-size: 12px;
-        }
+    div {
+        font-family: 'Esa-Bold';
     }
 
     &__top {
@@ -61,27 +72,15 @@
         display: flex;
         justify-content: center;
 
-        &-button {
+        &-desc {
+            background-color: $main;
+            font-family: 'Wanted-Medium' !important;
+            font-size: 20px;
+            padding: 5px 12px; 
+            border-radius: 20px;
             width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            border: none;
-            background-color: $dark;
-            padding: 10px;
-            border-radius: 5px;
-
-            &-abc {
-                fill: $bright;
-            }
-
-            div {
-                color: white;
-                font-family: 'Esa-Light';
-            }
-            font-size: 25px;
-
+            box-shadow: 0px 3px 0px $black;
+            color: $bright;
         }
     }
 
