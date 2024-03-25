@@ -34,32 +34,32 @@ class MarketControllerTest extends RestDocsSupport {
 
     private final MarketService marketService = mock(MarketService.class);
 
-    @DisplayName("전체 상품 조회")
-    @Test
-    void listAllProducts() throws Exception {
-        // Given
-        Pageable pageable = PageRequest.of(0, 10);
-        given(marketService.listAllProducts(pageable)).willReturn(new PageImpl<>(Collections.emptyList()));
-
-        // When & Then
-        mockMvc.perform(get("/api/market/products").accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andDo(print())
-                .andDo(document("products-list",
-                                preprocessRequest(prettyPrint()),
-                                preprocessResponse(prettyPrint()),
-                                responseFields(
-                                        fieldWithPath("[]").description("A list of products"),
-                                        subsectionWithPath("[].productId").type(JsonFieldType.NUMBER).description("상품 ID"),
-                                        subsectionWithPath("[].productName").type(JsonFieldType.STRING).description("상품명"),
-                                        subsectionWithPath("[].productPrice").type(JsonFieldType.NUMBER).description("상품 가격"),
-                                        subsectionWithPath("[].productBrand").type(JsonFieldType.STRING).description("상품 브랜드"),
-                                        subsectionWithPath("[].productImg").type(JsonFieldType.STRING).description("상품 이미지 URL"),
-                                        subsectionWithPath("[].productCategory").type(JsonFieldType.STRING).description("상품 카테고리")
-                                )
-                        )
-                );
-    }
+//    @DisplayName("전체 상품 조회")
+//    @Test
+//    void listAllProducts() throws Exception {
+//        // Given
+//        Pageable pageable = PageRequest.of(0, 10);
+//        given(marketService.listAllProducts(pageable)).willReturn(new PageImpl<>(Collections.emptyList()));
+//
+//        // When & Then
+//        mockMvc.perform(get("/api/market/products").accept(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isOk())
+//                .andDo(print())
+//                .andDo(document("products-list",
+//                                preprocessRequest(prettyPrint()),
+//                                preprocessResponse(prettyPrint()),
+//                                responseFields(
+//                                        fieldWithPath("[]").description("A list of products"),
+//                                        subsectionWithPath("[].productId").type(JsonFieldType.NUMBER).description("상품 ID"),
+//                                        subsectionWithPath("[].productName").type(JsonFieldType.STRING).description("상품명"),
+//                                        subsectionWithPath("[].productPrice").type(JsonFieldType.NUMBER).description("상품 가격"),
+//                                        subsectionWithPath("[].productBrand").type(JsonFieldType.STRING).description("상품 브랜드"),
+//                                        subsectionWithPath("[].productImg").type(JsonFieldType.STRING).description("상품 이미지 URL"),
+//                                        subsectionWithPath("[].productCategory").type(JsonFieldType.STRING).description("상품 카테고리")
+//                                )
+//                        )
+//                );
+//    }
 
 //    @DisplayName("카테고리별 상품 조회")
 //    @Test

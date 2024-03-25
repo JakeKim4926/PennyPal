@@ -1,6 +1,8 @@
 package com.ssafy.pennypal.domain.chat.service;
 
+import com.ssafy.pennypal.domain.chat.dto.ChatRoomDto;
 import com.ssafy.pennypal.domain.chat.dto.request.ChattingRequest;
+import com.ssafy.pennypal.domain.chat.entity.ChatMessage;
 import com.ssafy.pennypal.domain.chat.entity.ChatRoom;
 import com.ssafy.pennypal.domain.chat.repository.IChatMessageRepository;
 import com.ssafy.pennypal.domain.chat.repository.IChatRoomRepository;
@@ -12,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -63,6 +67,19 @@ public class ChatService {
         member.setChatRoom(chatRoom);
 
         chatRoomRepository.save(chatRoom);
+    }
+
+    /**
+     * 채팅방 입장
+     */
+    public ChatRoomDto enterChatRoom(Long chatRoomId){
+
+        ChatRoom chatRoom = chatRoomRepository.findByChatRoomId(chatRoomId);
+
+        // chatRoomId로 메시지들을 조회하는 메소드가 있다고 가정
+        List<ChatMessage> chatMessages = chatMessageRepository.findByChatRoomId(chatRoomId);
+
+        return ChatRoomDto.convertToChatRoomDto(chatRoom, chatMessages);
     }
 
     /**

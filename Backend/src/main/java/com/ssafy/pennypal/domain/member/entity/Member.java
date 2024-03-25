@@ -94,6 +94,13 @@ public class Member extends BaseEntity {
     @Setter
     private ChatRoom chatRoom;                                                     // 참여 중인 채팅방
 
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            mappedBy = "member"
+    )
+    @Column(name = "chat_message")
+    private List<ChatMessage> chatMessage;
+
 
     @Builder
     @QueryProjection
