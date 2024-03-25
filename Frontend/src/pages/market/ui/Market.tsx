@@ -2,6 +2,7 @@ import { PageHeader } from '../../../shared';
 import { useLocation } from 'react-router-dom';
 import { MarketTop } from '../ui/MarketTop/MarketTop';
 import { MarketCategory } from '../ui/MarketCategory/MarketCategory';
+import { MarketList } from '../ui/MarketList/MarketList';
 
 export function Market() {
     const page = useLocation();
@@ -12,6 +13,7 @@ export function Market() {
                 <PageHeader page={page.pathname.substring(1)} />
                 <MarketTop point={1230} />
                 <MarketCategory />
+                <MarketList />
             </div>
         </div>
     );
