@@ -1,3 +1,2 @@
-export * from './lib/customAxios';
-export * from './lib/usePenny';
+export * from './lib/index';
 export * from './ui/index';
