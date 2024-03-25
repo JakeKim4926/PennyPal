@@ -20,7 +20,7 @@ import java.util.function.Function;
 public class JwtService {
 
     private static String SECRET_KEY = "FE72ieGtyDteOT6jFfJtwLrX7hE2QrsoB0Ug01qGgOQ=";
-    private static final int EXPIRED_TIME = 1000 * 60 * 60 * 24;
+    public static int EXPIRED_TIME = 1000 * 60 * 60 * 24;
 
     //  1초 = 1000
     //  1분 = 60초 = 60 * 1000
