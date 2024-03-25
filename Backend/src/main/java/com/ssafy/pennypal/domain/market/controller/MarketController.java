@@ -32,8 +32,8 @@ public class MarketController {
 
     // 키워드 검색
     @GetMapping("/products/search")
-    public Page<ProductResponseDTO> searchProducts(@RequestParam("keyword") String keyword, @RequestParam(required = false) String category, Pageable pageable) {
-        return marketService.searchProducts(keyword, category, pageable);
+    public Page<ProductResponseDTO> searchProducts(@RequestParam("keyword") String keyword, Pageable pageable) {
+        return marketService.searchProducts(keyword, pageable);
     }
 
     // 상품 상세 조회
