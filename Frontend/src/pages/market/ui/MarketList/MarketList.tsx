@@ -11,17 +11,6 @@ export function MarketList() {
         { id: 1, image: 'image', title: '상품1', point: 2500 },
         { id: 1, image: 'image', title: '상품1', point: 2500 },
         { id: 1, image: 'image', title: '상품1', point: 2500 },
-        { id: 1, image: 'image', title: '상품1', point: 2500 },
-        { id: 1, image: 'image', title: '상품1', point: 2500 },
-        { id: 1, image: 'image', title: '상품1', point: 2500 },
-        { id: 1, image: 'image', title: '상품1', point: 2500 },
-        { id: 1, image: 'image', title: '상품1', point: 2500 },
-        { id: 1, image: 'image', title: '상품1', point: 2500 },
-        { id: 1, image: 'image', title: '상품1', point: 2500 },
-        { id: 1, image: 'image', title: '상품1', point: 2500 },
-        { id: 1, image: 'image', title: '상품1', point: 2500 },
-        { id: 1, image: 'image', title: '상품1', point: 2500 },
-        { id: 1, image: 'image', title: '상품1', point: 2500 },
     ];
 
     return (

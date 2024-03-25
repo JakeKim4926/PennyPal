@@ -35,10 +35,10 @@ export function MarketCategory() {
     return (
         <div className="marketCategory">
             {categories.map((it) => (
-                <div className="marketCategory__item">
+                <button className="marketCategory__item">
                     <div className="marketCategory__item-icon">{it.icon}</div>
                     <div className="marketCategory__item-title">{it.title}</div>
-                </div>
+                </button>
             ))}
         </div>
     );
