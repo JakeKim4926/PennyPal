@@ -3,7 +3,7 @@ import { TeamInfo } from '../../teamInfo/index';
 import { Team } from '../../team/index';
 
 export function TeamRouting() {
-    const hasTeam = true;
+    const hasTeam = false;
 
     return <div className="teamRouting">{hasTeam ? <TeamInfo /> : <Team />}</div>;
 }

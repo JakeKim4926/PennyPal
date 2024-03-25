@@ -1,5 +1,5 @@
-import { customAxios } from '../../../shared';
+import { customAxios } from '@/shared';
 
 export async function createGroup(postDto: object) {
-    return await customAxios.post('/team/create', postDto).catch((err) => err);
+    return await customAxios.post('/api/team/create', postDto).catch((err) => err);
 }

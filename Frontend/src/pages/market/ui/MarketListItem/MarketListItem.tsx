@@ -8,10 +8,15 @@ type MarketListItemProps = {
 
 export function MarketListItem({ image, title, point }: MarketListItemProps) {
     return (
-        <div className="marketListItem">
-            <div>{image}</div>
-            <div>{title}</div>
-            <div>{point}</div>
+        <div className="marketList__item">
+            <div className="marketList__item-image">{image}</div>
+            <div className="marketList__item-desc">
+                <div className="marketList__item-desc-title">{title}</div>
+                <div className="marketList__item-desc-point">
+                    <div>[P]{point.toLocaleString()}</div>
+                    <div>[I]</div>
+                </div>
+            </div>
         </div>
     );
 }

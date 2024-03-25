@@ -6,7 +6,7 @@ $LETTER_SPACING: 2px;
     display: flex;
     justify-content: space-between;
 
-    div {
+    div, button {
         font-family: 'Wanted-Medium';
         letter-spacing: $LETTER_SPACING;
     }
@@ -60,6 +60,9 @@ $LETTER_SPACING: 2px;
             padding: $PADDING;
             border-radius: $BORDER_RADIUS;
             color: $bright;
+            border: none;
+            height: 100%;
+            cursor: pointer;
         }
     }
 }

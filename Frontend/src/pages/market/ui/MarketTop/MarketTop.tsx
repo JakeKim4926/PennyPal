@@ -8,7 +8,7 @@ export function MarketTop({ point }: MarketTopProps) {
     return (
         <div className="marketTop">
             <div className="marketTop__point">
-                <div className="marketTop__point-title">[아이콘] POINT</div>
+                <div className="marketTop__point-title">[P] POINT</div>
                 <div className="marketTop__point-value">{point.toLocaleString()}P</div>
             </div>
             <div className="marketTop__search">
@@ -16,7 +16,7 @@ export function MarketTop({ point }: MarketTopProps) {
                 <button className="marketTop__search-button">검색</button>
             </div>
             <div className="marketTop__record">
-                <div className="marketTop__record-item">사용기록[아이콘]</div>
+                <button className="marketTop__record-item button">사용 내역[I]</button>
             </div>
         </div>
     );
