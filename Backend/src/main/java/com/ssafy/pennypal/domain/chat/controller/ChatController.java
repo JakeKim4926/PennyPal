@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("api/chat")
 public class ChatController {
 
     private final ChatService chatService;
@@ -18,7 +19,7 @@ public class ChatController {
     /**
      * note : 2.7.2 참여 중인 채팅방 상세 조회
      */
-    @GetMapping("/chat/{rommId}")
+    @GetMapping("/{chatRoomId}")
     public ApiResponse<ChatRoomDto> enterChatRoom(@PathVariable Long chatRoomId){
         return ApiResponse.ok(chatService.enterChatRoom(chatRoomId));
     }
@@ -26,7 +27,7 @@ public class ChatController {
     /**
      * note : 2.7.3 채팅 전송
      */
-    @MessageMapping("/chat/{roomId}")
+    @MessageMapping("/{roomId}")
     public void chatMessageSend(@DestinationVariable("roomId") Long roomId,
                                 @RequestBody ChattingRequest request) {
 

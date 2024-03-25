@@ -1,0 +1,9 @@
+[[enter-chat-room]]
+==== HTTP Request
+
+include::{snippets}/enter-chat-room/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/enter-chat-room/http-response.adoc[]
+include::{snippets}/enter-chat-room/response-fields.adoc[]

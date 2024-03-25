@@ -124,6 +124,7 @@ public class TeamControllerTest extends RestDocsSupport {
                                 )
                         )
                 );
+        verify(teamService).createTeam(any(TeamCreateServiceRequest.class));
 
     }
 
