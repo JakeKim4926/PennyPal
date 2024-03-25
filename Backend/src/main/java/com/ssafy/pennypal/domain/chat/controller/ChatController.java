@@ -19,12 +19,10 @@ public class ChatController {
      * note : 2.7.3 채팅 전송
      */
     @MessageMapping("/chat/{roomId}")
-    public void chatMessageSend(
-            @DestinationVariable("roomId") Long roomId,
-            @RequestBody ChattingRequest request
-            ){
-        chatService.sendChatMessage(roomId, request);
+    public void chatMessageSend(@DestinationVariable("roomId") Long roomId,
+                                @RequestBody ChattingRequest request){
 
+        chatService.sendChatMessage(roomId, request);
     }
 
 

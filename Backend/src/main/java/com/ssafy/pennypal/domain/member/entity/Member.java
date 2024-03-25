@@ -2,6 +2,7 @@ package com.ssafy.pennypal.domain.member.entity;
 
 import com.querydsl.core.annotations.QueryProjection;
 import com.ssafy.pennypal.domain.chat.entity.ChatMessage;
+import com.ssafy.pennypal.domain.chat.entity.ChatRoom;
 import com.ssafy.pennypal.domain.market.entity.Order;
 import com.ssafy.pennypal.domain.team.entity.Team;
 import com.ssafy.pennypal.global.common.BaseEntity;
@@ -87,6 +88,11 @@ public class Member extends BaseEntity {
 
     @Column(name = "member_attendance")
     private Integer memberAttendance;                                              // 이번 주 출석 횟수
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "chat_room_id")
+    @Setter
+    private ChatRoom chatRoom;                                                     // 참여 중인 채팅방
 
 
     @Builder

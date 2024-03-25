@@ -1,14 +1,19 @@
 package com.ssafy.pennypal.domain.chat.entity;
 
+import com.ssafy.pennypal.domain.member.entity.Member;
 import com.ssafy.pennypal.global.common.BaseEntity;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChatRoom extends BaseEntity {
 
     @Id
@@ -19,4 +24,12 @@ public class ChatRoom extends BaseEntity {
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
     private List<ChatMessage> chatMessages = new ArrayList<>();
 
+    @OneToMany(mappedBy = "chatRoom")
+    private List<Member> members = new ArrayList<>();
+
+    @Builder
+    public ChatRoom(List<ChatMessage> chatMessages, Member member) {
+        this.chatMessages = chatMessages;
+        this.members.add(member);
+    }
 }

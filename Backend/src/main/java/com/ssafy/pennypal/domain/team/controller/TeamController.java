@@ -1,6 +1,7 @@
 package com.ssafy.pennypal.domain.team.controller;
 
 import com.ssafy.pennypal.bank.service.api.BankServiceAPIImpl;
+import com.ssafy.pennypal.domain.chat.service.ChatService;
 import com.ssafy.pennypal.domain.team.dto.request.TeamCreateRequest;
 import com.ssafy.pennypal.domain.team.dto.request.TeamJoinRequest;
 import com.ssafy.pennypal.domain.team.dto.response.*;
@@ -19,6 +20,7 @@ import java.util.List;
 public class TeamController {
 
     private final TeamService teamService;
+    private final ChatService chatService;
 
     private final BankServiceAPIImpl bankServiceAPI;
 
@@ -28,7 +30,13 @@ public class TeamController {
     @PostMapping("/create")
     public ApiResponse<TeamCreateResponse> createTeam(@Valid @RequestBody TeamCreateRequest request) {
 
-        return ApiResponse.ok(teamService.createTeam(request.toServiceRequest()));
+        // 팀 생성
+        TeamCreateResponse result = teamService.createTeam(request.toServiceRequest());
+
+        // 팀 채팅방 생성
+        chatService.createChatRoom(request.getTeamLeaderId());
+
+        return ApiResponse.ok(result);
 
     }
 
