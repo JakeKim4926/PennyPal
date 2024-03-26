@@ -27,7 +27,7 @@ public class ChatController {
     }
 
     /**
-     * note : 2.7.3 채팅 전송
+     * note : 2.7.3 채팅 전송, 저장
      */
     @MessageMapping("/{roomId}")
     public void chatMessageSend(@DestinationVariable("roomId") Long roomId,
