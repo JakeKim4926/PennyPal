@@ -19,4 +19,13 @@ public class TeamModifyRequest {
 
     private String teamInfo;
 
+    @Builder
+    private TeamModifyRequest(Long memberId, String teamName, Long teamLeaderId, Boolean teamIsAutoConfirm, String teamInfo) {
+        this.memberId = memberId;
+        this.teamName = teamName;
+        this.teamLeaderId = teamLeaderId;
+        this.teamIsAutoConfirm = teamIsAutoConfirm;
+        this.teamInfo = teamInfo;
+    }
+
 }

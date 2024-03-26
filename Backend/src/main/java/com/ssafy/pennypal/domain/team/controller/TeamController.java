@@ -108,6 +108,7 @@ public class TeamController {
 
     /**
      * note : 2.5.1 팀원 추방
+     * todo : 응답값 상의 후 수정
      */
     @PostMapping("/ban")
     public ApiResponse<String> banishMember(@RequestBody TeamBanishRequest request){
