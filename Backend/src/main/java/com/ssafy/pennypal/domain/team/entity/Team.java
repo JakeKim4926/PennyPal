@@ -1,6 +1,7 @@
 package com.ssafy.pennypal.domain.team.entity;
 
 import com.ssafy.pennypal.domain.chat.entity.ChatRoom;
+import com.ssafy.pennypal.domain.member.dto.SimpleMemberDto;
 import com.ssafy.pennypal.domain.member.entity.Member;
 import com.ssafy.pennypal.domain.team.dto.request.TeamModifyRequest;
 import com.ssafy.pennypal.global.common.BaseEntity;
@@ -67,7 +68,15 @@ public class Team extends BaseEntity {
     @Setter
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "chat_room_id")
-    private ChatRoom chatRoom;
+    private ChatRoom chatRoom;                                                         // 채팅방
+
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            mappedBy = "memberBanishedTeam",
+            cascade = CascadeType.ALL
+    )
+    @Column(name = "team_banished_list")
+    private List<Member> teamBanishedList = new ArrayList<>();                         // 추방 당한 유저 리스트
 
 
     @Builder

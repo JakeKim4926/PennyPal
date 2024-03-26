@@ -48,7 +48,7 @@ public class ChatService {
         team.setChatRoom(newChatRoom);
         teamRepository.save(team);
 
-        member.setChatRoom(newChatRoom);
+        member.setMemberChatRoom(newChatRoom);
         memberRepository.save(member);
     }
 
@@ -66,7 +66,7 @@ public class ChatService {
 
         // 유저 리스트에 추가, 유저 채팅방에 추가
         chatRoom.getMembers().add(member);
-        member.setChatRoom(chatRoom);
+        member.setMemberChatRoom(chatRoom);
 
         chatRoomRepository.save(chatRoom);
     }

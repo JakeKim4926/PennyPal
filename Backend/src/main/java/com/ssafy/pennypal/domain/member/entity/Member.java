@@ -95,14 +95,19 @@ public class Member extends BaseEntity implements UserDetails {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chat_room_id")
     @Setter
-    private ChatRoom chatRoom;                                                     // 참여 중인 채팅방
+    private ChatRoom memberChatRoom;                                                     // 참여 중인 채팅방
 
     @OneToMany(
             fetch = FetchType.LAZY,
             mappedBy = "member"
     )
     @Column(name = "chat_message")
-    private List<ChatMessage> chatMessage;
+    private List<ChatMessage> memberChatMessage;                                          // 보낸 메시지
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_banished_list")
+    @Setter
+    private Team memberBanishedTeam;                                                // 가입 차단 당한 팀
 
 
     @Builder
