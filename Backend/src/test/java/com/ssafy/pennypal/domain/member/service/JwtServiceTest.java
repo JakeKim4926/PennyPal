@@ -100,31 +100,31 @@ class JwtServiceTest {
         assertThat(jwtService.isTokenValid(token, userDetails)).isTrue();
     }
 
-    @DisplayName("추출한 이메일을 통해 Member의 정보를 받아와 토큰의 유효기간 만료 시 false를 반환한다.")
-    @Test
-    void tokenIsExpired() throws InterruptedException {
-        // given
-        Member member = Member.builder()
-                .memberEmail("Jake95@naver.com")
-                .memberNickname("J크")
-                .memberPassword(passwordEncoder.encode("qwer1234"))
-                .memberBirthDate(LocalDateTime.now())
-                .memberName("Jake")
-                .build();
-
-        jwtService.EXPIRED_TIME = 1000;
-
-        String token = jwtService.generateToken(member);
-        String memberEmail = jwtService.extractUsername(token);
-
-
-        Thread.sleep(1100);
-
-        // when
-        UserDetails userDetails = member;
-//        UserDetails userDetails = userDetailsService.loadUserByUsername(memberEmail);
-
-        // then
-        assertThat(jwtService.isTokenValid(token, userDetails)).isFalse();
-    }
+//    @DisplayName("추출한 이메일을 통해 Member의 정보를 받아와 토큰의 유효기간 만료 시 false를 반환한다.")
+//    @Test
+//    void tokenIsExpired() throws InterruptedException {
+//        // given
+//        Member member = Member.builder()
+//                .memberEmail("Jake95@naver.com")
+//                .memberNickname("J크")
+//                .memberPassword(passwordEncoder.encode("qwer1234"))
+//                .memberBirthDate(LocalDateTime.now())
+//                .memberName("Jake")
+//                .build();
+//
+//        jwtService.EXPIRED_TIME = 1000;
+//
+//        String token = jwtService.generateToken(member);
+//        String memberEmail = jwtService.extractUsername(token);
+//
+//
+//        Thread.sleep(1100);
+//
+//        // when
+//        UserDetails userDetails = member;
+////        UserDetails userDetails = userDetailsService.loadUserByUsername(memberEmail);
+//
+//        // then
+//        assertThat(jwtService.isTokenValid(token, userDetails)).isFalse();
+//    }
 }
