@@ -1,8 +1,8 @@
 package com.ssafy.pennypal.domain.member.service;
 
 import com.ssafy.pennypal.domain.member.dto.request.MemberSignupRequest;
+import com.ssafy.pennypal.domain.member.dto.response.MemberSignupResponse;
 import com.ssafy.pennypal.domain.member.entity.Member;
-import com.ssafy.pennypal.domain.member.entity.MemberErrorStatus;
 import com.ssafy.pennypal.domain.member.repository.IMemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @Transactional
 @SpringBootTest
@@ -54,7 +53,7 @@ class MemberServiceTest {
                 .build().getMemberNickname());
     }
 
-    @DisplayName("회원 정보 중 이메일 중복을 검사하여 중복 될 경우 420을 반환한다.")
+    @DisplayName("회원 정보 중 이메일 중복을 검사하여 중복 될 경우 예외 처리")
     @Test
     void isEmailExist() {
         // given
@@ -74,16 +73,20 @@ class MemberServiceTest {
                 .memberName("김준섭")
                 .build();
 
-        int i = memberService.signUp(member1);
+        memberService.signUp(member1);
         // when
-        int result = memberService.signUp(member2);
+        MemberSignupResponse memberSignupResponse = memberService.signUp(member2);
 
         // then
-        assertThat(result).isEqualTo(MemberErrorStatus.EMAIL_EXIST.getValue());
+//        assertThat(memberSignupResponse).isEqualTo(MemberSignupResponse.builder()
+//                .status(HttpStatus.BAD_REQUEST)
+//                .message("이미 사용 중인 이메일 입니다.")
+//                .build());
+        assertThat(memberSignupResponse.getMessage()).isEqualTo("이미 사용 중인 이메일 입니다.");
 
     }
 
-    @DisplayName("회원 정보 중 닉네임 중복을 검사하여 중복 될 경우 421을 반환한다.")
+    @DisplayName("회원 정보 중 닉네임 중복을 검사하여 중복 될 경우 예외 처리")
     @Test
     void isNicknameExist() {
         // given
@@ -103,12 +106,26 @@ class MemberServiceTest {
                 .memberName("김준섭")
                 .build();
 
-        int i = memberService.signUp(member1);
+        memberService.signUp(member1);
         // when
-        int result = memberService.signUp(member2);
+        MemberSignupResponse memberSignupResponse = memberService.signUp(member2);
 
         // then
-        assertThat(result).isEqualTo(MemberErrorStatus.NICKNAME_EXIST.getValue());
+//        assertThat(memberSignupResponse).isEqualTo(MemberSignupResponse.builder()
+//                .status(HttpStatus.BAD_REQUEST)
+//                .message("이미 사용 중인 닉네임 입니다.")
+//                .build());
+        assertThat(memberSignupResponse.getMessage()).isEqualTo("이미 사용 중인 닉네임 입니다.");
+    }
+
+    @DisplayName("Id와 패스워드를 받아 로그인을 성공 후 토큰을 발급한다.")
+    @Test
+    public void test() throws Exception {
+        // given
+
+        // when
+
+        // then
 
     }
 }

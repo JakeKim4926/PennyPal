@@ -71,6 +71,9 @@ dependencies {
     // JWT Jackson
     implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
+    // 사용 중인 Jackson 버전과 호환되는 버전 사용
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.0'
+
 }
 
 tasks.named('test') {

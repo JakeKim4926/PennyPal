@@ -1,26 +1,23 @@
 package com.ssafy.pennypal.domain.member.service;
 
 import com.ssafy.pennypal.domain.member.dto.request.MemberSignupRequest;
+import com.ssafy.pennypal.domain.member.dto.response.MemberSignupResponse;
 import com.ssafy.pennypal.domain.member.entity.Member;
-import com.ssafy.pennypal.domain.member.entity.MemberErrorStatus;
 import com.ssafy.pennypal.domain.member.repository.IMemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class MemberService {
 
     private final IMemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
-    public int signUp(MemberSignupRequest memberSignupRequest) {
+    public MemberSignupResponse signUp(MemberSignupRequest memberSignupRequest) {
         Member member = Member.builder()
                 .memberEmail(memberSignupRequest.getMemberEmail())
                 .memberNickname(memberSignupRequest.getMemberNickname())
@@ -32,16 +29,27 @@ public class MemberService {
         Member memberByEmail = memberRepository.findByMemberEmail(member.getMemberEmail());
 
         if(memberByEmail != null)
-            return MemberErrorStatus.EMAIL_EXIST.getValue();
+            return MemberSignupResponse.builder()
+                    .status(HttpStatus.BAD_REQUEST)
+                    .message("이미 사용 중인 이메일 입니다.")
+                    .build();
 
         Member memberByNickname = memberRepository.findByMemberNickname(member.getMemberNickname());
 
         if(memberByNickname != null)
-            return MemberErrorStatus.NICKNAME_EXIST.getValue();
+            return MemberSignupResponse.builder()
+                    .status(HttpStatus.BAD_REQUEST)
+                    .message("이미 사용 중인 닉네임 입니다.")
+                    .build();
+
 
         memberRepository.save(member);
 
-        return HttpStatus.OK.value();
+        return MemberSignupResponse.builder()
+                .status(HttpStatus.OK)
+                .message("회원 가입 성공")
+                .build();
+
     }
 
 }
