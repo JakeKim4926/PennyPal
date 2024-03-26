@@ -1,4 +1,6 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
+import { openMarketItemModal } from '@/pages/market/model/index';
 
 type MarketListItemProps = {
     image: string;
@@ -7,8 +9,10 @@ type MarketListItemProps = {
 };
 
 export function MarketListItem({ image, title, point }: MarketListItemProps) {
+    const dispatch = useDispatch();
+
     return (
-        <div className="marketList__item">
+        <div className="marketList__item" onClick={() => dispatch(openMarketItemModal({ value: 123 }))}>
             <div className="marketList__item-image">{image}</div>
             <div className="marketList__item-desc">
                 <div className="marketList__item-desc-title">{title}</div>
