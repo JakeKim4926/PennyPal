@@ -13,6 +13,7 @@ import { SignUp } from '../pages/signup';
 import { Test } from '../pages/test/ui/Test';
 import { Navigate } from 'react-router-dom';
 import { TeamRouting } from '../pages/teamRouting';
+import { FindPassword } from '../pages/signin';
 
 export function AppRoutes() {
     return (
@@ -30,6 +31,7 @@ export function AppRoutes() {
             <Route path="signup" element={<SignUp />} />
             <Route path="team" element={<TeamRouting />} />
             <Route path="test" element={<Test />} />
+            <Route path="find-password" element={<FindPassword />} />
         </Routes>
     );
 }

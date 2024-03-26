@@ -1,5 +1,5 @@
 type ButtonProps = {
-    child?: String;
+    child?: React.ReactNode;
     color?: String;
     size?: String;
     onClick?: React.MouseEventHandler<HTMLButtonElement>;
