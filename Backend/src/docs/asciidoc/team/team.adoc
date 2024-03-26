@@ -9,5 +9,11 @@ include::api/realtimeTeamRanking.adoc[]
 include::api/searchTeamList.adoc[]
 === 2.4 팀 상세 조회
 include::api/detailTeam.adoc[]
+=== 2.5 팀 정보 수정
+include::api/modifyTeam.adoc[]
 === 2.5.2 팀 가입
 include::api/joinTeam.adoc[]
+=== 2.5.3 팀 탈퇴
+include::api/leaveTeam.adoc[]
+=== 2.6 팀 삭제
+include::api/deleteTeam.adoc[]

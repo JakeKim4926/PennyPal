@@ -1,0 +1,10 @@
+[[modify-team]]
+==== HTTP Request
+
+include::{snippets}/modify-team/http-request.adoc[]
+include::{snippets}/modify-team/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/modify-team/http-response.adoc[]
+include::{snippets}/modify-team/response-fields.adoc[]

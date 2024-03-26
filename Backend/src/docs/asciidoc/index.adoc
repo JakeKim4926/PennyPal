@@ -17,3 +17,7 @@ include::bank/bank.adoc[]
 == Team API
 
 include::team/team.adoc[]
+
+== Chat API
+
+include::chat/chat.adoc[]

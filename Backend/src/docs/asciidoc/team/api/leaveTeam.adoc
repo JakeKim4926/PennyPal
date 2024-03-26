@@ -1,0 +1,10 @@
+[[leave-team]]
+==== HTTP Request
+
+include::{snippets}/leave-team/http-request.adoc[]
+include::{snippets}/leave-team/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/leave-team/http-response.adoc[]
+include::{snippets}/leave-team/response-fields.adoc[]

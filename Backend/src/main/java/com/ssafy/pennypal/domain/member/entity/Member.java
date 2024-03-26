@@ -2,6 +2,7 @@ package com.ssafy.pennypal.domain.member.entity;
 
 import com.querydsl.core.annotations.QueryProjection;
 import com.ssafy.pennypal.domain.chat.entity.ChatMessage;
+import com.ssafy.pennypal.domain.chat.entity.ChatRoom;
 import com.ssafy.pennypal.domain.market.entity.Order;
 import com.ssafy.pennypal.domain.team.entity.Team;
 import com.ssafy.pennypal.global.common.BaseEntity;
@@ -91,14 +92,25 @@ public class Member extends BaseEntity implements UserDetails {
     @Column(name = "member_attendance")
     private Integer memberAttendance;                                              // 이번 주 출석 횟수
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "chat_room_id")
+    @Setter
+    private ChatRoom chatRoom;                                                     // 참여 중인 채팅방
+
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            mappedBy = "member"
+    )
+    @Column(name = "chat_message")
+    private List<ChatMessage> chatMessage;
+
 
     @Builder
     @QueryProjection
     public Member(
             String memberEmail, String memberPassword, String memberName, String memberNickname,
             LocalDateTime memberBirthDate, Integer memberPoint, String memberMostCategory, Team team, List<Order> orders,
-            String memberBankApi, Team memberWaitingTeam, List<Expense> memberExpensesOfLastWeek,
-            List<Expense> memberExpensesOfThisWeek, Integer memberAttendance
+            String memberBankApi, Team memberWaitingTeam, Integer memberAttendance
     ) {
         this.memberEmail = memberEmail;
         this.memberPassword = memberPassword;
@@ -111,8 +123,6 @@ public class Member extends BaseEntity implements UserDetails {
         this.orders = orders;
         this.memberBankApi = memberBankApi;
         this.memberWaitingTeam = memberWaitingTeam;
-        this.memberExpensesOfLastWeek = memberExpensesOfLastWeek;
-        this.memberExpensesOfThisWeek = memberExpensesOfThisWeek;
         this.memberAttendance = memberAttendance;
     }
 

@@ -1,8 +1,11 @@
 package com.ssafy.pennypal.domain.team.controller;
 
 import com.ssafy.pennypal.bank.service.api.BankServiceAPIImpl;
+import com.ssafy.pennypal.domain.chat.service.ChatService;
 import com.ssafy.pennypal.domain.team.dto.request.TeamCreateRequest;
 import com.ssafy.pennypal.domain.team.dto.request.TeamJoinRequest;
+import com.ssafy.pennypal.domain.team.dto.SimpleTeamDto;
+import com.ssafy.pennypal.domain.team.dto.request.TeamModifyRequest;
 import com.ssafy.pennypal.domain.team.dto.response.*;
 import com.ssafy.pennypal.domain.team.service.TeamService;
 import com.ssafy.pennypal.global.common.api.ApiResponse;
@@ -19,16 +22,23 @@ import java.util.List;
 public class TeamController {
 
     private final TeamService teamService;
+    private final ChatService chatService;
 
     private final BankServiceAPIImpl bankServiceAPI;
 
     /**
-     * note : 2.1 팀 생성
+     * note : 2.1 팀 생성 ( + 팀 채팅방 생성 )
      */
     @PostMapping("/create")
     public ApiResponse<TeamCreateResponse> createTeam(@Valid @RequestBody TeamCreateRequest request) {
 
-        return ApiResponse.ok(teamService.createTeam(request.toServiceRequest()));
+        // 팀 생성
+        TeamCreateResponse result = teamService.createTeam(request.toServiceRequest());
+
+        // 팀 채팅방 생성
+        chatService.createChatRoom(request.getTeamLeaderId());
+
+        return ApiResponse.ok(result);
 
     }
 
@@ -70,7 +80,7 @@ public class TeamController {
      */
     @GetMapping
     public ApiResponse<List<TeamSearchResponse>> searchTeamList(
-            @RequestParam(name = "teamName", required = false) String teamName
+            @RequestParam(name = "keyword", required = false) String teamName
     ){
 
         return ApiResponse.ok(teamService.searchTeamList(teamName));
@@ -86,18 +96,52 @@ public class TeamController {
     }
 
     /**
-     * note : 2.5.2 팀 가입
+     * note : 2.5 팀 정보 수정
      */
-    @PostMapping("/{teamId}")
-    public ApiResponse<TeamJoinResponse> joinTeam(@PathVariable Long teamId, Long memberId) {
+    @PatchMapping("/{teamId}")
+    public ApiResponse<TeamModifyResponse> modifyTeam(@PathVariable("teamId") Long teamId,
+                                                      @RequestBody TeamModifyRequest request){
 
-        TeamJoinRequest joinRequest = TeamJoinRequest.builder()
-                .teamId(teamId)
-                .memberId(memberId)
-                .build();
+        return ApiResponse.ok(teamService.modifyTeam(teamId, request));
+    }
 
-        return ApiResponse.ok(teamService.joinTeam(joinRequest.toServiceRequest()));
+    /**
+     * note : 2.5.2 팀 가입 ( + 팀 채팅방 초대 )
+     */
+    @PostMapping("/join")
+    public ApiResponse<TeamJoinResponse> joinTeam(@RequestBody TeamJoinRequest request) {
 
+        TeamJoinResponse result = teamService.joinTeam(request.toServiceRequest());
+
+        // 팀 채팅방 초대
+        chatService.inviteChatRoom(request.getTeamId(), request.getMemberId());
+
+        return ApiResponse.ok(result);
+
+    }
+
+    /**
+     * note : 2.5.3 팀 탈퇴
+     * todo : 응답값 상의 후 수정
+     */
+    @PostMapping("leave")
+    public ApiResponse<String> leaveTeam(@RequestBody SimpleTeamDto request){
+
+        teamService.leaveTeam(request);
+
+        return ApiResponse.ok("탈퇴 완료");
+    }
+
+    /**
+     * note : 2.6 팀 삭제
+     * todo : 응답값 상의 후 수정
+     */
+    @DeleteMapping
+    public ApiResponse<String> deleteTeam(@RequestBody SimpleTeamDto request){
+
+        teamService.deleteTeam(request);
+
+        return ApiResponse.ok("삭제 완료");
     }
 
 }

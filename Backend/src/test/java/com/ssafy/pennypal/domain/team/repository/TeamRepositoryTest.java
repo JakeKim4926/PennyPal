@@ -36,7 +36,8 @@ class TeamRepositoryTest {
         Team savedTeam = teamRepository.save(team);
 
         // when
-        Team findedTeam = teamRepository.findByTeamId(savedTeam.getTeamId());
+        Team findedTeam = teamRepository.findByTeamId(savedTeam.getTeamId())
+                        .orElseThrow(() -> new IllegalArgumentException("팀 정보를 찾을 수 없습니다."));
 
         // then
         assertThat(findedTeam)

@@ -1,0 +1,10 @@
+[[delete-team]]
+==== HTTP Request
+
+include::{snippets}/delete-team/http-request.adoc[]
+include::{snippets}/delete-team/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/delete-team/http-response.adoc[]
+include::{snippets}/delete-team/response-fields.adoc[]

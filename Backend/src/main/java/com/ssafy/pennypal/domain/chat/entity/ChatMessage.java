@@ -16,18 +16,21 @@ public class ChatMessage extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "chat_id")
-    private Long chatId;
+    private Long chatMessageId;
 
-    @Column(name = "chat_message")
-    private String chatMessage;
+    private String message;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chat_room_id")
     private ChatRoom chatRoom;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+
     @Builder
-    private ChatMessage(String chatMessage, ChatRoom chatRoom) {
-        this.chatMessage = chatMessage;
+    private ChatMessage(String message, ChatRoom chatRoom) {
+        this.message = message;
         this.chatRoom = chatRoom;
     }
 }

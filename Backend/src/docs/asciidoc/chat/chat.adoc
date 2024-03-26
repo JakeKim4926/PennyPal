@@ -1,0 +1,4 @@
+[[Chat-API]]
+
+=== 2.7.2 채팅방 상세 조회
+include::api/enterChatRoom.adoc[]

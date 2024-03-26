@@ -1,6 +1,8 @@
 package com.ssafy.pennypal.domain.team.entity;
 
+import com.ssafy.pennypal.domain.chat.entity.ChatRoom;
 import com.ssafy.pennypal.domain.member.entity.Member;
+import com.ssafy.pennypal.domain.team.dto.request.TeamModifyRequest;
 import com.ssafy.pennypal.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -62,6 +64,11 @@ public class Team extends BaseEntity {
     @Column(name = "team_rank_histories")
     private List<TeamRankHistory> TeamRankHistories = new ArrayList<>();               // 랭킹 내역
 
+    @Setter
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "chat_room_id")
+    private ChatRoom chatRoom;
+
 
     @Builder
     private Team(String teamName, Boolean teamIsAutoConfirm, Long teamLeaderId, String teamInfo, Member member) {
@@ -71,6 +78,27 @@ public class Team extends BaseEntity {
         this.teamLeaderId = teamLeaderId;
         this.members.add(member);
         this.teamInfo = teamInfo;
+    }
+
+    public static Team modifyTeam(Team team, TeamModifyRequest request){
+
+        if(request.getTeamName() != null){
+            team.teamName = request.getTeamName();
+        }
+
+        if(request.getTeamLeaderId() != null){
+            team.teamLeaderId = request.getTeamLeaderId();
+        }
+
+        if(request.getTeamIsAutoConfirm() != null){
+            team.teamIsAutoConfirm = request.getTeamIsAutoConfirm();
+        }
+
+        if(request.getTeamInfo() != null){
+            team.teamInfo = request.getTeamInfo();
+        }
+
+        return team;
     }
 
 }
