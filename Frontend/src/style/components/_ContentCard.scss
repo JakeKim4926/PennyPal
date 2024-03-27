@@ -17,36 +17,5 @@
             font-family: 'Wanted-ExtraBlack';
             letter-spacing: 3px;
         }
-
-        &-week {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 900;
-
-            * {
-                color: $dark;
-            }
-
-            .black {
-                font-size: 14px;
-                color: $black;
-            }
-        }
-
-        &-today {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 900;
-            letter-spacing: 1px;
-
-            .green {
-                color: $main;
-            }
-            .gray {
-                color: $dark;
-            }
-        }
     }
 }
