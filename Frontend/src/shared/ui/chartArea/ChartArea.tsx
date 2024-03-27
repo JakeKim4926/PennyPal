@@ -24,33 +24,33 @@ export function ChartArea({ data }: CharAreaProps) {
     return (
         <>
             <LineChart data={data} />
-            <div className="teaminfoTeamExpenditure__bottom">
-                <div className="teaminfoTeamExpenditure__bottom-left">
-                    <div className="teaminfoTeamExpenditure__bottom-left-prev">
-                        <div className="teaminfoTeamExpenditure__bottom-left-prev-title">이전 주차 지출액</div>
-                        <div className="teaminfoTeamExpenditure__bottom-left-prev-value">
+            <div className="chartArea__bottom">
+                <div className="chartArea__bottom-left">
+                    <div className="chartArea__bottom-left-prev">
+                        <div className="chartArea__bottom-left-prev-title">이전 주차 지출액</div>
+                        <div className="chartArea__bottom-left-prev-value">
                             <span className="value">{prevSum.toLocaleString()}</span>
                             <span className="unit">원</span>
                         </div>
                     </div>
-                    <div className="teaminfoTeamExpenditure__bottom-left-pres">
-                        <div className="teaminfoTeamExpenditure__bottom-left-pres-title">이번 주차 지출액</div>
-                        <div className="teaminfoTeamExpenditure__bottom-left-pres-value">
+                    <div className="chartArea__bottom-left-pres">
+                        <div className="chartArea__bottom-left-pres-title">이번 주차 지출액</div>
+                        <div className="chartArea__bottom-left-pres-value">
                             <span className="value">{presSum.toLocaleString()}</span>
                             <span className="unit">원</span>
                         </div>
                     </div>
                 </div>
-                <div className="teaminfoTeamExpenditure__bottom-right">
-                    <div className="teaminfoTeamExpenditure__bottom-right-prev">
-                        <div className="teaminfoTeamExpenditure__bottom-right-prev-title">전 주 대비</div>
-                        <div className="teaminfoTeamExpenditure__bottom-right-prev-value">
+                <div className="chartArea__bottom-right">
+                    <div className="chartArea__bottom-right-prev">
+                        <div className="chartArea__bottom-right-prev-title">전 주 대비</div>
+                        <div className="chartArea__bottom-right-prev-value">
                             {savingRate !== '100.0' ? `${savingRate}%` : ''} {savingState}
                         </div>
                     </div>
-                    <div className="teaminfoTeamExpenditure__bottom-right-pres">
-                        <div className="teaminfoTeamExpenditure__bottom-right-pres-title">전 주 대비</div>
-                        <div className="teaminfoTeamExpenditure__bottom-right-pres-value">
+                    <div className="chartArea__bottom-right-pres">
+                        <div className="chartArea__bottom-right-pres-title">전 주 대비</div>
+                        <div className="chartArea__bottom-right-pres-value">
                             {savingRate !== '100.0' ? `${spendDiff}` : ''} {savingState}
                         </div>
                     </div>
