@@ -70,7 +70,14 @@ type NameAreaProps = {
 };
 
 function NameArea({ moveNext }: NameAreaProps) {
+    const PASS = 'PASS';
+    const LENGTH = 'LENGTH';
+    const CHAR = 'CHAR';
+    const VALID = 'VALID';
+    const DUP = 'DUP';
+
     const [check, setCheck] = useState('LENGTH');
+    const nameRef = useRef<HTMLInputElement>(null);
 
     let timer: any = '';
     const regex = /^[가-힣|a-z|A-Z|0-9|]+$/;
@@ -83,15 +90,14 @@ function NameArea({ moveNext }: NameAreaProps) {
         }
 
         timer = setTimeout(() => {
-            console.log(newValue, newValue.length);
             if (newValue.length < 4 || newValue.length > 20) {
-                setCheck('LENGTH');
+                setCheck(LENGTH);
             } else if (!regex.test(newValue)) {
-                setCheck('CHAR');
+                setCheck(CHAR);
             } else {
-                setCheck('VALID');
+                setCheck(VALID);
             }
-        }, 200);
+        }, 300);
     }
 
     return (
@@ -100,11 +106,24 @@ function NameArea({ moveNext }: NameAreaProps) {
                 <div className="teamCreateTeam__content-inner-second-name">
                     <div>팀명을 입력해주세요</div>
                     <div className="teamCreateTeam__content-inner-second-name-input">
-                        <input type="text" placeholder="팀명" onChange={handleChange}></input>
+                        <input type="text" placeholder="팀명" onChange={handleChange} ref={nameRef}></input>
                         <button
                             className={`teamCreateTeam__content-inner-second-name-input-button ${
                                 check !== 'VALID' ? 'button-disabled' : 'button'
                             }`}
+                            disabled={check !== 'VALID'}
+                            onClick={() => {
+                                // 추후 작성 예정
+                                // 메일 중복체크하는 API 호출
+
+                                if (nameRef.current!.value) {
+                                    // 중복이 아니라면
+                                    setCheck(PASS);
+                                } else {
+                                    // 중복이라면
+                                    setCheck(DUP);
+                                }
+                            }}
                         >
                             중복 확인
                         </button>
@@ -113,7 +132,7 @@ function NameArea({ moveNext }: NameAreaProps) {
                 </div>
             </div>
             <button
-                disabled={check !== 'PASS'}
+                disabled={check !== PASS}
                 onClick={() => {
                     moveNext();
                 }}
@@ -128,24 +147,22 @@ type NameCheckProps = {
     state: string;
 };
 function NameCheck({ state }: NameCheckProps) {
-    switch (state) {
-        case 'CHAR':
-            return (
-                <div className="teamCreateTeam__content-inner-second-name">팀명은 한글, 숫자, 영문만 허용됩니다.</div>
-            );
-        case 'LENGTH':
-            return (
-                <div className="teamCreateTeam__content-inner-second-name">
-                    팀명은 4자 이상, 20자 이하만 허용됩니다.
-                </div>
-            );
-        case 'VALID':
-            return (
-                <div className="teamCreateTeam__content-inner-second-name">
-                    유효한 팀명입니다. 중복체크를 진행해주세요.
-                </div>
-            );
-        case 'PASS':
-            return <div className="teamCreateTeam__content-inner-second-name">사용 가능한 팀명입니다.</div>;
-    }
+    const text: () => string = () => {
+        switch (state) {
+            case 'CHAR':
+                return '팀명은 한글, 숫자, 영문만 허용됩니다.';
+            case 'LENGTH':
+                return '팀명은 4자 이상, 20자 이하만 허용됩니다.';
+            case 'VALID':
+                return '유효한 팀명입니다. 중복체크를 진행해주세요.';
+            case 'PASS':
+                return '사용 가능한 팀명입니다.';
+            case 'DUP':
+                return '중복된 팀명입니다.';
+            default:
+                return '팀명은 한글, 숫자, 영문만 허용됩니다.';
+        }
+    };
+
+    return <div className="teamCreateTeam__content-inner-second-name">{text()}</div>;
 }

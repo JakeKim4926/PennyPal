@@ -61,8 +61,8 @@ body {
 
 @mixin buttonCommon {
     box-shadow: 0 3px 2px $black;
-    transition-property: box-shadow, transform;
-    transition-duration: 0.1s;
+    transition-property: all;
+    transition-duration: 0.3s;
     border: 2px solid $gray;
 }
 
