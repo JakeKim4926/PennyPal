@@ -1,0 +1,30 @@
+@import '@/style/abstract/variables';
+
+.expenditureWeekly {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    &__content {
+        &-weekDay {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+            align-items: center;
+            justify-content: center;
+        }
+
+        &-weekDay {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+            align-items: center;
+            justify-content: center;
+        }
+
+        &-weekDay {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+}

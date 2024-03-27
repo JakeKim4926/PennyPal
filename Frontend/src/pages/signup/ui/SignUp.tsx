@@ -2,7 +2,7 @@ import { SignUpForm } from './SignUpForm';
 import { Agreement } from './Agreement';
 import { SignUpDone } from './SignUpDone';
 import { useSelector } from 'react-redux';
-import { RootState } from 'app/appProvider';
+import { RootState } from '@/app/appProvider';
 
 export function SignUp() {
     const currentStep = useSelector((state: RootState) => state.signUpStep.currentStep);

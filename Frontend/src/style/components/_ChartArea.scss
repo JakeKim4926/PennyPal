@@ -1,0 +1,93 @@
+.chartArea {
+
+    &__bottom {
+        display: flex;
+        justify-content: space-between;
+        gap: 40px;
+        padding: 0 20px;
+        margin-top: 20px;
+
+        &-left {
+            display: flex;
+            flex-direction: column;
+            width: 50%;
+            gap: 10px;
+
+            &-prev {
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+
+                div {
+                    font-family: 'Wanted-Medium';
+                }
+
+                &-title {
+
+                }
+
+                &-value {
+
+                }
+            }
+
+            &-pres {
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+
+                &-title {
+
+                }
+
+                &-value {
+
+                }
+            }
+        }
+
+        &-right {
+            display: flex;
+            justify-content: space-between;
+            width: 40%;
+            text-align: center;
+            align-items: center;
+
+            &-prev {
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+
+                &-title {
+
+                }
+
+                &-value {
+
+                }
+            }
+
+            &-pres {
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+
+                &-title {
+
+                }
+
+                &-value {
+
+                }
+            }
+        }
+    }
+
+    .value {
+        margin-right: 5px;
+    }
+
+    .unit {
+
+    }
+}

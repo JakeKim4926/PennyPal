@@ -1,0 +1,25 @@
+@import '@/style/abstract/fonts';
+@import '@/style/abstract/variables';
+@import '@/style/abstract/global';
+
+.expenditure {
+    width: $CONTENT_WIDTH_RATIO;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    gap: 20px;
+    padding-bottom: 20px;
+
+    &__container {
+        background-color: $black;
+        width: 100%;
+    }
+
+    .horizontal {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+    }
+}

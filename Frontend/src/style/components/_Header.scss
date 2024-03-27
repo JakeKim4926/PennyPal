@@ -1,13 +1,13 @@
 @import '@/style/abstract/variables';
 
-.header{
+.header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 50%;
     height: $HEADER_HEIGHT;
 
-    &__container{
+    &__container {
         width: 100%;
         min-width: $BODY_MIN_WIDTH;
         display: flex;
@@ -18,19 +18,15 @@
         z-index: 1;
     }
 
-    &__menubar{
+    &__menubar {
         display: flex;
         gap: 40px;
         align-items: center;
     }
 
-    &__logo{
-        img{
-            width: 180px;
+    &__logo {
+        img {
+            height: 70%;
         }
     }
-
-    
 }
-
-

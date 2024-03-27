@@ -1,0 +1,35 @@
+.TeamInfoChatButton {
+    position: absolute;
+    bottom: 80px;
+    right: 50px;
+    z-index: 2;
+    border-radius: 50px;
+    background-color: $main;
+    width: 50px;
+    height: 50px;
+    padding: 10px;
+    animation: floating 3s infinite ease-in-out;
+    
+    
+    
+    &__button {
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+
+    }
+}
+
+@keyframes floating {
+    0% {
+        transform: translate(0);
+    }
+
+    30% {
+        transform: translate(0, -4px);
+    }
+    
+    60% {
+        transform: translate(0, 0);
+    }
+}
