@@ -1,5 +1,6 @@
 import React from 'react';
 import { useState, useEffect, useRef } from 'react';
+import { scrollTeamCreateArea } from '../../model/scrollTeamCreateArea';
 
 export function TeamCreateTeam() {
     return (
@@ -20,6 +21,9 @@ function Content() {
     });
     const contentRef = useRef<HTMLDivElement>(null);
 
+    // moveNext: 다음 페이지로 넘기는 함수
+    const moveNext = scrollTeamCreateArea;
+
     return (
         <div className="teamCreateTeam__content" ref={contentRef}>
             <div className="teamCreateTeam__content-inner">
@@ -27,10 +31,7 @@ function Content() {
                 <button
                     className="teamCreateTeam__content-inner-nextButton"
                     onClick={() => {
-                        contentRef.current?.scrollTo({
-                            top: contentRef.current?.offsetHeight,
-                            behavior: 'smooth',
-                        });
+                        moveNext(contentRef, 1);
                     }}
                 >
                     팀 생성하기
@@ -41,6 +42,22 @@ function Content() {
                     <div className="teamCreateTeam__content-inner-second-name">
                         <div>팀명을 입력해주세요</div>
                         <input type="text" placeholder="팀명"></input>
+                    </div>
+                </div>
+            </div>
+            <div className="teamCreateTeam__content-inner">
+                <div className="teamCreateTeam__content-inner-second">
+                    <div className="teamCreateTeam__content-inner-second-name">
+                        <div>우리 팀을 한 줄로 소개해주세요</div>
+                        <input type="text" placeholder="소개"></input>
+                    </div>
+                </div>
+            </div>
+            <div className="teamCreateTeam__content-inner">
+                <div className="teamCreateTeam__content-inner-second">
+                    <div className="teamCreateTeam__content-inner-second-name">
+                        <div>우리 팀을 한 줄로 소개해주세요</div>
+                        <input type="text" placeholder="소개"></input>
                     </div>
                 </div>
             </div>
