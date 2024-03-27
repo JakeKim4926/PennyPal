@@ -7,6 +7,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.ssafy.pennypal.common.RestDocsSupport;
 import com.ssafy.pennypal.domain.member.dto.request.MemberLoginRequest;
 import com.ssafy.pennypal.domain.member.dto.request.MemberSignupRequest;
+import com.ssafy.pennypal.domain.member.dto.request.MemberUpdateNicknameRequest;
+import com.ssafy.pennypal.domain.member.dto.request.MemberUpdatePasswordRequest;
 import com.ssafy.pennypal.domain.member.dto.response.MemberLoginResponse;
 import com.ssafy.pennypal.domain.member.dto.response.MemberSignupResponse;
 import com.ssafy.pennypal.domain.member.entity.Member;
@@ -34,6 +36,7 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -167,5 +170,112 @@ class MemberControllerTest extends RestDocsSupport {
                 ));
 
         verify(memberService).login(any(MemberLoginRequest.class));
+    }
+
+    @DisplayName("memberId, 닉네임을 받아 사용자의 닉네임을 수정한다.")
+    @Test
+    public void updateNickname() throws Exception {
+
+        MemberUpdateNicknameRequest request = MemberUpdateNicknameRequest.builder()
+                .memberId(1L)
+                .memberNickname("옹옹씌")
+                .build();
+
+        given(memberService.updateNickname(any(MemberUpdateNicknameRequest.class)))
+                .willReturn(ApiResponse.of(
+                        HttpStatus.OK,
+                        "닉네임 변경에 성공하셨습니다.",
+                        request.getMemberNickname())
+                );
+
+        // when
+        // then
+        mockMvc.perform(
+                        patch("/api/member/nickname")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(new ObjectMapper()
+                                        .registerModule(new JavaTimeModule())
+                                        .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+                                        .writeValueAsString(request))
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("update-nickname",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestFields(
+                                fieldWithPath("memberId").type(JsonFieldType.NUMBER)
+                                        .description("사용자 Index"),
+                                fieldWithPath("memberNickname").type(JsonFieldType.STRING)
+                                        .description("수정할 닉네임")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("응답 코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("응답 상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data").type(JsonFieldType.STRING)
+                                        .description("응답 데이터")
+                        )
+                ));
+
+        verify(memberService).updateNickname(any(MemberUpdateNicknameRequest.class));
+    }
+
+    @DisplayName("memberId, 비밀번호, 수정할 비밀번호를 받아 비밀번호를 수정한다.")
+    @Test
+    public void updatePassword() throws Exception {
+
+        MemberUpdatePasswordRequest request = MemberUpdatePasswordRequest.builder()
+                .memberId(1L)
+                .memberOriginPassword("gorila97")
+                .memberChangePassword("97gorila")
+                .build();
+
+        given(memberService.updatePassword(any(MemberUpdatePasswordRequest.class)))
+                .willReturn(ApiResponse.of(
+                        HttpStatus.OK,
+                        "비밀번호 변경에 성공하셨습니다."
+                        ,""
+                ));
+
+        // when
+        // then
+        mockMvc.perform(
+                        patch("/api/member/password")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(new ObjectMapper()
+                                        .registerModule(new JavaTimeModule())
+                                        .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+                                        .writeValueAsString(request))
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("update-password",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestFields(
+                                fieldWithPath("memberId").type(JsonFieldType.NUMBER)
+                                        .description("사용자 Index"),
+                                fieldWithPath("memberOriginPassword").type(JsonFieldType.STRING)
+                                        .description("사용자 비밀번호"),
+                                fieldWithPath("memberChangePassword").type(JsonFieldType.STRING)
+                                        .description("수정할 비밀번호")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("응답 코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("응답 상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data").type(JsonFieldType.STRING)
+                                        .description("응답 데이터")
+                        )
+                ));
+
+        verify(memberService).updatePassword(any(MemberUpdatePasswordRequest.class));
     }
 }

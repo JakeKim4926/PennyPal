@@ -30,12 +30,14 @@ public class Member extends BaseEntity implements UserDetails {
     @Column(name = "member_email")
     private String memberEmail;                                                 // 사용자 이메일
 
+    @Setter
     @Column(name = "member_password")
     private String memberPassword;                                              // 사용자 비밀번호
 
     @Column(name = "member_name")
     private String memberName;                                                  // 사용자 이름
 
+    @Setter
     @Column(name = "member_nickname")
     private String memberNickname;                                              // 사용자 닉네임
 

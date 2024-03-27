@@ -2,6 +2,8 @@ package com.ssafy.pennypal.domain.member.service;
 
 import com.ssafy.pennypal.domain.member.dto.request.MemberLoginRequest;
 import com.ssafy.pennypal.domain.member.dto.request.MemberSignupRequest;
+import com.ssafy.pennypal.domain.member.dto.request.MemberUpdateNicknameRequest;
+import com.ssafy.pennypal.domain.member.dto.request.MemberUpdatePasswordRequest;
 import com.ssafy.pennypal.domain.member.dto.response.MemberLoginResponse;
 import com.ssafy.pennypal.domain.member.dto.response.MemberSignupResponse;
 import com.ssafy.pennypal.domain.member.entity.Member;
@@ -247,4 +249,156 @@ class MemberServiceTest {
         )).isTrue();
 
     }
+
+    @DisplayName("memberId, 수정할 닉네임을 받아 닉네임을 수정한다.")
+    @Test
+    public void updateNickname() throws Exception {
+        // given
+        MemberSignupRequest member1 = MemberSignupRequest.builder()
+                .memberEmail("Jake95@naver.com")
+                .memberNickname("J크")
+                .memberPassword("qwer1234")
+                .memberBirthDate(LocalDateTime.now())
+                .memberName("Jake")
+                .build();
+
+        memberService.signUp(member1);
+
+        MemberLoginRequest request = MemberLoginRequest.builder()
+                .memberEmail("Jake95@naver.com")
+                .memberPassword("qwer1234")
+                .build();
+
+        ApiResponse<MemberLoginResponse> login = memberService.login(request);
+        Long memberId = login.getData().getMemberId();
+
+        MemberUpdateNicknameRequest memberUpdateNicknameRequest = MemberUpdateNicknameRequest.builder()
+                .memberId(memberId)
+                .memberNickname("섭섭")
+                .build();
+        ApiResponse<String> stringApiResponse = memberService.updateNickname(memberUpdateNicknameRequest);
+
+        // when
+        ApiResponse<MemberLoginResponse> login2 = memberService.login(request);
+
+        // then
+        assertThat(stringApiResponse.getCode()).isEqualTo(200);
+        assertThat(login2.getData().getMemberNickname()).isEqualTo("섭섭");
+    }
+
+    @DisplayName("수정할 닉네임이 이미 존재할 경우 예외처리한다.")
+    @Test
+    public void updateNicknameDuplicate() throws Exception {
+        // given
+        MemberSignupRequest member1 = MemberSignupRequest.builder()
+                .memberEmail("Jake95@naver.com")
+                .memberNickname("J크")
+                .memberPassword("qwer1234")
+                .memberBirthDate(LocalDateTime.now())
+                .memberName("Jake")
+                .build();
+
+        memberService.signUp(member1);
+
+        MemberLoginRequest request = MemberLoginRequest.builder()
+                .memberEmail("Jake95@naver.com")
+                .memberPassword("qwer1234")
+                .build();
+
+        ApiResponse<MemberLoginResponse> login = memberService.login(request);
+        Long memberId = login.getData().getMemberId();
+
+        MemberUpdateNicknameRequest memberUpdateNicknameRequest = MemberUpdateNicknameRequest.builder()
+                .memberId(memberId)
+                .memberNickname("J크")
+                .build();
+
+        // when
+        ApiResponse<String> stringApiResponse = memberService.updateNickname(memberUpdateNicknameRequest);
+
+        // then
+        assertThat(stringApiResponse.getCode()).isEqualTo(400);
+        assertThat(stringApiResponse.getMessage()).isEqualTo("이미 사용 중인 닉네임 입니다.");
+    }
+
+    @DisplayName("memberId, 비밀번호, 수정할 비밀번호를 받아 비밀번호를 수정한다.")
+    @Test
+    public void updatePassword() throws Exception {
+        // given
+        MemberSignupRequest member1 = MemberSignupRequest.builder()
+                .memberEmail("Jake95@naver.com")
+                .memberNickname("J크")
+                .memberPassword("qwer1234")
+                .memberBirthDate(LocalDateTime.now())
+                .memberName("Jake")
+                .build();
+
+        memberService.signUp(member1);
+
+        MemberLoginRequest request = MemberLoginRequest.builder()
+                .memberEmail("Jake95@naver.com")
+                .memberPassword("qwer1234")
+                .build();
+
+        ApiResponse<MemberLoginResponse> login = memberService.login(request);
+        Long memberId = login.getData().getMemberId();
+
+        MemberUpdatePasswordRequest memberUpdatePasswordRequest = MemberUpdatePasswordRequest.builder()
+                .memberId(memberId)
+                .memberOriginPassword("qwer1234")
+                .memberChangePassword("1234qwer")
+                .build();
+        ApiResponse<String> stringApiResponse = memberService.updatePassword(memberUpdatePasswordRequest);
+
+        MemberLoginRequest request2 = MemberLoginRequest.builder()
+                .memberEmail("Jake95@naver.com")
+                .memberPassword("1234qwer")
+                .build();
+
+        ApiResponse<MemberLoginResponse> login2 = memberService.login(request2);
+        // when
+        Member byMemberId = memberRepository.findByMemberId(login2.getData().getMemberId());
+
+        // then
+        assertThat(stringApiResponse.getCode()).isEqualTo(200);
+        assertThat(passwordEncoder.matches(memberUpdatePasswordRequest.getMemberChangePassword(), byMemberId.getMemberPassword())).isTrue();
+    }
+
+    @DisplayName("비밀번호 수정 시 원래 비밀번호를 인증 하여 실패 시 예외처리한다.")
+    @Test
+    public void updatePasswordWrong() throws Exception {
+        // given
+        MemberSignupRequest member1 = MemberSignupRequest.builder()
+                .memberEmail("Jake95@naver.com")
+                .memberNickname("J크")
+                .memberPassword("qwer1234")
+                .memberBirthDate(LocalDateTime.now())
+                .memberName("Jake")
+                .build();
+
+        memberService.signUp(member1);
+
+        MemberLoginRequest request = MemberLoginRequest.builder()
+                .memberEmail("Jake95@naver.com")
+                .memberPassword("qwer1234")
+                .build();
+
+        ApiResponse<MemberLoginResponse> login = memberService.login(request);
+        Long memberId = login.getData().getMemberId();
+
+        MemberUpdatePasswordRequest memberUpdatePasswordRequest = MemberUpdatePasswordRequest.builder()
+                .memberId(memberId)
+                .memberOriginPassword("qwer12345")
+                .memberChangePassword("1234qwer")
+                .build();
+
+        // when
+        ApiResponse<String> stringApiResponse = memberService.updatePassword(memberUpdatePasswordRequest);
+
+        // then
+        assertThat(stringApiResponse.getCode()).isEqualTo(401);
+        assertThat(stringApiResponse.getMessage()).isEqualTo("비밀번호가 잘못되었습니다.");
+
+    }
+
 }

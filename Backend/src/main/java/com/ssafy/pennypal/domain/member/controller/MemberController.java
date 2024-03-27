@@ -3,6 +3,8 @@ package com.ssafy.pennypal.domain.member.controller;
 
 import com.ssafy.pennypal.domain.member.dto.request.MemberLoginRequest;
 import com.ssafy.pennypal.domain.member.dto.request.MemberSignupRequest;
+import com.ssafy.pennypal.domain.member.dto.request.MemberUpdateNicknameRequest;
+import com.ssafy.pennypal.domain.member.dto.request.MemberUpdatePasswordRequest;
 import com.ssafy.pennypal.domain.member.dto.response.MemberLoginResponse;
 import com.ssafy.pennypal.domain.member.dto.response.MemberSignupResponse;
 import com.ssafy.pennypal.domain.member.service.MemberService;
@@ -26,6 +28,17 @@ public class MemberController {
     public ApiResponse<MemberLoginResponse> login(@RequestBody MemberLoginRequest memberLoginRequest) {
         return memberService.login(memberLoginRequest);
     }
+
+    @PatchMapping("/nickname")
+    public ApiResponse<String> updateNickname(MemberUpdateNicknameRequest memberUpdateNicknameRequest) {
+        return memberService.updateNickname(memberUpdateNicknameRequest);
+    }
+
+    @PatchMapping("/password")
+    public ApiResponse<String> updatePassword(MemberUpdatePasswordRequest memberUpdatePasswordRequest) {
+        return memberService.updatePassword(memberUpdatePasswordRequest);
+    }
+
 
 
 }

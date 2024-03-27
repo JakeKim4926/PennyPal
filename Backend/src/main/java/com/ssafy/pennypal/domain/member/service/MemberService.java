@@ -2,6 +2,8 @@ package com.ssafy.pennypal.domain.member.service;
 
 import com.ssafy.pennypal.domain.member.dto.request.MemberLoginRequest;
 import com.ssafy.pennypal.domain.member.dto.request.MemberSignupRequest;
+import com.ssafy.pennypal.domain.member.dto.request.MemberUpdateNicknameRequest;
+import com.ssafy.pennypal.domain.member.dto.request.MemberUpdatePasswordRequest;
 import com.ssafy.pennypal.domain.member.dto.response.MemberLoginResponse;
 import com.ssafy.pennypal.domain.member.dto.response.MemberSignupResponse;
 import com.ssafy.pennypal.domain.member.entity.Member;
@@ -26,6 +28,7 @@ public class MemberService {
         Member memberByEmail = memberRepository.findByMemberEmail(memberSignupRequest.getMemberEmail());
         if(memberByEmail != null)
             return MemberSignupResponse.builder()
+                    .code(400)
                     .status(HttpStatus.BAD_REQUEST)
                     .message("이미 사용 중인 이메일 입니다.")
                     .build();
@@ -33,6 +36,7 @@ public class MemberService {
         Member memberByNickname = memberRepository.findByMemberNickname(memberSignupRequest.getMemberNickname());
         if(memberByNickname != null)
             return MemberSignupResponse.builder()
+                    .code(400)
                     .status(HttpStatus.BAD_REQUEST)
                     .message("이미 사용 중인 닉네임 입니다.")
                     .build();
@@ -71,6 +75,32 @@ public class MemberService {
                 .build();
 
         return ApiResponse.of(HttpStatus.OK, "로그인에 성공하셨습니다.", response);
+    }
+
+    public ApiResponse<String> updateNickname(MemberUpdateNicknameRequest memberUpdateNicknameRequest) {
+        Member memberByNickname = memberRepository.findByMemberNickname(memberUpdateNicknameRequest.getMemberNickname());
+        if(memberByNickname != null)
+            return ApiResponse.of(HttpStatus.BAD_REQUEST, "이미 사용 중인 닉네임 입니다.", memberUpdateNicknameRequest.getMemberNickname());
+
+        Member member = memberRepository.findByMemberId(memberUpdateNicknameRequest.getMemberId());
+        member.setMemberNickname(memberUpdateNicknameRequest.getMemberNickname());
+
+        memberRepository.save(member);
+
+        return ApiResponse.of(HttpStatus.OK, "닉네임 변경에 성공하셨습니다.", memberUpdateNicknameRequest.getMemberNickname());
+    }
+
+    public ApiResponse<String> updatePassword(MemberUpdatePasswordRequest memberUpdatePasswordRequest) {
+
+        Member member = memberRepository.findByMemberId(memberUpdatePasswordRequest.getMemberId());
+        if(!passwordEncoder.matches(memberUpdatePasswordRequest.getMemberOriginPassword(), member.getPassword()))
+            return ApiResponse.of(HttpStatus.UNAUTHORIZED, "비밀번호가 잘못되었습니다.", null);
+
+        member.setMemberPassword(passwordEncoder.encode(memberUpdatePasswordRequest.getMemberChangePassword()));
+        
+        memberRepository.save(member);
+
+        return ApiResponse.of(HttpStatus.OK, "비밀번호 변경에 성공하셨습니다.", null);
     }
 
 }
