@@ -7,7 +7,9 @@ dotenv.config();
 
 module.exports = () => {
     return {
-        entry: './src/main.tsx',
+        entry: {
+            main: './src/main.tsx',
+        },
         output: {
             filename: 'bundle.js',
             path: path.resolve(__dirname, 'dist'),

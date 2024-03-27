@@ -1,0 +1,38 @@
+.marketReceiptContent {
+    background-color: $bright;
+
+    &__top {
+        text-align: center;
+    }
+
+    &__header {
+
+        &-desc {
+            display: grid;
+            grid-template-columns: 30% 40% 15% 15%;
+            text-align: center;
+        }
+    }
+
+    &__main {
+
+        &-list {
+            
+            &-item {
+                display: grid;
+                grid-template-columns: 30% 40% 15% 15%;
+                text-align: center;
+                list-style-type: none;
+                padding: 5px 0;
+            }
+        }
+    }
+    
+    &__footer {
+
+    }
+
+    &__pagenation {
+
+    }
+}
