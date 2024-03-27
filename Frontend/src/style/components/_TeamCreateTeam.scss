@@ -1,24 +1,58 @@
 .teamCreateTeam {
     overflow: hidden;
+    height: 15rem;
+    div {
+        font-weight: bold;
+    }
 
     &__content {
-        height: 100px;
-        flex-direction: column;
-        display: flex;
-        font-size: 20px;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
+        overflow: hidden;
+        height: 100%;
 
-        &-nextButton {
-            border: none;
-            font-size: 20px;
-            background-color: transparent;
-            color: $gray;
-            cursor: pointer;
+        &-inner {
+            flex-shrink: 0;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 1.3rem;
 
-            &:hover {
-                color: $black;
+            &-nextButton {
+                border: none;
+                font-size: 20px;
+                background-color: transparent;
+                color: $gray;
+                cursor: pointer;
+
+                &:hover {
+                    color: $black;
+                }
+            }
+
+            &-second {
+                width: 100%;
+                padding: 0.3rem;
+                display: flex;
+
+                &-name {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.3rem;
+
+                    input {
+                        font-size: 1.5rem;
+                        font-weight: bold;
+                        border: none;
+                        border-bottom: 3px solid $main;
+                        outline: none;
+                        padding: 0.3rem 0;
+                        width: 30rem;
+                        letter-spacing: -0.13rem;
+                    }
+                }
             }
         }
     }
