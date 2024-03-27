@@ -13,11 +13,10 @@
     gap: 10px;
 
     &__title {
-        
         &-text {
             display: flex;
             justify-content: space-between;
-            
+
             &-button {
                 $padding: 3px;
                 letter-spacing: 3px;
@@ -49,7 +48,6 @@
             }
 
             &-head {
-
                 div {
                     font-family: 'Esa-Light';
                     display: flex;
@@ -76,7 +74,7 @@
             background-color: $main;
             font-family: 'Wanted-Medium' !important;
             font-size: 20px;
-            padding: 5px 12px; 
+            padding: 5px 12px;
             border-radius: 20px;
             width: 100%;
             box-shadow: 0px 3px 0px $black;
@@ -89,7 +87,7 @@
         font-family: 'Esa-Light';
     }
 
-    .subtitle{
+    .subtitle {
         font-size: 30px;
         color: $dark;
         font-family: 'Esa-Medium';
@@ -100,4 +98,3 @@
         letter-spacing: -3px;
     }
 }
-

@@ -1,5 +1,13 @@
 // FONTS
 @font-face {
+    font-family: 'Wanted Sans Variable', 'Wanted Sans', -apple-system, BlinkMacSystemFont, system-ui, 'Segoe UI',
+        'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+        sans-serif;
+    src: url('https://cdn.jsdelivr.net/gh/wanteddev/wanted-sans@v1.0.3/packages/wanted-sans/fonts/webfonts/static/split/WantedSans.min.css');
+}
+
+// FONTS
+@font-face {
     font-family: 'Wanted-ExtraBold';
     src: url('@/assets/fonts/WantedSans-ExtraBold.ttf');
 }
