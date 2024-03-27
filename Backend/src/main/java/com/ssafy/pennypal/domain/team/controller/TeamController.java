@@ -12,6 +12,10 @@ import com.ssafy.pennypal.domain.team.service.TeamService;
 import com.ssafy.pennypal.global.common.api.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,9 +50,10 @@ public class TeamController {
     /**
      * note : 매주 월요일 오전 12시에 주간 랭킹 업데이트
      */
-    @Scheduled(cron = "0 0 0 * * MON")
+//    @Scheduled(cron = "00 00 00 * * MON")
+    @PostMapping("/rank")
     public void autoRank() {
-        teamService.calculateTeamScore();
+//        teamService.calculateTeamScore();
         teamService.RankTeamScore();
     }
 
@@ -56,9 +61,11 @@ public class TeamController {
      * note : 2.2 팀 주간 랭킹 조회
      */
     @GetMapping("/rank/weekly")
-    public ApiResponse<List<TeamRankHistoryResponse>> weeklyTeamRanking(){
+    public ApiResponse<Page<TeamRankHistoryResponse>> weeklyTeamRanking(
+            @PageableDefault(page = 0, size = 6, direction = Sort.Direction.ASC)
+            Pageable pageable){
 
-        return ApiResponse.ok(teamService.rankHistoriesForWeeks());
+        return ApiResponse.ok(teamService.rankHistoriesForWeeks(pageable));
     }
 
     /**
@@ -80,11 +87,13 @@ public class TeamController {
      * note : 2.3 팀 전체 조회 + 검색 (팀이름)
      */
     @GetMapping
-    public ApiResponse<List<TeamSearchResponse>> searchTeamList(
-            @RequestParam(name = "keyword", required = false) String teamName
+    public ApiResponse<Page<TeamSearchResponse>> searchTeamList(
+            @RequestParam(name = "keyword", required = false) String teamName,
+            @PageableDefault(page = 0, size = 4, sort = "teamName" , direction = Sort.Direction.ASC)
+            Pageable pageable
     ){
 
-        return ApiResponse.ok(teamService.searchTeamList(teamName));
+        return ApiResponse.ok(teamService.searchTeamList(teamName, pageable));
     }
 
     /**

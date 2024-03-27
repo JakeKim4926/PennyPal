@@ -62,7 +62,6 @@ public class Team extends BaseEntity {
             cascade = CascadeType.ALL
     )
     @Setter
-    @Column(name = "team_rank_histories")
     private List<TeamRankHistory> TeamRankHistories = new ArrayList<>();               // 랭킹 내역
 
     @Setter

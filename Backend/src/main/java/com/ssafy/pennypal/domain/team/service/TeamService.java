@@ -1,8 +1,10 @@
 package com.ssafy.pennypal.domain.team.service;
 
+import com.ssafy.pennypal.bank.dto.controller.response.UserAccountResponseControllerDTO;
 import com.ssafy.pennypal.bank.dto.service.common.CommonHeaderRequestDTO;
 import com.ssafy.pennypal.bank.dto.service.request.AccountTransactionRequestServiceDTO;
 import com.ssafy.pennypal.bank.dto.service.request.GetUserAccountListServiceRequestDTO;
+import com.ssafy.pennypal.bank.dto.service.request.UserAccountRequestServiceDTO;
 import com.ssafy.pennypal.bank.dto.service.response.AccountTransactionListResponseServiceDTO;
 import com.ssafy.pennypal.bank.dto.service.response.AccountTransactionResponseServiceDTO;
 import com.ssafy.pennypal.bank.dto.service.response.UserAccountListResponseServiceDTO;
@@ -22,8 +24,12 @@ import com.ssafy.pennypal.domain.team.dto.request.TeamModifyRequest;
 import com.ssafy.pennypal.domain.team.dto.response.*;
 import com.ssafy.pennypal.domain.team.entity.Team;
 import com.ssafy.pennypal.domain.team.entity.TeamRankHistory;
+import com.ssafy.pennypal.domain.team.repository.ITeamRankHistoryRepository;
 import com.ssafy.pennypal.domain.team.repository.ITeamRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,6 +52,7 @@ public class TeamService {
     private final ITeamRepository teamRepository;
     private final IMemberRepository memberRepository;
     private final IChatRoomRepository chatRoomRepository;
+    private final ITeamRankHistoryRepository teamRankHistoryRepository;
 
     private static final String SSAFY_BANK_API_KEY = System.getenv("SSAFY_BANK_API_KEY");
     private final BankServiceAPIImpl bankServiceAPI;
@@ -57,6 +64,9 @@ public class TeamService {
     private static final LocalDate SUNDAY_OF_THIS_WEEK = TODAY.with(DayOfWeek.SUNDAY);
     private static final LocalDate MONDAY_OF_NEXT_WEEK = MONDAY_OF_THIS_WEEK.plusDays(7);
     private static final LocalDate SUNDAY_OF_TWO_LAST_WEEK = SUNDAY_OF_THIS_WEEK.minusDays(14);
+
+    private static final LocalDate WEDNESDAY_OF_THIS_WEEK = TODAY.with(DayOfWeek.WEDNESDAY);
+
 
     @Transactional
     public TeamCreateResponse createTeam(TeamCreateServiceRequest request) {
@@ -192,13 +202,15 @@ public class TeamService {
                 // 멤버의 계좌 목록 조회
                 for (Member member : members) {
 
-                    String memberBankApi = member.getMemberBankApi();
+                    String memberEmail = member.getMemberEmail();
+
+                    UserAccountResponseControllerDTO userAccountResponseControllerDTO = getUserBankApi(memberEmail);
 
                     // 공통 헤더 정보 설정
                     CommonHeaderRequestDTO commonHeaderRequestDTO = CommonHeaderRequestDTO.builder()
                             .apiName("inquireAccountList")
                             .apiKey(SSAFY_BANK_API_KEY)
-                            .userKey(memberBankApi)
+                            .userKey(userAccountResponseControllerDTO.getUserKey())
                             .build();
 
                     // 계좌 목록 조회 요청 객체 생성
@@ -290,16 +302,14 @@ public class TeamService {
         List<TeamRankResponse> rankedTeams = teams.stream()
                 .map(team -> new TeamRankResponse(team.getTeamId(), team.getTeamName(), team.getTeamScore(), 0))
                 .sorted(Comparator.comparing(TeamRankResponse::getTeamScore).reversed())
-                .collect(Collectors.toList());
+                .toList();
 
         // 등수 계산
 
         // 등수
-        int rankNum = 1;
-
+        int rankNum = 0;
         // 이전 팀의 점수
-        int previousScore = rankedTeams.isEmpty() ? 0 : rankedTeams.get(0).getTeamScore();
-
+        int previousScore = 0;
         // 동점인 팀이 있는지?
         int sameScoreCount = 1;
 
@@ -315,19 +325,19 @@ public class TeamService {
             if (currentTeam == null) continue;
 
             if (currentTeamResponse.getTeamScore() == previousScore) {
-
                 // 이전 팀과 점수가 같다면, 같은 등수로 저장
                 currentTeamResponse.setTeamRankNum(rankNum);
 
+                // 동점 팀 수 +1
+                sameScoreCount++;
             } else {
-                // 점수가 다르면, 이전에 동점이었던 팀 수 만큼 현재 팀의 등수는 내려감
-                rankNum += sameScoreCount;
-                currentTeamResponse.setTeamRankNum(rankNum);
-                sameScoreCount = 0;
+                // 점수가 다르면, 이전에 동점이었던 팀 수만큼 현재 팀의 등수는 내려감
+                rankNum += sameScoreCount - 1 ;
+
+                currentTeamResponse.setTeamRankNum(++rankNum); // 그 다음 등수로 설정
+                sameScoreCount = 1; // 동점 팀 수 초기화
             }
 
-            // 동점 팀 수 +1
-            sameScoreCount++;
 
             //다음 팀으로 넘어가기 전에 현재 팀의 점수 저장
             previousScore = currentTeamResponse.getTeamScore();
@@ -345,17 +355,31 @@ public class TeamService {
 
     }
 
-    public List<TeamRankHistoryResponse> rankHistoriesForWeeks() {
+    public Page<TeamRankHistoryResponse> rankHistoriesForWeeks(Pageable pageable) {
 
-        List<Team> teams = teamRepository.findAll();
+        // 원하는 조건(이번주 월요일)에 해당하는 모든 팀의 랭킹 기록 조회
+        List<TeamRankHistory> histories = teamRankHistoryRepository.findByRankDate(WEDNESDAY_OF_THIS_WEEK);
 
-        // 월요일에 집계된 등수 리턴
-        return teams.stream()
-                .flatMap(team -> team.getTeamRankHistories().stream())
-                .filter(history -> history.getRankDate().isEqual(MONDAY_OF_THIS_WEEK)) // 이번주 월요일에 해당하는 기록만 필터링
+        System.out.println("/////////////////////////////////////////////////");
+        System.out.println("today = " + WEDNESDAY_OF_THIS_WEEK);
+        for (TeamRankHistory history : histories){
+            System.out.println("historyId = " + history.getHistoryId());
+            System.out.println("rankNum = " + history.getRankNum());
+        }
+        System.out.println("/////////////////////////////////////////////////");
+
+        // 조회된 히스토리를 rankNum 기준으로 오름차순 정렬하고 TeamRankHistoryResponse로 변환
+        List<TeamRankHistoryResponse> sortedResponses = histories.stream()
+                .sorted(Comparator.comparingInt(TeamRankHistory::getRankNum))
                 .map(history -> new TeamRankHistoryResponse(history.getTeam().getTeamName(), history.getRankDate(), history.getRankNum()))
-                .collect(Collectors.toList());
+                .toList();
+
+        // sortedResponses를 바탕으로 Page<TeamRankHistoryResponse> 생성
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), sortedResponses.size());
+        return new PageImpl<>(sortedResponses.subList(start, end), pageable, sortedResponses.size());
     }
+
 
     @Transactional
     public List<TeamRankResponse> RankTeamRealTimeScore() {
@@ -449,32 +473,29 @@ public class TeamService {
         }
     }
 
-    public List<TeamSearchResponse> searchTeamList(String teamName) {
+    public Page<TeamSearchResponse> searchTeamList(String teamName, Pageable pageable) {
 
-        List<Team> teams = null;
+        Page<Team> teams = null;
 
         if (teamName == null) {
-            teams = teamRepository.findAll();
+            teams = teamRepository.findAll(pageable);
         } else {
-            teams = teamRepository.findByTeamNameContaining(teamName);
+            teams = teamRepository.findByTeamNameContaining(teamName, pageable);
         }
 
-        List<TeamSearchResponse> result = new ArrayList<>();
-        for (Team team : teams) {
+        Page<TeamSearchResponse> result = teams.map(team -> {
 
             // 팀 리더
             Member member = getMember(team.getTeamLeaderId());
 
-            TeamSearchResponse build = TeamSearchResponse.builder()
+            return TeamSearchResponse.builder()
                     .teamId(team.getTeamId())
                     .teamName(team.getTeamName())
                     .teamMembersNum(team.getMembers().size())
                     .teamLeaderNickname(member.getMemberNickname())
                     .teamIsAutoConfirm(team.getTeamIsAutoConfirm())
                     .build();
-
-            result.add(build);
-        }
+        });
 
         return result;
 
@@ -663,6 +684,17 @@ public class TeamService {
 
     private Member getMember(Long memberId) {
         return memberRepository.findByMemberId(memberId);
+    }
+
+    private UserAccountResponseControllerDTO getUserBankApi(String userEmail) {
+        UserAccountRequestServiceDTO userAccountRequestServiceDTO = UserAccountRequestServiceDTO.builder()
+                .apiKey(SSAFY_BANK_API_KEY)
+                .userId(userEmail)
+                .build();
+
+        return UserAccountResponseControllerDTO.of(
+                bankServiceAPI.getUserAccount(userAccountRequestServiceDTO)
+        );
     }
 
 }
