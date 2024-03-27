@@ -8,17 +8,29 @@
     text-decoration: none;
     list-style: none;
     color: $black;
-    font-family: 'Wanted-Bold';
+
     user-select: none;
+    font-family: 'Wanted Sans Variable';
 }
 
-body{
+::-webkit-scrollbar {
+    display: none;
+}
+
+::selection {
+    background: $main;
+    color: $bright;
+}
+
+body {
     min-width: $BODY_MIN_WIDTH;
-    overflow: hidden;
+
+    // 좌우 스크롤 차단 문제 때문에 잠시 비활성화 해두겠습니다.
+    // overflow: hidden;
 }
 
-.container{
-    margin-top: $HEADER_HEIGHT;   
+.container {
+    margin-top: $HEADER_HEIGHT;
     overflow-y: auto;
     height: calc(100vh - ($HEADER_HEIGHT + $NAV_HEIGHT));
     display: flex;
@@ -27,11 +39,11 @@ body{
     justify-content: start;
 }
 
-.background{
+.background {
     position: fixed;
 }
 
-.modalContainer{
+.modalContainer {
     width: 100vw;
     height: 100vh;
 
@@ -57,7 +69,7 @@ body{
         transform: translateY(1px);
         cursor: pointer;
     }
-    
+
     &:active {
         box-shadow: 0 1px 1px $black;
         transform: translateY(3px);
