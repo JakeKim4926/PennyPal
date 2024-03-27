@@ -70,7 +70,7 @@ type NameAreaProps = {
 };
 
 function NameArea({ moveNext }: NameAreaProps) {
-    const [check, setCheck] = useState('INVALID');
+    const [check, setCheck] = useState('LENGTH');
 
     let timer: any = '';
     const regex = /^[가-힣|a-z|A-Z|0-9|]+$/;
@@ -84,14 +84,14 @@ function NameArea({ moveNext }: NameAreaProps) {
 
         timer = setTimeout(() => {
             console.log(newValue, newValue.length);
-            if (newValue.length >= 4 && newValue.length <= 20 && regex.test(newValue)) {
-                setCheck('VALID');
+            if (newValue.length < 4 || newValue.length > 20) {
+                setCheck('LENGTH');
+            } else if (!regex.test(newValue)) {
+                setCheck('CHAR');
             } else {
-                if (check !== 'INVALID') {
-                    setCheck('INVALID');
-                }
+                setCheck('VALID');
             }
-        }, 500);
+        }, 200);
     }
 
     return (
@@ -129,10 +129,22 @@ type NameCheckProps = {
 };
 function NameCheck({ state }: NameCheckProps) {
     switch (state) {
-        case 'INVALID':
-            return <div className="teamCreateTeam__content-inner-second-name">유효하지 않은 팀명입니다.</div>;
+        case 'CHAR':
+            return (
+                <div className="teamCreateTeam__content-inner-second-name">팀명은 한글, 숫자, 영문만 허용됩니다.</div>
+            );
+        case 'LENGTH':
+            return (
+                <div className="teamCreateTeam__content-inner-second-name">
+                    팀명은 4자 이상, 20자 이하만 허용됩니다.
+                </div>
+            );
         case 'VALID':
-            return <div className="teamCreateTeam__content-inner-second-name">유효한 팀명입니다.</div>;
+            return (
+                <div className="teamCreateTeam__content-inner-second-name">
+                    유효한 팀명입니다. 중복체크를 진행해주세요.
+                </div>
+            );
         case 'PASS':
             return <div className="teamCreateTeam__content-inner-second-name">사용 가능한 팀명입니다.</div>;
     }
