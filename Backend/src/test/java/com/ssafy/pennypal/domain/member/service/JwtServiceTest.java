@@ -3,6 +3,7 @@ package com.ssafy.pennypal.domain.member.service;
 import com.ssafy.pennypal.domain.member.dto.request.MemberSignupRequest;
 import com.ssafy.pennypal.domain.member.entity.Member;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.DisplayName;
@@ -11,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -100,31 +103,44 @@ class JwtServiceTest {
         assertThat(jwtService.isTokenValid(token, userDetails)).isTrue();
     }
 
-//    @DisplayName("추출한 이메일을 통해 Member의 정보를 받아와 토큰의 유효기간 만료 시 false를 반환한다.")
-//    @Test
-//    void tokenIsExpired() throws InterruptedException {
-//        // given
-//        Member member = Member.builder()
-//                .memberEmail("Jake95@naver.com")
-//                .memberNickname("J크")
-//                .memberPassword(passwordEncoder.encode("qwer1234"))
-//                .memberBirthDate(LocalDateTime.now())
-//                .memberName("Jake")
-//                .build();
-//
-//        jwtService.EXPIRED_TIME = 1000;
-//
-//        String token = jwtService.generateToken(member);
-//        String memberEmail = jwtService.extractUsername(token);
-//
-//
-//        Thread.sleep(1100);
-//
-//        // when
-//        UserDetails userDetails = member;
-////        UserDetails userDetails = userDetailsService.loadUserByUsername(memberEmail);
-//
-//        // then
-//        assertThat(jwtService.isTokenValid(token, userDetails)).isFalse();
-//    }
+    @DisplayName("추출한 이메일을 통해 Member의 정보를 받아와 토큰의 유효기간 만료 시 Unauthorized(401)를 반환한다.")
+    @Test
+    void tokenIsExpired() throws InterruptedException {
+        // given
+        Member member = Member.builder()
+                .memberEmail("Jake95@naver.com")
+                .memberNickname("J크")
+                .memberPassword(passwordEncoder.encode("qwer1234"))
+                .memberBirthDate(LocalDateTime.now())
+                .memberName("Jake")
+                .build();
+
+        jwtService.EXPIRED_TIME = 1000;
+
+        String token = jwtService.generateToken(member);
+        String memberEmail = jwtService.extractUsername(token);
+
+        Thread.sleep(1200);
+        UserDetails userDetails = member;
+//        UserDetails userDetails = userDetailsService.loadUserByUsername(memberEmail);
+
+        int result = 0;
+
+        // when
+        try {
+            if (jwtService.isTokenValid(token, userDetails)) {
+                // 정상 처리 로직
+                result = HttpStatus.OK.value();
+            }
+        } catch (ExpiredJwtException e) {
+            // 토큰 만료 예외 처리
+            result = HttpStatus.UNAUTHORIZED.value();
+        } catch (Exception e) {
+            // 기타 예외 처리
+            result = HttpStatus.BAD_REQUEST.value();
+        }
+        // then
+        assertThat(result).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+
+    }
 }

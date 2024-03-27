@@ -19,8 +19,8 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    private static String SECRET_KEY = "FE72ieGtyDteOT6jFfJtwLrX7hE2QrsoB0Ug01qGgOQ=";
-    public static int EXPIRED_TIME = 1000 * 60 * 60 * 24;
+    private static final String SECRET_KEY = "FE72ieGtyDteOT6jFfJtwLrX7hE2QrsoB0Ug01qGgOQ=";
+    public static int EXPIRED_TIME = 1000 * 60 * 60;
 
     //  1초 = 1000
     //  1분 = 60초 = 60 * 1000
@@ -75,6 +75,5 @@ public class JwtService {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-
     }
 }
