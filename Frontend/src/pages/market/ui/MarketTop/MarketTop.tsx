@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 type MarketTopProps = {
     point: number;
@@ -16,7 +17,9 @@ export function MarketTop({ point }: MarketTopProps) {
                 <button className="marketTop__search-button">검색</button>
             </div>
             <div className="marketTop__record">
-                <button className="marketTop__record-item button">사용 내역[I]</button>
+                <Link to="/receipt">
+                    <button className="marketTop__record-item button">사용 내역[I]</button>
+                </Link>
             </div>
         </div>
     );

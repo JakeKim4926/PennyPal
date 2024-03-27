@@ -12,6 +12,7 @@ import { SignUp } from '@/pages/signup';
 import { Test } from '@/pages/test/ui/Test';
 import { Navigate } from 'react-router-dom';
 import { TeamRouting } from '@/pages/teamRouting';
+import { MarketReceipt } from '@/pages/marketReceipt';
 
 export function AppRoutes() {
     return (
@@ -22,6 +23,7 @@ export function AppRoutes() {
             <Route path="/finance" element={<Finance />} />
             <Route path="/landing" element={<Landing />} />
             <Route path="/market" element={<Market />} />
+            <Route path="/receipt" element={<MarketReceipt />} />
             <Route path="/mission" element={<Mission />} />
             <Route path="/my-page" element={<MyPage />} />
             <Route path="/ranking" element={<Ranking />} />
