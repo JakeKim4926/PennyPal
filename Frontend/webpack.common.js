@@ -1,12 +1,15 @@
 const path = require('path');
 const webpack = require('webpack');
 const dotenv = require('dotenv');
+const CopyPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 dotenv.config();
 
 module.exports = () => {
     return {
-        entry: './src/main.tsx',
+        entry: {
+            main: './src/main.tsx',
+        },
         output: {
             filename: 'bundle.js',
             path: path.resolve(__dirname, 'dist'),
@@ -16,10 +19,8 @@ module.exports = () => {
             extensions: ['.ts', '.tsx', '.js', '.jsx'],
             alias: {
                 '@': path.resolve(__dirname, './src/'),
-                '#': path.resolve(__dirname, '/'),
             },
         },
-
         module: {
             rules: [
                 //ts loader
@@ -46,6 +47,7 @@ module.exports = () => {
                 {
                     test: /\.s[ac]ss$/,
                     use: ['style-loader', 'css-loader', 'sass-loader'],
+                    include: path.resolve(__dirname, 'src'),
                 },
 
                 // asset loader
@@ -62,6 +64,7 @@ module.exports = () => {
             new webpack.DefinePlugin({
                 'process.env': JSON.stringify(process.env),
             }),
+            new CopyPlugin({ patterns: [{ from: 'public/assets', to: 'assets/' }] }),
         ],
     };
 };

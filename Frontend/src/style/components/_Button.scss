@@ -20,3 +20,10 @@
 .medium{
     width: 300px;
 }
+// button의 disabled prop
+.true{   //disable
+    opacity: 0.5; 
+}
+.false{ //able
+    opacity: 1;
+}

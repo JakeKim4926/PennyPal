@@ -1,8 +1,7 @@
 import { useLocation } from 'react-router-dom';
-import { PageHeader } from '../../../shared';
-import { TeamTeamInfo } from './TeamTeamInfo/TeamTeamInfo';
-import { TeamTeamSearch } from './TeamTeamSearch/TeamTeamSearch';
-import { TeamApplyModal } from './TeamApplyModal/TeamApplyModal';
+import { PageHeader } from '@/shared';
+import { TeamTeamSearch } from '@/pages/team/ui/TeamTeamSearch/TeamTeamSearch';
+import { TeamCreateTeam } from '@/pages/team/ui/TeamCreateTeam/TeamCreateTeam';
 export function Team() {
     const page = useLocation();
 
@@ -10,7 +9,7 @@ export function Team() {
         <div className="container team__container ">
             <div className="team">
                 <PageHeader page={page.pathname.substring(1)} />
-                <TeamTeamInfo hasTeam={true} />
+                <TeamCreateTeam />
                 <TeamTeamSearch />
             </div>
         </div>

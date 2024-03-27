@@ -1,9 +1,13 @@
 import { combineReducers } from 'redux';
-import { openModal } from '../pages/team/index';
+import { openModal } from '@/pages/team/index';
+import { signUpStepReducer } from '@/pages/signup/index';
+import { openMarketItem } from '@/pages/market/index';
 
 // 루트 리듀서를 내보내주세요.
 export const rootReducer = combineReducers({
     openModal,
+    openMarketItem,
+    signUpStep: signUpStepReducer,
 });
 
 // 루트 리듀서의 반환값를 유추해줍니다

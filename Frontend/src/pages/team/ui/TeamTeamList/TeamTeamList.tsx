@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { TeamTeamListItem } from '../TeamTeamListItem/TeamTeamListItem';
-import { TeamTeamListPagenation } from '../TeamTeamListPagenation/TeamTeamListPagenation';
+import { TeamTeamListItem } from '@/pages/team/ui/TeamTeamListItem/TeamTeamListItem';
+import { TeamTeamListPagenation } from '@/pages/team/ui/TeamTeamListPagenation/TeamTeamListPagenation';
 
 type Team = {
     id: number;

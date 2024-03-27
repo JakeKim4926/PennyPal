@@ -1,6 +1,6 @@
 import { ModalSpace, Nav } from '../shared';
 import { Header } from '../shared';
-import { AppRoutes } from './AppRoutes';
+import { AppRoutes } from './appRoutes';
 
 import '@/style/main.scss';
 

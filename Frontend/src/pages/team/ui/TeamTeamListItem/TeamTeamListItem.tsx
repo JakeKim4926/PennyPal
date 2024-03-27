@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { openApplyModal } from '../../model/openApplyModal';
-import { createGroup } from '../../model/createGroup';
+import { openApplyModal } from '@/pages/team/model/openApplyModal';
+import { createGroup } from '@/pages/team/model/createGroup';
 
 type TeamTeamListItemProps = {
     name: string;
@@ -49,10 +49,9 @@ function ApplyButton() {
             onClick={async () => {
                 const a = await createGroup(dto);
                 console.log(a);
-                console.log(process.env);
             }}
         >
-            가입신청
+            상세 정보
         </button>
     );
 }

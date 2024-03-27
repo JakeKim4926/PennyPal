@@ -1,0 +1,46 @@
+$GAP: 20px;
+
+.marketItemModal {
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: $GAP;
+    box-shadow: 0 0 6px $gray;
+
+    &__top {
+
+        &-image {
+            background-color: $sub;
+            height: 300px;
+            border-radius: 20px;
+        }
+    }
+
+    &__middle {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid $black;
+        padding-bottom: $GAP;
+
+        &-left {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+    }
+
+    &__bottom {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    &__button {
+        background-color: $main;
+        color: $bright;
+        padding: 5px;
+        border-radius: 10px;
+        font-size: 20px;
+    }
+}

@@ -1,0 +1,13 @@
+.market{
+    width: $CONTENT_WIDTH_RATIO;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    gap: 20px;
+    padding-bottom: 20px;
+    
+    &__container{
+        background-color: $light;
+        width: 100%;
+    }
+}
