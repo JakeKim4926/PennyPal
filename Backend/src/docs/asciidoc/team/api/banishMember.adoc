@@ -1,0 +1,10 @@
+[[banish-member]]
+==== HTTP Request
+
+include::{snippets}/banish-member/http-request.adoc[]
+include::{snippets}/banish-member/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/banish-member/http-response.adoc[]
+include::{snippets}/banish-member/response-fields.adoc[]

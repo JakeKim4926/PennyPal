@@ -11,6 +11,8 @@ include::api/searchTeamList.adoc[]
 include::api/detailTeam.adoc[]
 === 2.5 팀 정보 수정
 include::api/modifyTeam.adoc[]
+=== 2.5.1 팀원 추방
+include::api/banishMember.adoc[]
 === 2.5.2 팀 가입
 include::api/joinTeam.adoc[]
 === 2.5.3 팀 탈퇴

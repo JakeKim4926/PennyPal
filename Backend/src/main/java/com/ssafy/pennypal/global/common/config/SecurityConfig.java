@@ -33,6 +33,7 @@ public class SecurityConfig {
                         authorizeRequests
                                 .requestMatchers("/api/**")
                                 .permitAll()
+                                .requestMatchers("/ws/**").permitAll() // WebSocket 경로 허용
                                 .anyRequest()
                                 .authenticated()
                 )

@@ -14,6 +14,7 @@ import com.ssafy.pennypal.domain.member.dto.response.MemberExpensesDetailRespons
 import com.ssafy.pennypal.domain.member.entity.Member;
 import com.ssafy.pennypal.domain.member.entity.Expense;
 import com.ssafy.pennypal.domain.member.repository.IMemberRepository;
+import com.ssafy.pennypal.domain.team.dto.request.TeamBanishRequest;
 import com.ssafy.pennypal.domain.team.dto.request.TeamCreateServiceRequest;
 import com.ssafy.pennypal.domain.team.dto.request.TeamJoinServiceRequest;
 import com.ssafy.pennypal.domain.team.dto.SimpleTeamDto;
@@ -21,7 +22,6 @@ import com.ssafy.pennypal.domain.team.dto.request.TeamModifyRequest;
 import com.ssafy.pennypal.domain.team.dto.response.*;
 import com.ssafy.pennypal.domain.team.entity.Team;
 import com.ssafy.pennypal.domain.team.entity.TeamRankHistory;
-import com.ssafy.pennypal.domain.team.repository.ITeamRankHistoryRepository;
 import com.ssafy.pennypal.domain.team.repository.ITeamRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -136,6 +136,11 @@ public class TeamService {
                 if (member.getTeam() != null) {
                     throw new IllegalArgumentException("이미 가입된 팀이 있습니다.");
                 }
+            }
+
+            // 추방된 유저라면 가입 불가
+            if (team.getTeamBanishedList().contains(member)) {
+                throw new IllegalArgumentException("추방 당한 팀에는 가입할 수 없습니다.");
             }
 
             // 팀 자동승인 여부에 따라...
@@ -502,15 +507,15 @@ public class TeamService {
     }
 
     @Transactional
-    public void leaveTeam(SimpleTeamDto request){
+    public void leaveTeam(SimpleTeamDto request) {
 
         Team team = getTeam(request.getTeamId());
         ChatRoom chatRoom = team.getChatRoom();
         Member member = getMember(request.getMemberId());
 
-        if(team.getTeamLeaderId().equals(member.getMemberId())){
+        if (team.getTeamLeaderId().equals(member.getMemberId())) {
             throw new IllegalArgumentException("팀장은 팀을 탈퇴할 수 없습니다.");
-        }else{
+        } else {
 
             // 팀, 채팅방에서 해당 유저 삭제
             team.getMembers().remove(member);
@@ -521,7 +526,7 @@ public class TeamService {
 
             // 유저 정보에서 팀, 채팅방 삭제
             member.setTeam(null);
-            member.setChatRoom(null);
+            member.setMemberChatRoom(null);
 
             memberRepository.save(member);
         }
@@ -529,27 +534,75 @@ public class TeamService {
     }
 
     @Transactional
-    public void deleteTeam(SimpleTeamDto request){
+    public void deleteTeam(SimpleTeamDto request) {
 
         Team team = getTeam(request.getTeamId());
         Member leader = getMember(request.getMemberId());
         ChatRoom chatRoom = team.getChatRoom();
         List<Member> members = team.getMembers();
 
-        if(!team.getTeamLeaderId().equals(leader.getMemberId())){
+        if (!team.getTeamLeaderId().equals(leader.getMemberId())) {
             // 팀장이 아니라면 삭제 불가
             throw new IllegalArgumentException("팀 삭제는 팀장만 가능합니다.");
-        }else{
+        } else {
 
             // 멤버 모두 팀, 채팅방 삭제
-            for(Member member : members){
+            for (Member member : members) {
                 member.setTeam(null);
-                member.setChatRoom(null);
+                member.setMemberChatRoom(null);
             }
 
             // 팀, 채팅방 삭제
             teamRepository.delete(team);
             chatRoomRepository.delete(chatRoom);
+
+        }
+
+    }
+
+    @Transactional
+    public void banishMember(TeamBanishRequest request) {
+
+        Team team = getTeam(request.getTeamId());
+        ChatRoom chatRoom = team.getChatRoom();
+        Member leader = getMember(request.getTeamLeaderId());
+        Member targetMember = getMember(request.getTargetMemberId());
+
+        // 팀장만 추방 가능
+        if (!team.getTeamLeaderId().equals(leader.getMemberId())) {
+            throw new IllegalArgumentException("팀원 추방은 팀장만 가능합니다.");
+        } else {
+
+            // 팀장 자신은 추방 불가
+            if (leader.getMemberId().equals(targetMember.getMemberId())) {
+                throw new IllegalArgumentException("팀원만 추방 할 수 있습니다.");
+            }
+
+            // 팀 구성원에 해당 유저 있는지 확인
+            if (!team.getMembers().contains(targetMember)) {
+                throw new IllegalArgumentException("해당 팀원을 찾을 수 없습니다.");
+            } else {
+
+                // 유저 팀, 채팅방 삭제
+                targetMember.setTeam(null);
+                targetMember.setMemberChatRoom(null);
+
+                // 차단 당한 팀에 해당 팀 추가
+                targetMember.setMemberBanishedTeam(team);
+
+                memberRepository.save(targetMember);
+
+                // 팀, 채팅방에서 유저 삭제
+                team.getMembers().remove(targetMember);
+                chatRoom.getMembers().remove(targetMember);
+
+                // 추방한 유저에 추가
+                team.getTeamBanishedList().add(targetMember);
+
+                teamRepository.save(team);
+                chatRoomRepository.save(chatRoom);
+
+            }
 
         }
 
@@ -603,12 +656,12 @@ public class TeamService {
         return expensesOfLastWeek;
     }
 
-    private Team getTeam(Long teamId){
+    private Team getTeam(Long teamId) {
         return teamRepository.findByTeamId(teamId)
                 .orElseThrow(() -> new IllegalArgumentException("팀 정보를 찾을 수 없습니다."));
     }
 
-    private Member getMember(Long memberId){
+    private Member getMember(Long memberId) {
         return memberRepository.findByMemberId(memberId);
     }
 

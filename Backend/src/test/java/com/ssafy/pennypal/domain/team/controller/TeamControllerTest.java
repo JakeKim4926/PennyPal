@@ -543,7 +543,7 @@ public class TeamControllerTest extends RestDocsSupport {
                                         .description("팀 ID"),
                                 fieldWithPath("memberId").type(JsonFieldType.NUMBER)
                                         .description("유저 ID")
-                                ),responseFields(
+                        ), responseFields(
                                 fieldWithPath("code").type(JsonFieldType.NUMBER)
                                         .description("코드"),
                                 fieldWithPath("status").type(JsonFieldType.STRING)
@@ -562,7 +562,7 @@ public class TeamControllerTest extends RestDocsSupport {
 
     @DisplayName("팀 삭제")
     @Test
-    void deleteTeam() throws Exception{
+    void deleteTeam() throws Exception {
         Team team = mock(Team.class);
         ChatRoom chatRoom = mock(ChatRoom.class);
         Member member = mock(Member.class);
@@ -587,7 +587,7 @@ public class TeamControllerTest extends RestDocsSupport {
                                         .description("팀 ID"),
                                 fieldWithPath("memberId").type(JsonFieldType.NUMBER)
                                         .description("유저 ID")
-                        ),responseFields(
+                        ), responseFields(
                                 fieldWithPath("code").type(JsonFieldType.NUMBER)
                                         .description("코드"),
                                 fieldWithPath("status").type(JsonFieldType.STRING)
@@ -602,6 +602,56 @@ public class TeamControllerTest extends RestDocsSupport {
                 ));
 
         verify(teamService).deleteTeam(any(SimpleTeamDto.class));
+    }
+
+    @DisplayName("팀원 추방")
+    @Test
+    void banishMember() throws Exception {
+        Team team = mock(Team.class);
+        ChatRoom chatRoom = mock(ChatRoom.class);
+        Member leader = mock(Member.class);
+        Member targetMember = mock(Member.class);
+
+        TeamBanishRequest request = TeamBanishRequest.builder()
+                .teamId(1L)
+                .teamLeaderId(1L)
+                .targetMemberId(2L)
+                .build();
+
+        doNothing().when(teamService).banishMember(any(TeamBanishRequest.class));
+
+        mockMvc.perform(
+                        post("/api/team/ban")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(new ObjectMapper().writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("banish-member",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestFields(
+                                fieldWithPath("teamId").type(JsonFieldType.NUMBER)
+                                        .description("팀 ID"),
+                                fieldWithPath("teamLeaderId").type(JsonFieldType.NUMBER)
+                                        .description("요청 보내는 유저 ID"),
+                                fieldWithPath("targetMemberId").type(JsonFieldType.NUMBER)
+                                        .description("추방 할 유저 ID")
+                        ), responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+
+                                fieldWithPath("data").type(JsonFieldType.STRING)
+                                        .description("추방 완료 메시지")
+                        )
+
+                ));
+
+        verify(teamService).banishMember(any(TeamBanishRequest.class));
+
     }
 
     private Member createMember(String memberEmail, String memberNickname, LocalDateTime memberBirthDate) {

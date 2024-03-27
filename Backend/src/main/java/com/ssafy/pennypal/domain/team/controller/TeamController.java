@@ -2,6 +2,7 @@ package com.ssafy.pennypal.domain.team.controller;
 
 import com.ssafy.pennypal.bank.service.api.BankServiceAPIImpl;
 import com.ssafy.pennypal.domain.chat.service.ChatService;
+import com.ssafy.pennypal.domain.team.dto.request.TeamBanishRequest;
 import com.ssafy.pennypal.domain.team.dto.request.TeamCreateRequest;
 import com.ssafy.pennypal.domain.team.dto.request.TeamJoinRequest;
 import com.ssafy.pennypal.domain.team.dto.SimpleTeamDto;
@@ -103,6 +104,18 @@ public class TeamController {
                                                       @RequestBody TeamModifyRequest request){
 
         return ApiResponse.ok(teamService.modifyTeam(teamId, request));
+    }
+
+    /**
+     * note : 2.5.1 팀원 추방
+     * todo : 응답값 상의 후 수정
+     */
+    @PostMapping("/ban")
+    public ApiResponse<String> banishMember(@RequestBody TeamBanishRequest request){
+
+        teamService.banishMember(request);
+
+        return ApiResponse.ok("추방 완료");
     }
 
     /**

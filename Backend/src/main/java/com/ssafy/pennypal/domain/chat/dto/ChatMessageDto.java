@@ -29,7 +29,6 @@ public class ChatMessageDto {
 
         return ChatMessageDto.builder()
                 .chatMessageId(chatMessage.getChatMessageId())
-                .memberNickname(chatMessage.getMember().getMemberNickname())
                 .message(chatMessage.getMessage())
                 .createdAt(chatMessage.getCreatedDateTime())
                 .build();
