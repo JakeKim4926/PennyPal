@@ -50,7 +50,20 @@
                         outline: none;
                         padding: 0.3rem 0;
                         width: 30rem;
-                        letter-spacing: -0.13rem;
+                    }
+
+                    &-input {
+                        display: flex;
+                        gap: 0.3rem;
+                        align-items: end;
+
+                        &-button {
+                            background-color: $main;
+                            color: $bright;
+                            padding: 0 0.7rem;
+                            border-radius: 1rem;
+                            height: 80%;
+                        }
                     }
                 }
             }
