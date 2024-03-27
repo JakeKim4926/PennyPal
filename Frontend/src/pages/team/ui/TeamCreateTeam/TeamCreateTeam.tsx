@@ -13,6 +13,13 @@ export function TeamCreateTeam() {
     );
 }
 
+type teamInfo = {
+    teamName: string;
+    teamIsAutoConfirm: boolean;
+    teamLeaderId: number | null;
+    teamInfo: string;
+};
+
 function Content() {
     useEffect(() => {
         if (contentRef.current) {
@@ -23,6 +30,14 @@ function Content() {
 
     // moveNext: 다음 페이지로 넘기는 함수
     const moveNext = scrollTeamCreateArea;
+
+    // teamInfo: 팀 생성에 사용되는 데이터를 저장할 객체
+    const teamInfo = {
+        teamName: '',
+        teamIsAutoConfirm: false,
+        teamLeaderId: '', // 추후작업: 로그인된 유저 id를 기본값으로
+        teamInfo: '',
+    };
 
     return (
         <div className="teamCreateTeam__content" ref={contentRef}>
@@ -37,7 +52,7 @@ function Content() {
                     팀 생성하기
                 </button>
             </div>
-            <NameArea moveNext={() => moveNext(contentRef, 2)} />
+            <NameArea moveNext={() => moveNext(contentRef, 2)} teamInfo={teamInfo} />
             <div className="teamCreateTeam__content-inner">
                 <div className="teamCreateTeam__content-inner-second">
                     <div className="teamCreateTeam__content-inner-second-name">
@@ -67,9 +82,10 @@ function Content() {
 
 type NameAreaProps = {
     moveNext: () => void;
+    teamInfo: Object;
 };
 
-function NameArea({ moveNext }: NameAreaProps) {
+function NameArea({ moveNext, teamInfo }: NameAreaProps) {
     const PASS = 'PASS';
     const LENGTH = 'LENGTH';
     const CHAR = 'CHAR';
@@ -146,17 +162,18 @@ function NameArea({ moveNext }: NameAreaProps) {
 type NameCheckProps = {
     state: string;
 };
+
 function NameCheck({ state }: NameCheckProps) {
-    const text: () => string = () => {
+    const text: () => string | JSX.Element = () => {
         switch (state) {
             case 'CHAR':
                 return '팀명은 한글, 숫자, 영문만 허용됩니다.';
             case 'LENGTH':
                 return '팀명은 4자 이상, 20자 이하만 허용됩니다.';
             case 'VALID':
-                return '유효한 팀명입니다. 중복체크를 진행해주세요.';
+                return <span className="green">유효한 팀명입니다. 중복체크를 진행해주세요.</span>;
             case 'PASS':
-                return '사용 가능한 팀명입니다.';
+                return <span className="green">사용 가능한 팀명입니다.</span>;
             case 'DUP':
                 return '중복된 팀명입니다.';
             default:
