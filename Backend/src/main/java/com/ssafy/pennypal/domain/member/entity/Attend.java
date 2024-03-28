@@ -3,6 +3,7 @@ package com.ssafy.pennypal.domain.member.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -16,14 +17,14 @@ public class Attend {
 
     @Setter
     @Column(name = "attend_last_date")
-    private LocalDateTime attendLastDate;
+    private LocalDate attendLastDate;
 
     @Setter
     @Column(name = "attend_is_attended")
     private Boolean attendIsAttended;
 
     @Builder
-    public Attend(LocalDateTime attendLastDate, Boolean attendIsAttended) {
+    public Attend(LocalDate attendLastDate, Boolean attendIsAttended) {
         this.attendLastDate = attendLastDate;
         this.attendIsAttended = attendIsAttended;
     }

@@ -63,7 +63,7 @@ class AttendServiceTest {
 
         MemberAttendRequest memberAttendRequest = MemberAttendRequest.builder()
                 .memberId(memberId)
-                .memberDate(LocalDateTime.now())
+                .memberDate(LocalDate.now())
                 .build();
 
         ApiResponse<String> attend = attendService.attend(memberAttendRequest);
@@ -100,7 +100,7 @@ class AttendServiceTest {
 
         MemberAttendRequest memberAttendRequest = MemberAttendRequest.builder()
                 .memberId(memberId)
-                .memberDate(LocalDateTime.now())
+                .memberDate(LocalDate.now())
                 .build();
 
         ApiResponse<String> attend = attendService.attend(memberAttendRequest);

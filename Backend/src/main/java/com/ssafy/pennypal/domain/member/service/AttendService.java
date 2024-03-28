@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Service
@@ -43,7 +44,7 @@ public class AttendService {
         }
 
         // 출석 날짜가 똑같거나 이미 출석 인증을 하였다..
-        if(attendById.getAttendLastDate().toLocalDate().isEqual(memberAttendRequest.getMemberDate().toLocalDate())
+        if(attendById.getAttendLastDate().isEqual(memberAttendRequest.getMemberDate())
         || attendById.getAttendIsAttended())
             return ApiResponse.of(HttpStatus.BAD_REQUEST, "이미 출석 인증을 하셨습니다.", "");
 
@@ -66,10 +67,11 @@ public class AttendService {
             return ApiResponse.of(HttpStatus.OK,false);
 
         Attend byAttendId = attendRepository.findByAttendId(member.getAttendId());
-        
-        if(byAttendId.getAttendLastDate() == null || !byAttendId.getAttendLastDate().toLocalDate().isEqual(LocalDateTime.now().toLocalDate()))
+
+        if(byAttendId.getAttendLastDate() == null || !byAttendId.getAttendLastDate().isEqual(LocalDate.now()))
             return ApiResponse.of(HttpStatus.OK, false);
 
         return ApiResponse.of(HttpStatus.OK, true);
     }
+
 }

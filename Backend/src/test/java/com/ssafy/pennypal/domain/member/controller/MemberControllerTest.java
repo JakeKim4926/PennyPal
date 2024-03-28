@@ -288,7 +288,7 @@ class MemberControllerTest extends RestDocsSupport {
 
         MemberAttendRequest request = MemberAttendRequest.builder()
                 .memberId(1L)
-                .memberDate(LocalDateTime.now())
+                .memberDate(LocalDate.now())
                 .build();
 
         given(attendService.attend(any(MemberAttendRequest.class)))
