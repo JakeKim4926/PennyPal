@@ -50,7 +50,7 @@ class TeamServiceTest {
     @Test
     void createTeam() {
         // given
-        Member member1 = createMember("member1@pennypal.site", "짠1", LocalDateTime.now());
+        Member member1 = createMember("member1@pennypal.site", "짠1", LocalDate.now());
 
         memberRepository.save(member1);
 
@@ -70,8 +70,8 @@ class TeamServiceTest {
     @Test
     void teamNameCannotSame() {
         // given
-        Member member1 = createMember("member1@pennypal.site", "짠1", LocalDateTime.now());
-        Member member2 = createMember("member2@pennypal.site", "짠2", LocalDateTime.now());
+        Member member1 = createMember("member1@pennypal.site", "짠1", LocalDate.now());
+        Member member2 = createMember("member2@pennypal.site", "짠2", LocalDate.now());
 
         memberRepository.saveAll(List.of(member1, member2));
 
@@ -91,8 +91,8 @@ class TeamServiceTest {
     @Test
     void memberCanHaveOneTeam() {
         // given
-        Member member1 = createMember("member1@pennypal.site", "짠1", LocalDateTime.now());
-        Member member2 = createMember("member2@pennypal.site", "짠2", LocalDateTime.now());
+        Member member1 = createMember("member1@pennypal.site", "짠1", LocalDate.now());
+        Member member2 = createMember("member2@pennypal.site", "짠2", LocalDate.now());
 
         memberRepository.saveAll(List.of(member1, member2));
 
@@ -122,7 +122,7 @@ class TeamServiceTest {
         List<Member> members = new ArrayList<>();
         for (int i = 0; i <= 6; i++) {
             members.add(createMember("member" + i + "@pennypal.site",
-                    "짠" + i, LocalDateTime.now()));
+                    "짠" + i, LocalDate.now()));
         }
         memberRepository.saveAll(members.subList(0, 6));
 
@@ -150,7 +150,7 @@ class TeamServiceTest {
     @Test
     void cannotSignUpSameTeam() {
         // given
-        Member member = createMember("member1@pennypal.site", "짠1", LocalDateTime.now());
+        Member member = createMember("member1@pennypal.site", "짠1", LocalDate.now());
         memberRepository.save(member);
 
         Team team = createTeam("팀이름17", true, 1L, "팀소개1", member);
@@ -171,9 +171,9 @@ class TeamServiceTest {
     @Test
     void cannotSignUpAnotherTeam() {
         // given
-        Member member1 = createMember("member1@pennypal.site", "짠1", LocalDateTime.now());
-        Member member2 = createMember("member2@pennypal.site", "짠2", LocalDateTime.now());
-        Member member3 = createMember("member3@pennypal.site", "짠3", LocalDateTime.now());
+        Member member1 = createMember("member1@pennypal.site", "짠1", LocalDate.now());
+        Member member2 = createMember("member2@pennypal.site", "짠2", LocalDate.now());
+        Member member3 = createMember("member3@pennypal.site", "짠3", LocalDate.now());
         memberRepository.saveAll(List.of(member1, member2, member3));
 
         Team team1 = createTeam("팀이름18", true, member1.getMemberId(), "팀소개1", member1);
@@ -198,8 +198,8 @@ class TeamServiceTest {
     @Test
     void TeamIsAutoConfirmTrue() {
         // given
-        Member member1 = createMember("member1@pennypal.site", "짠1", LocalDateTime.now());
-        Member member2 = createMember("member2@pennypal.site", "짠2", LocalDateTime.now());
+        Member member1 = createMember("member1@pennypal.site", "짠1", LocalDate.now());
+        Member member2 = createMember("member2@pennypal.site", "짠2", LocalDate.now());
         memberRepository.saveAll(List.of(member1, member2));
 
         TeamCreateServiceRequest createRequest = createServiceRequest("팀이름20", true, member1.getMemberId(), "팀소개");
@@ -227,8 +227,8 @@ class TeamServiceTest {
     @Test
     void TeamIsAutoConfirmFalse() {
         // given
-        Member member1 = createMember("member1@pennypal.site", "짠1", LocalDateTime.now());
-        Member member2 = createMember("member2@pennypal.site", "짠2", LocalDateTime.now());
+        Member member1 = createMember("member1@pennypal.site", "짠1", LocalDate.now());
+        Member member2 = createMember("member2@pennypal.site", "짠2", LocalDate.now());
         memberRepository.saveAll(List.of(member1, member2));
 
         TeamCreateServiceRequest createRequest = createServiceRequest("팀이름21", false, member1.getMemberId(), "팀소개");
@@ -355,7 +355,7 @@ class TeamServiceTest {
     @Test
     void excludeIfMemberSizeLessThan4() {
         // given
-        Member member1 = createMember("member1@pennypal.site", "닉네임1", LocalDateTime.now());
+        Member member1 = createMember("member1@pennypal.site", "닉네임1", LocalDate.now());
 
         // 지출 내역 생성
         // 토요일부터 6일 동안 30000원씩 지출 -> 지난 주 2일, 이번 주 4일
@@ -379,7 +379,7 @@ class TeamServiceTest {
     }
 
 
-    private Member createMember(String memberEmail, String memberNickname, LocalDateTime memberBirthDate) {
+    private Member createMember(String memberEmail, String memberNickname, LocalDate memberBirthDate) {
         return Member.builder()
                 .memberEmail(memberEmail)
                 .memberPassword("1234")

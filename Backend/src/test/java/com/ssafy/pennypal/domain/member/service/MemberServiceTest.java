@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -46,7 +47,7 @@ class MemberServiceTest {
                 .memberEmail("Jake95@naver.com")
                 .memberNickname("J크")
                 .memberPassword("qwer1234")
-                .memberBirthDate(LocalDateTime.now())
+                .memberBirthDate(LocalDate.now())
                 .memberName("Jake")
                 .build();
 
@@ -71,7 +72,7 @@ class MemberServiceTest {
                 .memberEmail("Jake95@naver.com")
                 .memberNickname("J크")
                 .memberPassword("qwer1234")
-                .memberBirthDate(LocalDateTime.now())
+                .memberBirthDate(LocalDate.now())
                 .memberName("Jake")
                 .build();
 
@@ -79,7 +80,7 @@ class MemberServiceTest {
                 .memberEmail("Jake95@naver.com")
                 .memberNickname("섭섭")
                 .memberPassword("qwer1234")
-                .memberBirthDate(LocalDateTime.now())
+                .memberBirthDate(LocalDate.now())
                 .memberName("김준섭")
                 .build();
 
@@ -104,15 +105,15 @@ class MemberServiceTest {
                 .memberEmail("Taek95@naver.com")
                 .memberNickname("SCM")
                 .memberPassword("qwer1234")
-                .memberBirthDate(LocalDateTime.now())
+                .memberBirthDate(LocalDate.now())
                 .memberName("오유택")
                 .build();
 
         MemberSignupRequest member2 = MemberSignupRequest.builder()
-                .memberEmail("Jake95@naver.com")
+                .memberEmail("Jake96@naver.com")
                 .memberNickname("SCM")
                 .memberPassword("qwer1234")
-                .memberBirthDate(LocalDateTime.now())
+                .memberBirthDate(LocalDate.now())
                 .memberName("김준섭")
                 .build();
 
@@ -136,7 +137,7 @@ class MemberServiceTest {
                 .memberEmail("Jake95@naver.com")
                 .memberNickname("J크")
                 .memberPassword("qwer1234")
-                .memberBirthDate(LocalDateTime.now())
+                .memberBirthDate(LocalDate.now())
                 .memberName("Jake")
                 .build();
 
@@ -162,7 +163,7 @@ class MemberServiceTest {
                 .memberEmail("Jake95@naver.com")
                 .memberNickname("J크")
                 .memberPassword("qwer1234")
-                .memberBirthDate(LocalDateTime.now())
+                .memberBirthDate(LocalDate.now())
                 .memberName("Jake")
                 .build();
 
@@ -192,7 +193,7 @@ class MemberServiceTest {
                 .memberEmail("Jake95@naver.com")
                 .memberNickname("J크")
                 .memberPassword("qwer1234")
-                .memberBirthDate(LocalDateTime.now())
+                .memberBirthDate(LocalDate.now())
                 .memberName("Jake")
                 .build();
 
@@ -222,7 +223,7 @@ class MemberServiceTest {
                 .memberEmail("Jake95@naver.com")
                 .memberNickname("J크")
                 .memberPassword("qwer1234")
-                .memberBirthDate(LocalDateTime.now())
+                .memberBirthDate(LocalDate.now())
                 .memberName("Jake")
                 .build();
 
@@ -258,7 +259,7 @@ class MemberServiceTest {
                 .memberEmail("Jake95@naver.com")
                 .memberNickname("J크")
                 .memberPassword("qwer1234")
-                .memberBirthDate(LocalDateTime.now())
+                .memberBirthDate(LocalDate.now())
                 .memberName("Jake")
                 .build();
 
@@ -294,7 +295,7 @@ class MemberServiceTest {
                 .memberEmail("Jake95@naver.com")
                 .memberNickname("J크")
                 .memberPassword("qwer1234")
-                .memberBirthDate(LocalDateTime.now())
+                .memberBirthDate(LocalDate.now())
                 .memberName("Jake")
                 .build();
 
@@ -329,7 +330,7 @@ class MemberServiceTest {
                 .memberEmail("Jake95@naver.com")
                 .memberNickname("J크")
                 .memberPassword("qwer1234")
-                .memberBirthDate(LocalDateTime.now())
+                .memberBirthDate(LocalDate.now())
                 .memberName("Jake")
                 .build();
 
@@ -372,7 +373,7 @@ class MemberServiceTest {
                 .memberEmail("Jake95@naver.com")
                 .memberNickname("J크")
                 .memberPassword("qwer1234")
-                .memberBirthDate(LocalDateTime.now())
+                .memberBirthDate(LocalDate.now())
                 .memberName("Jake")
                 .build();
 

@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.given;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -60,7 +61,7 @@ class MemberControllerTest extends RestDocsSupport {
                 .memberEmail("Jake95@naver.com")
                 .memberNickname("J크")
                 .memberPassword("qwer1234")
-                .memberBirthDate(LocalDateTime.of(1995, 12, 6, 7, 30))
+                .memberBirthDate(LocalDate.of(1999,4,10))
                 .memberName("Jake")
                 .build();
 
@@ -134,7 +135,7 @@ class MemberControllerTest extends RestDocsSupport {
         // when
         // then
         mockMvc.perform(
-                        get("/api/member/login")
+                        post("/api/member/login")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(new ObjectMapper()
                                         .registerModule(new JavaTimeModule())
@@ -300,7 +301,7 @@ class MemberControllerTest extends RestDocsSupport {
         // when
         // then
         mockMvc.perform(
-                        get("/api/member/attend")
+                        post("/api/member/attend")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(new ObjectMapper()
                                         .registerModule(new JavaTimeModule())

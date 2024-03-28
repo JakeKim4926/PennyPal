@@ -654,7 +654,7 @@ public class TeamControllerTest extends RestDocsSupport {
 
     }
 
-    private Member createMember(String memberEmail, String memberNickname, LocalDateTime memberBirthDate) {
+    private Member createMember(String memberEmail, String memberNickname, LocalDate memberBirthDate) {
         return Member.builder()
                 .memberEmail(memberEmail)
                 .memberPassword("1234")

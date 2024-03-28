@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -46,7 +47,7 @@ class AttendServiceTest {
                 .memberEmail("Jake95@naver.com")
                 .memberNickname("J크")
                 .memberPassword("qwer1234")
-                .memberBirthDate(LocalDateTime.now())
+                .memberBirthDate(LocalDate.of(1999,4,10))
                 .memberName("Jake")
                 .build();
 
@@ -83,7 +84,7 @@ class AttendServiceTest {
                 .memberEmail("Jake95@naver.com")
                 .memberNickname("J크")
                 .memberPassword("qwer1234")
-                .memberBirthDate(LocalDateTime.now())
+                .memberBirthDate(LocalDate.of(1999,4,10))
                 .memberName("Jake")
                 .build();
 

@@ -8,6 +8,7 @@ import com.ssafy.pennypal.domain.member.service.AttendService;
 import com.ssafy.pennypal.domain.member.service.MemberService;
 import com.ssafy.pennypal.global.common.api.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -23,7 +24,7 @@ public class MemberController {
         return memberService.signUp(memberSignupRequest);
     }
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ApiResponse<MemberLoginResponse> login(@RequestBody MemberLoginRequest memberLoginRequest) {
         return memberService.login(memberLoginRequest);
     }
@@ -38,7 +39,7 @@ public class MemberController {
         return memberService.updatePassword(memberUpdatePasswordRequest);
     }
 
-    @GetMapping("/attend")
+    @PostMapping("/attend")
     public ApiResponse<String> attend(@RequestBody MemberAttendRequest memberAttendRequest) {
         return attendService.attend(memberAttendRequest);
     }

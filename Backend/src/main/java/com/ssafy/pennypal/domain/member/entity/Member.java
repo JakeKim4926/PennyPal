@@ -8,9 +8,11 @@ import com.ssafy.pennypal.domain.team.entity.Team;
 import com.ssafy.pennypal.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.cglib.core.Local;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -42,7 +44,7 @@ public class Member extends BaseEntity implements UserDetails {
     private String memberNickname;                                              // 사용자 닉네임
 
     @Column(name = "member_birth_date")
-    private LocalDateTime memberBirthDate;                                      // 사용자 생일 YYYY-MM-DD (1995-12-06)
+    private LocalDate memberBirthDate;                                      // 사용자 생일 YYYY-MM-DD (1995-12-06)
 
     // 사용자 보상 포인트
     @Setter
@@ -114,7 +116,7 @@ public class Member extends BaseEntity implements UserDetails {
     @QueryProjection
     public Member(
             String memberEmail, String memberPassword, String memberName, String memberNickname,
-            LocalDateTime memberBirthDate, Integer memberPoint, String memberMostCategory, Team team, List<Order> orders,
+            LocalDate memberBirthDate, Integer memberPoint, String memberMostCategory, Team team, List<Order> orders,
             String memberBankApi, Team memberWaitingTeam, Integer memberAttendance
     ) {
         this.memberEmail = memberEmail;
