@@ -9,8 +9,6 @@ import { MyPage } from '@/pages/myPage';
 import { Ranking } from '@/pages/ranking';
 import { SignIn } from '@/pages/signin';
 import { SignUp } from '@/pages/signup';
-
-import { Test } from '@/pages/test/ui/Test';
 import { TeamRouting } from '@/pages/teamRouting';
 import { FindPassword } from '@/pages/signin';
 import { MarketReceipt } from '@/pages/marketReceipt';

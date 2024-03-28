@@ -60,10 +60,14 @@ body {
     left: 0;
 }
 
-.button {
+@mixin buttonCommon {
     box-shadow: 0 3px 2px $black;
-    transition-property: box-shadow, transform;
-    transition-duration: 0.1s;
+    transition-property: all;
+    transition-duration: 0.3s;
+}
+
+.button {
+    @include buttonCommon();
 
     &:hover {
         box-shadow: 0 2px 2px $black;
@@ -75,4 +79,14 @@ body {
         box-shadow: 0 1px 1px $black;
         transform: translateY(3px);
     }
+
+    &-disabled {
+        @include buttonCommon();
+        background-color: $gray;
+        cursor: not-allowed;
+    }
+}
+
+.green {
+    color: $main;
 }
