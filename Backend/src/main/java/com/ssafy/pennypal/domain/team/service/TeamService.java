@@ -131,12 +131,12 @@ public class TeamService {
         }
 
         // 이미 가입 신청을 한 유저라면 신청 불가
-        if(team.getTeamWaitingList().contains(member)){
+        if (team.getTeamWaitingList().contains(member)) {
             throw new IllegalArgumentException("이미 가입 신청을 완료한 팀입니다.");
         }
 
         // 이미 다른 팀에 가입 신청을 했다면 신청 불가
-        if(member.getMemberWaitingTeam() != null){
+        if (member.getMemberWaitingTeam() != null) {
             throw new IllegalArgumentException("이미 가입 신청 된 팀이 존재합니다.");
         }
 
@@ -566,19 +566,32 @@ public class TeamService {
         }
     }
 
-    public TeamOtherDetailResponse detailOtherTeamInfo(Long teamId){
+    public TeamOtherDetailResponse detailOtherTeamInfo(Long teamId) {
 
         Team team = getTeam(teamId);
         Long leaderId = team.getTeamLeaderId();
         Member leader = getMember(leaderId);
 
-        Integer lastIndex = team.getTeamRankHistories().size()-1;
+        Integer lastRank = 0;
+        Integer lastIndex = 0;
 
-        return TeamOtherDetailResponse.builder()
-                .teamName(team.getTeamName())
-                .teamLeaderNickname(leader.getMemberNickname())
-                .lastRank(team.getTeamRankHistories().get(lastIndex).getRankNum())
-                .build();
+        if (!team.getTeamRankHistories().isEmpty()) {
+
+            lastIndex = team.getTeamRankHistories().size() - 1;
+
+            return TeamOtherDetailResponse.builder()
+                    .teamName(team.getTeamName())
+                    .teamLeaderNickname(leader.getMemberNickname())
+                    .lastRank(team.getTeamRankHistories().get(lastIndex).getRankNum())
+                    .build();
+        }else{
+            return TeamOtherDetailResponse.builder()
+                    .teamName(team.getTeamName())
+                    .teamLeaderNickname(leader.getMemberNickname())
+                    .lastRank(0)
+                    .build();
+        }
+
 
     }
 
