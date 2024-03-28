@@ -6,7 +6,7 @@ export function MyPage() {
 
     return (
         <div className="container contentCard">
-            <div className="contentCard__title">
+            {/* <div className="contentCard__title">
                 <h1 className="contentCard__title-text">MyPage</h1>
             </div>
             <div className="container contentCard">
@@ -80,7 +80,7 @@ export function MyPage() {
                         <Button child={'NEXT'} color={'color-main'} onClick={handleNext} />
                     </div>
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 }
