@@ -1,6 +1,6 @@
-import { SignUpForm } from './SignUpForm/SignUpForm';
-import { Agreement } from './Agreement/Agreement';
-import { SignUpDone } from './SignUpDone/SignUpDone';
+import { SignUpForm } from './SignUpForm';
+import { Agreement } from './Agreement';
+import { SignUpDone } from './SignUpDone';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/app/appProvider';
 
