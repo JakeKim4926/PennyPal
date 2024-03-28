@@ -27,7 +27,7 @@ import java.util.stream.IntStream;
 
 @Slf4j
 @RestController
-@RequestMapping("api/bank")
+@RequestMapping("/api/bank")
 @RequiredArgsConstructor
 public class BankController {
     private static final String SSAFY_BANK_API_KEY = System.getenv("SSAFY_BANK_API_KEY");
@@ -54,7 +54,6 @@ public class BankController {
 
     @PostMapping("/user/key/{userEmail}")
     public ApiResponse<Object> createUserApiKey(@PathVariable String userEmail) {
-
         UserAccountRequestServiceDTO userAccountRequestServiceDTO = UserAccountRequestServiceDTO.builder()
                 .apiKey(SSAFY_BANK_API_KEY)
                 .userId(userEmail)
@@ -252,7 +251,7 @@ public class BankController {
                 .transactionBalance(accountDrawingTransferControllerDTO.getTransactionBalance())
                 .transactionSummary(accountDrawingTransferControllerDTO.getTransactionSummary())
                 .build();
-        
+
         bankServiceAPI.accountWithdrawal(drawingTransferRequestServiceDTO);
 
         return ApiResponse.ok(null);
