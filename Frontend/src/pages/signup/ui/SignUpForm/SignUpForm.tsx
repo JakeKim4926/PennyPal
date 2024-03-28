@@ -17,11 +17,10 @@ export function SignUpForm() {
     } = useSignUpFormModel(); // useSignUpFormModel 훅을 사용하여 필요한 상태와 함수를 가져옵니다.
 
     const dispatch = useDispatch();
-    // 예: handleChange, handleNext 등
-    const handleNext = () => {
-        const allFieldsValid =
-            emailValid && passwordValid && confirmPasswordValid && nameValid && birthdayValid && nickNameValid;
 
+    const allFieldsValid =
+        emailValid && passwordValid && confirmPasswordValid && nameValid && birthdayValid && nickNameValid;
+    const handleNext = () => {
         if (allFieldsValid) {
             dispatch(setSignUpStep(1));
             // 리덕스 상태관리로 다음 창으로 이동.
@@ -121,7 +120,7 @@ export function SignUpForm() {
                 </div>
             </div>
             <div className="nextButton">
-                <Button child={'NEXT'} color={'color-main'} onClick={handleNext} />
+                <Button child={'NEXT'} color={'color-main'} disabled={!allFieldsValid} onClick={handleNext} />
             </div>
         </div>
     );

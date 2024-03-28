@@ -1,12 +1,21 @@
 import { Button } from '@/shared';
+import { useSignUpFormModel } from '@/pages/signup/model/signUpFormModel';
 
 export function MyPage() {
     //브라우저 스토리지에 있는 유저data(memberId, memberNickName) 불러오기.
-    // 함수들 및 valid usedata 같은 변수들 하드코딩 vs signup에서 model로 분리후 import
+    const { userData, passwordValid, confirmPasswordValid, nickNameValid, handleChange } = useSignUpFormModel();
+    const handleNext = () => {
+        const allFieldsValid = passwordValid && confirmPasswordValid && nickNameValid;
+        if (allFieldsValid) {
+            // 회원정보수정 api
+        } else {
+            console.error('입력한 값이 유효하지 않습니다.');
+        }
+    };
 
     return (
         <div className="container contentCard">
-            {/* <div className="contentCard__title">
+            <div className="contentCard__title">
                 <h1 className="contentCard__title-text">MyPage</h1>
             </div>
             <div className="container contentCard">
@@ -80,7 +89,7 @@ export function MyPage() {
                         <Button child={'NEXT'} color={'color-main'} onClick={handleNext} />
                     </div>
                 </div>
-            </div> */}
+            </div>
         </div>
     );
 }
