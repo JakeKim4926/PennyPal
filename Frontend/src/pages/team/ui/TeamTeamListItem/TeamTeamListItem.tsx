@@ -1,16 +1,17 @@
-import React from 'react';
 import { useDispatch } from 'react-redux';
 import { openApplyModal } from '@/pages/team/model/openApplyModal';
-import { createGroup } from '@/pages/team/model/createGroup';
 
 type TeamTeamListItemProps = {
+    teamId: number;
     name: string;
     head: number;
     leader: string;
     description: string;
 };
 
-export function TeamTeamListItem({ name, head, leader, description }: TeamTeamListItemProps) {
+export function TeamTeamListItem({ teamId, name, head, leader, description }: TeamTeamListItemProps) {
+    const dispatch = useDispatch();
+
     return (
         <div className="teamTeamListItem">
             <div className="teamTeamListItem__info">
@@ -25,33 +26,15 @@ export function TeamTeamListItem({ name, head, leader, description }: TeamTeamLi
                 <div className="teamTeamListItem__info-desc">{description}</div>
             </div>
             <div className="teamTeamListItem__apply">
-                <ApplyButton />
+                <button
+                    className="teamTeamListItem__apply-button button"
+                    onClick={() => {
+                        dispatch(openApplyModal({ value: '123' }));
+                    }}
+                >
+                    상세 정보
+                </button>
             </div>
         </div>
-    );
-}
-
-function ApplyButton() {
-    const dispatch = useDispatch();
-    const dto = {
-        teamName: '팀이름',
-        teamIsAutoConfirm: false,
-        teamLeaderId: 1,
-        teamInfo: '팀소개',
-    };
-
-    return (
-        <button
-            className="teamTeamListItem__apply-button button"
-            // onClick={() => {
-            //     dispatch(openApplyModal({ value: '123' }));
-            // }}
-            onClick={async () => {
-                const a = await createGroup(dto);
-                console.log(a);
-            }}
-        >
-            상세 정보
-        </button>
     );
 }

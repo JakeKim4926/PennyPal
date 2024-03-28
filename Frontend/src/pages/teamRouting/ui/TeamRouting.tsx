@@ -7,6 +7,7 @@ import { RootState } from '@/app/appProvider';
 export function TeamRouting() {
     const hasTeam = useSelector((state: RootState) => state.setHasTeam.data);
     // 추후에 hasTeam 초기 값을 동적으로 설정해줄 수 있어야함 -> 팀 존재 여부에 따라
+    // 여기 들어오면 가입한 팀 존재 여부 API 날린 다음 응답값에 따라 페이지 분기
 
     return <div className="teamRouting">{hasTeam ? <TeamInfo /> : <Team />}</div>;
 }
