@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { scrollTeamCreateArea } from '../../model/scrollTeamCreateArea';
 import { useDispatch } from 'react-redux';
 import { setHasTeamTrue } from '@/pages/teamRouting/model/setHasTeam';
+import { createGroup } from '../../model/createGroup';
 
 export function TeamCreateTeam() {
     return (
@@ -37,7 +38,7 @@ function Content() {
     const teamDto = {
         teamName: '',
         teamIsAutoConfirm: false,
-        teamLeaderId: '', // 추후작업: 로그인된 유저 id를 기본값으로
+        teamLeaderId: 1, // 추후작업: 로그인된 유저 id를 기본값으로
         teamInfo: '',
     };
 
@@ -67,8 +68,12 @@ function Content() {
                 </button>
             </div>
             <NameArea moveNext={() => moveNext(contentRef, 2)} registName={registName} />
-            <DescArea moveNext={() => moveNext(contentRef, 3)} registInfo={registInfo} />
-            <ConfirmArea moveNext={() => moveNext(contentRef, 4)} registConfirm={registConfirm} />
+            <DescArea
+                moveBack={() => moveNext(contentRef, 1)}
+                moveNext={() => moveNext(contentRef, 3)}
+                registInfo={registInfo}
+            />
+            <ConfirmArea moveNext={() => moveNext(contentRef, 4)} registConfirm={registConfirm} teamDto={teamDto} />
             <LastArea />
         </div>
     );
@@ -180,11 +185,12 @@ function NameCheck({ state }: NameCheckProps) {
 }
 
 type DescAreaProps = {
+    moveBack: () => void;
     moveNext: () => void;
     registInfo: (info: string) => void;
 };
 
-function DescArea({ moveNext, registInfo }: DescAreaProps) {
+function DescArea({ moveBack, moveNext, registInfo }: DescAreaProps) {
     const [VALID, INVALID] = ['VALID', 'INVALID'];
     const [check, setCheck] = useState(VALID);
     const inputRef = useRef<HTMLInputElement>(null);
@@ -210,6 +216,13 @@ function DescArea({ moveNext, registInfo }: DescAreaProps) {
 
     return (
         <div className="teamCreateTeam__content-inner">
+            <button
+                onClick={() => {
+                    moveBack();
+                }}
+            >
+                이전으로
+            </button>
             <div className="teamCreateTeam__content-inner-second">
                 <div className="teamCreateTeam__content-inner-second-name">
                     <div>우리 팀을 한 줄로 소개해주세요</div>
@@ -240,20 +253,24 @@ function DescArea({ moveNext, registInfo }: DescAreaProps) {
 type ConfirmArea = {
     registConfirm: (confirm: boolean) => void;
     moveNext: () => void;
+    teamDto: Object;
 };
 
-function ConfirmArea({ registConfirm, moveNext }: ConfirmArea) {
+function ConfirmArea({ registConfirm, moveNext, teamDto }: ConfirmArea) {
     const dispatch = useDispatch();
 
-    function handleRegist(value: boolean) {
+    async function handleRegist(value: boolean) {
         registConfirm(value);
         // 팀 가입 API 요청
 
-        // 에러 O
+        const res = await createGroup(teamDto);
+        console.log(res);
 
-        // 에러 X
-        moveNext();
-        handleRouting();
+        if (res.status === 200) {
+            moveNext();
+            handleRouting();
+            console.log('팀 생성 완료');
+        }
     }
 
     function handleRouting() {
