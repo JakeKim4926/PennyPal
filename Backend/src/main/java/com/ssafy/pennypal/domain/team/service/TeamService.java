@@ -581,12 +581,14 @@ public class TeamService {
 
             return TeamOtherDetailResponse.builder()
                     .teamName(team.getTeamName())
+                    .teamInfo(team.getTeamInfo())
                     .teamLeaderNickname(leader.getMemberNickname())
                     .lastRank(team.getTeamRankHistories().get(lastIndex).getRankNum())
                     .build();
         }else{
             return TeamOtherDetailResponse.builder()
                     .teamName(team.getTeamName())
+                    .teamInfo(team.getTeamInfo())
                     .teamLeaderNickname(leader.getMemberNickname())
                     .lastRank(0)
                     .build();
