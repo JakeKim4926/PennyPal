@@ -1,6 +1,8 @@
 import React from 'react';
 import { useState, useEffect, useRef } from 'react';
 import { scrollTeamCreateArea } from '../../model/scrollTeamCreateArea';
+import { useDispatch } from 'react-redux';
+import { setHasTeamTrue } from '@/pages/teamRouting/model/setHasTeam';
 
 export function TeamCreateTeam() {
     return (
@@ -64,20 +66,20 @@ function Content() {
                     팀 생성하기
                 </button>
             </div>
-            <NameArea moveNext={() => moveNext(contentRef, 2)} teamDto={teamDto} registName={registName} />
-            <DescArea moveNext={() => moveNext(contentRef, 3)} teamDto={teamDto} registInfo={registInfo} />
-            <ConfirmArea moveNext={() => moveNext(contentRef, 4)} registConfirm={registConfirm} teamInfo={teamDto} />
+            <NameArea moveNext={() => moveNext(contentRef, 2)} registName={registName} />
+            <DescArea moveNext={() => moveNext(contentRef, 3)} registInfo={registInfo} />
+            <ConfirmArea moveNext={() => moveNext(contentRef, 4)} registConfirm={registConfirm} />
+            <LastArea />
         </div>
     );
 }
 
 type NameAreaProps = {
     moveNext: () => void;
-    teamDto: Object;
     registName: (name: string) => void;
 };
 
-function NameArea({ moveNext, teamDto, registName }: NameAreaProps) {
+function NameArea({ moveNext, registName }: NameAreaProps) {
     const PASS = 'PASS';
     const LENGTH = 'LENGTH';
     const CHAR = 'CHAR';
@@ -179,11 +181,10 @@ function NameCheck({ state }: NameCheckProps) {
 
 type DescAreaProps = {
     moveNext: () => void;
-    teamDto: Object;
     registInfo: (info: string) => void;
 };
 
-function DescArea({ moveNext, teamDto, registInfo }: DescAreaProps) {
+function DescArea({ moveNext, registInfo }: DescAreaProps) {
     const [VALID, INVALID] = ['VALID', 'INVALID'];
     const [check, setCheck] = useState(VALID);
     const inputRef = useRef<HTMLInputElement>(null);
@@ -239,10 +240,28 @@ function DescArea({ moveNext, teamDto, registInfo }: DescAreaProps) {
 type ConfirmArea = {
     registConfirm: (confirm: boolean) => void;
     moveNext: () => void;
-    teamInfo: Object;
 };
 
-function ConfirmArea({ registConfirm, moveNext, teamInfo }: ConfirmArea) {
+function ConfirmArea({ registConfirm, moveNext }: ConfirmArea) {
+    const dispatch = useDispatch();
+
+    function handleRegist(value: boolean) {
+        registConfirm(value);
+        // 팀 가입 API 요청
+
+        // 에러 O
+
+        // 에러 X
+        moveNext();
+        handleRouting();
+    }
+
+    function handleRouting() {
+        setTimeout(() => {
+            dispatch(setHasTeamTrue());
+        }, 3500);
+    }
+
     return (
         <div className="teamCreateTeam__content-inner">
             <div className="teamCreateTeam__content-inner-second">
@@ -252,8 +271,7 @@ function ConfirmArea({ registConfirm, moveNext, teamInfo }: ConfirmArea) {
                         <button
                             className="teamCreateTeam__content-inner-second-name-buttons-button yes"
                             onClick={() => {
-                                registConfirm(true);
-                                console.log(teamInfo);
+                                handleRegist(true);
                             }}
                         >
                             네
@@ -261,8 +279,7 @@ function ConfirmArea({ registConfirm, moveNext, teamInfo }: ConfirmArea) {
                         <button
                             className="teamCreateTeam__content-inner-second-name-buttons-button no"
                             onClick={() => {
-                                registConfirm(false);
-                                console.log(teamInfo);
+                                handleRegist(false);
                             }}
                         >
                             아니오
@@ -277,14 +294,9 @@ function ConfirmArea({ registConfirm, moveNext, teamInfo }: ConfirmArea) {
 function LastArea() {
     return (
         <div className="teamCreateTeam__content-inner">
-            <div className="teamCreateTeam__content-inner-second">
-                <div className="teamCreateTeam__content-inner-second-name">
-                    <div className="confirm">팀원 가입 신청을 자동으로 승인할까요?</div>
-                    <div className="teamCreateTeam__content-inner-second-name-buttons">
-                        <button className="teamCreateTeam__content-inner-second-name-buttons-button yes">네</button>
-                        <button className="teamCreateTeam__content-inner-second-name-buttons-button no">아니오</button>
-                    </div>
-                </div>
+            <div className="teamCreateTeam__content-inner-last">
+                <div>팀 생성이 완료됐어요!</div>
+                <div>잠시 후 내 팀 페이지로 이동합니다</div>
             </div>
         </div>
     );
