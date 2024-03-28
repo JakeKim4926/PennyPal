@@ -58,12 +58,13 @@ public class TeamController {
     /**
      * note : 2.2 팀 주간 랭킹 조회
      */
-    @GetMapping("/rank/weekly")
-    public ApiResponse<Page<TeamRankHistoryResponse>> weeklyTeamRanking(
+    @GetMapping("/rank/weekly/{teamId}")
+    public ApiResponse<Page<TeamRankWeeklyResponse>> weeklyTeamRanking(
+            @PathVariable("teamId") Long teamId,
             @PageableDefault(page = 0, size = 6, direction = Sort.Direction.ASC)
             Pageable pageable){
 
-        return ApiResponse.ok(teamService.rankOfWeeks(pageable));
+        return ApiResponse.ok(teamService.rankOfWeeks(teamId, pageable));
     }
 
     /**
@@ -83,12 +84,13 @@ public class TeamController {
     /**
      * note : 2.2.1 팀 실시간 랭킹 조회
      */
-    @GetMapping("/rank/realtime")
+    @GetMapping("/rank/realtime/{teamId}")
     public ApiResponse<Page<TeamRankRealtimeResponse>> realtimeTeamRanking(
+            @PathVariable("teamId") Long teamId,
             @PageableDefault(page = 0, size = 6, direction = Sort.Direction.ASC)
             Pageable pageable) {
 
-        return ApiResponse.ok(teamService.rankOfRealtime(pageable));
+        return ApiResponse.ok(teamService.rankOfRealtime(teamId, pageable));
     }
 
     /**

@@ -36,10 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.lang.Integer.parseInt;
@@ -65,6 +62,7 @@ public class TeamService {
     private static final LocalDate MONDAY_OF_NEXT_WEEK = MONDAY_OF_THIS_WEEK.plusDays(7);
     private static final LocalDate SUNDAY_OF_TWO_LAST_WEEK = SUNDAY_OF_THIS_WEEK.minusDays(14);
 
+    private static final LocalDate THURSDAY_OF_THIS_WEEK = TODAY.with(DayOfWeek.THURSDAY);
 
     @Transactional
     public TeamCreateResponse createTeam(TeamCreateServiceRequest request) {
@@ -301,10 +299,10 @@ public class TeamService {
         LocalDate today = LocalDate.now();
 
         // 팀 점수에 따라 내림차순 정렬
-        List<TeamRankResponse> rankedTeams = teams.stream()
+        List<TeamRankCalculateResponse> rankedTeams = teams.stream()
                 .filter(team -> team.getMembers().size() >= 4)
-                .map(team -> new TeamRankResponse(team.getTeamId(), team.getTeamName(), team.getTeamScore(), 0))
-                .sorted(Comparator.comparing(TeamRankResponse::getTeamScore).reversed())
+                .map(team -> new TeamRankCalculateResponse(team.getTeamId(), team.getTeamName(), team.getTeamScore(), 0))
+                .sorted(Comparator.comparing(TeamRankCalculateResponse::getTeamScore).reversed())
                 .toList();
 
         // 등수 계산
@@ -317,7 +315,7 @@ public class TeamService {
         int sameScoreCount = 1;
 
         for (int i = 0; i < rankedTeams.size(); i++) {
-            TeamRankResponse currentTeamResponse = rankedTeams.get(i);
+            TeamRankCalculateResponse currentTeamResponse = rankedTeams.get(i);
 
             // 순위를 매길 팀
             Team currentTeam = teams.stream()
@@ -357,21 +355,44 @@ public class TeamService {
 
     }
 
-    public Page<TeamRankHistoryResponse> rankOfWeeks(Pageable pageable) {
+    public Page<TeamRankWeeklyResponse> rankOfWeeks(Long teamId, Pageable pageable) {
+        // 조회하는 유저의 팀 정보
+        Team myTeam = getTeam(teamId);
 
         // 원하는 조건(이번주 월요일)에 해당하는 모든 팀의 랭킹 기록 조회
-        List<TeamRankHistory> histories = teamRankHistoryRepository.findByRankDate(MONDAY_OF_THIS_WEEK);
+        List<TeamRankHistory> histories = teamRankHistoryRepository.findByRankDate(THURSDAY_OF_THIS_WEEK);
 
         // 조회된 히스토리를 rankNum 기준으로 오름차순 정렬하고 TeamRankHistoryResponse로 변환
         List<TeamRankHistoryResponse> sortedResponses = histories.stream()
                 .sorted(Comparator.comparingInt(TeamRankHistory::getRankNum))
-                .map(history -> new TeamRankHistoryResponse(history.getTeam().getTeamName(), history.getRankDate(), history.getRankNum()))
-                .toList();
+                .map(history -> TeamRankHistoryResponse.builder()
+                        .teamName(history.getTeam().getTeamName())
+                        .rankDate(history.getRankDate())
+                        .rankNum(history.getRankNum())
+                        .teamScore(history.getTeam().getTeamScore())
+                        .build())
+                .collect(Collectors.toList());
 
-        // sortedResponses를 바탕으로 Page<TeamRankHistoryResponse> 생성
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), sortedResponses.size());
-        return new PageImpl<>(sortedResponses.subList(start, end), pageable, sortedResponses.size());
+        // 내 팀의 랭킹 정보 추출
+        TeamRankHistoryResponse myTeamRank = sortedResponses.stream()
+                .filter(response -> response.getTeamName().equals(myTeam.getTeamName()))
+                .findFirst()
+                .orElse(TeamRankHistoryResponse.builder()
+                        .teamName(myTeam.getTeamName())
+                        .rankNum(-1) // 팀 랭킹이 없는 경우 -1로 설정
+                        .teamScore(myTeam.getTeamScore())
+                        .build());
+
+        // 모든 팀의 랭킹 정보와 내 팀의 랭킹 정보를 포함하는 TeamRankWeeklyResponse 객체 생성
+        TeamRankWeeklyResponse teamRankWeeklyResponse = TeamRankWeeklyResponse.builder()
+                .teamRanks(sortedResponses)
+                .myTeamName(myTeamRank.getTeamName())
+                .myTeamScore(myTeamRank.getTeamScore())
+                .myTeamRankNum(myTeamRank.getRankNum())
+                .build();
+
+        // 결과를 페이지화하여 반환
+        return new PageImpl<>(Collections.singletonList(teamRankWeeklyResponse), pageable, 1);
     }
 
     @Transactional
@@ -412,19 +433,47 @@ public class TeamService {
         teamRepository.saveAll(teams);
     }
 
-    public Page<TeamRankRealtimeResponse> rankOfRealtime(Pageable pageable) {
+    public Page<TeamRankRealtimeResponse> rankOfRealtime(Long teamId, Pageable pageable) {
+        // Retrieve the current user's team information
+        Team myTeam = getTeam(teamId);
 
-        Page<Team> teams = teamRepository.findAll(pageable);
+        // Fetch all teams using pagination
+        Page<Team> teamsPage = teamRepository.findAll(pageable);
 
-        List<TeamRankRealtimeResponse> sortedResponses = teams.stream()
-                .filter(team -> team.getMembers().size() >= 4)
-                .sorted(Comparator.comparingInt(Team::getTeamRankRealtime))
-                .map(team -> new TeamRankRealtimeResponse(team.getTeamName(), team.getTeamRankRealtime(), team.getTeamScore()))
-                .toList();
+        // Map the teams to the DTO
+        List<TeamRankRealtimeResponse> teamRanks = teamsPage.getContent().stream()
+                .map(team -> TeamRankRealtimeResponse.builder()
+                        .teamName(team.getTeamName())
+                        .teamRankRealtime(team.getTeamRankRealtime())
+                        .teamScoreRealtime(team.getTeamScore())
+                        .build())
+                .collect(Collectors.toList());
 
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), sortedResponses.size());
-        return new PageImpl<>(sortedResponses.subList(start, end), pageable, sortedResponses.size());
+        // Get the ranking details for the current team
+        TeamRankRealtimeResponse myTeamRank = teamRanks.stream()
+                .filter(teamRank -> teamRank.getTeamName().equals(myTeam.getTeamName()))
+                .findFirst()
+                .orElse(null);
+
+        // If the current team rank is not found, set the rankNum to -1
+        if (myTeamRank == null) {
+            myTeamRank = TeamRankRealtimeResponse.builder()
+                    .teamName(myTeam.getTeamName())
+                    .teamRankRealtime(-1)
+                    .teamScoreRealtime(myTeam.getTeamScore())
+                    .build();
+        }
+
+        // Create the response object with all team rankings and the current team's ranking
+        TeamRankRealtimeResponse response = TeamRankRealtimeResponse.builder()
+                .teamRanks(teamRanks)
+                .teamName(myTeamRank.getTeamName())
+                .teamRankRealtime(myTeamRank.getTeamRankRealtime())
+                .teamScoreRealtime(myTeamRank.getTeamScoreRealtime())
+                .build();
+
+        // Return the paged response
+        return new PageImpl<>(Collections.singletonList(response), pageable, teamsPage.getTotalElements());
     }
 
     public TeamDetailResponse detailTeamInfo(Long teamId) {
