@@ -3,7 +3,8 @@ import { useState, useEffect, useRef } from 'react';
 import { scrollTeamCreateArea } from '../../model/scrollTeamCreateArea';
 import { useDispatch } from 'react-redux';
 import { setHasTeamTrue } from '@/pages/teamRouting/model/setHasTeam';
-import { createGroup } from '../../model/createGroup';
+import { createGroup } from '../../model/api/createGroup';
+import { checkTeamName } from '../../model';
 
 export function TeamCreateTeam() {
     return (
@@ -119,21 +120,27 @@ function NameArea({ moveNext, registName }: NameAreaProps) {
                 <div className="teamCreateTeam__content-inner-second-name">
                     <div>팀명을 입력해주세요</div>
                     <div className="teamCreateTeam__content-inner-second-name-input">
-                        <input type="text" placeholder="팀명" onChange={handleChange} ref={nameRef}></input>
+                        <input
+                            type="text"
+                            placeholder="팀명"
+                            onChange={handleChange}
+                            ref={nameRef}
+                            maxLength={20}
+                        ></input>
                         <button
                             className={`teamCreateTeam__content-inner-second-name-input-button ${
                                 check !== 'VALID' ? 'button-disabled' : 'button'
                             }`}
                             disabled={check !== 'VALID'}
-                            onClick={() => {
-                                // 추후 작성 예정
-                                // 메일 중복체크하는 API 호출
+                            onClick={async () => {
+                                // res: 팀명 중복 체크 결과
+                                const res = await checkTeamName(nameRef.current!.value);
 
-                                if (nameRef.current!.value) {
-                                    // 중복이 아니라면
+                                if (!res.data.data) {
+                                    // 1. 중복이 아니라면
                                     setCheck(VALIDATION_CHECK.PASS);
-                                } else {
-                                    // 중복이라면
+                                } else if (res.data.data) {
+                                    // 2. 중복이라면
                                     setCheck(VALIDATION_CHECK.DUP);
                                 }
                             }}
@@ -189,24 +196,34 @@ type DescAreaProps = {
 };
 
 function DescArea({ moveBack, moveNext, registInfo }: DescAreaProps) {
-    const [VALID, INVALID] = ['VALID', 'INVALID'];
-    const [check, setCheck] = useState(VALID);
+    enum VALIDATION_CHECK {
+        VALID = 'VALID',
+        INVALID = 'INVALID',
+    }
+
+    const [check, setCheck] = useState(VALIDATION_CHECK.VALID);
     const inputRef = useRef<HTMLInputElement>(null);
 
+    // timer: 디바운싱에 사용할 타이머
     let timer: NodeJS.Timeout | null = null;
+
+    // handleChange: 팀 소개 입력란의 value가 변할 때 동작
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+        // newValue: 입력된 문자열
         const newValue = e.target.value;
 
+        // 1. 타이머가 존재할 때 타이머 제거
         if (timer) {
             clearTimeout(timer);
         }
 
+        // 2. 타이머에 새로운 타이머 부착
         timer = setTimeout(() => {
-            if (newValue.length > 20) {
-                setCheck(INVALID);
+            if (newValue.length > 40) {
+                setCheck(VALIDATION_CHECK.INVALID);
             } else {
-                if (check !== VALID) {
-                    setCheck(VALID);
+                if (check !== VALIDATION_CHECK.VALID) {
+                    setCheck(VALIDATION_CHECK.VALID);
                 }
             }
         }, 300);
@@ -236,7 +253,7 @@ function DescArea({ moveBack, moveNext, registInfo }: DescAreaProps) {
                 </div>
             </div>
             <button
-                disabled={check === INVALID}
+                disabled={check === VALIDATION_CHECK.INVALID}
                 onClick={() => {
                     registInfo(inputRef.current!.value.trim());
                     moveNext();
@@ -257,21 +274,25 @@ type ConfirmArea = {
 function ConfirmArea({ registConfirm, moveNext, teamDto }: ConfirmArea) {
     const dispatch = useDispatch();
 
+    // handleRegist: 팀 생성 버튼 눌렀을 때동작
     async function handleRegist(value: boolean) {
         registConfirm(value);
-        // 팀 가입 API 요청
 
+        // res: 팀 생성 결과 반환
         const res = await createGroup(teamDto);
-        console.log(res);
 
+        // 1. 정상적으로 팀이 생성됐을 때
         if (res.status === 200) {
+            // moveNext: 다음 페이지로 이동
             moveNext();
-            handleRouting();
-            console.log('팀 생성 완료');
+
+            // handleRoute: 일정시간 후 팀 페이지 전환
+            handleRoute();
         }
     }
 
-    function handleRouting() {
+    // handleRoute: 팀 가입 여부를 변경해 내 팀 상세 페이지로 라우트
+    function handleRoute() {
         setTimeout(() => {
             dispatch(setHasTeamTrue());
         }, 3500);
