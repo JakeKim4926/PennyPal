@@ -29,7 +29,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -189,9 +188,6 @@ public class TeamService {
                 continue;
             } else {
 
-                //팀 점수 초기화
-                int teamScore = 0;
-
                 List<Member> members = team.getMembers().stream()
                         .filter(Objects::nonNull)
                         .toList();
@@ -204,15 +200,20 @@ public class TeamService {
                     UserAccountResponseControllerDTO userAccountResponseControllerDTO = getUserBankApi(memberEmail);
 
                     // 공통 헤더 정보 설정
-                    CommonHeaderRequestDTO commonHeaderRequestDTO = CommonHeaderRequestDTO.builder()
+                    CommonHeaderRequestDTO headerForGetAccountList = CommonHeaderRequestDTO.builder()
                             .apiName("inquireAccountList")
+                            .apiKey(SSAFY_BANK_API_KEY)
+                            .userKey(userAccountResponseControllerDTO.getUserKey())
+                            .build();
+                    CommonHeaderRequestDTO headerForGetTransaction = CommonHeaderRequestDTO.builder()
+                            .apiName("inquireAccountTransactionHistory")
                             .apiKey(SSAFY_BANK_API_KEY)
                             .userKey(userAccountResponseControllerDTO.getUserKey())
                             .build();
 
                     // 계좌 목록 조회 요청 객체 생성
                     GetUserAccountListServiceRequestDTO requestDTO = GetUserAccountListServiceRequestDTO.builder()
-                            .header(commonHeaderRequestDTO)
+                            .header(headerForGetAccountList)
                             .build();
 
                     // 계좌 목록 조회 API 호출
@@ -222,7 +223,7 @@ public class TeamService {
                     for (UserAccountListResponseServiceDTO account : responseDTO.getREC()) {
                         // 계좌 거래 내역 조회를 위한 요청 객체 생성
                         AccountTransactionRequestServiceDTO transactionRequestDTO = AccountTransactionRequestServiceDTO.builder()
-                                .header(commonHeaderRequestDTO)
+                                .header(headerForGetTransaction)
                                 .bankCode(account.getBankCode()) // 은행 코드
                                 .accountNo(account.getAccountNo()) // 계좌 번호
 
@@ -231,7 +232,7 @@ public class TeamService {
                                 .endDate(SUNDAY_OF_THIS_WEEK.format(DateTimeFormatter.ofPattern("yyyyMMdd")))
 
                                 .transactionType("D") // 출금 내역만
-                                .orderByType("default")
+                                .orderByType("ASC")
                                 .build();
 
                         // 계좌 거래 내역 조회 API 호출
@@ -241,16 +242,21 @@ public class TeamService {
                         // 유저의 2주 동안의 지출 날짜, 지출 금액, 해당 유저를 리스트로 담기
                         List<Expense> allExpenses = new ArrayList<>();
 
-                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMdd");
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
 
                         for (AccountTransactionResponseServiceDTO transaction : transactionListResponseDTO.getREC().getList()) {
                             allExpenses.add(new Expense(LocalDate.parse(transaction.getTransactionDate(), formatter),
-                                    parseInt(transaction.getTransactionBalance()), member));
+                                    Integer.parseInt(transaction.getTransactionBalance()), member));
                         }
 
-                        // 지난 주 , 이번 주 거래 내역 구분해서 저장
-                        calculateLastWeekExpenses(allExpenses);
-                        calculateThisWeekExpenses(allExpenses);
+                        // 지난 주와 이번 주의 지출 내역 분류
+                        List<Expense> expensesOfLastWeek = calculateLastWeekExpenses(allExpenses);
+                        List<Expense> expensesOfThisWeek = calculateThisWeekExpenses(allExpenses);
+
+                        member.setMemberExpensesOfLastWeek(expensesOfLastWeek);
+                        member.setMemberExpensesOfThisWeek(expensesOfThisWeek);
+
+                        memberRepository.save(member);
                     }
 
                 } // member
@@ -758,8 +764,8 @@ public class TeamService {
 
     private int calculateSavingScore(Double lastWeekTotalExpenses, Double thisWeekTotalExpenses) {
 
-        // 이번주 지출이 지난주 지출과 같거나 크다면 절약점수는 0
-        if (thisWeekTotalExpenses >= lastWeekTotalExpenses) {
+        // 이번주 지출이 지난주 지출 보다 크다면 절약점수는 0
+        if (thisWeekTotalExpenses > lastWeekTotalExpenses) {
             return 0;
         } else {
             double savingsScore = ((double) (lastWeekTotalExpenses - thisWeekTotalExpenses) / lastWeekTotalExpenses) * 100;
@@ -786,6 +792,7 @@ public class TeamService {
         }
 
         return expensesOfThisWeek;
+
     }
 
     public List<Expense> calculateLastWeekExpenses(List<Expense> allExpenses) {
@@ -801,6 +808,7 @@ public class TeamService {
         }
 
         return expensesOfLastWeek;
+
     }
 
     private Team getTeam(Long teamId) {

@@ -69,7 +69,7 @@ public class TeamController {
 //    @Scheduled(cron = "00 00 00 * * MON")
     @PostMapping("/rank")
     public void autoRankWeekly() {
-//        teamService.calculateTeamScore();
+        teamService.calculateTeamScore();
         teamService.RankTeamScore();
 
         // 모든 유저의 출석 일수 초기화
@@ -96,7 +96,7 @@ public class TeamController {
     public void autoRankRealtime() {
 
         // 팀 점수 계산
-//        teamService.calculateTeamScore();
+        teamService.calculateTeamScore();
 
         // 팀 실시간 등수 계산
         teamService.RankRealTimeScore();
