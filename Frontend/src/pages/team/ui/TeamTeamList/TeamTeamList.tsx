@@ -2,8 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { TeamTeamListItem } from '@/pages/team/ui/TeamTeamListItem/TeamTeamListItem';
 import { TeamTeamListPagenation } from '@/pages/team/ui/TeamTeamListPagenation/TeamTeamListPagenation';
 import { getTeamList } from '@/pages/team/index';
-import { API_CACHE_DATA } from '@/shared';
-
+import { API_CACHE_DATA } from '@/shared'; // API 응답 데이터 캐싱에 사용할 MAP
 // API_CACHE_DATA: 페이지 변할 때 마다 API를 계속해서 요청하는 것 방지하기 위함
 
 type Team = {
@@ -20,23 +19,26 @@ export function TeamTeamList() {
     const [teamList, setTeamList] = useState<Team[]>([]);
 
     // fetchData: 팀 리스트 가져오기
-    const fetchData = useCallback((url: string, curPage: number) => getTeamList(url, curPage), []);
+    const fetchData = useCallback((url: string) => getTeamList(url), []);
 
     useEffect(() => {
+        // REQUEST_URL: 요청 URL
+        const REQUEST_URL = `/team?keyword=&page=${curPage}`;
+
         // cacheData: 캐시된 데이터
-        const cacheData = API_CACHE_DATA.get(curPage - 1);
+        const cacheData = API_CACHE_DATA.get(REQUEST_URL);
 
         // 1. 캐시 데이터가 없거나 만료된 데이터라면
         if (!cacheData || cacheData.exp.getTime() < new Date().getTime()) {
             // 1-1. API 요청하기
-            fetchData('', curPage - 1)
+            fetchData(REQUEST_URL)
                 .then((res) => {
                     // 1-2. 응답 데이터로 리렌더링
                     setMaxPage(res.data.data.totalPages);
                     setTeamList(res.data.data.content);
 
                     // 1-3. 응답 데이터 캐싱하기
-                    API_CACHE_DATA.set(curPage - 1, {
+                    API_CACHE_DATA.set(REQUEST_URL, {
                         data: res.data.data,
                         exp: new Date(new Date().getTime() + 1000 * 60 * 10),
                     });
