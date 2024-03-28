@@ -1,10 +1,9 @@
 package com.ssafy.pennypal.domain.team.dto.response;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TeamRankCalculateResponse {
 
     private Long teamId;

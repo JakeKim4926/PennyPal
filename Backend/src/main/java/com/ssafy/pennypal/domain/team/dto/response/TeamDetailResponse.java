@@ -1,13 +1,16 @@
 package com.ssafy.pennypal.domain.team.dto.response;
 
 import com.ssafy.pennypal.domain.member.dto.response.*;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TeamDetailResponse {
 
     private Long teamId;
