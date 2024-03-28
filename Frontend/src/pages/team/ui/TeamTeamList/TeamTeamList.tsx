@@ -2,9 +2,9 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { TeamTeamListItem } from '@/pages/team/ui/TeamTeamListItem/TeamTeamListItem';
 import { TeamTeamListPagenation } from '@/pages/team/ui/TeamTeamListPagenation/TeamTeamListPagenation';
 import { getTeamList } from '@/pages/team/index';
+import { API_CACHE_DATA } from '@/shared';
 
-// 페이지 변할 때 마다 API를 계속해서 요청하는 것 방지하기 위함
-const API_CACHE_DATA = new Map();
+// API_CACHE_DATA: 페이지 변할 때 마다 API를 계속해서 요청하는 것 방지하기 위함
 
 type Team = {
     teamId: number;
