@@ -33,26 +33,28 @@ public class TeamController {
      * note : 2.1 팀 생성 ( + 팀 채팅방 생성 )
      */
     @PostMapping("/create")
-    public ApiResponse<TeamCreateResponse> createTeam(@Valid @RequestBody TeamCreateRequest request) {
+    public ApiResponse<String> createTeam(@Valid @RequestBody TeamCreateRequest request) {
 
         // 팀 생성
-        TeamCreateResponse result = teamService.createTeam(request.toServiceRequest());
+        teamService.createTeam(request.toServiceRequest());
 
         // 팀 채팅방 생성
         chatService.createChatRoom(request.getTeamLeaderId());
 
-        return ApiResponse.ok(result);
+        return ApiResponse.ok("팀 생성 완료");
 
     }
 
     /**
      * note : 매주 월요일 오전 12시에 주간 랭킹 업데이트
      */
-    @Scheduled(cron = "00 00 00 * * MON")
-//    @PostMapping("/rank")
+//    @Scheduled(cron = "00 00 00 * * MON")
+    @PostMapping("/rank")
     public void autoRankWeekly() {
-        teamService.calculateTeamScore();
+//        teamService.calculateTeamScore();
         teamService.RankTeamScore();
+
+        // todo : 출석 횟수 초기화
     }
 
     /**
@@ -70,12 +72,12 @@ public class TeamController {
     /**
      * note : 매 시 정각에 실시간 랭킹 업데이트
      */
-    @Scheduled(cron = "0 0 * * * *")
-//    @PostMapping("/rankRealtime")
+//    @Scheduled(cron = "0 0 * * * *")
+    @PostMapping("/rankRealtime")
     public void autoRankRealtime() {
 
         // 팀 점수 계산
-        teamService.calculateTeamScore();
+//        teamService.calculateTeamScore();
 
         // 팀 실시간 등수 계산
         teamService.RankRealTimeScore();
