@@ -16,13 +16,6 @@ export function TeamCreateTeam() {
     );
 }
 
-type teamInfo = {
-    teamName: string;
-    teamIsAutoConfirm: boolean;
-    teamLeaderId: number | null;
-    teamInfo: string;
-};
-
 function Content() {
     useEffect(() => {
         if (contentRef.current) {
@@ -42,14 +35,17 @@ function Content() {
         teamInfo: '',
     };
 
+    // registName: dto에 팀명 저장
     function registName(name: string) {
         teamDto.teamName = name;
     }
 
+    // registinfo: dto에 팀 소개 저장
     function registInfo(info: string) {
         teamDto.teamInfo = info;
     }
 
+    // registConfirm: dto에 팀원 가입 자동 승인 여부 저장
     function registConfirm(confirm: boolean) {
         teamDto.teamIsAutoConfirm = confirm;
     }
@@ -85,11 +81,13 @@ type NameAreaProps = {
 };
 
 function NameArea({ moveNext, registName }: NameAreaProps) {
-    const PASS = 'PASS';
-    const LENGTH = 'LENGTH';
-    const CHAR = 'CHAR';
-    const VALID = 'VALID';
-    const DUP = 'DUP';
+    enum VALIDATION_CHECK {
+        PASS = 'PASS',
+        LENGTH = 'LENGTH',
+        CHAR = 'CHAR',
+        VALID = 'VALID',
+        DUP = 'DUP',
+    }
 
     const [check, setCheck] = useState('LENGTH');
     const nameRef = useRef<HTMLInputElement>(null);
@@ -106,11 +104,11 @@ function NameArea({ moveNext, registName }: NameAreaProps) {
 
         timer = setTimeout(() => {
             if (newValue.length < 4 || newValue.length > 20) {
-                setCheck(LENGTH);
+                setCheck(VALIDATION_CHECK.LENGTH);
             } else if (!regex.test(newValue)) {
-                setCheck(CHAR);
+                setCheck(VALIDATION_CHECK.CHAR);
             } else {
-                setCheck(VALID);
+                setCheck(VALIDATION_CHECK.VALID);
             }
         }, 300);
     }
@@ -133,10 +131,10 @@ function NameArea({ moveNext, registName }: NameAreaProps) {
 
                                 if (nameRef.current!.value) {
                                     // 중복이 아니라면
-                                    setCheck(PASS);
+                                    setCheck(VALIDATION_CHECK.PASS);
                                 } else {
                                     // 중복이라면
-                                    setCheck(DUP);
+                                    setCheck(VALIDATION_CHECK.DUP);
                                 }
                             }}
                         >
@@ -147,7 +145,7 @@ function NameArea({ moveNext, registName }: NameAreaProps) {
                 </div>
             </div>
             <button
-                disabled={check !== PASS}
+                disabled={check !== VALIDATION_CHECK.PASS}
                 onClick={() => {
                     moveNext();
                     registName(nameRef.current!.value);
