@@ -1,5 +1,5 @@
 import React from 'react';
-import PieChart from '@/shared/ui/chartArea/pieChart';
+import PieChart from '@/shared/ui/chartArea/PieChart';
 
 export function ExpenditureAnalyzeRecommend() {
     return (
