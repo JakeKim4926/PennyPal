@@ -15,6 +15,7 @@ export function ModalSpace() {
 
 function TeamApplyModalSpace() {
     const openModal = useSelector((state: RootState) => state.openModal.data);
+    console.log(openModal);
 
     if (openModal) return <TeamApplyModal />;
     return null;
@@ -22,6 +23,7 @@ function TeamApplyModalSpace() {
 
 function MarketItemModalSpace() {
     const openMarketItemModal = useSelector((state: RootState) => state.openMarketItem.data);
+    console.log(openMarketItemModal);
 
     if (openMarketItemModal) return <MarketItemModal />;
     return null;

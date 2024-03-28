@@ -1,29 +1,14 @@
 .marketReceiptContent {
     background-color: $bright;
-    padding: 4.2rem 10px;
+    padding: 10px;
     border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    position: relative;
-
+    
     &__top {
         text-align: center;
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-
-        &-icon {
-            height: 3rem;
-        }
-
-        &-desc {
-            font-size: 1.5rem;
-        }
     }
 
     &__header {
-        overflow: hidden;
+
         &-desc {
             display: grid;
             grid-template-columns: 30% 40% 15% 15%;
@@ -32,58 +17,24 @@
     }
 
     &__main {
+
         &-list {
+            
             &-item {
                 display: grid;
                 grid-template-columns: 30% 40% 15% 15%;
                 text-align: center;
                 list-style-type: none;
-                padding: 7px 0;
+                padding: 5px 0;
             }
         }
     }
-
+    
     &__footer {
-        overflow: hidden;
 
-        &-total {
-            display: flex;
-            justify-content: space-between;
-            padding: 0 40px;
-        }
     }
 
     &__pagenation {
-        display: flex;
-        justify-content: center;
 
-        &-box {
-            display: flex;
-            justify-content: space-around;
-            gap: 20px;
-        }
-    }
-
-    $diameter: 50px;
-
-    &__deco {
-        position: absolute;
-        background-color: $light;
-        width: $diameter;
-        height: $diameter;
-        border-radius: 50%;
-
-        &-bottom {
-            bottom: 0;
-        }
-    }
-    .top {
-        top: calc($diameter / -2);
-        left: calc(50% - calc($diameter / 2));
-    }
-
-    .bottom {
-        bottom: calc($diameter / -2);
-        left: calc(50% - calc($diameter / 2));
     }
 }
