@@ -7,13 +7,13 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class TeamJoinRequest {
+public class TeamRequestDTO {
 
     Long teamId;
     Long memberId;
 
     @Builder
-    private TeamJoinRequest(Long teamId, Long memberId) {
+    private TeamRequestDTO(Long teamId, Long memberId) {
         this.teamId = teamId;
         this.memberId = memberId;
     }

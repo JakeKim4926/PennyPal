@@ -40,7 +40,7 @@ public class Team extends BaseEntity {
 
     @OneToMany(
             mappedBy = "team",
-            cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REMOVE},
+            cascade = {CascadeType.PERSIST, CascadeType.DETACH},
             fetch = FetchType.LAZY
     )
     private List<Member> members = new ArrayList<>();                                   // 팀 구성원
@@ -51,7 +51,7 @@ public class Team extends BaseEntity {
     @OneToMany(
             fetch = FetchType.LAZY,
             mappedBy = "memberWaitingTeam",
-            cascade = CascadeType.ALL
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE}
     )
     private List<Member> teamWaitingList = new ArrayList<>();                           // 가입 승인 대기 리스트
 
@@ -75,7 +75,7 @@ public class Team extends BaseEntity {
     @OneToMany(
             fetch = FetchType.LAZY,
             mappedBy = "memberBanishedTeam",
-            cascade = CascadeType.ALL
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE}
     )
     private List<Member> teamBanishedList = new ArrayList<>();                         // 추방 당한 유저 리스트
 

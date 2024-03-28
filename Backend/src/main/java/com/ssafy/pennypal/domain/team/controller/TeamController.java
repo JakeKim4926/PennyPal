@@ -4,7 +4,7 @@ import com.ssafy.pennypal.bank.service.api.BankServiceAPIImpl;
 import com.ssafy.pennypal.domain.chat.service.ChatService;
 import com.ssafy.pennypal.domain.team.dto.request.TeamBanishRequest;
 import com.ssafy.pennypal.domain.team.dto.request.TeamCreateRequest;
-import com.ssafy.pennypal.domain.team.dto.request.TeamJoinRequest;
+import com.ssafy.pennypal.domain.team.dto.request.TeamRequestDTO;
 import com.ssafy.pennypal.domain.team.dto.SimpleTeamDto;
 import com.ssafy.pennypal.domain.team.dto.request.TeamModifyRequest;
 import com.ssafy.pennypal.domain.team.dto.response.*;
@@ -16,8 +16,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -44,6 +46,22 @@ public class TeamController {
         return ApiResponse.ok("팀 생성 완료");
 
     }
+
+    /**
+     * note : 팀명 중복 체크
+     */
+    @PostMapping("/create/{keyword}")
+    public ApiResponse<Boolean> validTeamName(@PathVariable String keyword){
+
+        Boolean result = teamService.validTeamName(keyword);
+
+        if(result){
+            return ApiResponse.of(HttpStatus.CONFLICT, "NO",result );
+        }else{
+            return ApiResponse.ok(result);
+        }
+    }
+
 
     /**
      * note : 매주 월요일 오전 12시에 주간 랭킹 업데이트
@@ -119,6 +137,15 @@ public class TeamController {
     }
 
     /**
+     * note : 수동 가입인 경우 가입 대기 유저 조회
+     */
+    @GetMapping("/waitingList")
+    public ApiResponse<List<TeamWaitingListResponse>> waitingList(@RequestBody TeamRequestDTO request){
+
+        return ApiResponse.ok(teamService.waitingList(request));
+    }
+
+    /**
      * note : 2.5 팀 정보 수정
      */
     @PatchMapping("/{teamId}")
@@ -130,7 +157,6 @@ public class TeamController {
 
     /**
      * note : 2.5.1 팀원 추방
-     * todo : 응답값 상의 후 수정
      */
     @PostMapping("/ban")
     public ApiResponse<String> banishMember(@RequestBody TeamBanishRequest request){
@@ -144,20 +170,24 @@ public class TeamController {
      * note : 2.5.2 팀 가입 ( + 팀 채팅방 초대 )
      */
     @PostMapping("/join")
-    public ApiResponse<TeamJoinResponse> joinTeam(@RequestBody TeamJoinRequest request) {
+    public ApiResponse<TeamJoinResponse> joinTeam(@RequestBody TeamRequestDTO request) {
 
         TeamJoinResponse result = teamService.joinTeam(request.toServiceRequest());
+
+        if(result == null){
+            // 수동 승인일 때
+            return ApiResponse.of(HttpStatus.ACCEPTED, "Hold", null);
+        }else{
 
         // 팀 채팅방 초대
         chatService.inviteChatRoom(request.getTeamId(), request.getMemberId());
 
         return ApiResponse.ok(result);
-
+}
     }
 
     /**
      * note : 2.5.3 팀 탈퇴
-     * todo : 응답값 상의 후 수정
      */
     @PostMapping("leave")
     public ApiResponse<String> leaveTeam(@RequestBody SimpleTeamDto request){
@@ -169,7 +199,6 @@ public class TeamController {
 
     /**
      * note : 2.6 팀 삭제
-     * todo : 응답값 상의 후 수정
      */
     @DeleteMapping
     public ApiResponse<String> deleteTeam(@RequestBody SimpleTeamDto request){

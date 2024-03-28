@@ -71,7 +71,9 @@ public class Member extends BaseEntity implements UserDetails {
     @Setter
     private String memberBankApi;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "team_waiting_list")
     @Setter
     private Team memberWaitingTeam;                                               // 사용자가 가입 요청한 팀
@@ -97,7 +99,7 @@ public class Member extends BaseEntity implements UserDetails {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chat_room_id")
     @Setter
-    private ChatRoom memberChatRoom;                                                     // 참여 중인 채팅방
+    private ChatRoom memberChatRoom;                                               // 참여 중인 채팅방
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_banished_list")

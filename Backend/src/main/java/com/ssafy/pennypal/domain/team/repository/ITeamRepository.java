@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface ITeamRepository extends JpaRepository<Team, Long> {
 
-    Optional<Team> findByTeamName(String teamName);
+    Team findByTeamName(String teamName);
 
     Optional<Team> findByTeamId(Long teamId);
 

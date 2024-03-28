@@ -27,7 +27,7 @@ import java.util.stream.IntStream;
 
 @Slf4j
 @RestController
-@RequestMapping("api/bank")
+@RequestMapping("/api/bank")
 @RequiredArgsConstructor
 public class BankController {
     private static final String SSAFY_BANK_API_KEY = System.getenv("SSAFY_BANK_API_KEY");
@@ -69,6 +69,7 @@ public class BankController {
                 .userKey(userAccountResponseControllerDTO.getUserKey())
                 .build();
 
+        log.info("여기까지 됬어요");
         bankServiceDB.InsertUserKey(userApiKeyRequestDTO);
 
         CommonHeaderRequestDTO commonHeaderRequestDTO = CommonHeaderRequestDTO.builder()

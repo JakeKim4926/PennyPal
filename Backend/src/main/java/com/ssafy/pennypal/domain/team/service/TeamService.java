@@ -16,11 +16,8 @@ import com.ssafy.pennypal.domain.member.dto.response.*;
 import com.ssafy.pennypal.domain.member.entity.Member;
 import com.ssafy.pennypal.domain.member.entity.Expense;
 import com.ssafy.pennypal.domain.member.repository.IMemberRepository;
-import com.ssafy.pennypal.domain.team.dto.request.TeamBanishRequest;
-import com.ssafy.pennypal.domain.team.dto.request.TeamCreateServiceRequest;
-import com.ssafy.pennypal.domain.team.dto.request.TeamJoinServiceRequest;
+import com.ssafy.pennypal.domain.team.dto.request.*;
 import com.ssafy.pennypal.domain.team.dto.SimpleTeamDto;
-import com.ssafy.pennypal.domain.team.dto.request.TeamModifyRequest;
 import com.ssafy.pennypal.domain.team.dto.response.*;
 import com.ssafy.pennypal.domain.team.entity.Team;
 import com.ssafy.pennypal.domain.team.entity.TeamRankHistory;
@@ -32,6 +29,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -74,7 +72,7 @@ public class TeamService {
         }
 
         // 이미 존재하는 팀명이라면 예외 발생
-        if (teamRepository.findByTeamName(request.getTeamName()).isPresent()) {
+        if (teamRepository.findByTeamName(request.getTeamName()) != null) {
             throw new IllegalArgumentException("이미 사용 중인 팀명입니다.");
         }
 
@@ -106,60 +104,77 @@ public class TeamService {
         // 팀 정보 가져오기
         Team team = getTeam(request.getTeamId());
 
-        if (team != null) {
+        // 유저 정보 조회
+        Member member = getMember(request.getMemberId());
 
-            // 유저 정보 조회
-            Member member = getMember(request.getMemberId());
-
-            if (member == null) {
-                throw new IllegalArgumentException("유저 정보를 찾을 수 없습니다.");
-            }
-
-            // 팀 인원 6명이면 예외 발생
-            if (team.getMembers().size() == 6) {
-                throw new IllegalArgumentException("팀 인원이 가득 찼습니다.");
-            }
-
-            // 팀 구성원에 포함 돼 있는지 확인
-            if (team.getMembers().contains(member)) {
-                throw new IllegalArgumentException("이미 가입한 팀입니다.");
-            } else {
-                // 이미 다른 팀의 구성원인지 확인
-                if (member.getTeam() != null) {
-                    throw new IllegalArgumentException("이미 가입된 팀이 있습니다.");
-                }
-            }
-
-            // 추방된 유저라면 가입 불가
-            if (team.getTeamBanishedList().contains(member)) {
-                throw new IllegalArgumentException("추방 당한 팀에는 가입할 수 없습니다.");
-            }
-
-            // 팀 자동승인 여부에 따라...
-            if (team.getTeamIsAutoConfirm()) {
-                // 자동 승인이라면 바로 추가
-                team.getMembers().add(member);
-                member.setTeam(team);
-                teamRepository.save(team);
-                memberRepository.save(member);
-            } else {
-                // 수동 승인이라면 대기 리스트에 추가하고 예외 던져주기
-                team.getTeamWaitingList().add(member);
-                member.setMemberWaitingTeam(team);
-                throw new IllegalArgumentException("가입 요청 완료 메시지를 위한 에러 발생");
-            }
-
-        } else {
-            throw new IllegalArgumentException("팀 정보를 찾을 수 없습니다.");
+        if (member == null) {
+            throw new IllegalArgumentException("유저 정보를 찾을 수 없습니다.");
         }
 
+        // 팀 인원 6명이면 예외 발생
+        if (team.getMembers().size() == 6) {
+            throw new IllegalArgumentException("팀 인원이 가득 찼습니다.");
+        }
 
-        return TeamJoinResponse.builder()
-                .teamName(team.getTeamName())
-                .teamInfo(team.getTeamInfo())
-                .teamScore(team.getTeamScore())
-                .teamLeaderId(team.getTeamLeaderId())
-                .build();
+        // 팀 구성원에 포함 돼 있는지 확인
+        if (team.getMembers().contains(member)) {
+            throw new IllegalArgumentException("이미 가입한 팀입니다.");
+        } else {
+            // 이미 다른 팀의 구성원인지 확인
+            if (member.getTeam() != null) {
+                throw new IllegalArgumentException("이미 가입된 팀이 있습니다.");
+            }
+        }
+
+        // 추방된 유저라면 가입 불가
+        if (team.getTeamBanishedList().contains(member)) {
+            throw new IllegalArgumentException("추방 당한 팀에는 가입할 수 없습니다.");
+        }
+
+        // 이미 가입 신청을 한 유저라면 신청 불가
+        if(team.getTeamWaitingList().contains(member)){
+            throw new IllegalArgumentException("이미 가입 신청을 완료한 팀입니다.");
+        }
+
+        // 이미 다른 팀에 가입 신청을 했다면 신청 불가
+        if(member.getMemberWaitingTeam() != null){
+            throw new IllegalArgumentException("이미 가입 신청 된 팀이 존재합니다.");
+        }
+
+        // 팀 자동승인 여부에 따라...
+        if (team.getTeamIsAutoConfirm()) {
+            // 자동 승인이라면 바로 추가
+            team.getMembers().add(member);
+            member.setTeam(team);
+            teamRepository.save(team);
+            memberRepository.save(member);
+
+            return TeamJoinResponse.builder()
+                    .teamName(team.getTeamName())
+                    .teamInfo(team.getTeamInfo())
+                    .teamScore(team.getTeamScore())
+                    .teamLeaderId(team.getTeamLeaderId())
+                    .build();
+        } else {
+            // 수동 승인이라면 대기 리스트에 추가
+            team.getTeamWaitingList().add(member);
+            member.setMemberWaitingTeam(team);
+            teamRepository.save(team);
+            memberRepository.save(member);
+
+            return null;
+//            throw new IllegalArgumentException("가입 요청 완료 메시지를 위한 에러 발생");
+        }
+
+    }
+
+    @Transactional
+    public Boolean validTeamName(String keyword) {
+
+        Team team = teamRepository.findByTeamName(keyword);
+
+        return team != null;
+
     }
 
     @Transactional
@@ -566,6 +581,7 @@ public class TeamService {
                     .teamMembersNum(team.getMembers().size())
                     .teamLeaderNickname(member.getMemberNickname())
                     .teamIsAutoConfirm(team.getTeamIsAutoConfirm())
+                    .teamInfo(team.getTeamInfo())
                     .build();
         });
 
@@ -702,15 +718,40 @@ public class TeamService {
     }
 
     @Transactional
-    public void resetMemberAttendance(){
+    public void resetMemberAttendance() {
 
         List<Member> memberList = memberRepository.findAll();
 
-        for(Member member : memberList){
+        for (Member member : memberList) {
             member.setMemberAttendance(0);
         }
 
         memberRepository.saveAll(memberList);
+
+    }
+
+    public List<TeamWaitingListResponse> waitingList(TeamRequestDTO request) {
+        Team team = getTeam(request.getTeamId());
+        Member leader = getMember(request.getMemberId());
+
+        if (leader.getMemberId() != team.getTeamLeaderId()) {
+            throw new IllegalArgumentException("가입 대기 리스트는 팀장만 조회 가능합니다.");
+        } else {
+
+            List<TeamWaitingListResponse> result = new ArrayList<>();
+
+            for (Member member : team.getTeamWaitingList()) {
+                TeamWaitingListResponse response = TeamWaitingListResponse.builder()
+                        .memberId(member.getMemberId())
+                        .memberNickname(member.getMemberNickname())
+                        .memberMostCategory(member.getMemberMostCategory())
+                        .build();
+
+                result.add(response);
+            }
+            return result;
+
+        }
 
     }
 
