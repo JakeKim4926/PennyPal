@@ -1,15 +1,15 @@
 import { Button } from '@/shared';
 import { useSignUpFormModel } from '@/pages/signup/model/signUpFormModel';
+import { ChangeEvent, useState } from 'react';
 
 export function MyPage() {
-    //브라우저 스토리지에 있는 유저data(memberId, memberNickName) 불러오기.
     const { userData, passwordValid, confirmPasswordValid, nickNameValid, handleChange } = useSignUpFormModel();
-    const handleNext = () => {
-        const allFieldsValid = passwordValid && confirmPasswordValid && nickNameValid;
-        if (allFieldsValid) {
-            // 회원정보수정 api
+    const [nowpassword, setNowPassword] = useState<string>('');
+    const handleSubmit = (s: 'nickName' | 'password') => {
+        if (s === 'nickName') {
+            //nickname 수정 api
         } else {
-            console.error('입력한 값이 유효하지 않습니다.');
+            //password 수정 api
         }
     };
 
@@ -36,7 +36,14 @@ export function MyPage() {
                         </div>
                     </div>
                     <div className="">
-                        <Button child={'NEXT'} color={'color-main'} onClick={handleNext} />
+                        <Button
+                            child={'변경'}
+                            color={'color-main'}
+                            disabled={!nickNameValid}
+                            onClick={() => {
+                                handleSubmit('nickName');
+                            }}
+                        />
                     </div>
                 </div>
                 <div>
@@ -46,7 +53,10 @@ export function MyPage() {
                         <input
                             type="password"
                             placeholder="현재패스워드"
-                            onChange={(e) => handleChange(e, 'password')}
+                            value={nowpassword}
+                            onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                                setNowPassword(event.target.value);
+                            }}
                         />
                     </div>
                 </div>
@@ -86,7 +96,14 @@ export function MyPage() {
                         ) : null}
                     </div>
                     <div className="">
-                        <Button child={'NEXT'} color={'color-main'} onClick={handleNext} />
+                        <Button
+                            child={'NEXT'}
+                            color={'color-main'}
+                            disabled={!(passwordValid && confirmPasswordValid)}
+                            onClick={() => {
+                                handleSubmit('password');
+                            }}
+                        />
                     </div>
                 </div>
             </div>
