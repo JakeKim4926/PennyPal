@@ -23,7 +23,7 @@ export function TeamTeamList() {
 
     useEffect(() => {
         // REQUEST_URL: 요청 URL
-        const REQUEST_URL = `/team?keyword=&page=${curPage}`;
+        const REQUEST_URL = `/team?keyword=&page=${curPage - 1}`;
 
         // cacheData: 캐시된 데이터
         const cacheData = API_CACHE_DATA.get(REQUEST_URL);
