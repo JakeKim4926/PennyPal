@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { Expenditure } from '@/pages/expenditure';
 import { Finance } from '@/pages/finance';
 import { Landing } from '@/pages/landing';
@@ -9,7 +9,8 @@ import { MyPage } from '@/pages/myPage';
 import { Ranking } from '@/pages/ranking';
 import { SignIn } from '@/pages/signin';
 import { SignUp } from '@/pages/signup';
-import { Navigate } from 'react-router-dom';
+
+import { Test } from '@/pages/test/ui/Test';
 import { TeamRouting } from '@/pages/teamRouting';
 import { FindPassword } from '@/pages/signin';
 import { MarketReceipt } from '@/pages/marketReceipt';

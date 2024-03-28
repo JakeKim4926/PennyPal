@@ -5,12 +5,13 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    text-decoration: none;
-    list-style-type: none;
-    color: $black;
 
     user-select: none;
-    font-family: 'Wanted Sans Variable';
+    text-decoration: none;
+    list-style-type: none;
+
+    font-family: 'Wanted-Medium';
+    color: $black;
 }
 
 ::-webkit-scrollbar {
