@@ -65,8 +65,6 @@ public class TeamService {
     private static final LocalDate MONDAY_OF_NEXT_WEEK = MONDAY_OF_THIS_WEEK.plusDays(7);
     private static final LocalDate SUNDAY_OF_TWO_LAST_WEEK = SUNDAY_OF_THIS_WEEK.minusDays(14);
 
-    private static final LocalDate WEDNESDAY_OF_THIS_WEEK = TODAY.with(DayOfWeek.WEDNESDAY);
-
 
     @Transactional
     public TeamCreateResponse createTeam(TeamCreateServiceRequest request) {
@@ -132,6 +130,10 @@ public class TeamService {
 
             // 유저 정보 조회
             Member member = getMember(request.getMemberId());
+
+            if(member == null){
+                throw new IllegalArgumentException("유저 정보를 찾을 수 없습니다.");
+            }
 
             // 팀 인원 6명이면 예외 발생
             if (team.getMembers().size() == 6) {
@@ -300,6 +302,7 @@ public class TeamService {
 
         // 팀 점수에 따라 내림차순 정렬
         List<TeamRankResponse> rankedTeams = teams.stream()
+                .filter(team -> team.getMembers().size() >= 4)
                 .map(team -> new TeamRankResponse(team.getTeamId(), team.getTeamName(), team.getTeamScore(), 0))
                 .sorted(Comparator.comparing(TeamRankResponse::getTeamScore).reversed())
                 .toList();
@@ -332,12 +335,11 @@ public class TeamService {
                 sameScoreCount++;
             } else {
                 // 점수가 다르면, 이전에 동점이었던 팀 수만큼 현재 팀의 등수는 내려감
-                rankNum += sameScoreCount - 1 ;
+                rankNum += sameScoreCount - 1;
 
                 currentTeamResponse.setTeamRankNum(++rankNum); // 그 다음 등수로 설정
                 sameScoreCount = 1; // 동점 팀 수 초기화
             }
-
 
             //다음 팀으로 넘어가기 전에 현재 팀의 점수 저장
             previousScore = currentTeamResponse.getTeamScore();
@@ -355,18 +357,10 @@ public class TeamService {
 
     }
 
-    public Page<TeamRankHistoryResponse> rankHistoriesForWeeks(Pageable pageable) {
+    public Page<TeamRankHistoryResponse> rankOfWeeks(Pageable pageable) {
 
         // 원하는 조건(이번주 월요일)에 해당하는 모든 팀의 랭킹 기록 조회
-        List<TeamRankHistory> histories = teamRankHistoryRepository.findByRankDate(WEDNESDAY_OF_THIS_WEEK);
-
-        System.out.println("/////////////////////////////////////////////////");
-        System.out.println("today = " + WEDNESDAY_OF_THIS_WEEK);
-        for (TeamRankHistory history : histories){
-            System.out.println("historyId = " + history.getHistoryId());
-            System.out.println("rankNum = " + history.getRankNum());
-        }
-        System.out.println("/////////////////////////////////////////////////");
+        List<TeamRankHistory> histories = teamRankHistoryRepository.findByRankDate(MONDAY_OF_THIS_WEEK);
 
         // 조회된 히스토리를 rankNum 기준으로 오름차순 정렬하고 TeamRankHistoryResponse로 변환
         List<TeamRankHistoryResponse> sortedResponses = histories.stream()
@@ -380,48 +374,57 @@ public class TeamService {
         return new PageImpl<>(sortedResponses.subList(start, end), pageable, sortedResponses.size());
     }
 
-
     @Transactional
-    public List<TeamRankResponse> RankTeamRealTimeScore() {
+    public void RankRealTimeScore() {
 
-        List<Team> teams = teamRepository.findAll();
+        // 그 전의 랭킹은 리셋
+        List<Team> teamList = teamRepository.findAll();
 
-        // 팀 점수에 따라 내림차순 정렬
-        List<TeamRankResponse> rankedTeams = teams.stream()
-                .map(team -> new TeamRankResponse(team.getTeamId(), team.getTeamName(), team.getTeamScore(), 0))
-                .sorted(Comparator.comparing(TeamRankResponse::getTeamScore).reversed())
-                .collect(Collectors.toList());
-
-        // 등수 계산
-        int rankNum = 1;
-        int previousScore = rankedTeams.isEmpty() ? 0 : rankedTeams.get(0).getTeamScore();
-        int sameScoreCount = 1;
-
-        for (int i = 0; i < rankedTeams.size(); i++) {
-            TeamRankResponse currentTeamResponse = rankedTeams.get(i);
-            Team currentTeam = teams.stream()
-                    .filter(t -> t.getTeamId().equals(currentTeamResponse.getTeamId()))
-                    .findFirst()
-                    .orElse(null);
-
-            if (currentTeam == null) continue;
-
-            if (currentTeamResponse.getTeamScore() == previousScore) {
-                currentTeamResponse.setTeamRankNum(rankNum);
-            } else {
-                rankNum += sameScoreCount;
-                currentTeamResponse.setTeamRankNum(rankNum);
-                sameScoreCount = 0;
-            }
-            sameScoreCount++;
-            previousScore = currentTeamResponse.getTeamScore();
-
-            teamRepository.save(currentTeam);
+        for(Team team : teamList){
+            team.setTeamRankRealtime(0);
         }
 
-        // note : 주간 랭킹 집계와 다르게 팀 랭크 히스토리에 저장하지 않음!
+        List<Team> teams = teamRepository.findAll().stream()
+                .filter(team -> team.getMembers().size() >= 4)
+                .collect(Collectors.toList());
 
-        return rankedTeams;
+        teams.sort(Comparator.comparingInt(Team::getTeamScore).reversed());
+
+        int rankNum = 1; // 순위는 1부터 시작
+        int previousScore = teams.isEmpty() ? -1 : teams.get(0).getTeamScore(); // 첫 번째 팀의 점수로 초기화
+        int sameScoreCount = 0; // 동점 팀의 수
+
+        for (Team team : teams) {
+            if (team.getTeamScore() == previousScore) {
+                // 점수가 이전 팀과 같으면, 동일 순위 부여
+                team.setTeamRankRealtime(rankNum);
+            } else {
+                // 점수가 다르면, 이전 동점 팀의 수를 고려하여 순위 업데이트
+                rankNum += sameScoreCount;
+                team.setTeamRankRealtime(rankNum);
+                sameScoreCount = 0; // 동점 팀 수 초기화
+                previousScore = team.getTeamScore(); // 이전 점수 업데이트
+            }
+            sameScoreCount++; // 동점 팀 수 증가
+
+        }
+
+        teamRepository.saveAll(teams);
+    }
+
+    public Page<TeamRankRealtimeResponse> rankOfRealtime(Pageable pageable) {
+
+        Page<Team> teams = teamRepository.findAll(pageable);
+
+        List<TeamRankRealtimeResponse> sortedResponses = teams.stream()
+                .filter(team -> team.getMembers().size() >= 4)
+                .sorted(Comparator.comparingInt(Team::getTeamRankRealtime))
+                .map(team -> new TeamRankRealtimeResponse(team.getTeamName(), team.getTeamRankRealtime(), team.getTeamScore()))
+                .toList();
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), sortedResponses.size());
+        return new PageImpl<>(sortedResponses.subList(start, end), pageable, sortedResponses.size());
     }
 
     public TeamDetailResponse detailTeamInfo(Long teamId) {

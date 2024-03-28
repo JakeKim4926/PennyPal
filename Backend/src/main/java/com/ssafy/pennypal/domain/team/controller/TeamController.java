@@ -19,8 +19,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("api/team")
@@ -50,10 +48,10 @@ public class TeamController {
     /**
      * note : 매주 월요일 오전 12시에 주간 랭킹 업데이트
      */
-//    @Scheduled(cron = "00 00 00 * * MON")
-    @PostMapping("/rank")
-    public void autoRank() {
-//        teamService.calculateTeamScore();
+    @Scheduled(cron = "00 00 00 * * MON")
+//    @PostMapping("/rank")
+    public void autoRankWeekly() {
+        teamService.calculateTeamScore();
         teamService.RankTeamScore();
     }
 
@@ -65,22 +63,32 @@ public class TeamController {
             @PageableDefault(page = 0, size = 6, direction = Sort.Direction.ASC)
             Pageable pageable){
 
-        return ApiResponse.ok(teamService.rankHistoriesForWeeks(pageable));
+        return ApiResponse.ok(teamService.rankOfWeeks(pageable));
+    }
+
+    /**
+     * note : 매 시 정각에 실시간 랭킹 업데이트
+     */
+    @Scheduled(cron = "0 0 * * * *")
+//    @PostMapping("/rankRealtime")
+    public void autoRankRealtime() {
+
+        // 팀 점수 계산
+        teamService.calculateTeamScore();
+
+        // 팀 실시간 등수 계산
+        teamService.RankRealTimeScore();
     }
 
     /**
      * note : 2.2.1 팀 실시간 랭킹 조회
      */
     @GetMapping("/rank/realtime")
-    public ApiResponse<List<TeamRankResponse>> realtimeTeamRanking() {
+    public ApiResponse<Page<TeamRankRealtimeResponse>> realtimeTeamRanking(
+            @PageableDefault(page = 0, size = 6, direction = Sort.Direction.ASC)
+            Pageable pageable) {
 
-        // 팀 점수 계산
-        teamService.calculateTeamScore();
-
-        // 등수 계산
-        List<TeamRankResponse> result = teamService.RankTeamRealTimeScore();
-
-        return ApiResponse.ok(result);
+        return ApiResponse.ok(teamService.rankOfRealtime(pageable));
     }
 
     /**
