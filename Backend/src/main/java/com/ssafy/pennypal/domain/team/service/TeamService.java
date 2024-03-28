@@ -566,6 +566,22 @@ public class TeamService {
         }
     }
 
+    public TeamOtherDetailResponse detailOtherTeamInfo(Long teamId){
+
+        Team team = getTeam(teamId);
+        Long leaderId = team.getTeamLeaderId();
+        Member leader = getMember(leaderId);
+
+        Integer lastIndex = team.getTeamRankHistories().size()-1;
+
+        return TeamOtherDetailResponse.builder()
+                .teamName(team.getTeamName())
+                .teamLeaderNickname(leader.getMemberNickname())
+                .lastRank(team.getTeamRankHistories().get(lastIndex).getRankNum())
+                .build();
+
+    }
+
     public Page<TeamSearchResponse> searchTeamList(String teamName, Pageable pageable) {
 
         Page<Team> teams = null;
