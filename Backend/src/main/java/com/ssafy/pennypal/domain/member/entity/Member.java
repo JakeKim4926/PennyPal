@@ -91,6 +91,7 @@ public class Member extends BaseEntity implements UserDetails {
     private List<Expense> memberExpensesOfThisWeek = new ArrayList<>();            // 이번 주 지출 내역
 
     @Column(name = "member_attendance")
+    @Setter
     private Integer memberAttendance;                                              // 이번 주 출석 횟수
 
     @ManyToOne(fetch = FetchType.LAZY)

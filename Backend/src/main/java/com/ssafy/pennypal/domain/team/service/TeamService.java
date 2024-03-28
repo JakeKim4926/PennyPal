@@ -701,6 +701,19 @@ public class TeamService {
 
     }
 
+    @Transactional
+    public void resetMemberAttendance(){
+
+        List<Member> memberList = memberRepository.findAll();
+
+        for(Member member : memberList){
+            member.setMemberAttendance(0);
+        }
+
+        memberRepository.saveAll(memberList);
+
+    }
+
 
     private int calculateSavingScore(Double lastWeekTotalExpenses, Double thisWeekTotalExpenses) {
 

@@ -54,7 +54,8 @@ public class TeamController {
 //        teamService.calculateTeamScore();
         teamService.RankTeamScore();
 
-        // todo : 출석 횟수 초기화
+        // 모든 유저의 출석 일수 초기화
+        teamService.resetMemberAttendance();
     }
 
     /**
