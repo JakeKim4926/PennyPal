@@ -92,6 +92,7 @@ public class Member extends BaseEntity implements UserDetails {
     @Column(name = "member_expenses_of_this_week")
     private List<Expense> memberExpensesOfThisWeek = new ArrayList<>();            // 이번 주 지출 내역
 
+    @Setter
     @Column(name = "member_attendance")
     private Integer memberAttendance;                                              // 이번 주 출석 횟수
 
@@ -105,6 +106,9 @@ public class Member extends BaseEntity implements UserDetails {
     @Setter
     private Team memberBanishedTeam;                                                // 가입 차단 당한 팀
 
+    @Setter
+    @Column(name = "attend_id")
+    private Long attendId;
 
     @Builder
     @QueryProjection

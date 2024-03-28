@@ -9,3 +9,9 @@ include::api/updateNickname.adoc[]
 
 === 회원 비밀번호 수정
 include::api/updatePassword.adoc[]
+
+=== 출석 인증
+include::api/attend.adoc[]
+
+=== 사용자 출석 여부
+include::api/isAttend.adoc[]

@@ -5,13 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.ssafy.pennypal.common.RestDocsSupport;
-import com.ssafy.pennypal.domain.member.dto.request.MemberLoginRequest;
-import com.ssafy.pennypal.domain.member.dto.request.MemberSignupRequest;
-import com.ssafy.pennypal.domain.member.dto.request.MemberUpdateNicknameRequest;
-import com.ssafy.pennypal.domain.member.dto.request.MemberUpdatePasswordRequest;
+import com.ssafy.pennypal.domain.member.dto.request.*;
 import com.ssafy.pennypal.domain.member.dto.response.MemberLoginResponse;
 import com.ssafy.pennypal.domain.member.dto.response.MemberSignupResponse;
 import com.ssafy.pennypal.domain.member.entity.Member;
+import com.ssafy.pennypal.domain.member.service.AttendService;
 import com.ssafy.pennypal.domain.member.service.MemberService;
 import com.ssafy.pennypal.domain.team.controller.TeamControllerTest;
 import com.ssafy.pennypal.global.common.api.ApiResponse;
@@ -35,19 +33,23 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
+
 class MemberControllerTest extends RestDocsSupport {
 
     private final MemberService memberService = mock(MemberService.class);
+    private final AttendService attendService = mock(AttendService.class);
 
     @Override
     protected Object initController() {
-        return new MemberController(memberService);
+        return new MemberController(memberService, attendService);
     }
 
     @DisplayName("멤버의 정보를 받아 회원가입을 진행한다.")
@@ -277,5 +279,100 @@ class MemberControllerTest extends RestDocsSupport {
                 ));
 
         verify(memberService).updatePassword(any(MemberUpdatePasswordRequest.class));
+    }
+
+    @DisplayName("출석 요청을 받아 출석을 진행한다.")
+    @Test
+    public void attend() throws Exception {
+
+        MemberAttendRequest request = MemberAttendRequest.builder()
+                .memberId(1L)
+                .memberDate(LocalDateTime.now())
+                .build();
+
+        given(attendService.attend(any(MemberAttendRequest.class)))
+                .willReturn(ApiResponse.of(
+                        HttpStatus.OK,
+                        "출석 인증에 성공하셨습니다."
+                        ,""
+                ));
+
+        // when
+        // then
+        mockMvc.perform(
+                        get("/api/member/attend")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(new ObjectMapper()
+                                        .registerModule(new JavaTimeModule())
+                                        .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+                                        .writeValueAsString(request))
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("attend",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestFields(
+                                fieldWithPath("memberId").type(JsonFieldType.NUMBER)
+                                        .description("사용자 Index"),
+                                fieldWithPath("memberDate").type(JsonFieldType.STRING)
+                                        .description("현재 날짜")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("응답 코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("응답 상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data").type(JsonFieldType.STRING)
+                                        .description("응답 데이터")
+                        )
+                ));
+
+        verify(attendService).attend(any(MemberAttendRequest.class));
+    }
+
+    @DisplayName("유저의 index를 받아 출석 여부를 반환한다.")
+    @Test
+    public void isAttended() throws Exception {
+
+        Long request = 1L;
+
+        given(attendService.getIsAttended(any(Long.class)))
+                .willReturn(ApiResponse.of(
+                        HttpStatus.OK,
+                        "금일 출석을 진행하지 않으셨습니다."
+                        ,false
+                ));
+
+        // when
+        // then
+        mockMvc.perform(
+                        get("/api/member/attend/state")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .param("memberId", request.toString())
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("isAttended",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        queryParameters( // Note the change here to document the request parameter
+                                parameterWithName("memberId").description("사용자 Index")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("응답 코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("응답 상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data").type(JsonFieldType.BOOLEAN)
+                                        .description("응답 데이터")
+                        )
+                ));
+
+        verify(attendService).getIsAttended(any(Long.class));
     }
 }

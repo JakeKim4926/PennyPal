@@ -5,7 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="590e91e7-8499-4b51-bd6a-05ca195e5fce" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../Backend/src/main/java/com/ssafy/pennypal/domain/member/controller/MemberController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/com/ssafy/pennypal/domain/member/controller/MemberController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/src/main/java/com/ssafy/pennypal/domain/member/entity/Member.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/com/ssafy/pennypal/domain/member/entity/Member.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Backend/src/main/java/com/ssafy/pennypal/global/common/config/JwtAuthenticationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/com/ssafy/pennypal/global/common/config/JwtAuthenticationFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/src/main/java/com/ssafy/pennypal/global/common/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/com/ssafy/pennypal/global/common/config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/src/main/java/com/ssafy/pennypal/global/common/config/WebConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/com/ssafy/pennypal/global/common/config/WebConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/resources/application.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,7 +66,7 @@
     "Python.mysql.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "feature/BE-signup",
+    "git-widget-placeholder": "feature/BE-member",
     "last_opened_file_path": "C:/S10P22B108/flask/handledata",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
