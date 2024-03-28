@@ -31,13 +31,25 @@ function Content() {
     // moveNext: 다음 페이지로 넘기는 함수
     const moveNext = scrollTeamCreateArea;
 
-    // teamInfo: 팀 생성에 사용되는 데이터를 저장할 객체
-    const teamInfo = {
+    // teamDto: 팀 생성에 사용되는 데이터를 저장할 객체
+    const teamDto = {
         teamName: '',
         teamIsAutoConfirm: false,
         teamLeaderId: '', // 추후작업: 로그인된 유저 id를 기본값으로
         teamInfo: '',
     };
+
+    function registName(name: string) {
+        teamDto.teamName = name;
+    }
+
+    function registInfo(info: string) {
+        teamDto.teamInfo = info;
+    }
+
+    function registConfirm(confirm: boolean) {
+        teamDto.teamIsAutoConfirm = confirm;
+    }
 
     return (
         <div className="teamCreateTeam__content" ref={contentRef}>
@@ -52,40 +64,20 @@ function Content() {
                     팀 생성하기
                 </button>
             </div>
-            <NameArea moveNext={() => moveNext(contentRef, 2)} teamInfo={teamInfo} />
-            <div className="teamCreateTeam__content-inner">
-                <div className="teamCreateTeam__content-inner-second">
-                    <div className="teamCreateTeam__content-inner-second-name">
-                        <div>우리 팀을 한 줄로 소개해주세요</div>
-                        <input type="text" placeholder="소개 (40자 이내)"></input>
-                    </div>
-                </div>
-            </div>
-            <div className="teamCreateTeam__content-inner">
-                <div className="teamCreateTeam__content-inner-second">
-                    <div className="teamCreateTeam__content-inner-second-name">
-                        <div>우리 팀을 한 줄로 소개해주세요</div>
-                        <input type="text"></input>
-                    </div>
-                </div>
-                <button
-                    onClick={() => {
-                        moveNext(contentRef, 2);
-                    }}
-                >
-                    다음으로
-                </button>
-            </div>
+            <NameArea moveNext={() => moveNext(contentRef, 2)} teamDto={teamDto} registName={registName} />
+            <DescArea moveNext={() => moveNext(contentRef, 3)} teamDto={teamDto} registInfo={registInfo} />
+            <ConfirmArea moveNext={() => moveNext(contentRef, 4)} registConfirm={registConfirm} teamInfo={teamDto} />
         </div>
     );
 }
 
 type NameAreaProps = {
     moveNext: () => void;
-    teamInfo: Object;
+    teamDto: Object;
+    registName: (name: string) => void;
 };
 
-function NameArea({ moveNext, teamInfo }: NameAreaProps) {
+function NameArea({ moveNext, teamDto, registName }: NameAreaProps) {
     const PASS = 'PASS';
     const LENGTH = 'LENGTH';
     const CHAR = 'CHAR';
@@ -95,7 +87,7 @@ function NameArea({ moveNext, teamInfo }: NameAreaProps) {
     const [check, setCheck] = useState('LENGTH');
     const nameRef = useRef<HTMLInputElement>(null);
 
-    let timer: any = '';
+    let timer: NodeJS.Timeout | null = null;
     const regex = /^[가-힣|a-z|A-Z|0-9|]+$/;
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -151,6 +143,7 @@ function NameArea({ moveNext, teamInfo }: NameAreaProps) {
                 disabled={check !== PASS}
                 onClick={() => {
                     moveNext();
+                    registName(nameRef.current!.value);
                 }}
             >
                 다음으로
@@ -182,4 +175,117 @@ function NameCheck({ state }: NameCheckProps) {
     };
 
     return <div className="teamCreateTeam__content-inner-second-name">{text()}</div>;
+}
+
+type DescAreaProps = {
+    moveNext: () => void;
+    teamDto: Object;
+    registInfo: (info: string) => void;
+};
+
+function DescArea({ moveNext, teamDto, registInfo }: DescAreaProps) {
+    const [VALID, INVALID] = ['VALID', 'INVALID'];
+    const [check, setCheck] = useState(VALID);
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    let timer: NodeJS.Timeout | null = null;
+    function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+        const newValue = e.target.value;
+
+        if (timer) {
+            clearTimeout(timer);
+        }
+
+        timer = setTimeout(() => {
+            if (newValue.length > 20) {
+                setCheck(INVALID);
+            } else {
+                if (check !== VALID) {
+                    setCheck(VALID);
+                }
+            }
+        }, 300);
+    }
+
+    return (
+        <div className="teamCreateTeam__content-inner">
+            <div className="teamCreateTeam__content-inner-second">
+                <div className="teamCreateTeam__content-inner-second-name">
+                    <div>우리 팀을 한 줄로 소개해주세요</div>
+                    <div className="teamCreateTeam__content-inner-second-name-input">
+                        <input
+                            type="text"
+                            placeholder="소개 (40자 이내)"
+                            onChange={handleChange}
+                            maxLength={40}
+                            ref={inputRef}
+                        ></input>
+                    </div>
+                </div>
+            </div>
+            <button
+                disabled={check === INVALID}
+                onClick={() => {
+                    registInfo(inputRef.current!.value.trim());
+                    moveNext();
+                }}
+            >
+                다음으로
+            </button>
+        </div>
+    );
+}
+
+type ConfirmArea = {
+    registConfirm: (confirm: boolean) => void;
+    moveNext: () => void;
+    teamInfo: Object;
+};
+
+function ConfirmArea({ registConfirm, moveNext, teamInfo }: ConfirmArea) {
+    return (
+        <div className="teamCreateTeam__content-inner">
+            <div className="teamCreateTeam__content-inner-second">
+                <div className="teamCreateTeam__content-inner-second-name">
+                    <div className="confirm">팀원 가입 신청을 자동으로 승인할까요?</div>
+                    <div className="teamCreateTeam__content-inner-second-name-buttons">
+                        <button
+                            className="teamCreateTeam__content-inner-second-name-buttons-button yes"
+                            onClick={() => {
+                                registConfirm(true);
+                                console.log(teamInfo);
+                            }}
+                        >
+                            네
+                        </button>
+                        <button
+                            className="teamCreateTeam__content-inner-second-name-buttons-button no"
+                            onClick={() => {
+                                registConfirm(false);
+                                console.log(teamInfo);
+                            }}
+                        >
+                            아니오
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+function LastArea() {
+    return (
+        <div className="teamCreateTeam__content-inner">
+            <div className="teamCreateTeam__content-inner-second">
+                <div className="teamCreateTeam__content-inner-second-name">
+                    <div className="confirm">팀원 가입 신청을 자동으로 승인할까요?</div>
+                    <div className="teamCreateTeam__content-inner-second-name-buttons">
+                        <button className="teamCreateTeam__content-inner-second-name-buttons-button yes">네</button>
+                        <button className="teamCreateTeam__content-inner-second-name-buttons-button no">아니오</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 }
