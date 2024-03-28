@@ -18,7 +18,7 @@ type TeamTeamListProps = {
     keyword: string;
 };
 
-export function TeamTeamList({ searchedPage, keyword }: TeamTeamListProps) {
+export const TeamTeamList = React.memo(({ searchedPage, keyword }: TeamTeamListProps) => {
     const [curPage, setCurPage] = useState<number>(searchedPage);
     const [maxPage, setMaxPage] = useState<number>(0);
     const [teamList, setTeamList] = useState<Team[]>([]);
@@ -73,4 +73,4 @@ export function TeamTeamList({ searchedPage, keyword }: TeamTeamListProps) {
             <TeamTeamListPagenation curPage={curPage} setCurPage={setCurPage} maxPage={maxPage} />
         </>
     );
-}
+});
