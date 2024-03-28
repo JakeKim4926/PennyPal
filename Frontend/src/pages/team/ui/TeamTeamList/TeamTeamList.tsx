@@ -49,7 +49,7 @@ export function TeamTeamList() {
                 {teamList.map((it) => (
                     <TeamTeamListItem
                         name={it.teamName}
-                        head={it.teamMembersNum + 1}
+                        head={it.teamMembersNum}
                         leader={it.teamLeaderNickname}
                         description={'소개'}
                         key={it.teamId}
