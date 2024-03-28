@@ -470,6 +470,7 @@ public class TeamService {
 
                     // 계산된 총액을 TeamMemberExpenseResponse 객체로 반환
                     return TeamMemberExpenseResponse.builder()
+                            .memberId(m.getMemberId())
                             .memberNickname(m.getMemberNickname())
                             .memberLastTotalExpenses(lastWeekTotalExpenses)
                             .memberThisTotalExpenses(thisWeekTotalExpenses)
