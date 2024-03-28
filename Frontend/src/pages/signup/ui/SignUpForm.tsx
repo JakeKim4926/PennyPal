@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { Button } from '../../../shared';
+import { Button } from '@/shared';
 import { useDispatch } from 'react-redux';
-import { setSignUpStep } from '../model/signUpStepReducer';
+import { setSignUpStep } from '@/pages/signup/model/signUpStepReducer';
 
 interface UserData {
     email: string;
