@@ -13,8 +13,13 @@ type Team = {
     teamName: string;
 };
 
-export function TeamTeamList() {
-    const [curPage, setCurPage] = useState<number>(1);
+type TeamTeamListProps = {
+    searchedPage: number;
+    keyword: string;
+};
+
+export function TeamTeamList({ searchedPage, keyword }: TeamTeamListProps) {
+    const [curPage, setCurPage] = useState<number>(searchedPage);
     const [maxPage, setMaxPage] = useState<number>(0);
     const [teamList, setTeamList] = useState<Team[]>([]);
 
@@ -23,7 +28,7 @@ export function TeamTeamList() {
 
     useEffect(() => {
         // REQUEST_URL: 요청 URL
-        const REQUEST_URL = `/team?keyword=&page=${curPage - 1}`;
+        const REQUEST_URL = `/team?keyword=${keyword}&page=${curPage - 1}`;
 
         // cacheData: 캐시된 데이터
         const cacheData = API_CACHE_DATA.get(REQUEST_URL);
@@ -49,7 +54,7 @@ export function TeamTeamList() {
             setMaxPage(cacheData.data.totalPages);
             setTeamList(cacheData.data.content);
         }
-    }, [curPage]);
+    }, [curPage, keyword]);
 
     return (
         <>
