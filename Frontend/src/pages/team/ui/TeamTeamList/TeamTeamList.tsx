@@ -11,6 +11,7 @@ type Team = {
     teamLeaderNickname: string;
     teamMembersNum: number;
     teamName: string;
+    teamInfo: string;
 };
 
 type TeamTeamListProps = {
@@ -65,7 +66,7 @@ export const TeamTeamList = React.memo(({ searchedPage, keyword }: TeamTeamListP
                         name={it.teamName}
                         head={it.teamMembersNum}
                         leader={it.teamLeaderNickname}
-                        description={'소개'}
+                        description={it.teamInfo ?? '소개말이 없습니다.'}
                         key={it.teamId}
                     />
                 ))}
