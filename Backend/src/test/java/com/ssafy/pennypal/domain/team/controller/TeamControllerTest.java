@@ -678,6 +678,53 @@ public class TeamControllerTest extends RestDocsSupport {
         verify(teamService).approveMember(any(TeamRequestDTO.class));
     }
 
+    @DisplayName("가입 거절")
+    @Test
+    void rejectMember() throws Exception {
+        // given
+        Team team = mock(Team.class);
+        Member member = mock(Member.class);
+
+        TeamRequestDTO request = TeamRequestDTO.builder()
+                .teamId(1L)
+                .memberId(1L)
+                .build();
+
+        doNothing().when(teamService).rejectMember(any(TeamRequestDTO.class));
+
+        mockMvc.perform(
+                        post("/api/team/reject")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(new ObjectMapper().writeValueAsString(request))
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(
+                        document("reject-member",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                requestFields(
+                                        fieldWithPath("teamId").type(JsonFieldType.NUMBER)
+                                                .description("팀 ID"),
+                                        fieldWithPath("memberId").type(JsonFieldType.NUMBER)
+                                                .description("승인 대기 유저 ID")
+                                ), responseFields(
+
+                                        fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                                .description("코드"),
+                                        fieldWithPath("status").type(JsonFieldType.STRING)
+                                                .description("상태"),
+                                        fieldWithPath("message").type(JsonFieldType.STRING)
+                                                .description("메시지"),
+                                        fieldWithPath("data").type(JsonFieldType.STRING)
+                                                .description("거절 완료 메시지")
+                                )
+                        )
+                );
+        verify(teamService).rejectMember(any(TeamRequestDTO.class));
+
+    }
+
     private Member createMember(String memberEmail, String memberNickname, LocalDateTime memberBirthDate) {
         return Member.builder()
                 .memberEmail(memberEmail)

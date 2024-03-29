@@ -212,7 +212,7 @@ public class TeamController {
     @PostMapping("/reject")
     public ApiResponse<String> rejectMember(@RequestBody TeamRequestDTO request){
         teamService.rejectMember(request);
-        return ApiResponse.ok("승인 거절 완료");
+        return ApiResponse.ok("가입 거절 완료");
     }
 
     /**
