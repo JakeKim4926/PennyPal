@@ -15,7 +15,7 @@ public class TeamRankHistory {
     private Long historyId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "team_rank_histories")
+    @JoinColumn(name = "team_id")
     private Team team;
 
     @Column(name = "rank_date")

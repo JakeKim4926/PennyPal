@@ -11,7 +11,6 @@ import com.ssafy.pennypal.domain.member.dto.response.MemberSignupResponse;
 import com.ssafy.pennypal.domain.member.entity.Member;
 import com.ssafy.pennypal.domain.member.service.AttendService;
 import com.ssafy.pennypal.domain.member.service.MemberService;
-import com.ssafy.pennypal.domain.team.controller.TeamControllerTest;
 import com.ssafy.pennypal.global.common.api.ApiResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

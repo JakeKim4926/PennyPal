@@ -1,0 +1,10 @@
+[[signup]]
+==== HTTP Request
+
+include::{snippets}/get-stock-list/http-request.adoc[]
+include::{snippets}/get-stock-list/query-parameters.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/get-stock-list/http-response.adoc[]
+include::{snippets}/get-stock-list/response-fields.adoc[]

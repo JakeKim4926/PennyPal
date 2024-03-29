@@ -1,0 +1,3 @@
+=== 주식 리스트 가져오기 (Signup)
+
+include::api/getlist.adoc[]
