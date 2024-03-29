@@ -15,6 +15,8 @@ include::api/modifyTeam.adoc[]
 include::api/banishMember.adoc[]
 === 2.5.2 팀 가입
 include::api/joinTeam.adoc[]
+=== 팀 가입 승인
+include::api/approve-member.adoc[]
 === 2.5.3 팀 탈퇴
 include::api/leaveTeam.adoc[]
 === 2.6 팀 삭제

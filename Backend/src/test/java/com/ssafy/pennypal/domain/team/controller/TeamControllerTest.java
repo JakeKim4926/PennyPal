@@ -15,12 +15,6 @@ import com.ssafy.pennypal.domain.team.entity.Team;
 import com.ssafy.pennypal.domain.team.service.TeamService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 
@@ -37,8 +31,6 @@ import static org.mockito.Mockito.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -639,6 +631,51 @@ public class TeamControllerTest extends RestDocsSupport {
                 ));
         verify(teamService).detailOtherTeamInfo(anyLong());
 
+    }
+
+    @DisplayName("가입 승인")
+    @Test
+    void approveMember() throws Exception {
+        // given
+        Team team = mock(Team.class);
+        Member member = mock(Member.class);
+
+        TeamRequestDTO request = TeamRequestDTO.builder()
+                .teamId(1L)
+                .memberId(1L)
+                .build();
+
+        doNothing().when(teamService).approveMember(any(TeamRequestDTO.class));
+
+        mockMvc.perform(
+                        post("/api/team/approve")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(new ObjectMapper().writeValueAsString(request))
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(
+                        document("approve-member",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                requestFields(
+                                        fieldWithPath("teamId").type(JsonFieldType.NUMBER)
+                                                .description("팀 ID"),
+                                        fieldWithPath("memberId").type(JsonFieldType.NUMBER)
+                                                .description("승인 대기 유저 ID")
+                                ), responseFields(
+
+                                        fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                                .description("코드"),
+                                        fieldWithPath("status").type(JsonFieldType.STRING)
+                                                .description("상태"),
+                                        fieldWithPath("message").type(JsonFieldType.STRING)
+                                                .description("메시지"),
+                                        fieldWithPath("data").type(JsonFieldType.STRING)
+                                                .description("승인 완료 메시지")
+                                )
+                        ));
+        verify(teamService).approveMember(any(TeamRequestDTO.class));
     }
 
     private Member createMember(String memberEmail, String memberNickname, LocalDateTime memberBirthDate) {

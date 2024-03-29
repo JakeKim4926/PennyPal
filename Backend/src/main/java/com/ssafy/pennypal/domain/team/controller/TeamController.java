@@ -146,7 +146,7 @@ public class TeamController {
     }
 
     /**
-     * note : 수동 가입인 경우 가입 대기 유저 조회
+     * note : 가입 대기 유저 조회
      */
     @GetMapping("/waitingList")
     public ApiResponse<List<TeamWaitingListResponse>> waitingList(@RequestBody TeamRequestDTO request){
