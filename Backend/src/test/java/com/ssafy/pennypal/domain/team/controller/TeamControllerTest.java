@@ -500,22 +500,78 @@ public class TeamControllerTest extends RestDocsSupport {
 
     @DisplayName("팀명 중복 체크")
     @Test
-    void validTeamName() throws Exception{
+    void validTeamName() throws Exception {
         // given
         Team team = mock(Team.class);
 
         when(teamService.validTeamName(anyString())).thenReturn(false);
 
         mockMvc.perform(
-                post("/api/team/create/{keyword}", "teamName1")
-                        .contentType(MediaType.APPLICATION_JSON)
+                        post("/api/team/create/{keyword}", "teamName1")
+                                .contentType(MediaType.APPLICATION_JSON)
                 )
-                        .andDo(print())
-                        .andExpect(status().isOk())
-                        .andDo(document("valid-team-name",
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("valid-team-name",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+
+                                fieldWithPath("data").type(JsonFieldType.BOOLEAN)
+                                        .description("중복 여부")
+                        )
+
+                ));
+
+        verify(teamService).validTeamName(anyString());
+
+    }
+
+    @DisplayName("팀 가입 대기 리스트 조회")
+    @Test
+    void test() throws Exception {
+        // given
+        Team team = mock(Team.class);
+        Member member = mock(Member.class);
+
+        TeamRequestDTO request = TeamRequestDTO.builder()
+                .teamId(1L)
+                .memberId(3L)
+                .build();
+
+        TeamWaitingListResponse response = TeamWaitingListResponse.builder()
+                .memberId(3L)
+                .memberNickname("대기자 닉네임")
+                .memberMostCategory("문화")
+                .build();
+
+        List<TeamWaitingListResponse> responseList = List.of(response, response);
+
+        when(teamService.waitingList(any(TeamRequestDTO.class)))
+                .thenReturn(responseList);
+
+        mockMvc.perform(
+                        get("/api/team/waitingList")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(new ObjectMapper().writeValueAsString(request))
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("waiting-list",
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
-                                responseFields(
+                                requestFields(
+                                        fieldWithPath("teamId").type(JsonFieldType.NUMBER)
+                                                .description("팀 ID"),
+                                        fieldWithPath("memberId").type(JsonFieldType.NUMBER)
+                                                .description("리스트 보려는 유저(팀장) ID")
+                                ), responseFields(
                                         fieldWithPath("code").type(JsonFieldType.NUMBER)
                                                 .description("코드"),
                                         fieldWithPath("status").type(JsonFieldType.STRING)
@@ -523,13 +579,19 @@ public class TeamControllerTest extends RestDocsSupport {
                                         fieldWithPath("message").type(JsonFieldType.STRING)
                                                 .description("메시지"),
 
-                                        fieldWithPath("data").type(JsonFieldType.BOOLEAN)
-                                                .description("중복 여부")
+                                        fieldWithPath("data").type(JsonFieldType.ARRAY)
+                                                .description("응답 데이터"),
+                                        fieldWithPath("data.[].memberId").type(JsonFieldType.NUMBER)
+                                                .description("유저 ID"),
+                                        fieldWithPath("data.[].memberNickname").type(JsonFieldType.STRING)
+                                                .description("유저 닉네임"),
+                                        fieldWithPath("data.[].memberMostCategory").type(JsonFieldType.STRING)
+                                                .description("유저 최대 지출 카테고리")
                                 )
+                        )
 
-                        ));
-
-        verify(teamService).validTeamName(anyString());
+                );
+        verify(teamService).waitingList(any(TeamRequestDTO.class));
 
     }
 
