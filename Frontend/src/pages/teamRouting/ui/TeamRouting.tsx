@@ -27,7 +27,7 @@ export function TeamRouting() {
 
     // 추후에 hasTeam 초기 값을 동적으로 설정해줄 수 있어야함 -> 팀 존재 여부에 따라
     // 여기 들어오면 가입한 팀 존재 여부 API 날린 다음 응답값에 따라 페이지 분기
-    const userId = 3429;
+    const userId = 3601;
 
     // fetchData: 해당 유저 팀 정보 가져오기
     const fetchData = useCallback((url: string) => getTeamInfo(`/team/${userId}`), [userId]);
@@ -45,7 +45,6 @@ export function TeamRouting() {
         fetchData(REQUEST_URL)
             .then((res) => {
                 // 1-2. 응답 데이터로 리렌더링
-                console.log(res.data.data);
                 dispatch(setTeamInfo(res.data.data));
                 // // 1-3. 응답 데이터 캐싱하기
                 API_CACHE_DATA.set(REQUEST_URL, {
