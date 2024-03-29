@@ -1,14 +1,23 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
+from flask_cors import CORS
 from handledata.category.service.CardService import CardService
 
 app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 card_service = CardService()
 @app.route("/api/card/recommend", methods=['GET'])
 def recommend_card():
     try:
+        # memberIndex 파라미터를 쿼리 스트링으로부터 받음
+        member_index = request.args.get('memberIndex', default=None, type=int)
+
+        # memberIndex가 제공되지 않았을 경우의 처리
+        if member_index is None:
+            return jsonify({"error": "No memberIndex provided"}), 400
+
         # Assuming card_service.get_card_by_similarity() is the method that interacts with the database
-        result = card_service.get_card_by_similarity()
+        result = card_service.get_card_by_similarity(member_index)
         return result
     except Exception as e:
         # Handle the exception when unable to connect to the database

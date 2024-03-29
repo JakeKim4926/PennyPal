@@ -385,7 +385,7 @@ public class BankControllerTest extends RestDocsSupport {
         // when
         // then
         mockMvc.perform(
-                        get("/api/bank/user/account/transaction")
+                        post("/api/bank/user/account/transaction")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(requestDTO))
                 )

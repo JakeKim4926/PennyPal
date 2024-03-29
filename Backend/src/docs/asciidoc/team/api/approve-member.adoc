@@ -1,0 +1,10 @@
+[[approve-member]]
+==== HTTP Request
+
+include::{snippets}/approve-member/http-request.adoc[]
+include::{snippets}/approve-member/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/approve-member/http-response.adoc[]
+include::{snippets}/approve-member/response-fields.adoc[]

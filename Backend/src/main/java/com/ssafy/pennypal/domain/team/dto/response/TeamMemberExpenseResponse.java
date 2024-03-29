@@ -1,28 +1,35 @@
 package com.ssafy.pennypal.domain.team.dto.response;
 
 import com.ssafy.pennypal.domain.member.dto.response.MemberExpensesDetailResponse;
+import com.ssafy.pennypal.domain.member.dto.response.MemberLastTotalExpenses;
+import com.ssafy.pennypal.domain.member.dto.response.MemberThisTotalExpenses;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TeamMemberExpenseResponse {
 
+    private Long memberId;
     private String memberNickname;
-
-    private List<MemberExpensesDetailResponse> memberLastWeekExpenses = new ArrayList<>();
-    private List<MemberExpensesDetailResponse> memberThisWeekExpenses = new ArrayList<>();
+    private Integer memberLastTotalExpenses; // 팀원 별 지난주 지출 총액
+    private Integer memberThisTotalExpenses; // 팀원 별 이번주 지출 총액
 
     @Builder
-    public TeamMemberExpenseResponse(String memberNickname,
-                                     List<MemberExpensesDetailResponse> memberLastWeekExpenses,
-                                     List<MemberExpensesDetailResponse> memberThisWeekExpenses
+    public TeamMemberExpenseResponse(Long memberId,
+                                     String memberNickname,
+                                     Integer memberLastTotalExpenses,
+                                     Integer memberThisTotalExpenses
     ) {
+        this.memberId = memberId;
         this.memberNickname = memberNickname;
-        this.memberLastWeekExpenses = memberLastWeekExpenses;
-        this.memberThisWeekExpenses = memberThisWeekExpenses;
+        this.memberLastTotalExpenses = memberLastTotalExpenses;
+        this.memberThisTotalExpenses = memberThisTotalExpenses;
     }
 
 }

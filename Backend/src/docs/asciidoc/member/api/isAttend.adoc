@@ -1,0 +1,8 @@
+[[isAttend]]
+==== HTTP Request
+include::{snippets}/isAttended/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/isAttended/http-response.adoc[]
+include::{snippets}/isAttended/response-fields.adoc[]

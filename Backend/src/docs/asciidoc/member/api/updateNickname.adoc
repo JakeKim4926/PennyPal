@@ -1,0 +1,10 @@
+[[update-nickname]]
+==== HTTP Request
+
+include::{snippets}/update-nickname/http-request.adoc[]
+include::{snippets}/update-nickname/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/update-nickname/http-response.adoc[]
+include::{snippets}/update-nickname/response-fields.adoc[]

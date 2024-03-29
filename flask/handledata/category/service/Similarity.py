@@ -5,6 +5,8 @@ from numpy import dot
 from numpy.linalg import norm
 
 from handledata.category.dao import Repository
+from handledata.category.service.MemberService import MemberService
+
 
 class Similarity(object):
     _instance = None
@@ -21,8 +23,10 @@ class Similarity(object):
         self.repository = Repository.Repository()
         self.card_result = None
         self.user_vector = np.array([0.2, 0.2, 0.1, 0, 0.1, 0, 0.1, 0.1, 0.1, 0.1, 0])
+        self.member_service = MemberService()
 
     def calculate_similarity(self, card_vector):
+
         if norm(self.user_vector) * norm(card_vector) == 0:
             return 0
 
@@ -41,10 +45,14 @@ class Similarity(object):
 
 
     # 추천
-    def recommend_cards(self, top_n=4):
+    def recommend_cards(self, index):
         # similarities = [(i, self.calculate_similarity(self.user_vector, card_vector)) for i, card_vector in
         #                 enumerate(self.card_vectors)]
         # similarities.sort(key=lambda x: x[1], reverse=True)
+        top_n = 4
+        # 먼저 사용자의 카테고리 부터 계산하자
+        self.member_service.getMemberReceipts(index)
+        self.user_vector = self.member_service.user_vector
 
         # 유사도를 저장할 리스트 초기화
         similarities = []
@@ -78,11 +86,13 @@ class Similarity(object):
 
         self.card_result = json.dumps(cards_data, ensure_ascii=False)
 
-    def get_json(self):
+    def get_json(self, index):
         self.load_card_category()
-        self.recommend_cards()
+        self.recommend_cards(index)
 
         return self.card_result
+
+
 
 
 
