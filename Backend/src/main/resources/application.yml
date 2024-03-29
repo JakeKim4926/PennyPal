@@ -1,13 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/penny_pal
-    username: root
-    password: 1234
-#    url: ${MYSQL_DATASOURCE_URL}
-#    username: ${MYSQL_DATASOURCE_USERNAME}
-#    password: ${MYSQL_DATASOURCE_PASSWORD}
-
+    url: ${MYSQL_DATASOURCE_URL}
+    username: ${MYSQL_DATASOURCE_USERNAME}
+    password: ${MYSQL_DATASOURCE_PASSWORD}
 
 
 #logging:
@@ -16,11 +12,7 @@ spring:
 #      springframework:
 #        web.client.RestTemplate: DEBUG
 #        http: DEBUG
-logging:
-  level:
-    org:
-      springframework:
-        security: DEBUG
+
 ---
 spring:
   profiles:
@@ -33,4 +25,3 @@ spring:
 spring:
   profiles:
     active: local
-

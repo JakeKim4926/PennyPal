@@ -432,3 +432,83 @@
 //        return expenses;
 //    }
 //}
+
+//    @DisplayName("팀원이 4명 미만이라면 팀 랭킹 경쟁에서 제외된다.")
+//    @Test
+//    void excludeIfMemberSizeLessThan4() {
+//        // given
+//        Member member1 = createMember("member1@pennypal.site", "닉네임1", LocalDate.now());
+//
+//        // 지출 내역 생성
+//        // 토요일부터 6일 동안 30000원씩 지출 -> 지난 주 2일, 이번 주 4일
+//        List<Expense> expenses = createExpenses(LocalDate.of(2024, 3, 16), 6, 1,
+//                30000, member1);
+//
+//        memberRepository.save(member1);
+//
+//        // 지출 내역 필터링
+//        List<Expense> expensesOfLastWeek = teamService.calculateLastWeekExpenses(expenses);
+//        List<Expense> expensesOfThisWeek = teamService.calculateThisWeekExpenses(expenses);
+//
+//        // 팀 생성
+//        Team team1 = createTeam("팀이름1", true, member1.getMemberId(), "팀소개", member1);
+//
+//        teamRepository.save(team1);
+//
+//        // when, then
+//        assertThat(team1.getTeamScore()).isEqualTo(0);
+//
+//    }
+//
+//
+//    private Member createMember(String memberEmail, String memberNickname, LocalDate memberBirthDate) {
+//        return Member.builder()
+//                .memberEmail(memberEmail)
+//                .memberPassword("1234")
+//                .memberName("김김짠돌")
+//                .memberNickname(memberNickname)
+//                .memberBirthDate(memberBirthDate)
+//                .build();
+//    }
+//
+//    private Team createTeam(String teamName, Boolean teamIsAutoConfirm, Long teamLeaderId, String teamInfo, Member member) {
+//        return Team.builder()
+//                .teamName(teamName)
+//                .teamIsAutoConfirm(teamIsAutoConfirm)
+//                .teamLeaderId(teamLeaderId)
+//                .teamInfo(teamInfo)
+//                .build();
+//    }
+//
+//    private TeamCreateServiceRequest createServiceRequest(String teamName, Boolean teamIsAutoConfirm, Long teamLeaderId, String teamInfo) {
+//        return TeamCreateServiceRequest.builder()
+//                .teamName(teamName)
+//                .teamIsAutoConfirm(teamIsAutoConfirm)
+//                .teamLeaderId(teamLeaderId)
+//                .teamInfo(teamInfo)
+//                .build();
+//    }
+//
+//    private TeamJoinServiceRequest joinServiceRequest(Long teamId, Long memberId) {
+//        return TeamJoinServiceRequest.builder()
+//                .teamId(teamId)
+//                .memberId(memberId)
+//                .build();
+//    }
+//
+//    private List<Expense> createExpenses(LocalDate startDate, int numOfExpenses, int intervalDays, int expenseAmount, Member member) {
+//        List<Expense> expenses = new ArrayList<>();
+//
+//        for (int i = 0; i < numOfExpenses; i++) {
+//            LocalDate expenseDate = startDate.plusDays(i * intervalDays); // 지출일을 계산하여 설정
+//            Expense expense = Expense.builder()
+//                    .expenseDate(expenseDate)
+//                    .expenseAmount(expenseAmount)
+//                    .member(member)
+//                    .build();
+//            expenses.add(expense);
+//        }
+//
+//        return expenses;
+//    }
+//}
