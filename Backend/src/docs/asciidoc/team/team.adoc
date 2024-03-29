@@ -1,6 +1,8 @@
 [[Team-API]]
 === 2.1 팀 생성
 include::api/createTeam.adoc[]
+=== 팀명 중복 체크
+include::api/validTeamName.adoc[]
 === 2.4 팀 상세 조회
 include::api/detailTeam.adoc[]
 === 2.5 팀 정보 수정

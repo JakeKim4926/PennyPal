@@ -196,9 +196,9 @@ public class TeamControllerTest extends RestDocsSupport {
 
         given(team.getTeamId()).willReturn(1L);
         given(member.getMemberNickname()).willReturn("멤버 닉네임");
-        given(teamLastEachTotalResponse.getDate()).willReturn(LocalDate.of(2024,3,28));
+        given(teamLastEachTotalResponse.getDate()).willReturn(LocalDate.of(2024, 3, 28));
         given(teamLastEachTotalResponse.getTotalAmount()).willReturn(300000);
-        given(teamThisEachTotalResponse.getDate()).willReturn(LocalDate.of(2024,3,28));
+        given(teamThisEachTotalResponse.getDate()).willReturn(LocalDate.of(2024, 3, 28));
         given(teamThisEachTotalResponse.getTotalAmount()).willReturn(300000);
 
         given(teamService.detailTeamInfo(anyLong()))
@@ -289,67 +289,6 @@ public class TeamControllerTest extends RestDocsSupport {
                 ));
         verify(teamService).detailTeamInfo(anyLong());
     }
-
-//    @DisplayName("팀 전체 조회")
-//    @Test
-//    void searchTeamList() throws Exception {
-//        // given
-//        Team team = mock(Team.class);
-//        TeamSearchResponse response1 = new TeamSearchResponse(1L, "teamName1", 3, "팀장닉네임1", true);
-//        TeamSearchResponse response2 = new TeamSearchResponse(2L, "teamName2", 6, "팀장닉네임2", false);
-//        TeamSearchResponse response3 = new TeamSearchResponse(3L, "teamName3", 4, "팀장닉네임3", true);
-//
-//        List<TeamSearchResponse> content = Arrays.asList(response1, response2, response3);
-//        Pageable pageable = PageRequest.of(0, 4);
-//
-//        // 전체 아이템 수가 content의 크기와 동일하다고 가정
-//        Page<TeamSearchResponse> responses = new PageImpl<>(content, pageable, content.size());
-//
-//        // Stubbing
-//        given(teamService.searchTeamList(anyString(), any(Pageable.class)))
-//                .willReturn(responses);
-//
-//        mockMvc.perform(get("/api/team")
-//                        .param("keyword","name")
-//                        .param("page", "0")
-//                        .param("size", "4")
-//                        .param("sort", "teamName,asc")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                )
-//                .andDo(print())
-//                .andExpect(status().isOk())
-//                .andDo(document("search-team-list",
-//                        preprocessResponse(prettyPrint()),
-//                        queryParameters(
-//                                parameterWithName("keyword").description("검색할 키워드"),
-//                                parameterWithName("page").description("페이지"),
-//                                parameterWithName("size").description("한 페이지 당 몇개?")
-//                        ),
-//                        responseFields(
-//                                fieldWithPath("code").type(JsonFieldType.NUMBER)
-//                                        .description("코드"),
-//                                fieldWithPath("status").type(JsonFieldType.STRING)
-//                                        .description("상태"),
-//                                fieldWithPath("message").type(JsonFieldType.STRING)
-//                                        .description("메시지"),
-//
-//                                fieldWithPath("data").type(JsonFieldType.ARRAY)
-//                                        .description("응답 데이터"),
-//                                fieldWithPath("data.[].teamId").type(JsonFieldType.NUMBER)
-//                                        .description("팀 ID"),
-//                                fieldWithPath("data.[].teamName").type(JsonFieldType.STRING)
-//                                        .description("팀 이름"),
-//                                fieldWithPath("data.[].teamMembersNum").type(JsonFieldType.NUMBER)
-//                                        .description("팀 멤버 수"),
-//                                fieldWithPath("data.[].teamLeaderNickname").type(JsonFieldType.STRING)
-//                                        .description("팀장 닉네임"),
-//                                fieldWithPath("data.[].teamIsAutoConfirm").type(JsonFieldType.BOOLEAN)
-//                                        .description("자동 가입 승인 여부")
-//                        )
-//                ));
-//
-//        verify(teamService).searchTeamList("name", pageable);
-//    }
 
     @DisplayName("팀 정보 수정")
     @Test
@@ -556,6 +495,41 @@ public class TeamControllerTest extends RestDocsSupport {
                 ));
 
         verify(teamService).banishMember(any(TeamBanishRequest.class));
+
+    }
+
+    @DisplayName("팀명 중복 체크")
+    @Test
+    void validTeamName() throws Exception{
+        // given
+        Team team = mock(Team.class);
+
+        when(teamService.validTeamName(anyString())).thenReturn(false);
+
+        mockMvc.perform(
+                post("/api/team/create/{keyword}", "teamName1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                        .andDo(print())
+                        .andExpect(status().isOk())
+                        .andDo(document("valid-team-name",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                responseFields(
+                                        fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                                .description("코드"),
+                                        fieldWithPath("status").type(JsonFieldType.STRING)
+                                                .description("상태"),
+                                        fieldWithPath("message").type(JsonFieldType.STRING)
+                                                .description("메시지"),
+
+                                        fieldWithPath("data").type(JsonFieldType.BOOLEAN)
+                                                .description("중복 여부")
+                                )
+
+                        ));
+
+        verify(teamService).validTeamName(anyString());
 
     }
 
