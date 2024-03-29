@@ -5,6 +5,8 @@ include::api/createTeam.adoc[]
 include::api/validTeamName.adoc[]
 === 2.4 팀 상세 조회
 include::api/detailTeam.adoc[]
+=== 다른 팀 상세 조회
+include::api/detail-other-team.adoc[]
 === 팀 가입 승인 대기 리스트 조회
 include::api/waiting-list.adoc[]
 === 2.5 팀 정보 수정

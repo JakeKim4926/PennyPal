@@ -15,6 +15,8 @@ import com.ssafy.pennypal.domain.team.entity.Team;
 import com.ssafy.pennypal.domain.team.service.TeamService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -35,6 +37,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -226,13 +229,6 @@ public class TeamControllerTest extends RestDocsSupport {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         responseFields(
-                                fieldWithPath("code").type(JsonFieldType.NUMBER)
-                                        .description("코드"),
-                                fieldWithPath("status").type(JsonFieldType.STRING)
-                                        .description("상태"),
-                                fieldWithPath("message").type(JsonFieldType.STRING)
-                                        .description("메시지"),
-
                                 fieldWithPath("code").type(JsonFieldType.NUMBER)
                                         .description("코드"),
                                 fieldWithPath("status").type(JsonFieldType.STRING)
@@ -535,7 +531,7 @@ public class TeamControllerTest extends RestDocsSupport {
 
     @DisplayName("팀 가입 대기 리스트 조회")
     @Test
-    void test() throws Exception {
+    void waitingList() throws Exception {
         // given
         Team team = mock(Team.class);
         Member member = mock(Member.class);
@@ -592,6 +588,56 @@ public class TeamControllerTest extends RestDocsSupport {
 
                 );
         verify(teamService).waitingList(any(TeamRequestDTO.class));
+
+    }
+
+    @DisplayName("다른 팀 상세조회")
+    @Test
+    void detailOtherTeamInfo() throws Exception {
+        // given
+        Team team = mock(Team.class);
+        Member member = mock(Member.class);
+
+        TeamOtherDetailResponse otherTeamInfo = TeamOtherDetailResponse.builder()
+                .teamName("팀 이름")
+                .teamLeaderNickname("리더 닉네임")
+                .lastRank(2)
+                .teamInfo("팀 한줄 소개")
+                .build();
+
+        when(teamService.detailOtherTeamInfo(anyLong()))
+                .thenReturn(otherTeamInfo);
+
+        mockMvc.perform(
+                        get("/api/team/detail/{teamId}", 1L)
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("detail-other-team",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+
+                                fieldWithPath("data").type(JsonFieldType.OBJECT)
+                                        .description("응답 데이터"),
+                                fieldWithPath("data.teamName").type(JsonFieldType.STRING)
+                                        .description("팀 명"),
+                                fieldWithPath("data.teamInfo").type(JsonFieldType.STRING)
+                                        .description("팀 한줄 소개"),
+                                fieldWithPath("data.teamLeaderNickname").type(JsonFieldType.STRING)
+                                        .description("팀장 닉네임"),
+                                fieldWithPath("data.lastRank").type(JsonFieldType.NUMBER)
+                                        .description("가장 마지막 랭크 내역")
+                        )
+                ));
+        verify(teamService).detailOtherTeamInfo(anyLong());
 
     }
 
