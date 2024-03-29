@@ -141,10 +141,14 @@ function NameArea({ moveNext, registName }: NameAreaProps) {
                             ref={nameRef}
                             maxLength={20}
                             onKeyDown={(e) => {
-                                // if (e.key === 'Enter') {
-                                //     console.log(e.key);
-                                //     handleCheck();
-                                // }
+                                if (e.key === 'Enter') {
+                                    if (check === VALIDATION_CHECK.VALID) {
+                                        handleCheck();
+                                    } else if (check === VALIDATION_CHECK.PASS) {
+                                        moveNext();
+                                        registName(nameRef.current!.value);
+                                    }
+                                }
                             }}
                         ></input>
                         <button
@@ -259,6 +263,12 @@ function DescArea({ moveBack, moveNext, registInfo }: DescAreaProps) {
                             onChange={handleChange}
                             maxLength={40}
                             ref={inputRef}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    registInfo(inputRef.current!.value.trim());
+                                    moveNext();
+                                }
+                            }}
                         ></input>
                     </div>
                 </div>
