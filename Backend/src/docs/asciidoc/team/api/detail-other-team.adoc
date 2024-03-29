@@ -1,0 +1,9 @@
+[[detail-other-team]]
+==== HTTP Request
+
+include::{snippets}/detail-other-team/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/detail-other-team/http-response.adoc[]
+include::{snippets}/detail-other-team/response-fields.adoc[]

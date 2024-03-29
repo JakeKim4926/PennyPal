@@ -40,7 +40,7 @@ public class Team extends BaseEntity {
 
     @OneToMany(
             mappedBy = "team",
-            cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REMOVE},
+            cascade = {CascadeType.PERSIST, CascadeType.DETACH},
             fetch = FetchType.LAZY
     )
     private List<Member> members = new ArrayList<>();                                   // 팀 구성원
@@ -51,10 +51,9 @@ public class Team extends BaseEntity {
     @OneToMany(
             fetch = FetchType.LAZY,
             mappedBy = "memberWaitingTeam",
-            cascade = CascadeType.ALL
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE}
     )
-    @Column(name = "team_waiting_list")
-    private List<Member> TeamWaitingList = new ArrayList<>();                           // 가입 승인 대기 리스트
+    private List<Member> teamWaitingList = new ArrayList<>();                           // 가입 승인 대기 리스트
 
     @OneToMany(
             fetch = FetchType.LAZY,
@@ -62,8 +61,11 @@ public class Team extends BaseEntity {
             cascade = CascadeType.ALL
     )
     @Setter
-    @Column(name = "team_rank_histories")
-    private List<TeamRankHistory> TeamRankHistories = new ArrayList<>();               // 랭킹 내역
+    private List<TeamRankHistory> teamRankHistories = new ArrayList<>();               // 랭킹 내역
+
+    @Setter
+    @Column(name = "team_rank_realtime")
+    private Integer teamRankRealtime;                                                  // 실시간 랭킹
 
     @Setter
     @OneToOne(cascade = CascadeType.ALL)
@@ -73,9 +75,8 @@ public class Team extends BaseEntity {
     @OneToMany(
             fetch = FetchType.LAZY,
             mappedBy = "memberBanishedTeam",
-            cascade = CascadeType.ALL
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE}
     )
-    @Column(name = "team_banished_list")
     private List<Member> teamBanishedList = new ArrayList<>();                         // 추방 당한 유저 리스트
 
 
@@ -87,6 +88,7 @@ public class Team extends BaseEntity {
         this.teamLeaderId = teamLeaderId;
         this.members.add(member);
         this.teamInfo = teamInfo;
+        this.teamRankRealtime = 0;
     }
 
     public static Team modifyTeam(Team team, TeamModifyRequest request){

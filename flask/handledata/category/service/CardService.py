@@ -10,7 +10,7 @@ class CardService:
     def initialize(self):
         self.similarity = Similarity()
 
-    def get_card_by_similarity(self):
-        return self.similarity.get_json()
+    def get_card_by_similarity(self, index):
+        return self.similarity.get_json(index)
 
 
