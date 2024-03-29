@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -67,8 +68,8 @@ public class TeamController {
     /**
      * note : 매주 월요일 오전 12시에 주간 랭킹 업데이트
      */
-//    @Scheduled(cron = "00 00 00 * * MON")
-    @PostMapping("/rank")
+    @Scheduled(cron = "00 00 00 * * MON")
+//    @PostMapping("/rank")
     public void autoRankWeekly() {
         teamService.calculateTeamScore();
         teamService.RankTeamScore();
@@ -92,8 +93,8 @@ public class TeamController {
     /**
      * note : 매 시 정각에 실시간 랭킹 업데이트
      */
-//    @Scheduled(cron = "0 0 * * * *")
-    @PostMapping("/rankRealtime")
+    @Scheduled(cron = "0 0 * * * *")
+//    @PostMapping("/rankRealtime")
     public void autoRankRealtime() {
 
         // 팀 점수 계산
