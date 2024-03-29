@@ -8,6 +8,7 @@ import com.ssafy.pennypal.domain.team.dto.request.TeamRequestDTO;
 import com.ssafy.pennypal.domain.team.dto.SimpleTeamDto;
 import com.ssafy.pennypal.domain.team.dto.request.TeamModifyRequest;
 import com.ssafy.pennypal.domain.team.dto.response.*;
+import com.ssafy.pennypal.domain.team.entity.Team;
 import com.ssafy.pennypal.domain.team.service.TeamService;
 import com.ssafy.pennypal.global.common.api.ApiResponse;
 import jakarta.validation.Valid;
@@ -35,15 +36,15 @@ public class TeamController {
      * note : 2.1 팀 생성 ( + 팀 채팅방 생성 )
      */
     @PostMapping("/create")
-    public ApiResponse<String> createTeam(@Valid @RequestBody TeamCreateRequest request) {
+    public ApiResponse<TeamDetailResponse> createTeam(@Valid @RequestBody TeamCreateRequest request) {
 
         // 팀 생성
-        teamService.createTeam(request.toServiceRequest());
+        TeamDetailResponse result = teamService.createTeam(request.toServiceRequest());
 
         // 팀 채팅방 생성
         chatService.createChatRoom(request.getTeamLeaderId());
 
-        return ApiResponse.ok("팀 생성 완료");
+        return ApiResponse.ok(result);
 
     }
 
