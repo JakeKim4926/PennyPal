@@ -21,7 +21,7 @@ export function TeamInfo() {
                     teamInfo={teamData.teamInfo}
                     teamRankRealtime={teamData.teamRankRealtime}
                 />
-                <TeamInfoMember />
+                <TeamInfoMember teamLeaderId={teamData.teamLeaderId} teamMembers={teamData.members} />
                 <TeamInfoTeamExpenditure />
                 <TeamInfoChatButton />
             </div>

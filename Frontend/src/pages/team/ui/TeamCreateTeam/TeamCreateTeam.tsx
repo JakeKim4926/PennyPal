@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { createGroup } from '../../api/createGroup';
 import { checkTeamName } from '../../model';
 import { setTeamInfo } from '@/pages/teamRouting/model/setTeamInfo';
+import { getTeamInfo } from '@/pages/teamRouting/api/getTeamInfo';
 
 export function TeamCreateTeam() {
     return (
@@ -32,7 +33,7 @@ function Content() {
     const teamDto = {
         teamName: '',
         teamIsAutoConfirm: false,
-        teamLeaderId: 3425, // 추후작업: 로그인된 유저 id를 기본값으로
+        teamLeaderId: 3429, // 추후작업: 로그인된 유저 id를 기본값으로
         teamInfo: '',
     };
 
@@ -297,12 +298,13 @@ function ConfirmArea({ registConfirm, moveNext, teamDto }: ConfirmArea) {
             moveNext();
 
             // handleRoute: 일정시간 후 팀 페이지 전환
-            handleRoute(res);
+            handleRoute();
         }
     }
 
     // handleRoute: 팀 가입 여부를 변경해 내 팀 상세 페이지로 라우트
-    function handleRoute(res: any) {
+    async function handleRoute() {
+        const res = await getTeamInfo('/team/3429');
         setTimeout(() => {
             dispatch(setTeamInfo(res.data.data));
         }, 3500);
