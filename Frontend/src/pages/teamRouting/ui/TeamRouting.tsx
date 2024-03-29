@@ -62,7 +62,15 @@ export function TeamRouting() {
 
     return (
         <div className="teamRouting">
-            {!teamInfo ? <div className="container">로딩중</div> : teamInfo.teamId ? <TeamInfo /> : <Team />}
+            {!teamInfo ? (
+                <div className="container" style={{ backgroundColor: 'rgb(64, 64, 64)' }}>
+                    로딩중
+                </div>
+            ) : teamInfo.teamId ? (
+                <TeamInfo />
+            ) : (
+                <Team />
+            )}
         </div>
     );
 }

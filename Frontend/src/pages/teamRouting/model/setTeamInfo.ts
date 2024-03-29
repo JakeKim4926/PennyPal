@@ -8,12 +8,12 @@ type setTeamInfoAction = ReturnType<typeof setTeamInfo>;
 
 // 관리 할 상태(data)의 타입 지정
 type TeamInfoState = {
-    data: object;
+    data: object | null;
 };
 
 // 초기 상태 지정
 const initialState: TeamInfoState = {
-    data: {},
+    data: null,
 };
 
 export function setTeamInfoReducer(state: TeamInfoState = initialState, action: setTeamInfoAction): TeamInfoState {
