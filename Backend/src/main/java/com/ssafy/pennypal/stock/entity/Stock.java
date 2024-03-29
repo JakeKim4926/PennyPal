@@ -32,7 +32,7 @@ public class Stock extends BaseEntity {
 
     @OneToMany(
             fetch = FetchType.LAZY,
-            mappedBy = "stckGenrDvdnAmt",
+            mappedBy = "stockTransactionId",
             cascade = CascadeType.ALL
     )
     private List<StockTransaction> stockTransactions = new ArrayList<>();

@@ -3,6 +3,8 @@ package com.ssafy.pennypal.stock.dto.response;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Getter
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -16,13 +18,14 @@ public class StockWithLatestTransactionDto {
 
     private String stckIssuCmpyNm;
 
-    private String basDt;
+    private LocalDate basDt;
 
-    private String stckGenrDvdnAmt;
+    private float stckGenrDvdnAmt;
 
     @Builder
     @QueryProjection
-    public StockWithLatestTransactionDto(Long stockId, String crno, String isinCd, String stckIssuCmpyNm, String basDt, String stckGenrDvdnAmt) {
+
+    public StockWithLatestTransactionDto(Long stockId, String crno, String isinCd, String stckIssuCmpyNm, LocalDate basDt, float stckGenrDvdnAmt) {
         this.stockId = stockId;
         this.crno = crno;
         this.isinCd = isinCd;

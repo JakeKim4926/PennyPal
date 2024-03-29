@@ -1,10 +1,10 @@
 package com.ssafy.pennypal.stock.service;
 
-import com.ssafy.pennypal.stock.entity.Stock;
-
-import java.util.List;
+import com.ssafy.pennypal.stock.dto.response.StockWithLatestTransactionDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface IStockService {
 
-    List<Stock> getStockList();
+    Page<StockWithLatestTransactionDto> getStockList(Pageable pageable);
 }

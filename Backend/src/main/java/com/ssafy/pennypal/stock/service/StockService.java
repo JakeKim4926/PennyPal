@@ -1,17 +1,24 @@
 package com.ssafy.pennypal.stock.service;
 
-import com.ssafy.pennypal.stock.entity.Stock;
+import com.ssafy.pennypal.stock.dto.response.StockWithLatestTransactionDto;
+import com.ssafy.pennypal.stock.repository.stock.IStockRepository;
+import com.ssafy.pennypal.stock.repository.stocktransaction.IStockTransactionRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class StockService implements IStockService {
 
+    private final IStockRepository stockRepository;
+    private final IStockTransactionRepository stockTransactionRepository;
+
     @Override
-    public List<Stock> getStockList() {
-        return null;
+    public Page<StockWithLatestTransactionDto> getStockList(Pageable pageable) {
+        return stockRepository.findStocksWithLatestTransaction(pageable);
     }
 }
