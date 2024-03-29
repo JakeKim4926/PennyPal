@@ -78,11 +78,14 @@ public class MemberService {
     }
 
     public ApiResponse<String> updateNickname(MemberUpdateNicknameRequest memberUpdateNicknameRequest) {
+        Member member = memberRepository.findByMemberId(memberUpdateNicknameRequest.getMemberId());
+        if(member == null)
+            return ApiResponse.of(HttpStatus.BAD_REQUEST, "존재하지 않는 계정 입니다.", memberUpdateNicknameRequest.getMemberNickname());
+        
         Member memberByNickname = memberRepository.findByMemberNickname(memberUpdateNicknameRequest.getMemberNickname());
         if(memberByNickname != null)
             return ApiResponse.of(HttpStatus.BAD_REQUEST, "이미 사용 중인 닉네임 입니다.", memberUpdateNicknameRequest.getMemberNickname());
 
-        Member member = memberRepository.findByMemberId(memberUpdateNicknameRequest.getMemberId());
         member.setMemberNickname(memberUpdateNicknameRequest.getMemberNickname());
 
         memberRepository.save(member);
