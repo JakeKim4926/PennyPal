@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { scrollTeamCreateArea } from '../../model/scrollTeamCreateArea';
 import { useDispatch } from 'react-redux';
 import { setHasTeamTrue } from '@/pages/teamRouting/model/setHasTeam';
-import { createGroup } from '../../model/api/createGroup';
+import { createGroup } from '../../api/createGroup';
 import { checkTeamName } from '../../model';
 
 export function TeamCreateTeam() {

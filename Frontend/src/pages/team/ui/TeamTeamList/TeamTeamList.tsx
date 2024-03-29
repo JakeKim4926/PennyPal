@@ -31,7 +31,7 @@ export const TeamTeamList = React.memo(({ searchedPage, keyword }: TeamTeamListP
         // REQUEST_URL: 요청 URL
         const REQUEST_URL = `/team?keyword=${keyword}&page=${curPage - 1}`;
 
-        // cacheData: 캐시된 데이터
+        // cacheData: 캐싱된 데이터
         const cacheData = API_CACHE_DATA.get(REQUEST_URL);
 
         // 1. 캐시 데이터가 없거나 만료된 데이터라면
