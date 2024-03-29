@@ -12,7 +12,16 @@ export function TeamTeamSearch() {
                 <div className="contentCard__title-text">TEAM SEARCH</div>
             </div>
             <div className="teamTeamSearch__searchBar">
-                <input className="teamTeamSearch__searchBar-input" type="text" ref={inputRef} />
+                <input
+                    className="teamTeamSearch__searchBar-input"
+                    type="text"
+                    ref={inputRef}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                            setKeyWord(inputRef.current!.value);
+                        }
+                    }}
+                />
                 <button
                     className="teamTeamSearch__searchBar-submit"
                     onClick={() => {
