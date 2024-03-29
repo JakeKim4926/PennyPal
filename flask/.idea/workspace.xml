@@ -239,13 +239,13 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="Flask server.flaskProject" />
+      <item itemvalue="Flask server.Flask (app.py)" />
+      <item itemvalue="Python.flaskProject" />
       <item itemvalue="Python.CardService" />
       <item itemvalue="Python.Repository (1)" />
       <item itemvalue="Python.Repository" />
       <item itemvalue="Python.Similarity" />
-      <item itemvalue="Python.flaskProject" />
-      <item itemvalue="Flask server.Flask (app.py)" />
-      <item itemvalue="Flask server.flaskProject" />
     </list>
     <recent_temporary>
       <list>
