@@ -4,25 +4,15 @@ import dotenv from 'dotenv';
 import mysql from 'mysql2/promise';
 
 // 매일 실행될 작업 스케줄링
-// schedule('59 23 * * *', async () => {
-//     dotenv.config();
-//     console.log(new Date() + " start");
-//     const date = await getDate();
-//     const totalCount = await initProcessData(date);
-//     await fetchAndProcessData(date, totalCount);
-//     console.log(new Date() + " end");
-// });
 
-async function test() {
+schedule('30 23 * * *', async () => {
     dotenv.config();
     console.log(new Date() + " start");
     const date = await getDate();
     const totalCount = await initProcessData(date);
     await fetchAndProcessData(date, totalCount);
     console.log(new Date() + " end");
-}
-
-test();
+});
 
 async function getDate() {
     const currentDate = new Date();
