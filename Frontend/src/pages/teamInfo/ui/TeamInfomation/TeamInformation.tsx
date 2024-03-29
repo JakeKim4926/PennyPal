@@ -22,6 +22,7 @@ export function TeamInformation({
             <div className="teamTeamInfo__title contentCard__title">
                 <div className="teamTeamInfo__title-text contentCard__title-text">
                     <div>TEAM INFO</div>
+                    {/* SETTING 버튼 -> 추후 팀장만 보이게끔 조건부 렌더링 */}
                     <button className="teamTeamInfo__title-text-button button">SETTING</button>
                 </div>
             </div>
@@ -34,8 +35,14 @@ export function TeamInformation({
                     </div>
                 </div>
                 <div className="teamTeamInfo__top-ranking">
-                    주간 랭킹 {teamRankRealtime}
-                    <span className="unit">위</span>
+                    {teamRankRealtime !== 0 ? (
+                        <>
+                            주간 랭킹 {teamRankRealtime}
+                            <span className="unit">위</span>
+                        </>
+                    ) : (
+                        <>순위 없음</>
+                    )}
                 </div>
             </div>
             <div className="teamTeamInfo__middle">
