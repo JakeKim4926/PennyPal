@@ -475,93 +475,112 @@ public class TeamService {
         return new PageImpl<>(Collections.singletonList(response), pageable, teamsPage.getTotalElements());
     }
 
-    public TeamDetailResponse detailTeamInfo(Long teamId) {
+    public TeamDetailResponse detailTeamInfo(Long memberId) {
 
-        Team team = getTeam(teamId);
+        Member member = getMember(memberId);
+        Team team = member.getTeam();
 
-        // 팀원별 지난주와 이번주 지출 총액 계산
-        List<TeamMemberExpenseResponse> members = team.getMembers().stream()
-                .filter(Objects::nonNull)
-                .map(m -> {
-                    // 각 멤버별로 지난주 및 이번주 지출 총액 계산
-                    int lastWeekTotalExpenses = m.getMemberExpensesOfLastWeek().stream()
-                            .mapToInt(Expense::getExpenseAmount).sum();
-                    int thisWeekTotalExpenses = m.getMemberExpensesOfThisWeek().stream()
-                            .mapToInt(Expense::getExpenseAmount).sum();
+        if(team!=null) {
 
-                    // 계산된 총액을 TeamMemberExpenseResponse 객체로 반환
-                    return TeamMemberExpenseResponse.builder()
-                            .memberId(m.getMemberId())
-                            .memberNickname(m.getMemberNickname())
-                            .memberLastTotalExpenses(lastWeekTotalExpenses)
-                            .memberThisTotalExpenses(thisWeekTotalExpenses)
-                            .build();
-                })
-                .collect(Collectors.toList());
+            // 팀원별 지난주와 이번주 지출 총액 계산
+            List<TeamMemberExpenseResponse> members = team.getMembers().stream()
+                    .filter(Objects::nonNull)
+                    .map(m -> {
+                        // 각 멤버별로 지난주 및 이번주 지출 총액 계산
+                        int lastWeekTotalExpenses = m.getMemberExpensesOfLastWeek().stream()
+                                .mapToInt(Expense::getExpenseAmount).sum();
+                        int thisWeekTotalExpenses = m.getMemberExpensesOfThisWeek().stream()
+                                .mapToInt(Expense::getExpenseAmount).sum();
 
-        // 팀 지난주, 이번주 지출 총액 계산
-        int teamLastTotalExpenses = 0;
-        int teamThisTotalExpenses = 0;
+                        // 계산된 총액을 TeamMemberExpenseResponse 객체로 반환
+                        return TeamMemberExpenseResponse.builder()
+                                .memberId(m.getMemberId())
+                                .memberNickname(m.getMemberNickname())
+                                .memberLastTotalExpenses(lastWeekTotalExpenses)
+                                .memberThisTotalExpenses(thisWeekTotalExpenses)
+                                .build();
+                    })
+                    .collect(Collectors.toList());
 
-        for (TeamMemberExpenseResponse member : members) {
-            teamLastTotalExpenses += member.getMemberLastTotalExpenses();
-            teamThisTotalExpenses += member.getMemberThisTotalExpenses();
-        }
+            // 팀 지난주, 이번주 지출 총액 계산
+            int teamLastTotalExpenses = 0;
+            int teamThisTotalExpenses = 0;
 
-        // 팀 지난주, 이번주 일자별 지출 총액 계산
-        Map<LocalDate, Integer> lastWeekExpensesMap = new HashMap<>();
-        Map<LocalDate, Integer> thisWeekExpensesMap = new HashMap<>();
+            for (TeamMemberExpenseResponse m : members) {
+                teamLastTotalExpenses += m.getMemberLastTotalExpenses();
+                teamThisTotalExpenses += m.getMemberThisTotalExpenses();
+            }
 
-        team.getMembers().forEach(member -> {
-            member.getMemberExpensesOfLastWeek().forEach(expense -> {
-                lastWeekExpensesMap.merge(expense.getExpenseDate(), expense.getExpenseAmount(), Integer::sum);
+            // 팀 지난주, 이번주 일자별 지출 총액 계산
+            Map<LocalDate, Integer> lastWeekExpensesMap = new HashMap<>();
+            Map<LocalDate, Integer> thisWeekExpensesMap = new HashMap<>();
+
+            team.getMembers().forEach(m -> {
+                member.getMemberExpensesOfLastWeek().forEach(expense -> {
+                    lastWeekExpensesMap.merge(expense.getExpenseDate(), expense.getExpenseAmount(), Integer::sum);
+                });
+                member.getMemberExpensesOfThisWeek().forEach(expense -> {
+                    thisWeekExpensesMap.merge(expense.getExpenseDate(), expense.getExpenseAmount(), Integer::sum);
+                });
             });
-            member.getMemberExpensesOfThisWeek().forEach(expense -> {
-                thisWeekExpensesMap.merge(expense.getExpenseDate(), expense.getExpenseAmount(), Integer::sum);
-            });
-        });
 
-        // 지난주 일자별 지출 총액 리스트 생성
-        List<TeamLastEachTotalResponse> teamLastEachTotalExpenses = lastWeekExpensesMap.entrySet().stream()
-                .map(entry -> new TeamLastEachTotalResponse(entry.getKey(), entry.getValue()))
-                .toList();
+            // 지난주 일자별 지출 총액 리스트 생성
+            List<TeamLastEachTotalResponse> teamLastEachTotalExpenses = lastWeekExpensesMap.entrySet().stream()
+                    .map(entry -> new TeamLastEachTotalResponse(entry.getKey(), entry.getValue()))
+                    .toList();
 
-        // 이번주 일자별 지출 총액 리스트 생성
-        List<TeamThisEachTotalResponse> teamThisEachTotalExpenses = thisWeekExpensesMap.entrySet().stream()
-                .map(entry -> new TeamThisEachTotalResponse(entry.getKey(), entry.getValue()))
-                .toList();
+            // 이번주 일자별 지출 총액 리스트 생성
+            List<TeamThisEachTotalResponse> teamThisEachTotalExpenses = thisWeekExpensesMap.entrySet().stream()
+                    .map(entry -> new TeamThisEachTotalResponse(entry.getKey(), entry.getValue()))
+                    .toList();
 
 
-        // 실시간 랭킹 순위 없을 때
-        if (team.getTeamRankRealtime() == null || team.getTeamRankRealtime().equals(0)) {
+            // 실시간 랭킹 순위 없을 때
+            if (team.getTeamRankRealtime() == null || team.getTeamRankRealtime().equals(0)) {
 
+                return TeamDetailResponse.builder()
+                        .teamId(team.getTeamId())
+                        .teamName(team.getTeamName())
+                        .teamLeaderId(team.getTeamLeaderId())
+                        .teamInfo(team.getTeamInfo())
+                        .teamScore(team.getTeamScore())
+                        .teamRankRealtime(0)
+                        .teamLastEachTotalExpenses(teamLastEachTotalExpenses)
+                        .teamThisEachTotalExpenses(teamThisEachTotalExpenses)
+                        .teamLastTotalExpenses(teamLastTotalExpenses)
+                        .teamThisTotalExpenses(teamThisTotalExpenses)
+                        .members(members)
+                        .build();
+            } else {
+                // 실시간 랭킹 순위 있을 때
+                return TeamDetailResponse.builder()
+                        .teamId(team.getTeamId())
+                        .teamName(team.getTeamName())
+                        .teamLeaderId(team.getTeamLeaderId())
+                        .teamInfo(team.getTeamInfo())
+                        .teamScore(team.getTeamScore())
+                        .teamRankRealtime(team.getTeamRankRealtime())
+                        .teamLastEachTotalExpenses(teamLastEachTotalExpenses)
+                        .teamThisEachTotalExpenses(teamThisEachTotalExpenses)
+                        .teamLastTotalExpenses(teamLastTotalExpenses)
+                        .teamThisTotalExpenses(teamThisTotalExpenses)
+                        .members(members)
+                        .build();
+            }
+        }else{
+            // 속한 팀이 아예 없다면
             return TeamDetailResponse.builder()
-                    .teamId(team.getTeamId())
-                    .teamName(team.getTeamName())
-                    .teamLeaderId(team.getTeamLeaderId())
-                    .teamInfo(team.getTeamInfo())
-                    .teamScore(team.getTeamScore())
-                    .teamRankRealtime(0)
-                    .teamLastEachTotalExpenses(teamLastEachTotalExpenses)
-                    .teamThisEachTotalExpenses(teamThisEachTotalExpenses)
-                    .teamLastTotalExpenses(teamLastTotalExpenses)
-                    .teamThisTotalExpenses(teamThisTotalExpenses)
-                    .members(members)
-                    .build();
-        } else {
-            // 실시간 랭킹 순위 있을 때
-            return TeamDetailResponse.builder()
-                    .teamId(team.getTeamId())
-                    .teamName(team.getTeamName())
-                    .teamLeaderId(team.getTeamLeaderId())
-                    .teamInfo(team.getTeamInfo())
-                    .teamScore(team.getTeamScore())
-                    .teamRankRealtime(team.getTeamRankRealtime())
-                    .teamLastEachTotalExpenses(teamLastEachTotalExpenses)
-                    .teamThisEachTotalExpenses(teamThisEachTotalExpenses)
-                    .teamLastTotalExpenses(teamLastTotalExpenses)
-                    .teamThisTotalExpenses(teamThisTotalExpenses)
-                    .members(members)
+                    .teamId(null)
+                    .teamName(null)
+                    .teamLeaderId(null)
+                    .teamInfo(null)
+                    .teamScore(null)
+                    .teamRankRealtime(null)
+                    .teamLastEachTotalExpenses(null)
+                    .teamThisEachTotalExpenses(null)
+                    .teamLastTotalExpenses(null)
+                    .teamThisTotalExpenses(null)
+                    .members(null)
                     .build();
         }
     }
@@ -771,7 +790,7 @@ public class TeamService {
         Team team = getTeam(request.getTeamId());
         Member leader = getMember(request.getMemberId());
 
-        if (leader.getMemberId() != team.getTeamLeaderId()) {
+        if (!Objects.equals(leader.getMemberId(), team.getTeamLeaderId())) {
             throw new IllegalArgumentException("가입 대기 리스트는 팀장만 조회 가능합니다.");
         } else {
 

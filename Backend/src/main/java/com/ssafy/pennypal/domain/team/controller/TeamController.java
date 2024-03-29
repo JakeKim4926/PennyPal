@@ -130,10 +130,10 @@ public class TeamController {
     /**
      * note : 2.4 팀 상세 조회 (내 팀)
      */
-    @GetMapping("/{teamId}")
-    public ApiResponse<TeamDetailResponse> detailTeamInfo(@PathVariable Long teamId){
+    @GetMapping("/{memberId}")
+    public ApiResponse<TeamDetailResponse> detailTeamInfo(@PathVariable Long memberId){
 
-        return ApiResponse.ok(teamService.detailTeamInfo(teamId));
+        return ApiResponse.ok(teamService.detailTeamInfo(memberId));
     }
 
     /**
