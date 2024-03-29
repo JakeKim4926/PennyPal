@@ -149,7 +149,7 @@ public class TeamController {
     /**
      * note : 가입 대기 유저 조회
      */
-    @GetMapping("/waitingList")
+    @PostMapping("/waitingList")
     public ApiResponse<List<TeamWaitingListResponse>> waitingList(@RequestBody TeamRequestDTO request){
 
         return ApiResponse.ok(teamService.waitingList(request));

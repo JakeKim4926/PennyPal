@@ -51,24 +51,40 @@ public class TeamControllerTest extends RestDocsSupport {
     @Test
     void createTeam() throws Exception {
 
-        Member mockMember = mock(Member.class);
-
-        // ID 1L의 Mock Member 생성
-        given(mockMember.getMemberId()).willReturn(1L);
+        TeamMemberExpenseResponse member = mock(TeamMemberExpenseResponse.class);
+        Team team = mock(Team.class);
+        TeamLastEachTotalResponse teamLastEachTotalResponse = mock(TeamLastEachTotalResponse.class);
+        TeamThisEachTotalResponse teamThisEachTotalResponse = mock(TeamThisEachTotalResponse.class);
 
         TeamCreateRequest request = TeamCreateRequest.builder()
                 .teamName("팀이름")
                 .teamIsAutoConfirm(false)
-                .teamLeaderId(mockMember.getMemberId())
+                .teamLeaderId(1L)
                 .teamInfo("팀소개")
                 .build();
 
-        // Mock MemberDetailResponse 생성
-        TeamMemberExpenseResponse mockMemberDetail = TeamMemberExpenseResponse.builder()
-                .memberNickname("팀원닉네임")
-                .build();
+        given(team.getTeamId()).willReturn(1L);
+        given(member.getMemberNickname()).willReturn("멤버 닉네임");
+        given(teamLastEachTotalResponse.getDate()).willReturn(LocalDate.of(2024, 3, 28));
+        given(teamLastEachTotalResponse.getTotalAmount()).willReturn(300000);
+        given(teamThisEachTotalResponse.getDate()).willReturn(LocalDate.of(2024, 3, 28));
+        given(teamThisEachTotalResponse.getTotalAmount()).willReturn(300000);
 
         // stubbing
+        given(teamService.createTeam(any(TeamCreateServiceRequest.class)))
+                .willReturn(TeamDetailResponse.builder()
+                        .teamId(1L)
+                        .teamName("팀이름")
+                        .teamLeaderId(1L)
+                        .teamInfo("팀 한줄소개")
+                        .teamScore(0)
+                        .teamRankRealtime(1)
+                        .teamLastTotalExpenses(30000)
+                        .teamThisTotalExpenses(200000)
+                        .teamLastEachTotalExpenses(List.of(teamLastEachTotalResponse))
+                        .teamThisEachTotalExpenses(List.of(teamThisEachTotalResponse))
+                        .members(Arrays.asList(member))
+                        .build());
 
 
         mockMvc.perform(
@@ -79,29 +95,61 @@ public class TeamControllerTest extends RestDocsSupport {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andDo(document("create-team",
-                                preprocessRequest(prettyPrint()),
-                                preprocessResponse(prettyPrint()),
-                                requestFields(
-                                        fieldWithPath("teamName").type(JsonFieldType.STRING)
-                                                .description("팀 이름"),
-                                        fieldWithPath("teamIsAutoConfirm").type(JsonFieldType.BOOLEAN)
-                                                .description("자동가입 승인 여부"),
-                                        fieldWithPath("teamLeaderId").type(JsonFieldType.NUMBER)
-                                                .description("팀장 ID"),
-                                        fieldWithPath("teamInfo").type(JsonFieldType.STRING)
-                                                .description("팀 한줄소개")
-                                ),
-                                responseFields(
-                                        fieldWithPath("code").type(JsonFieldType.NUMBER)
-                                                .description("코드"),
-                                        fieldWithPath("status").type(JsonFieldType.STRING)
-                                                .description("상태"),
-                                        fieldWithPath("message").type(JsonFieldType.STRING)
-                                                .description("메시지"),
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
 
-                                        fieldWithPath("data").type(JsonFieldType.STRING)
-                                                .description("응답 데이터")
-                                )
+                                fieldWithPath("data").type(JsonFieldType.OBJECT)
+                                        .description("응답 데이터"),
+                                fieldWithPath("data.teamId").type(JsonFieldType.NUMBER)
+                                        .description("팀 ID"),
+                                fieldWithPath("data.teamName").type(JsonFieldType.STRING)
+                                        .description("팀 명"),
+                                fieldWithPath("data.teamLeaderId").type(JsonFieldType.NUMBER)
+                                        .description("팀장 ID"),
+                                fieldWithPath("data.teamInfo").type(JsonFieldType.STRING)
+                                        .description("팀 한줄 소개"),
+                                fieldWithPath("data.teamScore").type(JsonFieldType.NUMBER)
+                                        .description("팀 포인트"),
+
+                                fieldWithPath("data.teamRankRealtime").type(JsonFieldType.NUMBER)
+                                        .description("팀 실시간 랭킹"),
+                                fieldWithPath("data.teamLastTotalExpenses").type(JsonFieldType.NUMBER)
+                                        .description("지난주 총 지출액"),
+                                fieldWithPath("data.teamThisTotalExpenses").type(JsonFieldType.NUMBER)
+                                        .description("이번주 총 지출액"),
+
+                                fieldWithPath("data.teamLastEachTotalExpenses").type(JsonFieldType.ARRAY)
+                                        .description("지난주 일자 별 총 지출액"),
+                                fieldWithPath("data.teamLastEachTotalExpenses[].date").type(JsonFieldType.ARRAY)
+                                        .description("일자"),
+                                fieldWithPath("data.teamLastEachTotalExpenses[].totalAmount").type(JsonFieldType.NUMBER)
+                                        .description("지출액"),
+
+                                fieldWithPath("data.teamThisEachTotalExpenses").type(JsonFieldType.ARRAY)
+                                        .description("이번주 일자 별 총 지출액"),
+                                fieldWithPath("data.teamThisEachTotalExpenses[].date").type(JsonFieldType.ARRAY)
+                                        .description("일자"),
+                                fieldWithPath("data.teamThisEachTotalExpenses[].totalAmount").type(JsonFieldType.NUMBER)
+                                        .description("지출액"),
+
+                                fieldWithPath("data.members").type(JsonFieldType.ARRAY)
+                                        .description("팀 멤버"),
+                                fieldWithPath("data.members[].memberId").type(JsonFieldType.NUMBER)
+                                        .description("멤버 ID"),
+                                fieldWithPath("data.members[].memberNickname").type(JsonFieldType.STRING)
+                                        .description("멤버 닉네임"),
+                                fieldWithPath("data.members[].memberLastTotalExpenses").type(JsonFieldType.NUMBER)
+                                        .description("멤버 지난주 지출 총액"),
+                                fieldWithPath("data.members[].memberThisTotalExpenses").type(JsonFieldType.NUMBER)
+                                        .description("멤버 이번주 지출 총액")
+                        )
                         )
                 );
         verify(teamService).createTeam(any(TeamCreateServiceRequest.class));
@@ -545,7 +593,7 @@ public class TeamControllerTest extends RestDocsSupport {
                 .thenReturn(responseList);
 
         mockMvc.perform(
-                        get("/api/team/waitingList")
+                        post("/api/team/waitingList")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(new ObjectMapper().writeValueAsString(request))
                 )
