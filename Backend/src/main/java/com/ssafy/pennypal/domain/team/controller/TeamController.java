@@ -196,9 +196,24 @@ public class TeamController {
     }
 
     /**
+     * note : 가입 승인
+     */
+    @PostMapping("/approve")
+    public ApiResponse<String> approveMember(@RequestBody TeamRequestDTO request){
+
+        teamService.approveMember(request);
+
+        return ApiResponse.ok("가입 승인 완료");
+    }
+
+    /**
+     * note : 가입 거절
+     */
+
+    /**
      * note : 2.5.3 팀 탈퇴
      */
-    @PostMapping("leave")
+    @PostMapping("/leave")
     public ApiResponse<String> leaveTeam(@RequestBody SimpleTeamDto request){
 
         teamService.leaveTeam(request);

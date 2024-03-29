@@ -168,6 +168,31 @@ public class TeamService {
     }
 
     @Transactional
+    public void approveMember(TeamRequestDTO request) {
+
+        Team team = getTeam(request.getTeamId());
+        Member member = getMember(request.getMemberId());
+        ChatRoom chatRoom = team.getChatRoom();
+
+        if (!team.getTeamWaitingList().contains(member)) {
+            throw new IllegalArgumentException("대기 리스트에서 해당 유저를 찾을 수 없습니다.");
+        } else {
+
+            team.getMembers().add(member);
+            team.getTeamWaitingList().remove(member);
+            teamRepository.save(team);
+
+            chatRoom.getMembers().add(member);
+            chatRoomRepository.save(chatRoom);
+
+            member.setMemberWaitingTeam(null);
+            member.setTeam(team);
+            member.setMemberChatRoom(chatRoom);
+            memberRepository.save(member);
+        }
+    }
+
+    @Transactional
     public Boolean validTeamName(String keyword) {
 
         Team team = teamRepository.findByTeamName(keyword);
@@ -480,7 +505,7 @@ public class TeamService {
         Member member = getMember(memberId);
         Team team = member.getTeam();
 
-        if(team!=null) {
+        if (team != null) {
 
             // 팀원별 지난주와 이번주 지출 총액 계산
             List<TeamMemberExpenseResponse> members = team.getMembers().stream()
@@ -567,7 +592,7 @@ public class TeamService {
                         .members(members)
                         .build();
             }
-        }else{
+        } else {
             // 속한 팀이 아예 없다면
             return TeamDetailResponse.builder()
                     .teamId(null)
@@ -591,7 +616,6 @@ public class TeamService {
         Long leaderId = team.getTeamLeaderId();
         Member leader = getMember(leaderId);
 
-        Integer lastRank = 0;
         Integer lastIndex = 0;
 
         if (!team.getTeamRankHistories().isEmpty()) {
@@ -604,7 +628,7 @@ public class TeamService {
                     .teamLeaderNickname(leader.getMemberNickname())
                     .lastRank(team.getTeamRankHistories().get(lastIndex).getRankNum())
                     .build();
-        }else{
+        } else {
             return TeamOtherDetailResponse.builder()
                     .teamName(team.getTeamName())
                     .teamInfo(team.getTeamInfo())
