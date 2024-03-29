@@ -2,9 +2,9 @@ import React from 'react';
 import { useState, useEffect, useRef } from 'react';
 import { scrollTeamCreateArea } from '../../model/scrollTeamCreateArea';
 import { useDispatch } from 'react-redux';
-import { setHasTeamTrue } from '@/pages/teamRouting/model/setHasTeam';
 import { createGroup } from '../../api/createGroup';
 import { checkTeamName } from '../../model';
+import { setTeamInfo } from '@/pages/teamRouting/model/setTeamInfo';
 
 export function TeamCreateTeam() {
     return (
@@ -32,7 +32,7 @@ function Content() {
     const teamDto = {
         teamName: '',
         teamIsAutoConfirm: false,
-        teamLeaderId: 1, // 추후작업: 로그인된 유저 id를 기본값으로
+        teamLeaderId: 3425, // 추후작업: 로그인된 유저 id를 기본값으로
         teamInfo: '',
     };
 
@@ -114,6 +114,19 @@ function NameArea({ moveNext, registName }: NameAreaProps) {
         }, 300);
     }
 
+    async function handleCheck() {
+        // res: 팀명 중복 체크 결과
+        const res = await checkTeamName(nameRef.current!.value);
+
+        if (!res.data.data) {
+            // 1. 중복이 아니라면
+            setCheck(VALIDATION_CHECK.PASS);
+        } else if (res.data.data) {
+            // 2. 중복이라면
+            setCheck(VALIDATION_CHECK.DUP);
+        }
+    }
+
     return (
         <div className="teamCreateTeam__content-inner">
             <div className="teamCreateTeam__content-inner-second">
@@ -126,23 +139,20 @@ function NameArea({ moveNext, registName }: NameAreaProps) {
                             onChange={handleChange}
                             ref={nameRef}
                             maxLength={20}
+                            onKeyDown={(e) => {
+                                // if (e.key === 'Enter') {
+                                //     console.log(e.key);
+                                //     handleCheck();
+                                // }
+                            }}
                         ></input>
                         <button
                             className={`teamCreateTeam__content-inner-second-name-input-button ${
                                 check !== 'VALID' ? 'button-disabled' : 'button'
                             }`}
                             disabled={check !== 'VALID'}
-                            onClick={async () => {
-                                // res: 팀명 중복 체크 결과
-                                const res = await checkTeamName(nameRef.current!.value);
-
-                                if (!res.data.data) {
-                                    // 1. 중복이 아니라면
-                                    setCheck(VALIDATION_CHECK.PASS);
-                                } else if (res.data.data) {
-                                    // 2. 중복이라면
-                                    setCheck(VALIDATION_CHECK.DUP);
-                                }
+                            onClick={() => {
+                                handleCheck();
                             }}
                         >
                             중복 확인
@@ -287,14 +297,14 @@ function ConfirmArea({ registConfirm, moveNext, teamDto }: ConfirmArea) {
             moveNext();
 
             // handleRoute: 일정시간 후 팀 페이지 전환
-            handleRoute();
+            handleRoute(res);
         }
     }
 
     // handleRoute: 팀 가입 여부를 변경해 내 팀 상세 페이지로 라우트
-    function handleRoute() {
+    function handleRoute(res: any) {
         setTimeout(() => {
-            dispatch(setHasTeamTrue());
+            dispatch(setTeamInfo(res.data.data));
         }, 3500);
     }
 
