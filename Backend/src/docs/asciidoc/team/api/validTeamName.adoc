@@ -1,0 +1,9 @@
+[[valid-team-name]]
+==== HTTP Request
+
+include::{snippets}/valid-team-name/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/valid-team-name/http-response.adoc[]
+include::{snippets}/valid-team-name/response-fields.adoc[]

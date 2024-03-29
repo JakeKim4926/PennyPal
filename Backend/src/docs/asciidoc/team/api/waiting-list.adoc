@@ -1,0 +1,10 @@
+[[waiting-list]]
+==== HTTP Request
+
+include::{snippets}/waiting-list/http-request.adoc[]
+include::{snippets}/waiting-list/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/waiting-list/response-body.adoc[]
+include::{snippets}/waiting-list/response-fields.adoc[]

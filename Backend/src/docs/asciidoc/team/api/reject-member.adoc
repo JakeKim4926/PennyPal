@@ -1,0 +1,10 @@
+[[reject-member]]
+==== HTTP Request
+
+include::{snippets}/reject-member/http-request.adoc[]
+include::{snippets}/reject-member/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/reject-member/http-response.adoc[]
+include::{snippets}/reject-member/response-fields.adoc[]

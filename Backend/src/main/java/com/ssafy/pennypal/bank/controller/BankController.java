@@ -68,6 +68,7 @@ public class BankController {
                 .userKey(userAccountResponseControllerDTO.getUserKey())
                 .build();
 
+        log.info("여기까지 됬어요");
         bankServiceDB.InsertUserKey(userApiKeyRequestDTO);
 
         CommonHeaderRequestDTO commonHeaderRequestDTO = CommonHeaderRequestDTO.builder()

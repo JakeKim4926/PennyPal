@@ -1,11 +1,10 @@
 package com.ssafy.pennypal.domain.team.dto.response;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
-public class TeamRankResponse {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class TeamRankCalculateResponse {
 
     private Long teamId;
     private String teamName;
@@ -15,7 +14,7 @@ public class TeamRankResponse {
     private Integer teamRankNum;
 
     @Builder
-    public TeamRankResponse(Long teamId, String teamName, Integer teamScore, Integer teamRankNum) {
+    public TeamRankCalculateResponse(Long teamId, String teamName, Integer teamScore, Integer teamRankNum) {
         this.teamId = teamId;
         this.teamName = teamName;
         this.teamScore = teamScore;
