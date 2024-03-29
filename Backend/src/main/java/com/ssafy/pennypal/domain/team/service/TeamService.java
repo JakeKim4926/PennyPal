@@ -193,6 +193,18 @@ public class TeamService {
     }
 
     @Transactional
+    public void rejectMember(TeamRequestDTO request){
+        Team team = getTeam(request.getTeamId());
+        Member member = getMember(request.getMemberId());
+
+        team.getTeamWaitingList().remove(member);
+        teamRepository.save(team);
+
+        member.setMemberWaitingTeam(null);
+        memberRepository.save(member);
+    }
+
+    @Transactional
     public Boolean validTeamName(String keyword) {
 
         Team team = teamRepository.findByTeamName(keyword);

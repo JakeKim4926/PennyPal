@@ -209,6 +209,11 @@ public class TeamController {
     /**
      * note : 가입 거절
      */
+    @PostMapping("/reject")
+    public ApiResponse<String> rejectMember(@RequestBody TeamRequestDTO request){
+        teamService.rejectMember(request);
+        return ApiResponse.ok("승인 거절 완료");
+    }
 
     /**
      * note : 2.5.3 팀 탈퇴
