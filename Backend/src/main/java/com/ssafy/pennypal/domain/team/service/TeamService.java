@@ -644,6 +644,7 @@ public TeamDetailResponse detailTeamInfo(Long memberId) {
 
             return TeamDetailResponse.builder()
                     .teamId(team.getTeamId())
+                    .chatRoomId(team.getChatRoom().getChatRoomId())
                     .teamName(team.getTeamName())
                     .teamLeaderId(team.getTeamLeaderId())
                     .teamInfo(team.getTeamInfo())
@@ -659,6 +660,7 @@ public TeamDetailResponse detailTeamInfo(Long memberId) {
             // 실시간 랭킹 순위 있을 때
             return TeamDetailResponse.builder()
                     .teamId(team.getTeamId())
+                    .chatRoomId(team.getChatRoom().getChatRoomId())
                     .teamName(team.getTeamName())
                     .teamLeaderId(team.getTeamLeaderId())
                     .teamInfo(team.getTeamInfo())
@@ -675,6 +677,7 @@ public TeamDetailResponse detailTeamInfo(Long memberId) {
         // 속한 팀이 아예 없다면
         return TeamDetailResponse.builder()
                 .teamId(null)
+                .chatRoomId(null)
                 .teamName(null)
                 .teamLeaderId(null)
                 .teamInfo(null)

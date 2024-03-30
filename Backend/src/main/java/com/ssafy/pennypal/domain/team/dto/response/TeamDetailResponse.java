@@ -14,6 +14,7 @@ import java.util.List;
 public class TeamDetailResponse {
 
     private Long teamId;
+    private Long chatRoomId;
     private String teamName;
     private Long teamLeaderId;
     private String teamInfo;
@@ -27,12 +28,13 @@ public class TeamDetailResponse {
     private List<TeamMemberExpenseResponse> members = new ArrayList<>(); // 팀원
 
     @Builder
-    public TeamDetailResponse(Long teamId, String teamName, Long teamLeaderId, String teamInfo, Integer teamScore,
+    public TeamDetailResponse(Long teamId,Long chatRoomId, String teamName, Long teamLeaderId, String teamInfo, Integer teamScore,
                               Integer teamRankRealtime, Integer teamLastTotalExpenses, Integer teamThisTotalExpenses,
                               List<TeamLastEachTotalResponse> teamLastEachTotalExpenses,
                               List<TeamThisEachTotalResponse> teamThisEachTotalExpenses,
                               List<TeamMemberExpenseResponse> members) {
         this.teamId = teamId;
+        this.chatRoomId = chatRoomId;
         this.teamName = teamName;
         this.teamLeaderId = teamLeaderId;
         this.teamInfo = teamInfo;
