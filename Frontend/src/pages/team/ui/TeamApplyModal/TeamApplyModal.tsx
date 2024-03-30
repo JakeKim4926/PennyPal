@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { closeTeamDetailModal, registGroup } from '../../model';
 import { getTeamDetail } from '../../api/getTeamDetail';
+import { USER_ID } from '@/shared';
 
 type TeamDetailModalProps = {
     team: any;
@@ -83,7 +84,7 @@ export function TeamApplyModal({ team }: TeamDetailModalProps) {
                         <button
                             className="button"
                             onClick={async () => {
-                                const res = await registGroup({ teamId: team.teamId, memberId: 3859 });
+                                const res = await registGroup({ teamId: team.teamId, memberId: USER_ID });
                                 console.log(res);
                             }}
                         >

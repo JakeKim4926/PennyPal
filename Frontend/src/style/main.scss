@@ -1,6 +1,7 @@
 @import '@/style/abstract/variables';
 @import '@/style/abstract/fonts';
 @import '@/style/abstract/global';
+@import '@/style/abstract/animation';
 
 @import '@/style/components/Button';
 @import '@/style/components/ChartArea';
@@ -14,6 +15,7 @@
 @import '@/style/components/TeamTeamListPagenation';
 @import '@/style/components/TeamInfoMemberItem';
 @import '@/style/components/TeamInfoMember';
+@import '@/style/components/TeamDetailModal';
 @import '@/style/components/TeamCreateTeam';
 @import '@/style/components/ContentCard.scss';
 @import '@/style/components/TeamInfoChatButton.scss';
