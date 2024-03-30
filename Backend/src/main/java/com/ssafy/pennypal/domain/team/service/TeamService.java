@@ -70,6 +70,10 @@ public class TeamService {
             throw new IllegalArgumentException("유저를 찾을 수 없습니다.");
         }
 
+        if(member.getMemberWaitingTeam() != null){
+            throw new AlreadyAppliedJoinException("가입 신청한 팀이 있어 팀 생성이 불가능합니다.");
+        }
+
         // 이미 존재하는 팀명이라면 예외 발생
         if (teamRepository.findByTeamName(request.getTeamName()) != null) {
             throw new IllegalArgumentException("이미 사용 중인 팀명입니다.");
