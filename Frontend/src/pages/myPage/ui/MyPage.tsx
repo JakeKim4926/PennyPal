@@ -1,17 +1,33 @@
-import { Button } from '@/shared';
+import { Button, getCookie } from '@/shared';
 import { useSignUpFormModel } from '@/pages/signup/model/signUpFormModel';
 import { ChangeEvent, useState } from 'react';
+import { doSubmit } from '../model/doSubmit';
 
 export function MyPage() {
     const { userData, passwordValid, confirmPasswordValid, nickNameValid, handleChange } = useSignUpFormModel();
     const [nowpassword, setNowPassword] = useState<string>('');
-    const handleSubmit = (s: 'nickName' | 'password') => {
-        if (s === 'nickName') {
-            //nickname 수정 api
+    const nowNick = getCookie('memberNickname') ? getCookie('memberNickname') : undefined;
+    async function handleSubmit(type: 'nickname' | 'password') {
+        let data = {};
+        if (type === 'nickname') {
+            //nickName 수정 api
+            data = {
+                memberId: getCookie('memberId'),
+                memberNickname: userData.nickName,
+            };
+            console.log(data);
         } else {
             //password 수정 api
+            data = {
+                memberId: getCookie('memberId'),
+                memberOriginPassword: nowpassword,
+                memberChangePassword: userData.password,
+            };
+            console.log(data);
         }
-    };
+        const res = await doSubmit(type, data);
+        console.log(res);
+    }
 
     return (
         <div className="container contentCard">
@@ -26,7 +42,7 @@ export function MyPage() {
                     <p>Nickname</p>
                     <div className="input-container">
                         <img src="assets/image/icons_mini/Name.svg" />
-                        <input type="text" placeholder={'기존닉네임'} onChange={(e) => handleChange(e, 'nickName')} />
+                        <input type="text" placeholder={'새 닉네임'} onChange={(e) => handleChange(e, 'nickName')} />
                         <div className="message-container">
                             {nickNameValid === true ? (
                                 <p className="message-container--valid">유효한 닉네임입니다.</p>
@@ -41,7 +57,7 @@ export function MyPage() {
                             color={'color-main'}
                             disabled={!nickNameValid}
                             onClick={() => {
-                                handleSubmit('nickName');
+                                handleSubmit('nickname');
                             }}
                         />
                     </div>
