@@ -1,19 +1,21 @@
 import React from 'react';
 import { TeamInfoMemberItem } from '../TeamInfoMemberItem/TeamInfoMemberItem';
 
-export function TeamInfoMember() {
-    let member = Array(6).fill({ isEmpty: true });
+type TeamInfoMember = {
+    teamLeaderId: number;
+    teamMembers: [];
+};
 
-    const response = [
-        { id: 1, nickname: '팀원1', isLeader: true, spend: 29300, isEmpty: false },
-        { id: 2, nickname: '팀원2', isLeader: false, spend: 293840, isEmpty: false },
-        { id: 3, nickname: '팀원3', isLeader: false, spend: 1000290, isEmpty: false },
-        { id: 4, nickname: '팀원4', isLeader: false, spend: 1000290, isEmpty: false },
-        // { id: 5, nickname: '팀원5', isLeader: false, spend: 1000290, isEmpty: false },
-    ];
+export function TeamInfoMember({ teamLeaderId, teamMembers }: TeamInfoMember) {
+    let members = Array(6).fill({
+        memberId: -1,
+        memberNickname: '',
+        memberLastTotalExpenses: -1,
+        memberThisTotalExpenses: -1,
+    });
 
-    for (let i = 0; i < response.length; i++) {
-        member[i] = response[i];
+    for (let i = 0; i < teamMembers.length; i++) {
+        members[i] = teamMembers[i];
     }
 
     return (
@@ -22,13 +24,13 @@ export function TeamInfoMember() {
                 <div className="contentCard__title-text teamInfoMember__title_text">MEMBERS</div>
             </div>
             <div className="teamInfoMember__itemList">
-                {member.map((it) => (
+                {members.map((it) => (
                     <TeamInfoMemberItem
-                        nickname={it.nickname}
-                        isLeader={it.isLeader}
-                        spend={it.spend}
-                        isEmpty={it.isEmpty}
-                        key={it.id}
+                        nickname={it.memberNickname}
+                        isLeader={it.id === teamLeaderId}
+                        spend={it.memberThisTotalExpenses}
+                        isEmpty={it.memberId === -1}
+                        key={it.memberId}
                     />
                 ))}
             </div>

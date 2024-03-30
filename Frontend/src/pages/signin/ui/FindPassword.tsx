@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { Button } from '../../../shared';
+import { Button } from '@/shared';
 import { useNavigate } from 'react-router-dom';
 
 export function FindPassword() {

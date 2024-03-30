@@ -9,6 +9,17 @@ export function usePenny() {
             tmpNumber += localString.substring(i * 3, i * 3 + 3);
         }
 
+        // if: 매개변수가 0일 경우 예외처리
+        if (param === 0) {
+            return (
+                <>
+                    <span className="spend spend-prev">000,000,00</span>
+                    <span className="spend spend-post">0</span>
+                    <span className="unit">원</span>
+                </>
+            );
+        }
+
         const tmpArr = [];
 
         let prev = '';

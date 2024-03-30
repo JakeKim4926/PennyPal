@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Button } from '../../../shared';
-import React from 'react';
+import { Button } from '@/shared';
 import { useNavigate } from 'react-router-dom';
+
 export function SignUpDone() {
     const navigate = useNavigate();
     const [countdown, setCountdown] = useState(5);

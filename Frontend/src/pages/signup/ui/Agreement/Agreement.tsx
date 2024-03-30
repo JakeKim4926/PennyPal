@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { Button } from '../../../shared';
+import { Button } from '@/shared';
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { setSignUpStep } from '../model/signUpStepReducer';
+import { setSignUpStep } from '@/pages/signup/model/signUpStepReducer';
 
 export function Agreement() {
     const [isChecked, setIsChecked] = useState(false);
