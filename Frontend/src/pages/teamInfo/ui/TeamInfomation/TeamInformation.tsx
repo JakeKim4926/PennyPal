@@ -1,5 +1,7 @@
 import { USER_ID } from '@/shared';
 import React, { useTransition } from 'react';
+import { useDispatch } from 'react-redux';
+import { openTeamLeaveModal } from '../../model/openTeamLeaveModal';
 
 type TeamInformationProps = {
     teamName: string;
@@ -9,6 +11,7 @@ type TeamInformationProps = {
     teamInfo?: 'string';
     teamRankRealtime: number;
     teamLeaderId: number;
+    teamId: number;
 };
 
 export function TeamInformation({
@@ -19,7 +22,10 @@ export function TeamInformation({
     teamInfo,
     teamRankRealtime,
     teamLeaderId,
+    teamId,
 }: TeamInformationProps) {
+    const dispatch = useDispatch();
+
     return (
         <div className="teamTeamInfo contentCard">
             <div className="teamTeamInfo__title contentCard__title">
@@ -29,7 +35,19 @@ export function TeamInformation({
                     {USER_ID === teamLeaderId ? (
                         <button className="teamTeamInfo__title-text-button button">SETTING</button>
                     ) : (
-                        <button className="teamTeamInfo__title-text-button button">탈퇴</button>
+                        <button
+                            className="teamTeamInfo__title-text-button button"
+                            onClick={() => {
+                                dispatch(
+                                    openTeamLeaveModal({
+                                        teamId: teamId,
+                                        memberId: USER_ID,
+                                    }),
+                                );
+                            }}
+                        >
+                            탈퇴
+                        </button>
                     )}
                 </div>
             </div>

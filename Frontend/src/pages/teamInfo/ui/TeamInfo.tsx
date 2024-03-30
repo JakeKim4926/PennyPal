@@ -21,6 +21,7 @@ export function TeamInfo() {
                     teamInfo={teamData.teamInfo}
                     teamRankRealtime={teamData.teamRankRealtime}
                     teamLeaderId={teamData.teamLeaderId}
+                    teamId={teamData.teamId}
                 />
                 <TeamInfoMember teamLeaderId={teamData.teamLeaderId} teamMembers={teamData.members} />
                 <TeamInfoTeamExpenditure />
