@@ -25,7 +25,7 @@ export function TeamInfoMemberItem({ isEmpty, nickname, isLeader, spend }: TeamI
                 </>
             ) : (
                 <div className="teamInfoMemberItem__middle">
-                    <button className="teamInfoMemberItem__middle-button">팀원 초대하기</button>
+                    <button className="teamInfoMemberItem__middle-button">???</button>
                 </div>
             )}
         </div>
