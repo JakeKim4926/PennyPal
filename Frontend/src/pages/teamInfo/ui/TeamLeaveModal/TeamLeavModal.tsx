@@ -12,7 +12,6 @@ export function TeamLeaveModal({ teamId, memberId }: TeamLeaveModal) {
                 onClick={async () => {
                     const postDto = { teamId, memberId };
                     const res = await customAxios.post('/team/leave', postDto);
-                    console.log(res);
                 }}
             >
                 네

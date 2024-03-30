@@ -4,6 +4,7 @@ import { signUpStepReducer } from '@/pages/signup/index';
 import { openMarketItem } from '@/pages/market/index';
 import { setTeamInfoReducer } from '@/pages/teamRouting/model/setTeamInfo';
 import { openTeamLeaveModalReducer } from '@/pages/teamInfo/index';
+import { openTeamSettingModalReducer } from '@/pages/teamInfo/index';
 
 // 루트 리듀서를 내보내주세요.
 export const rootReducer = combineReducers({
@@ -12,6 +13,7 @@ export const rootReducer = combineReducers({
     signUpStep: signUpStepReducer,
     setTeamInfoReducer,
     openTeamLeaveModalReducer,
+    openTeamSettingModalReducer,
 });
 
 // 루트 리듀서의 반환값를 유추해줍니다

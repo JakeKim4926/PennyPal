@@ -2,6 +2,7 @@ import { USER_ID } from '@/shared';
 import React, { useTransition } from 'react';
 import { useDispatch } from 'react-redux';
 import { openTeamLeaveModal } from '../../model/openTeamLeaveModal';
+import { openTeamSettingModal } from '../../model/openTeamSettingModal';
 
 type TeamInformationProps = {
     teamName: string;
@@ -33,7 +34,14 @@ export function TeamInformation({
                     <div>TEAM INFO</div>
                     {/* SETTING 버튼 -> 추후 팀장만 보이게끔 조건부 렌더링 */}
                     {USER_ID === teamLeaderId ? (
-                        <button className="teamTeamInfo__title-text-button button">SETTING</button>
+                        <button
+                            className="teamTeamInfo__title-text-button button"
+                            onClick={() => {
+                                dispatch(openTeamSettingModal({ teamId: teamId, memberId: USER_ID }));
+                            }}
+                        >
+                            SETTING
+                        </button>
                     ) : (
                         <button
                             className="teamTeamInfo__title-text-button button"
