@@ -1,0 +1,55 @@
+@import '@/style/abstract/variables';
+@import '@/style/abstract/fonts';
+
+.carousel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.carousel-item {
+    border: 1px solid #ccc;
+    padding: 20px;
+    position: relative;
+}
+
+.play-button-icon {
+    background-color: red;
+    height: 50px; /* Adjust as necessary */
+    width: 50px; /* Adjust as necessary */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.stats {
+    display: flex;
+    justify-content: space-around;
+}
+
+.stat img {
+    margin-right: 5px;
+}
+
+.carousel-indicator {
+    text-align: center;
+}
+
+.dot {
+    height: 10px;
+    width: 10px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+    margin: 0 5px;
+}
+
+.dot.active {
+    background-color: #717171;
+}
+
+.caption {
+    text-align: center;
+    margin-top: 10px;
+}
