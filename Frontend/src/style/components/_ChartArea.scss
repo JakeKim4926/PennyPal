@@ -1,33 +1,44 @@
-.chartArea {
+@import '@/style/abstract/variables';
+@import '@/style/abstract/fonts';
 
+.chartArea {
     &__bottom {
         display: flex;
         justify-content: space-between;
-        gap: 40px;
-        padding: 0 20px;
-        margin-top: 20px;
+        gap: 100px;
+        padding: 30px 20px 10px 20px;
 
         &-left {
             display: flex;
             flex-direction: column;
             width: 50%;
-            gap: 10px;
+            gap: 15px;
+
+            * {
+                font-family: 'Wanted-Medium';
+                color: $dark;
+            }
 
             &-prev {
                 display: flex;
                 justify-content: space-between;
                 width: 100%;
-
-                div {
-                    font-family: 'Wanted-Medium';
-                }
-
-                &-title {
-
-                }
+                font-size: 14px;
 
                 &-value {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 3px;
 
+                    .value {
+                        font-family: 'Digit';
+                        font-size: 16px;
+                        font-weight: 900;
+                    }
+                    .unit {
+                        font-family: 'Wanted-Bold';
+                    }
                 }
             }
 
@@ -35,23 +46,45 @@
                 display: flex;
                 justify-content: space-between;
                 width: 100%;
+                font-size: 16px;
 
                 &-title {
-
+                    font-family: 'Wanted-Bold';
+                    color: $black;
                 }
 
                 &-value {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 3px;
 
+                    .value {
+                        font-family: 'Digit';
+                        font-size: 20px;
+                        font-weight: 900;
+                        color: $black;
+                        text-shadow: 0 1px 0 $dark;
+                    }
+                    .unit {
+                        font-family: 'Wanted-ExtraBold';
+                        color: $black;
+                    }
                 }
             }
         }
 
         &-right {
             display: flex;
-            justify-content: space-between;
-            width: 40%;
-            text-align: center;
             align-items: center;
+            justify-content: space-between;
+            width: 50%;
+            text-align: center;
+
+            * {
+                font-family: 'Wanted-Bold';
+                color: $black;
+            }
 
             &-prev {
                 display: flex;
@@ -59,11 +92,11 @@
                 gap: 5px;
 
                 &-title {
-
                 }
 
                 &-value {
-
+                    font-family: 'Wanted-ExtraBlack';
+                    font-size: 20px;
                 }
             }
 
@@ -73,21 +106,22 @@
                 gap: 5px;
 
                 &-title {
-
                 }
 
                 &-value {
-
+                    font-family: 'Wanted-ExtraBlack';
+                    font-size: 20px;
                 }
             }
         }
     }
 
     .value {
+        font-family: 'Wanted-Black';
+        color: $black;
         margin-right: 5px;
     }
 
     .unit {
-
     }
 }

@@ -1,39 +1,49 @@
 import React, { useRef, useEffect } from 'react';
 import Chart from 'chart.js/auto';
 
-const PieChart: React.FC = () => {
-    const chartRef = useRef<HTMLCanvasElement>(null);
+type PieChartProps = {
+    datas: number[];
+    labels: string[];
+    backgroundColors: string[];
+};
+
+const PieChart = ({ datas, labels, backgroundColors }: PieChartProps) => {
+    const chartContainer = useRef<HTMLCanvasElement | null>(null);
 
     useEffect(() => {
-        if (chartRef && chartRef.current) {
-            const chartContext = chartRef.current.getContext('2d');
-            if (chartContext) {
-                new Chart(chartContext, {
-                    type: 'pie',
-                    data: {
-                        labels: ['Red', 'Blue', 'Yellow'],
-                        datasets: [
-                            {
-                                data: [12, 19, 3],
-                                backgroundColor: [
-                                    'rgba(255, 99, 132, 0.6)',
-                                    'rgba(54, 162, 235, 0.6)',
-                                    'rgba(255, 206, 86, 0.6)',
-                                ],
-                                borderColor: ['rgba(255,99,132,1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)'],
-                                borderWidth: 1,
-                            },
-                        ],
-                    },
-                    options: {
-                        responsive: true,
-                    },
-                });
-            }
-        }
-    }, []);
+        if (!chartContainer.current) return;
 
-    return <canvas ref={chartRef} />;
+        const ctx = chartContainer.current.getContext('2d')!;
+
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        data: datas,
+                        backgroundColor: backgroundColors,
+                        borderColor: '#FCFCFC',
+                        borderWidth: 1,
+                    },
+                ],
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    },
+                },
+            },
+        });
+    }, [datas, labels, backgroundColors]);
+
+    return (
+        <div className="expenditureAnalyze__pieChart">
+            <canvas className="expenditureAnalyze__pieChart-chart" ref={chartContainer}></canvas>
+        </div>
+    );
 };
 
 export default PieChart;
