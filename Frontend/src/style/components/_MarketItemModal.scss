@@ -1,13 +1,4 @@
 $GAP: 20px;
-@keyframes fadein {
-    0% {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    100% {
-        opacity: 1;
-    }
-}
 
 .marketItemModal {
     width: 400px;
@@ -15,7 +6,7 @@ $GAP: 20px;
     flex-direction: column;
     gap: $GAP;
     box-shadow: 0 0 6px $gray;
-    animation: fadein 0.22s ease-in-out;
+    animation: modalFadein 0.22s ease-in-out;
 
     &__top {
         &-image {

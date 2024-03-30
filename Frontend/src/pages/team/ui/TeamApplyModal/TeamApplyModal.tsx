@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { closeTeamDetailModal } from '../../model';
+import { closeTeamDetailModal, registGroup } from '../../model';
 import { getTeamDetail } from '../../api/getTeamDetail';
 
 type TeamDetailModalProps = {
-    teamId: any;
+    team: any;
 };
 
 type TeamInfo = {
@@ -13,7 +13,8 @@ type TeamInfo = {
     teamLeaderNickname?: 'string';
     lastRank?: number;
 };
-export function TeamApplyModal({ teamId }: TeamDetailModalProps) {
+
+export function TeamApplyModal({ team }: TeamDetailModalProps) {
     const dispatch = useDispatch();
     const [teamInfo, setTeamInfo] = useState<TeamInfo | null>(null);
 
@@ -33,36 +34,61 @@ export function TeamApplyModal({ teamId }: TeamDetailModalProps) {
         };
     }, []);
 
-    // fetchData: 팀 상세 정보를 가져오는 함수. useCallback을 활용해 같은 함수가 재선언되지 않도록 메모이제이션
-    const fetchData = useCallback((teamId: number) => getTeamDetail(teamId), []);
-
     useEffect(() => {
-        fetchData(teamId)
+        getTeamDetail(team.teamId)
             .then((res) => {
                 if (res.data.code === 200) {
                     setTeamInfo(res.data.data);
-                    console.log(res.data.data);
                 }
             })
             .catch((err) => {
                 console.log(err);
             });
-    }, [teamId]);
+    }, [team.teamId]);
 
     return (
         <div className="modalContainer">
-            <div className="teamApplyModal">
-                <div className="teamApplyModal__top">
-                    <div className="teamApplyModal__top-title">팀 정보</div>
-                    <button className="teamApplyModal__top-button"></button>
+            <div className="teamDetailModal">
+                <div className="teamDetailModal__top">
+                    <div className="teamDetailModal__top-title">TEAM INFO</div>
                 </div>
-                <div className="teamApplyModal__middle">
-                    <div className="teamApplyModal__middle-content">{teamInfo ? teamInfo!.teamName : null}</div>
+                <div className="teamDetailModal__middle">
+                    <div className="teamDetailModal__middle-content">
+                        {teamInfo ? (
+                            <>
+                                <div className="teamDetailModal__middle-content-item">
+                                    <div className="key">팀명</div>
+                                    <div className="value">{teamInfo.teamName}</div>
+                                </div>
+                                <div className="teamDetailModal__middle-content-item flex">
+                                    <div className="key">팀 소개</div>
+                                    <div className="value">
+                                        {teamInfo.teamInfo ? teamInfo.teamInfo : '팀 소개말이 없습니다.'}
+                                    </div>
+                                </div>
+                                <div className="teamDetailModal__middle-content-item">
+                                    <div className="key">팀장</div>
+                                    <div className="value">{teamInfo.teamLeaderNickname}</div>
+                                </div>
+                                <div className="teamDetailModal__middle-content-item">
+                                    <div className="key">주간 랭킹</div>
+                                    <div className="value">{teamInfo.lastRank}</div>
+                                </div>
+                            </>
+                        ) : null}
+                    </div>
                 </div>
-                <div className="teamApplyModal__bottom">
-                    <div className="teamApplyModal__buttons">
-                        <button>신청</button>
-                        <button>취소</button>
+                <div className="teamDetailModal__bottom">
+                    <div className="teamDetailModal__bottom-buttons">
+                        <button
+                            className="button"
+                            onClick={async () => {
+                                const res = await registGroup({ teamId: team.teamId, memberId: 3859 });
+                                console.log(res);
+                            }}
+                        >
+                            가입 신청
+                        </button>
                     </div>
                 </div>
             </div>

@@ -67,6 +67,7 @@ export const TeamTeamList = React.memo(({ searchedPage, keyword }: TeamTeamListP
                         head={it.teamMembersNum}
                         leader={it.teamLeaderNickname}
                         description={it.teamInfo ?? '소개말이 없습니다.'}
+                        teamIsAutoConfirm={it.teamIsAutoConfirm}
                         key={it.teamId}
                     />
                 ))}

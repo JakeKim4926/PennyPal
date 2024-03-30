@@ -7,9 +7,17 @@ type TeamTeamListItemProps = {
     head: number;
     leader: string;
     description: string;
+    teamIsAutoConfirm: boolean;
 };
 
-export function TeamTeamListItem({ teamId, name, head, leader, description }: TeamTeamListItemProps) {
+export function TeamTeamListItem({
+    teamId,
+    name,
+    head,
+    leader,
+    description,
+    teamIsAutoConfirm,
+}: TeamTeamListItemProps) {
     const dispatch = useDispatch();
 
     return (
@@ -29,7 +37,7 @@ export function TeamTeamListItem({ teamId, name, head, leader, description }: Te
                 <button
                     className="teamTeamListItem__apply-button button"
                     onClick={() => {
-                        dispatch(openTeamDetailModal(teamId));
+                        dispatch(openTeamDetailModal({ teamId: teamId, teamIsAutoConfirm: teamIsAutoConfirm }));
                     }}
                 >
                     상세 정보

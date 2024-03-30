@@ -1,0 +1,72 @@
+.teamDetailModal {
+    background-color: $bright;
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    border: 3px solid $black;
+
+    overflow: hidden;
+    width: 30rem;
+    animation: modalFadein 0.22s ease-in-out;
+
+    &__top {
+        background-color: $line;
+        padding: 5px;
+
+        &-title {
+            font-size: 30px;
+        }
+    }
+
+    &__middle {
+        &-content {
+            padding: 1rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+
+            &-item {
+                display: flex;
+                flex-direction: column;
+                gap: 0.2rem;
+
+                div {
+                    font-family: 'Wanted-Bold';
+                }
+
+                .key {
+                    font-size: 1.2rem;
+                }
+
+                .value {
+                    font-family: 'Wanted-Medium';
+                    border: 1px solid $black;
+                    border-radius: 0.8rem;
+                    border: none;
+                    padding: 0.3rem;
+                    color: $bright;
+                    box-shadow: 0 0.2rem 0 $black;
+                    background-color: $main;
+                    margin-left: 0.3rem;
+                    padding-left: 1rem;
+                }
+            }
+        }
+    }
+
+    &__bottom {
+        display: flex;
+        justify-content: center;
+        padding-bottom: 1rem;
+
+        button {
+            padding: 0.5rem;
+            font-size: 1.5rem;
+            font-family: 'Wanted-Bold';
+            background-color: $sub;
+            color: $bright;
+            border: none;
+            border-radius: 0.5rem;
+        }
+    }
+}
