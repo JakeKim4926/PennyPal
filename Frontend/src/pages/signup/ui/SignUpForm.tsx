@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Button } from '../../../shared';
 import { useDispatch } from 'react-redux';
+<<<<<<< HEAD:Frontend/src/pages/signup/ui/SignUpForm.tsx
 import { setSignUpStep } from '../model/signUpStepReducer';
 
 interface UserData {
@@ -11,10 +12,15 @@ interface UserData {
     birthday: string;
     nickName: string;
 }
+=======
+import { setSignUpStep } from '@/pages/signup/model/signUpStepReducer';
+import axios from 'axios';
+>>>>>>> origin/develop/FE:Frontend/src/pages/signup/ui/SignUpForm/SignUpForm.tsx
 
 export function SignUpForm() {
     const dispatch = useDispatch();
 
+<<<<<<< HEAD:Frontend/src/pages/signup/ui/SignUpForm.tsx
     const [userData, setUserData] = useState<UserData>({
         email: '',
         password: '',
@@ -93,6 +99,25 @@ export function SignUpForm() {
         const allFieldsValid =
             emailValid && passwordValid && confirmPasswordValid && nameValid && birthdayValid && nickNameValid;
 
+=======
+    const allFieldsValid =
+        emailValid && passwordValid && confirmPasswordValid && nameValid && birthdayValid && nickNameValid;
+    const handleNext = async () => {
+        try {
+            const data = {
+                memberEmail: userData.email,
+                memberPassword: userData.password,
+                memberName: userData.name,
+                memberNickname: userData.nickName,
+                memberBirthDate: userData.birthday,
+            };
+            console.log(data);
+            const response = await axios.post('http://localhost:8080/api/member/signup', data);
+            console.log(response.data.message); // 서버로부터 받은 응답 message 데이터 출력
+        } catch (error) {
+            console.error('Error:', error);
+        }
+>>>>>>> origin/develop/FE:Frontend/src/pages/signup/ui/SignUpForm/SignUpForm.tsx
         if (allFieldsValid) {
             dispatch(setSignUpStep(1));
             // 리덕스 상태관리로 다음 창으로 이동.

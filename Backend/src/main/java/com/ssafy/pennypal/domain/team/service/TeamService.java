@@ -21,6 +21,8 @@ import com.ssafy.pennypal.domain.team.dto.SimpleTeamDto;
 import com.ssafy.pennypal.domain.team.dto.response.*;
 import com.ssafy.pennypal.domain.team.entity.Team;
 import com.ssafy.pennypal.domain.team.entity.TeamRankHistory;
+import com.ssafy.pennypal.domain.team.exception.AlreadyAppliedJoinException;
+import com.ssafy.pennypal.domain.team.exception.BannedMemberJoinException;
 import com.ssafy.pennypal.domain.team.repository.ITeamRankHistoryRepository;
 import com.ssafy.pennypal.domain.team.repository.ITeamRepository;
 import lombok.RequiredArgsConstructor;
@@ -189,16 +191,13 @@ public TeamJoinResponse joinTeam(TeamJoinServiceRequest request) {
         }
     }
 
-    // 추방된 유저라면 가입 불가
     if (team.getTeamBanishedList().contains(member)) {
-        throw new IllegalArgumentException("추방 당한 팀에는 가입할 수 없습니다.");
+        throw new BannedMemberJoinException("추방 당한 팀에는 가입할 수 없습니다.");
     }
 
-    // 이미 가입 신청을 한 유저라면 신청 불가
     if (team.getTeamWaitingList().contains(member)) {
-        throw new IllegalArgumentException("이미 가입 신청을 완료한 팀입니다.");
+        throw new AlreadyAppliedJoinException("이미 가입 신청을 완료한 팀입니다.");
     }
-
     // 이미 다른 팀에 가입 신청을 했다면 신청 불가
     if (member.getMemberWaitingTeam() != null) {
         throw new IllegalArgumentException("이미 가입 신청 된 팀이 존재합니다.");

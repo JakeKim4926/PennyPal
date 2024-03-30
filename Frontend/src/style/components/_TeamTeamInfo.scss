@@ -16,6 +16,7 @@
         &-text {
             display: flex;
             justify-content: space-between;
+            width: 100%;
 
             &-button {
                 $padding: 3px;
@@ -74,7 +75,7 @@
             background-color: $main;
             font-family: 'Wanted-Medium' !important;
             font-size: 20px;
-            padding: 5px 12px;
+            padding: 0.4rem 1rem;
             border-radius: 20px;
             width: 100%;
             box-shadow: 0px 3px 0px $black;
@@ -85,6 +86,7 @@
     .unit {
         font-size: 27px;
         font-family: 'Esa-Light';
+        margin-left: 0.4rem;
     }
 
     .subtitle {

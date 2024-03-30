@@ -3,7 +3,12 @@
 .expenditureWeekly {
     display: flex;
     flex-direction: column;
+<<<<<<< HEAD
     gap: 20px;
+=======
+    gap: 30px;
+    font-size: 14px;
+>>>>>>> origin/develop/FE
 
     &__content {
         &-weekDay {

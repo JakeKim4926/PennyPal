@@ -1,6 +1,6 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMoneyBill1Wave, faPeopleGroup, faRankingStar, faStore } from '@fortawesome/free-solid-svg-icons';
+import { faMoneyBill1Wave, faPeopleGroup, faRankingStar, faStore, faReceipt } from '@fortawesome/free-solid-svg-icons';
 
 type PageHeaderProps = {
     page: string;
@@ -58,6 +58,11 @@ export function PageHeader({ page }: PageHeaderProps) {
             title: 'TEST',
             description: '테스트 페이지입니다.',
             icon: faStore,
+        },
+        receipt: {
+            title: 'RECEIPT',
+            description: '포인트 사용 내역입니다.',
+            icon: faReceipt,
         },
     };
 
