@@ -6,6 +6,7 @@ import { createGroup } from '../../api/createGroup';
 import { checkTeamName } from '../../model';
 import { setTeamInfo } from '@/pages/teamRouting/model/setTeamInfo';
 import { getTeamInfo } from '@/pages/teamRouting/api/getTeamInfo';
+import { USER_ID } from '@/shared';
 
 export function TeamCreateTeam() {
     return (
@@ -34,7 +35,7 @@ function Content() {
         teamName: '',
         teamIsAutoConfirm: false,
         // teamLeaderId: getCookie('memberId'), // 추후작업: 로그인된 유저 id를 기본값으로
-        teamLeaderId: 3859, // 추후작업: 로그인된 유저 id를 기본값으로
+        teamLeaderId: USER_ID, // 추후작업: 로그인된 유저 id를 기본값으로
         teamInfo: '',
     };
 

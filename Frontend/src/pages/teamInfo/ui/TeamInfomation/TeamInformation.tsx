@@ -1,3 +1,4 @@
+import { USER_ID } from '@/shared';
 import React, { useTransition } from 'react';
 
 type TeamInformationProps = {
@@ -7,6 +8,7 @@ type TeamInformationProps = {
     teamThisTotalExpenses: number;
     teamInfo?: 'string';
     teamRankRealtime: number;
+    teamLeaderId: number;
 };
 
 export function TeamInformation({
@@ -16,6 +18,7 @@ export function TeamInformation({
     teamThisTotalExpenses,
     teamInfo,
     teamRankRealtime,
+    teamLeaderId,
 }: TeamInformationProps) {
     return (
         <div className="teamTeamInfo contentCard">
@@ -23,7 +26,11 @@ export function TeamInformation({
                 <div className="teamTeamInfo__title-text contentCard__title-text">
                     <div>TEAM INFO</div>
                     {/* SETTING 버튼 -> 추후 팀장만 보이게끔 조건부 렌더링 */}
-                    <button className="teamTeamInfo__title-text-button button">SETTING</button>
+                    {USER_ID === teamLeaderId ? (
+                        <button className="teamTeamInfo__title-text-button button">SETTING</button>
+                    ) : (
+                        <button className="teamTeamInfo__title-text-button button">탈퇴</button>
+                    )}
                 </div>
             </div>
             <div className="teamTeamInfo__top">
