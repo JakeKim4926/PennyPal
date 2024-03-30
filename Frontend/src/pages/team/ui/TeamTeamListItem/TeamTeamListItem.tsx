@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux';
-import { openApplyModal } from '@/pages/team/model/openApplyModal';
+import { openTeamDetailModal } from '@/pages/team/model/openTeamDetailModal';
 
 type TeamTeamListItemProps = {
     teamId: number;
@@ -29,7 +29,7 @@ export function TeamTeamListItem({ teamId, name, head, leader, description }: Te
                 <button
                     className="teamTeamListItem__apply-button button"
                     onClick={() => {
-                        dispatch(openApplyModal({ value: '123' }));
+                        dispatch(openTeamDetailModal({ value: '123' }));
                     }}
                 >
                     상세 정보
