@@ -1,7 +1,7 @@
 const OPEN_TEAM_DETAIL_MODAL = 'OPEN_TEAM_DETAIL_MODAL' as const;
 const CLOSE_TEAM_DETAIL_MODAL = 'CLOSE_TEAM_DETAIL_MODAL' as const;
 
-export function openTeamDetailModal(data: object) {
+export function openTeamDetailModal(data: number) {
     return { type: OPEN_TEAM_DETAIL_MODAL, payload: data };
 }
 
@@ -13,7 +13,7 @@ type OpenModalAction = ReturnType<typeof openTeamDetailModal> | ReturnType<typeo
 
 // 관리 할 상태(data)의 타입 지정
 type OpenTeamDetailModalState = {
-    data: boolean | object;
+    data: boolean | number;
 };
 
 // 초기 상태 지정

@@ -29,7 +29,7 @@ export function TeamTeamListItem({ teamId, name, head, leader, description }: Te
                 <button
                     className="teamTeamListItem__apply-button button"
                     onClick={() => {
-                        dispatch(openTeamDetailModal({ value: '123' }));
+                        dispatch(openTeamDetailModal(teamId));
                     }}
                 >
                     상세 정보
