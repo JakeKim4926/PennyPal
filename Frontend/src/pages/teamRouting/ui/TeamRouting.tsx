@@ -27,14 +27,14 @@ export function TeamRouting() {
 
     // 추후에 hasTeam 초기 값을 동적으로 설정해줄 수 있어야함 -> 팀 존재 여부에 따라
     // 여기 들어오면 가입한 팀 존재 여부 API 날린 다음 응답값에 따라 페이지 분기
-    const userId = 3601;
+    const memberId = 3859;
 
     // fetchData: 해당 유저 팀 정보 가져오기
-    const fetchData = useCallback((url: string) => getTeamInfo(`/team/${userId}`), [userId]);
+    const fetchData = useCallback((url: string) => getTeamInfo(`/team/${memberId}`), [memberId]);
 
     useEffect(() => {
         // REQUEST_URL: 요청 주소
-        const REQUEST_URL = `/team/${userId}`;
+        const REQUEST_URL = `/team/${memberId}`;
 
         // // cacheData: 캐싱된 데이터
         // const cacheData = API_CACHE_DATA.get(REQUEST_URL);

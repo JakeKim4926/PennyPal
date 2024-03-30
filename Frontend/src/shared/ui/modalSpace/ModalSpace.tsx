@@ -14,9 +14,9 @@ export function ModalSpace() {
 }
 
 function TeamApplyModalSpace() {
-    const openModal = useSelector((state: RootState) => state.openModal.data);
+    const openTeamDetailModal = useSelector((state: RootState) => state.openTeamDetailModalReducer.data);
 
-    if (openModal) return <TeamApplyModal />;
+    if (openTeamDetailModal) return <TeamApplyModal team={openTeamDetailModal} />;
     return null;
 }
 

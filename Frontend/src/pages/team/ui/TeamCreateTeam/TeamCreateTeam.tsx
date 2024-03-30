@@ -33,7 +33,8 @@ function Content() {
     const teamDto = {
         teamName: '',
         teamIsAutoConfirm: false,
-        teamLeaderId: 3429, // 추후작업: 로그인된 유저 id를 기본값으로
+        // teamLeaderId: getCookie('memberId'), // 추후작업: 로그인된 유저 id를 기본값으로
+        teamLeaderId: 3859, // 추후작업: 로그인된 유저 id를 기본값으로
         teamInfo: '',
     };
 
@@ -308,13 +309,12 @@ function ConfirmArea({ registConfirm, moveNext, teamDto }: ConfirmArea) {
             moveNext();
 
             // handleRoute: 일정시간 후 팀 페이지 전환
-            handleRoute();
+            handleRoute(res);
         }
     }
 
     // handleRoute: 팀 가입 여부를 변경해 내 팀 상세 페이지로 라우트
-    async function handleRoute() {
-        const res = await getTeamInfo('/team/3429');
+    async function handleRoute(res: any) {
         setTimeout(() => {
             dispatch(setTeamInfo(res.data.data));
         }, 3500);

@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux';
-import { openApplyModal } from '@/pages/team/model/openApplyModal';
+import { openTeamDetailModal } from '@/pages/team/model/openTeamDetailModal';
 
 type TeamTeamListItemProps = {
     teamId: number;
@@ -7,9 +7,17 @@ type TeamTeamListItemProps = {
     head: number;
     leader: string;
     description: string;
+    teamIsAutoConfirm: boolean;
 };
 
-export function TeamTeamListItem({ teamId, name, head, leader, description }: TeamTeamListItemProps) {
+export function TeamTeamListItem({
+    teamId,
+    name,
+    head,
+    leader,
+    description,
+    teamIsAutoConfirm,
+}: TeamTeamListItemProps) {
     const dispatch = useDispatch();
 
     return (
@@ -29,7 +37,7 @@ export function TeamTeamListItem({ teamId, name, head, leader, description }: Te
                 <button
                     className="teamTeamListItem__apply-button button"
                     onClick={() => {
-                        dispatch(openApplyModal({ value: '123' }));
+                        dispatch(openTeamDetailModal({ teamId: teamId, teamIsAutoConfirm: teamIsAutoConfirm }));
                     }}
                 >
                     상세 정보
