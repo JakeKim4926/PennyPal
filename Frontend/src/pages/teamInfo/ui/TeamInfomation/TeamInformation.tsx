@@ -1,5 +1,5 @@
-import { USER_ID } from '@/shared';
-import React, { useTransition } from 'react';
+import { getCookie } from '@/shared';
+import React, { useEffect, useState, useTransition } from 'react';
 import { useDispatch } from 'react-redux';
 import { openTeamLeaveModal } from '../../model/openTeamLeaveModal';
 import { openTeamSettingModal } from '../../model/openTeamSettingModal';
@@ -26,6 +26,15 @@ export function TeamInformation({
     teamId,
 }: TeamInformationProps) {
     const dispatch = useDispatch();
+    const [memberId, setMemberId] = useState(0);
+
+    useEffect(() => {
+        const cookieData = getCookie('memberId');
+
+        if (typeof cookieData === 'number') {
+            setMemberId(cookieData);
+        }
+    }, []);
 
     return (
         <div className="teamTeamInfo contentCard">
@@ -33,11 +42,11 @@ export function TeamInformation({
                 <div className="teamTeamInfo__title-text contentCard__title-text">
                     <div>TEAM INFO</div>
                     {/* SETTING 버튼 -> 추후 팀장만 보이게끔 조건부 렌더링 */}
-                    {USER_ID === teamLeaderId ? (
+                    {memberId === teamLeaderId ? (
                         <button
                             className="teamTeamInfo__title-text-button button"
                             onClick={() => {
-                                dispatch(openTeamSettingModal({ teamId: teamId, memberId: USER_ID }));
+                                dispatch(openTeamSettingModal({ teamId: teamId, memberId: memberId }));
                             }}
                         >
                             SETTING
@@ -49,7 +58,7 @@ export function TeamInformation({
                                 dispatch(
                                     openTeamLeaveModal({
                                         teamId: teamId,
-                                        memberId: USER_ID,
+                                        memberId: memberId,
                                     }),
                                 );
                             }}

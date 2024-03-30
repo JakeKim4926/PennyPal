@@ -6,7 +6,7 @@ import { createGroup } from '../../api/createGroup';
 import { checkTeamName } from '../../model';
 import { setTeamInfo } from '@/pages/teamRouting/model/setTeamInfo';
 import { getTeamInfo } from '@/pages/teamRouting/api/getTeamInfo';
-import { USER_ID } from '@/shared';
+import { USER_ID, getCookie } from '@/shared';
 
 export function TeamCreateTeam() {
     return (
@@ -20,12 +20,8 @@ export function TeamCreateTeam() {
 }
 
 function Content() {
-    useEffect(() => {
-        if (contentRef.current) {
-            console.dir(contentRef.current.offsetWidth);
-        }
-    });
     const contentRef = useRef<HTMLDivElement>(null);
+    const memberId = getCookie('memberId');
 
     // moveNext: 다음 페이지로 넘기는 함수
     const moveNext = scrollTeamCreateArea;
@@ -34,8 +30,7 @@ function Content() {
     const teamDto = {
         teamName: '',
         teamIsAutoConfirm: false,
-        // teamLeaderId: getCookie('memberId'), // 추후작업: 로그인된 유저 id를 기본값으로
-        teamLeaderId: USER_ID, // 추후작업: 로그인된 유저 id를 기본값으로
+        teamLeaderId: memberId,
         teamInfo: '',
     };
 
