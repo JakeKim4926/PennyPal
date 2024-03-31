@@ -8,3 +8,5 @@ export * from '@/pages/teamInfo/model/openTeamSettingModal';
 export * from '@/pages/teamInfo/model/openTeamChattingModal';
 
 export * from '@/pages/teamInfo/api/deleteTeam';
+export * from '@/pages/teamInfo/api/connectTeamChatRoom';
+export * from '@/pages/teamInfo/api/sendTeamChat';
