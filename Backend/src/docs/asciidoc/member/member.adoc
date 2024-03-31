@@ -1,0 +1,17 @@
+=== 회원가입
+include::api/signup.adoc[]
+
+=== 로그인
+include::api/login.adoc[]
+
+=== 회원 닉네임 수정
+include::api/updateNickname.adoc[]
+
+=== 회원 비밀번호 수정
+include::api/updatePassword.adoc[]
+
+=== 출석 인증
+include::api/attend.adoc[]
+
+=== 사용자 출석 여부
+include::api/isAttend.adoc[]

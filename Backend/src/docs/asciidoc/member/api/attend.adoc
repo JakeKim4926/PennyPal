@@ -1,0 +1,10 @@
+[[attend]]
+==== HTTP Request
+
+include::{snippets}/attend/http-request.adoc[]
+include::{snippets}/attend/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/attend/http-response.adoc[]
+include::{snippets}/attend/response-fields.adoc[]

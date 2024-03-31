@@ -4,6 +4,7 @@ import com.ssafy.pennypal.domain.member.entity.Member;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -15,8 +16,8 @@ class TeamTest {
     @Test
     void teamScore(){
         // given
-        Member member1 = createMember("member1@pennypal.site", "짠1", LocalDateTime.now());
-        Member member2 = createMember("member2@pennypal.site", "짠2", LocalDateTime.now());
+        Member member1 = createMember("member1@pennypal.site", "짠1", LocalDate.now());
+        Member member2 = createMember("member2@pennypal.site", "짠2", LocalDate.now());
 
         // when
         Team team1 = createTeam("팀이름1", true, member1.getMemberId(), "팀소개1");
@@ -30,8 +31,8 @@ class TeamTest {
     @Test
     void teamNumberIsEqual1(){
         // given
-        Member member1 = createMember("member1@pennypal.site", "짠1", LocalDateTime.now());
-        Member member2 = createMember("member2@pennypal.site", "짠2", LocalDateTime.now());
+        Member member1 = createMember("member1@pennypal.site", "짠1", LocalDate.now());
+        Member member2 = createMember("member2@pennypal.site", "짠2", LocalDate.now());
 
         // when
         Team team1 = createTeam("팀이름1", true, member1.getMemberId(), "팀소개1");
@@ -42,10 +43,8 @@ class TeamTest {
     }
 
 
-    /**
-     * createMember method
-     */
-    private Member createMember(String memberEmail, String memberNickname, LocalDateTime memberBirthDate){
+
+    private Member createMember(String memberEmail, String memberNickname, LocalDate memberBirthDate){
         return Member.builder()
                 .memberEmail(memberEmail)
                 .memberPassword("1234")
@@ -55,9 +54,6 @@ class TeamTest {
                 .build();
     }
 
-    /**
-     * createTeam method
-     */
     private Team createTeam(String teamName, Boolean teamIsAutoConfirm, Long teamLeaderId, String teamInfo){
         return Team.builder()
                 .teamName(teamName)

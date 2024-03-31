@@ -1,0 +1,9 @@
+// [[weekly-team-ranking]]
+// ==== HTTP Request
+//
+// include::{snippets}/weekly-team-ranking/http-request.adoc[]
+//
+// ==== HTTP Response
+//
+// include::{snippets}/weekly-team-ranking/http-response.adoc[]
+// include::{snippets}/weekly-team-ranking/response-fields.adoc[]

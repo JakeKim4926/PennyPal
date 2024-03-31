@@ -55,10 +55,6 @@ def json_to_dataframe(strPath):
     df_view = pd.DataFrame(extracted_data_for_view)
     df_db = pd.DataFrame(extracted_data_for_db)
 
-    # 결과 출력
-    print(df_view)
-    print(df_db)
-
     df_db.to_csv('../static/data/result/card_db.csv', index=False, encoding="utf-8")
 
     df_view.to_excel('../static/data/result/card_view.xlsx', index=False)

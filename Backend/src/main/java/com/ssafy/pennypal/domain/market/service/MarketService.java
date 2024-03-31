@@ -35,9 +35,11 @@ public class MarketService {
     }
 
     // 상품 검색
-    public Page<ProductResponseDTO> searchProducts(String keyword, String category, Pageable pageable) {
-        return productRepository.findByProductNameContainingOrProductBrandContaining(keyword, keyword, pageable).map(ProductResponseDTO::new);
+    public Page<ProductResponseDTO> searchProducts(String keyword, Pageable pageable) {
+        return productRepository.findByProductNameContainingOrProductBrandContaining(keyword, keyword, pageable)
+                .map(ProductResponseDTO::new);
     }
+
 
     // 상품 상세 조회
     public ProductResponseDTO getProductDetails(Long productId) {
