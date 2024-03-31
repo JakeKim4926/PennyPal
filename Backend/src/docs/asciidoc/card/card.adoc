@@ -1,0 +1,2 @@
+=== 카드 전체 조회
+include::api/getCards.adoc[]
