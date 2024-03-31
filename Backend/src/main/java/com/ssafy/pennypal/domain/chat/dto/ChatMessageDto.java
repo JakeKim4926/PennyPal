@@ -1,6 +1,7 @@
 package com.ssafy.pennypal.domain.chat.dto;
 
 import com.ssafy.pennypal.domain.chat.entity.ChatMessage;
+import com.ssafy.pennypal.domain.member.entity.Member;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,9 +29,10 @@ public class ChatMessageDto {
     public static ChatMessageDto convertToChatMessageDto(ChatMessage chatMessage){
 
         return ChatMessageDto.builder()
+                .memberNickname(chatMessage.getSenderNickname())
                 .chatMessageId(chatMessage.getChatMessageId())
                 .message(chatMessage.getMessage())
-                .createdAt(chatMessage.getCreatedDateTime())
+                .createdAt(chatMessage.getCreatedAt())
                 .build();
     }
 }
