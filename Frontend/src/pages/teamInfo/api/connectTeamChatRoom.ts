@@ -1,7 +1,19 @@
 import { CompatClient, Stomp } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 
-export function connectTeamChatRoom(client: React.MutableRefObject<CompatClient | undefined>, chatRoomId: number) {
+type Message = {
+    chatMessageId: number;
+    memberNickname: string | null;
+    message: string;
+    createdAt: string;
+};
+
+export function connectTeamChatRoom(
+    client: React.MutableRefObject<CompatClient | undefined>,
+    chatRoomId: number,
+    messageList: Message[],
+    setMessageList: React.Dispatch<React.SetStateAction<Message[]>>,
+) {
     const socket = new SockJS(`${process.env.REACT_APP_WS_URL}`);
     client.current = Stomp.over(socket);
     client.current.connect(
@@ -15,7 +27,10 @@ export function connectTeamChatRoom(client: React.MutableRefObject<CompatClient 
 
                 // 1-2. 메세지 수신 시 콜백 함수
                 (message) => {
-                    alert(message.body);
+                    setMessageList((messageList) => {
+                        const newMessage = JSON.parse(message.body);
+                        return [...messageList, newMessage];
+                    });
                 },
             );
         },

@@ -15,11 +15,6 @@ export function TeamInfo() {
     // client: 채팅 연결 주체
     const client = useRef<CompatClient>();
 
-    useEffect(() => {
-        // connectTeamChatRoom: 채팅방 연결
-        connectTeamChatRoom(client, teamData.chatRoomId);
-    }, []);
-
     return (
         <div className="container teamInfo__container">
             <div className="teamInfo">

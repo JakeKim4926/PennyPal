@@ -6,6 +6,9 @@ import { faPaperPlane } from '@fortawesome/free-regular-svg-icons';
 import { faCircleXmark } from '@fortawesome/free-regular-svg-icons';
 import { getTeamChatHistory } from '../../api/getTeamChatHistory';
 import { getCookie } from '@/shared';
+import { connectTeamChatRoom } from '../../api/connectTeamChatRoom';
+import SockJS from 'sockjs-client';
+import { Stomp } from '@stomp/stompjs';
 
 type TeamChattingModalProps = {
     teamId: number;
@@ -25,6 +28,7 @@ export function TeamChattingModal({ teamId, memberId, chatRoomId, client }: Team
     const inputRef = useRef<HTMLInputElement>(null);
     const [messageList, setMessageList] = useState<Message[]>([]);
     const [memberNickname, setMemberNickname] = useState<string>('');
+    const chatRef = useRef<HTMLDivElement>(null);
 
     // handleSendMessage: 메세지 전송 및 인풋 비우기
     const handleSendMessage = useCallback(
@@ -49,8 +53,18 @@ export function TeamChattingModal({ teamId, memberId, chatRoomId, client }: Team
                     setMessageList(res.data.data.messages);
                 }
             })
+
             .catch((err) => console.log(err));
     }, []);
+
+    useEffect(() => {
+        // connectTeamChatRoom: 채팅방 연결
+        connectTeamChatRoom(client, chatRoomId, messageList, setMessageList);
+    }, []);
+
+    useEffect(() => {
+        chatRef.current!.scrollTo({ top: chatRef.current!.scrollHeight });
+    }, [messageList]);
 
     return (
         <div className="teamChattingModal">
@@ -60,7 +74,7 @@ export function TeamChattingModal({ teamId, memberId, chatRoomId, client }: Team
                     <FontAwesomeIcon icon={faCircleXmark} style={{ color: '#FFFFFF' }} />
                 </button>
             </div>
-            <div className="teamChattingModal__middle">
+            <div className="teamChattingModal__middle" ref={chatRef}>
                 {messageList.map((message: Message) => (
                     <MessageListItem message={message} memberNickname={memberNickname} />
                 ))}
@@ -93,19 +107,19 @@ type MessageListItemProps = {
 };
 
 function MessageListItem({ message, memberNickname }: MessageListItemProps) {
-    console.log(memberNickname, message.memberNickname);
-    if (memberNickname === message.memberNickname)
-        return (
-            <div className="messageListItem">
-                <div className="messageListItem__nickname">{message.memberNickname}</div>
-                <div className="messageListItem__message">{message.message}</div>
-            </div>
-        );
-    else {
+    console.log(memberNickname == message.memberNickname);
+    if (memberNickname == message.memberNickname)
         return (
             <div className="messageListItemMine">
                 <div className="messageListItemMine__nickname">{message.memberNickname}</div>
                 <div className="messageListItemMine__message">{message.message}</div>
+            </div>
+        );
+    else {
+        return (
+            <div className="messageListItem">
+                <div className="messageListItem__nickname">{message.memberNickname}</div>
+                <div className="messageListItem__message">{message.message}</div>
             </div>
         );
     }
