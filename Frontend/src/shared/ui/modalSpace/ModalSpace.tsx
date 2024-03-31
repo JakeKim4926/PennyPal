@@ -54,7 +54,14 @@ function TeamChattingModalSpace() {
 
     if (isOpenTeamChattingModal instanceof Object) {
         const data = isOpenTeamChattingModal;
-        return <TeamChattingModal teamId={data.teamId} memberId={data.memberId} chatRoomId={data.chatRoomId} />;
+        return (
+            <TeamChattingModal
+                teamId={data.teamId}
+                memberId={data.memberId}
+                chatRoomId={data.chatRoomId}
+                client={data.client}
+            />
+        );
     }
     return null;
 }

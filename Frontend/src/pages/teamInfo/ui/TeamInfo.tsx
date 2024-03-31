@@ -5,9 +5,20 @@ import { TeamInfoTeamExpenditure } from './TeamInfoTeamExpenditure/TeamInfoTeamE
 import { TeamInfoChatButton } from './TeamInfoChatButton/TeamInfoChatButton';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/app/appProvider';
+import { useEffect, useRef } from 'react';
+import { connectTeamChatRoom } from '../api/connectTeamChatRoom';
+import { CompatClient } from '@stomp/stompjs';
 
 export function TeamInfo() {
     const teamData: any = useSelector((state: RootState) => state.setTeamInfoReducer.data);
+
+    // client: 채팅 연결 주체
+    const client = useRef<CompatClient>();
+
+    useEffect(() => {
+        // connectTeamChatRoom: 채팅방 연결
+        connectTeamChatRoom(client, teamData.chatRoomId);
+    }, []);
 
     return (
         <div className="container teamInfo__container">
@@ -25,7 +36,7 @@ export function TeamInfo() {
                 />
                 <TeamInfoMember teamLeaderId={teamData.teamLeaderId} teamMembers={teamData.members} />
                 <TeamInfoTeamExpenditure />
-                <TeamInfoChatButton teamId={teamData.teamId} chatRoomId={teamData.chatRoomId} />
+                <TeamInfoChatButton teamId={teamData.teamId} chatRoomId={teamData.chatRoomId} client={client} />
             </div>
         </div>
     );

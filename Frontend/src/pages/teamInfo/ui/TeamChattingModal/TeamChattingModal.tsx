@@ -1,5 +1,4 @@
-import { useEffect, useRef } from 'react';
-import { connectTeamChatRoom } from '../../api/connectTeamChatRoom';
+import { useRef } from 'react';
 import { CompatClient } from '@stomp/stompjs';
 import { sendTeamChat } from '../../api/sendTeamChat';
 
@@ -7,21 +6,11 @@ type TeamChattingModalProps = {
     teamId: number;
     memberId: number;
     chatRoomId: number;
+    client: React.MutableRefObject<CompatClient | undefined>;
 };
 
-export function TeamChattingModal({ teamId, memberId, chatRoomId }: TeamChattingModalProps) {
-    const client = useRef<CompatClient>();
+export function TeamChattingModal({ teamId, memberId, chatRoomId, client }: TeamChattingModalProps) {
     const inputRef = useRef<HTMLInputElement>(null);
-
-    useEffect(() => {
-        connectTeamChatRoom(client, chatRoomId);
-
-        return () => {
-            if (client.current) {
-                client.current.disconnect();
-            }
-        };
-    });
 
     return (
         <div className="teamChattingModal modalContainer">
