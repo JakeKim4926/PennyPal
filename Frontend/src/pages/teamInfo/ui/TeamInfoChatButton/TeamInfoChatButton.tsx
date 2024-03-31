@@ -5,9 +5,10 @@ import { openTeamChattingModal } from '../../model/openTeamChattingModal';
 
 type TeamInfoChatButton = {
     teamId: number;
+    chatRoomId: number;
 };
 
-export function TeamInfoChatButton({ teamId }: TeamInfoChatButton) {
+export function TeamInfoChatButton({ teamId, chatRoomId }: TeamInfoChatButton) {
     const dispatch = useDispatch();
     const [memberId, setMemberId] = useState<number>(0);
 
@@ -23,7 +24,7 @@ export function TeamInfoChatButton({ teamId }: TeamInfoChatButton) {
         <div className="teamInfoChatButton">
             <button
                 className="teamInfoChatButton__button"
-                onClick={() => dispatch(openTeamChattingModal({ teamId, memberId }))}
+                onClick={() => dispatch(openTeamChattingModal({ teamId, memberId, chatRoomId }))}
             >
                 채팅창
             </button>
