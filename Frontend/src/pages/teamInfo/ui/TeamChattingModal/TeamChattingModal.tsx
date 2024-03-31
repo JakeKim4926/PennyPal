@@ -1,9 +1,11 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { CompatClient } from '@stomp/stompjs';
 import { sendTeamChat } from '../../api/sendTeamChat';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane } from '@fortawesome/free-regular-svg-icons';
 import { faCircleXmark } from '@fortawesome/free-regular-svg-icons';
+import { getTeamChatHistory } from '../../api/getTeamChatHistory';
+import { getCookie } from '@/shared';
 
 type TeamChattingModalProps = {
     teamId: number;
@@ -12,8 +14,19 @@ type TeamChattingModalProps = {
     client: React.MutableRefObject<CompatClient | undefined>;
 };
 
+type Message = {
+    chatMessageId: number;
+    memberNickname: string | null;
+    message: string;
+    createdAt: string;
+};
+
 export function TeamChattingModal({ teamId, memberId, chatRoomId, client }: TeamChattingModalProps) {
     const inputRef = useRef<HTMLInputElement>(null);
+    const [messageList, setMessageList] = useState<Message[]>([]);
+    const [memberNickname, setMemberNickname] = useState<string>('');
+
+    // handleSendMessage: 메세지 전송 및 인풋 비우기
     const handleSendMessage = useCallback(
         (client: React.MutableRefObject<CompatClient | undefined>, memberId: number, chatRoomId: number) => {
             if (inputRef.current!.value.trim().length > 0) {
@@ -23,6 +36,22 @@ export function TeamChattingModal({ teamId, memberId, chatRoomId, client }: Team
         },
         [],
     );
+
+    useEffect(() => {
+        const cookieData = getCookie('memberNickname');
+        if (typeof cookieData === 'string') {
+            setMemberNickname(cookieData);
+        }
+
+        getTeamChatHistory(chatRoomId, memberId)
+            .then((res) => {
+                if (res.data.code === 200) {
+                    setMessageList(res.data.data.messages);
+                }
+            })
+            .catch((err) => console.log(err));
+    }, []);
+
     return (
         <div className="teamChattingModal">
             <div className="teamChattingModal__top">
@@ -31,7 +60,11 @@ export function TeamChattingModal({ teamId, memberId, chatRoomId, client }: Team
                     <FontAwesomeIcon icon={faCircleXmark} style={{ color: '#FFFFFF' }} />
                 </button>
             </div>
-            <div className="teamChattingModal__middle"></div>
+            <div className="teamChattingModal__middle">
+                {messageList.map((message: Message) => (
+                    <MessageListItem message={message} memberNickname={memberNickname} />
+                ))}
+            </div>
             <div className="teamChattingModal__bottom">
                 <input
                     ref={inputRef}
@@ -52,4 +85,28 @@ export function TeamChattingModal({ teamId, memberId, chatRoomId, client }: Team
             </div>
         </div>
     );
+}
+
+type MessageListItemProps = {
+    message: Message;
+    memberNickname: string;
+};
+
+function MessageListItem({ message, memberNickname }: MessageListItemProps) {
+    console.log(memberNickname, message.memberNickname);
+    if (memberNickname === message.memberNickname)
+        return (
+            <div className="messageListItem">
+                <div className="messageListItem__nickname">{message.memberNickname}</div>
+                <div className="messageListItem__message">{message.message}</div>
+            </div>
+        );
+    else {
+        return (
+            <div className="messageListItemMine">
+                <div className="messageListItemMine__nickname">{message.memberNickname}</div>
+                <div className="messageListItemMine__message">{message.message}</div>
+            </div>
+        );
+    }
 }

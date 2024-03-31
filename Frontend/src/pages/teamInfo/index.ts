@@ -10,3 +10,4 @@ export * from '@/pages/teamInfo/model/openTeamChattingModal';
 export * from '@/pages/teamInfo/api/deleteTeam';
 export * from '@/pages/teamInfo/api/connectTeamChatRoom';
 export * from '@/pages/teamInfo/api/sendTeamChat';
+export * from '@/pages/teamInfo/api/getTeamChatHistory';
