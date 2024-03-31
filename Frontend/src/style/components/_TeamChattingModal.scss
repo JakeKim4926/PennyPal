@@ -1,0 +1,63 @@
+.teamChattingModal {
+    background-color: $bright;
+    border-radius: 1rem;
+    width: 20rem;
+    animation: modalFadein 0.22s ease-in-out;
+    position: absolute;
+    bottom: 80px;
+    right: 50px;
+    z-index: 2;
+    box-shadow: 0 0.2rem 1rem $black;
+
+    div,
+    button {
+        font-family: 'Wanted-Bold';
+    }
+
+    &__top {
+        display: flex;
+        justify-content: space-between;
+        background-color: $main;
+        border-top-left-radius: 1rem;
+        border-top-right-radius: 1rem;
+        padding: 0.4rem 1rem;
+
+        div {
+            color: $bright;
+            font-size: 1.5rem;
+        }
+
+        button {
+            background-color: transparent;
+            border: none;
+        }
+    }
+
+    &__middle {
+        background: linear-gradient(to top, $bright);
+        height: 20rem;
+    }
+
+    &__bottom {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem;
+        border-top: 2px solid $gray;
+
+        input {
+            width: 100%;
+            border: none;
+            outline: none;
+            font-size: 1.1rem;
+            font-family: 'Wanted-Bold';
+        }
+
+        button {
+            font-size: 1.5rem;
+            background-color: transparent;
+            padding: 0.2rem;
+            border: none;
+            cursor: pointer;
+        }
+    }
+}

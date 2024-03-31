@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { openTeamChattingModal } from '../../model/openTeamChattingModal';
 import { CompatClient } from '@stomp/stompjs';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCommentDots } from '@fortawesome/free-regular-svg-icons';
 
 type TeamInfoChatButton = {
     teamId: number;
@@ -23,12 +25,12 @@ export function TeamInfoChatButton({ teamId, chatRoomId, client }: TeamInfoChatB
     });
 
     return (
-        <div className="teamInfoChatButton">
+        <div className="teamInfoChatButton floating">
             <button
                 className="teamInfoChatButton__button"
                 onClick={() => dispatch(openTeamChattingModal({ teamId, memberId, chatRoomId, client }))}
             >
-                채팅창
+                <FontAwesomeIcon icon={faCommentDots} />
             </button>
         </div>
     );
