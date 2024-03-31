@@ -25,7 +25,7 @@ export function TeamInfo() {
                 />
                 <TeamInfoMember teamLeaderId={teamData.teamLeaderId} teamMembers={teamData.members} />
                 <TeamInfoTeamExpenditure />
-                <TeamInfoChatButton />
+                <TeamInfoChatButton teamId={teamData.teamId} />
             </div>
         </div>
     );
