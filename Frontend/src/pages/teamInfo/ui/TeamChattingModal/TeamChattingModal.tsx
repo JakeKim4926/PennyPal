@@ -7,8 +7,8 @@ import { faCircleXmark } from '@fortawesome/free-regular-svg-icons';
 import { getTeamChatHistory } from '../../api/getTeamChatHistory';
 import { getCookie } from '@/shared';
 import { connectTeamChatRoom } from '../../api/connectTeamChatRoom';
-import SockJS from 'sockjs-client';
-import { Stomp } from '@stomp/stompjs';
+import { useDispatch } from 'react-redux';
+import { closeTeamChattingModal } from '../../model/openTeamChattingModal';
 
 type TeamChattingModalProps = {
     teamId: number;
@@ -29,6 +29,7 @@ export function TeamChattingModal({ teamId, memberId, chatRoomId, client }: Team
     const [messageList, setMessageList] = useState<Message[]>([]);
     const [memberNickname, setMemberNickname] = useState<string>('');
     const chatRef = useRef<HTMLDivElement>(null);
+    const dispatch = useDispatch();
 
     // handleSendMessage: 메세지 전송 및 인풋 비우기
     const handleSendMessage = useCallback(
@@ -53,7 +54,6 @@ export function TeamChattingModal({ teamId, memberId, chatRoomId, client }: Team
                     setMessageList(res.data.data.messages);
                 }
             })
-
             .catch((err) => console.log(err));
     }, []);
 
@@ -70,7 +70,12 @@ export function TeamChattingModal({ teamId, memberId, chatRoomId, client }: Team
         <div className="teamChattingModal">
             <div className="teamChattingModal__top">
                 <div className="teamChattingModal__top-left">팀 채팅방</div>
-                <button className="teamChattingModal__top-right">
+                <button
+                    className="teamChattingModal__top-right"
+                    onClick={() => {
+                        dispatch(closeTeamChattingModal());
+                    }}
+                >
                     <FontAwesomeIcon icon={faCircleXmark} style={{ color: '#FFFFFF' }} />
                 </button>
             </div>
@@ -107,7 +112,6 @@ type MessageListItemProps = {
 };
 
 function MessageListItem({ message, memberNickname }: MessageListItemProps) {
-    console.log(memberNickname == message.memberNickname);
     if (memberNickname == message.memberNickname)
         return (
             <div className="messageListItemMine">
