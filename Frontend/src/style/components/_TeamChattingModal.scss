@@ -40,7 +40,7 @@
         padding: 0.5rem 1rem;
         display: flex;
         flex-direction: column;
-        gap: 0.4rem;
+        gap: 1.5rem;
     }
 
     &__bottom {
@@ -75,11 +75,11 @@
 }
 
 @mixin nicknameCommon {
-    font-size: 0.9rem;
+    font-size: 1.1rem;
 }
 
 .messageListItem {
-    display: inline-flex;
+    width: 100%;
     &__nickname {
         @include nicknameCommon();
     }
@@ -89,6 +89,7 @@
     }
 
     &Mine {
+        width: 100%;
         text-align: end;
         align-self: flex-end;
 
@@ -98,6 +99,7 @@
 
         &__message {
             @include messageCommon();
+            background-color: $light;
         }
     }
 }
