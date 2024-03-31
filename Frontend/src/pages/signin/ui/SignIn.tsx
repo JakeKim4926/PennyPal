@@ -1,7 +1,4 @@
 import { useNavigate } from 'react-router-dom';
-<<<<<<< HEAD
-import { Button } from '../../../shared';
-=======
 import { Button } from '@/shared';
 import { doLogin } from '@/pages/signin/model/doLogin';
 import { useState, useEffect, useRef } from 'react';
@@ -26,7 +23,6 @@ const handleLoginSuccess = (response: LoginResponse) => {
     // 받은 응답의 token(JWT 토큰)을 쿠키에 저장합니다. 쿠키의 유효 기간은 7일입니다.
     setCookie('memberToken', response.memberToken);
 };
->>>>>>> origin/develop/FE
 
 export function SignIn() {
     const [email, setEmail] = useState<string>('');

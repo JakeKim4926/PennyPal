@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-export function MyPage() {
-    return <div>MyPage</div>;
-=======
 import { Button, getCookie } from '@/shared';
 import { useSignUpFormModel } from '@/pages/signup/model/signUpFormModel';
 import { ChangeEvent, useState } from 'react';
@@ -129,5 +125,4 @@ export function MyPage() {
             </div>
         </div>
     );
->>>>>>> origin/develop/FE
 }

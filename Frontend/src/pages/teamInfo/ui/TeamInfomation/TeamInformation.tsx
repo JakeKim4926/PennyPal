@@ -1,4 +1,8 @@
-import React, { useTransition } from 'react';
+import { getCookie } from '@/shared';
+import React, { useEffect, useState, useTransition } from 'react';
+import { useDispatch } from 'react-redux';
+import { openTeamLeaveModal } from '../../model/openTeamLeaveModal';
+import { openTeamSettingModal } from '../../model/openTeamSettingModal';
 
 type TeamInformationProps = {
     teamName: string;
@@ -7,6 +11,8 @@ type TeamInformationProps = {
     teamThisTotalExpenses: number;
     teamInfo?: 'string';
     teamRankRealtime: number;
+    teamLeaderId: number;
+    teamId: number;
 };
 
 export function TeamInformation({
@@ -16,14 +22,50 @@ export function TeamInformation({
     teamThisTotalExpenses,
     teamInfo,
     teamRankRealtime,
+    teamLeaderId,
+    teamId,
 }: TeamInformationProps) {
+    const dispatch = useDispatch();
+    const [memberId, setMemberId] = useState(0);
+
+    useEffect(() => {
+        const cookieData = getCookie('memberId');
+
+        if (typeof cookieData === 'number') {
+            setMemberId(cookieData);
+        }
+    }, []);
+
     return (
         <div className="teamTeamInfo contentCard">
             <div className="teamTeamInfo__title contentCard__title">
                 <div className="teamTeamInfo__title-text contentCard__title-text">
                     <div>TEAM INFO</div>
                     {/* SETTING 버튼 -> 추후 팀장만 보이게끔 조건부 렌더링 */}
-                    <button className="teamTeamInfo__title-text-button button">SETTING</button>
+                    {memberId === teamLeaderId ? (
+                        <button
+                            className="teamTeamInfo__title-text-button button"
+                            onClick={() => {
+                                dispatch(openTeamSettingModal({ teamId: teamId, memberId: memberId }));
+                            }}
+                        >
+                            SETTING
+                        </button>
+                    ) : (
+                        <button
+                            className="teamTeamInfo__title-text-button button"
+                            onClick={() => {
+                                dispatch(
+                                    openTeamLeaveModal({
+                                        teamId: teamId,
+                                        memberId: memberId,
+                                    }),
+                                );
+                            }}
+                        >
+                            탈퇴
+                        </button>
+                    )}
                 </div>
             </div>
             <div className="teamTeamInfo__top">

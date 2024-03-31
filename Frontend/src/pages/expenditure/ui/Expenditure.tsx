@@ -43,7 +43,7 @@ export function Expenditure() {
                 ],
             },
             {
-                id: 2,
+                id: 3,
                 stats: [
                     {
                         icon: '/path/to/icon3.png',
@@ -58,7 +58,7 @@ export function Expenditure() {
                 ],
             },
             {
-                id: 2,
+                id: 4,
                 stats: [
                     {
                         icon: '/path/to/icon3.png',
@@ -92,7 +92,26 @@ export function Expenditure() {
                             console.log(a);
                         }}
                     >
-                        CardTest
+                        추천카드조회
+                    </button>
+
+                    <button
+                        onClick={async () => {
+                            const requestData = {
+                                memberIndex: 1,
+                            };
+
+                            try {
+                                const response = await customAxios.get('/card/recommend', {
+                                    params: requestData,
+                                });
+                                console.log(response.data); // 응답 데이터를 콘솔에 출력
+                            } catch (error) {
+                                console.error(error); // 오류 발생 시 콘솔에 오류를 출력
+                            }
+                        }}
+                    >
+                        특정유저 추천카드조회
                     </button>
 
                     <button

@@ -1,18 +1,10 @@
-<<<<<<< HEAD
-import React from 'react';
-import { TeamInfo } from '../../teamInfo/index';
-import { Team } from '../../team/index';
-
-export function TeamRouting() {
-    const hasTeam = true;
-=======
 import React, { useCallback, useEffect, useState } from 'react';
 import { TeamInfo } from '../../teamInfo/index';
 import { Team } from '../../team/index';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/app/appProvider';
 import { getTeamInfo } from '../api/getTeamInfo';
-import { API_CACHE_DATA, getCookie } from '@/shared';
+import { API_CACHE_DATA, USER_ID, getCookie } from '@/shared';
 import { useDispatch } from 'react-redux';
 import { setTeamInfo } from '../model/setTeamInfo';
 
@@ -32,11 +24,11 @@ interface TeamInfoData {
 export function TeamRouting() {
     const teamInfo: any = useSelector((state: RootState) => state.setTeamInfoReducer.data);
     const dispatch = useDispatch();
->>>>>>> origin/develop/FE
 
     // 추후에 hasTeam 초기 값을 동적으로 설정해줄 수 있어야함 -> 팀 존재 여부에 따라
     // 여기 들어오면 가입한 팀 존재 여부 API 날린 다음 응답값에 따라 페이지 분기
-    const memberId = getCookie('memberId');
+    // const memberId = getCookie('memberId');
+    const memberId = USER_ID;
 
     // fetchData: 해당 유저 팀 정보 가져오기
     const fetchData = useCallback((url: string) => getTeamInfo(`/team/${memberId}`), [memberId]);

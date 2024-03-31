@@ -1,7 +1,4 @@
 import React from 'react';
-<<<<<<< HEAD
-import { useState } from 'react';
-=======
 import { useState, useEffect, useRef } from 'react';
 import { scrollTeamCreateArea } from '../../model/scrollTeamCreateArea';
 import { useDispatch } from 'react-redux';
@@ -9,8 +6,7 @@ import { createGroup } from '../../api/createGroup';
 import { checkTeamName } from '../../model';
 import { setTeamInfo } from '@/pages/teamRouting/model/setTeamInfo';
 import { getTeamInfo } from '@/pages/teamRouting/api/getTeamInfo';
-import { getCookie } from '@/shared';
->>>>>>> origin/develop/FE
+import { USER_ID, getCookie } from '@/shared';
 
 export function TeamCreateTeam() {
     return (
@@ -24,15 +20,8 @@ export function TeamCreateTeam() {
 }
 
 function Content() {
-<<<<<<< HEAD
-    const [curPage, setCurPage] = useState(0);
-=======
-    useEffect(() => {
-        if (contentRef.current) {
-            console.dir(contentRef.current.offsetWidth);
-        }
-    });
     const contentRef = useRef<HTMLDivElement>(null);
+    const memberId = getCookie('memberId');
 
     // moveNext: 다음 페이지로 넘기는 함수
     const moveNext = scrollTeamCreateArea;
@@ -41,7 +30,7 @@ function Content() {
     const teamDto = {
         teamName: '',
         teamIsAutoConfirm: false,
-        teamLeaderId: getCookie('memberId'), // 추후작업: 로그인된 유저 id를 기본값으로
+        teamLeaderId: memberId,
         teamInfo: '',
     };
 
@@ -59,17 +48,20 @@ function Content() {
     function registConfirm(confirm: boolean) {
         teamDto.teamIsAutoConfirm = confirm;
     }
->>>>>>> origin/develop/FE
 
     return (
-        <>
-            <div className="teamCreateTeam__content">
-                <div className="teamCreateTeam__content-top">팀을 생성해 함께할 동료들을 모아보아요!</div>
-                <button className="teamCreateTeam__content-nextButton">다음으로</button>
+        <div className="teamCreateTeam__content" ref={contentRef}>
+            <div className="teamCreateTeam__content-inner">
+                <div className="teamCreateTeam__content-inner-top">팀을 생성해 함께할 동료들을 모아보아요!</div>
+                <button
+                    className="teamCreateTeam__content-inner-nextButton"
+                    onClick={() => {
+                        moveNext(contentRef, 1);
+                    }}
+                >
+                    팀 생성하기
+                </button>
             </div>
-<<<<<<< HEAD
-        </>
-=======
             <NameArea moveNext={() => moveNext(contentRef, 2)} registName={registName} />
             <DescArea
                 moveBack={() => moveNext(contentRef, 1)}
@@ -313,13 +305,12 @@ function ConfirmArea({ registConfirm, moveNext, teamDto }: ConfirmArea) {
             moveNext();
 
             // handleRoute: 일정시간 후 팀 페이지 전환
-            handleRoute();
+            handleRoute(res);
         }
     }
 
     // handleRoute: 팀 가입 여부를 변경해 내 팀 상세 페이지로 라우트
-    async function handleRoute() {
-        const res = await getTeamInfo('/team/3429');
+    async function handleRoute(res: any) {
         setTimeout(() => {
             dispatch(setTeamInfo(res.data.data));
         }, 3500);
@@ -362,6 +353,5 @@ function LastArea() {
                 <div>잠시 후 내 팀 페이지로 이동합니다</div>
             </div>
         </div>
->>>>>>> origin/develop/FE
     );
 }

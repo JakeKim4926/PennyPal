@@ -1,21 +1,19 @@
 import { combineReducers } from 'redux';
-import { openModal } from '@/pages/team/index';
+import { openTeamDetailModalReducer } from '@/pages/team/index';
 import { signUpStepReducer } from '@/pages/signup/index';
 import { openMarketItem } from '@/pages/market/index';
-<<<<<<< HEAD
-=======
 import { setTeamInfoReducer } from '@/pages/teamRouting/model/setTeamInfo';
->>>>>>> origin/develop/FE
+import { openTeamLeaveModalReducer } from '@/pages/teamInfo/index';
+import { openTeamSettingModalReducer } from '@/pages/teamInfo/index';
 
 // 루트 리듀서를 내보내주세요.
 export const rootReducer = combineReducers({
-    openModal,
+    openTeamDetailModalReducer,
     openMarketItem,
     signUpStep: signUpStepReducer,
-<<<<<<< HEAD
-=======
     setTeamInfoReducer,
->>>>>>> origin/develop/FE
+    openTeamLeaveModalReducer,
+    openTeamSettingModalReducer,
 });
 
 // 루트 리듀서의 반환값를 유추해줍니다
