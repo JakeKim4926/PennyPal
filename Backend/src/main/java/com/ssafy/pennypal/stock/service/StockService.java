@@ -1,6 +1,7 @@
 package com.ssafy.pennypal.stock.service;
 
 import com.ssafy.pennypal.stock.dto.response.StockWithLatestTransactionDto;
+import com.ssafy.pennypal.stock.dto.response.StockWithTransactionDto;
 import com.ssafy.pennypal.stock.repository.stock.IStockRepository;
 import com.ssafy.pennypal.stock.repository.stocktransaction.IStockTransactionRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ public class StockService implements IStockService {
     }
 
     @Override
-    public void getStock(String stock) {
-        
+    public StockWithTransactionDto getStock(Long stockId) {
+        return stockRepository.findStocksWithTransaction(stockId);
     }
 }
