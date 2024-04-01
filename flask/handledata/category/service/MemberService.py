@@ -74,10 +74,10 @@ class MemberService:
         }
 
         # POST 요청 보내기
-        response = requests.get('http://localhost:8080/api/bank/user/account/transaction', json=data)
+        response = requests.post('http://localhost:8080/api/bank/user/account/transaction', json=data)
 
         if response.status_code != 200:
-            response = requests.get('http://localhost:8080/api/bank/user/account/transaction', json=data)
+            response = requests.post('https://localhost:8080/api/bank/user/account/transaction', json=data)
 
 
         # 응답 확인
