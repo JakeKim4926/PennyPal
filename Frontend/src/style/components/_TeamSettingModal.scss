@@ -1,5 +1,6 @@
 @mixin listCommon {
     width: 20rem;
+    height: 18rem;
     padding: 1rem;
     border-radius: 1rem;
     display: flex;
@@ -84,6 +85,7 @@
                     flex-direction: column;
                     justify-content: space-around;
                     gap: 0.3rem;
+                    overflow-y: auto;
                 }
             }
         }
@@ -96,6 +98,10 @@
         &-buttons {
             display: flex;
             gap: 1.5rem;
+
+            button {
+                cursor: pointer;
+            }
         }
     }
 }
@@ -125,5 +131,9 @@
     &-buttons {
         display: flex;
         gap: 0.3rem;
+
+        button {
+            cursor: pointer;
+        }
     }
 }

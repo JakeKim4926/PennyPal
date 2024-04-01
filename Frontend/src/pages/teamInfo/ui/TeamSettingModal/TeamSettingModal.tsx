@@ -1,5 +1,5 @@
 import { closeTeamSettingModal, deleteTeam, getTeamWaitingList } from '@/pages/teamInfo/index';
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 type TeamSettingModal = {
@@ -65,12 +65,9 @@ export function TeamSettingModal({ teamId, memberId, teamName, teamInfo, members
                         <div className="teamSettingModal__middle-personnel-current">
                             <div>팀원 현황</div>
                             <div className="teamSettingModal__middle-personnel-current-list">
-                                <MemberListItem />
-                                <MemberListItem />
-                                <MemberListItem />
-                                <MemberListItem />
-                                <MemberListItem />
-                                <MemberListItem />
+                                {members?.map((member) => (
+                                    <MemberListItem member={member} />
+                                ))}
                             </div>
                         </div>
                         <div className="teamSettingModal__middle-personnel-waiting">
@@ -108,7 +105,7 @@ export function TeamSettingModal({ teamId, memberId, teamName, teamInfo, members
     );
 }
 
-function MemberListItem() {
+function MemberListItem({ member: [] }) {
     return (
         <div className="memberListItem">
             <div className="memberListItem-name">멤버이름</div>

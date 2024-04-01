@@ -43,8 +43,18 @@ function TeamLeaveModalSpace() {
 function TeamSettingModalSpace() {
     const isOpenTeamSettingModal = useSelector((state: RootState) => state.openTeamSettingModalReducer.data);
 
-    if (isOpenTeamSettingModal instanceof Object)
-        return <TeamSettingModal teamId={isOpenTeamSettingModal.teamId} memberId={isOpenTeamSettingModal.memberId} />;
+    if (isOpenTeamSettingModal instanceof Object) {
+        const data = isOpenTeamSettingModal;
+        return (
+            <TeamSettingModal
+                teamId={data.teamId}
+                memberId={data.memberId}
+                teamName={data.teamName}
+                teamInfo={data.teamInfo}
+                members={data.members}
+            />
+        );
+    }
 
     return null;
 }

@@ -46,7 +46,15 @@ export function TeamInformation({
                         <button
                             className="teamTeamInfo__title-text-button button"
                             onClick={() => {
-                                dispatch(openTeamSettingModal({ teamId: teamId, memberId: memberId }));
+                                dispatch(
+                                    openTeamSettingModal({
+                                        teamId,
+                                        memberId,
+                                        teamName,
+                                        teamInfo,
+                                        members: teamMembers,
+                                    }),
+                                );
                             }}
                         >
                             SETTING
