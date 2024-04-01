@@ -1,5 +1,5 @@
 import { getTeamInfo } from '@/pages/teamRouting';
-import { API_CACHE_DATA, getCookie } from '@/shared';
+import { API_CACHE_DATA, customAxios, getCookie } from '@/shared';
 import { useEffect, useState } from 'react';
 import { getRanking } from '../../api/getRanking';
 
@@ -71,6 +71,14 @@ export function RankingTable() {
                 <div>점수</div>
                 <div>보상 포인트</div>
             </div>
+            <button
+                onClick={() => {
+                    customAxios.post('/team/rank').catch((err) => console.log(err));
+                    customAxios.post('/team/rankRealtime').catch((err) => console.log(err));
+                }}
+            >
+                랭킹
+            </button>
             <div className="rankingTable__content">
                 <ul className="rankingTable__content-list">
                     {ranking.map((it) => (

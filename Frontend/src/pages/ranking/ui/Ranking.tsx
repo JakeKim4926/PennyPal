@@ -1,4 +1,4 @@
-import { PageHeader, getCookie } from '@/shared';
+import { PageHeader, customAxios, getCookie } from '@/shared';
 import { RankingTable } from './RankingTable/RankingTable';
 import { API_CACHE_DATA } from '@/shared';
 import { useEffect } from 'react';
@@ -9,6 +9,14 @@ export function Ranking() {
         <div className="ranking__container container">
             <div className="ranking">
                 <PageHeader page={'ranking'} />
+                <button
+                    onClick={() => {
+                        customAxios.post('/team/rank');
+                        customAxios.post('/team/rankRealtime');
+                    }}
+                >
+                    랭킹
+                </button>
                 <RankingTable />
             </div>
         </div>
