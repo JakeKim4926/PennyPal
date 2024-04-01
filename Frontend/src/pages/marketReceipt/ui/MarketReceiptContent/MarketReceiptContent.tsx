@@ -4,9 +4,18 @@ import { getCookie } from '@/shared';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStore } from '@fortawesome/free-solid-svg-icons';
 
+type Record = {
+    orderId: number;
+    productId: number;
+    buyQuantity: number;
+    priceSum: number;
+    orderDate: string;
+};
+
 export function MarketReceiptContent() {
-    const [record, setRecord] = useState([]);
+    const [record, setRecord] = useState<Record[]>([]);
     const memberId = getCookie('memberId');
+
     useEffect(() => {
         if (typeof memberId === 'number') {
             getPurchaseHistory(memberId)
@@ -14,19 +23,12 @@ export function MarketReceiptContent() {
                 .then((res) => {
                     if (res.status === 200) {
                         console.log(res.data.content);
+                        setRecord(res.data.content);
                     }
                 });
         }
     }, []);
 
-    const recordList = [
-        { date: '2024-03-22 22:22:22', name: '빙그레) 바나나맛 우유', quantity: 3, price: 5100 },
-        { date: '2024-03-22 22:22:22', name: '빙그레) 바나나맛 우유', quantity: 3, price: 5100 },
-        { date: '2024-03-22 22:22:22', name: '빙그레) 바나나맛 우유', quantity: 3, price: 5100 },
-        { date: '2024-03-22 22:22:22', name: '빙그레) 바나나맛 우유', quantity: 3, price: 5100 },
-        { date: '2024-03-22 22:22:22', name: '빙그레) 바나나맛 우유', quantity: 3, price: 5100 },
-        { date: '2024-03-22 22:22:22', name: '빙그레) 바나나맛 우유', quantity: 3, price: 5100 },
-    ];
     return (
         <div className="marketReceiptContent">
             <div className="marketReceiptContent__top">
@@ -45,12 +47,12 @@ export function MarketReceiptContent() {
             </div>
             <div className="marketReceiptContent__main">
                 <ul className="marketReceiptContent__main-list">
-                    {recordList.map((it) => (
+                    {record.map((it) => (
                         <li className="marketReceiptContent__main-list-item">
-                            <div>{it.date}</div>
-                            <div>{it.name}</div>
-                            <div>{it.quantity}</div>
-                            <div>{it.price}</div>
+                            <div>{it.orderDate}</div>
+                            <div>{it.orderId}</div>
+                            <div>{it.buyQuantity}</div>
+                            <div>{it.priceSum}</div>
                         </li>
                     ))}
                 </ul>
