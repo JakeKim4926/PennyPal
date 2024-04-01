@@ -1,19 +1,19 @@
 @import '@/style/abstract/variables';
 
-.pageHeader{
+.pageHeader {
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 30px;
-    padding-bottom: 30px;
+    gap: 20px;
+    padding: 50px 0;
     flex-shrink: 0;
-    
+
     background-color: $bright;
-    background-image: url('@/style/abstract/background.svg') ;
+    background-image: url('@/style/abstract/background.svg');
     background-repeat: repeat;
-    background-size: 90%;
-    
+    background-size: 100%;
+
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
 
@@ -23,7 +23,7 @@
 
     ::after {
         position: absolute;
-        background-color: white;
+        background-color: $bright;
         z-index: -1;
         width: 100%;
         height: 100%;
@@ -33,15 +33,22 @@
         content: '';
     }
 
+    * {
+        color: $black;
+    }
+
+    &__icon {
+        height: 5vh;
+    }
+
     &__title {
         font-family: 'Wanted-Black';
-        font-size: 40px;
-        // letter-spacing: normal;
+        font-size: 3.5vh;
+        letter-spacing: 0.6vh;
     }
 
     &__description {
-        font-family: 'Wanted-Bold';
-        font-size: 15px;
+        font-family: 'Wanted-Medium';
+        font-size: 14px;
     }
-
 }

@@ -8,10 +8,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ChatMessage extends BaseEntity {
+public class ChatMessage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,17 +22,24 @@ public class ChatMessage extends BaseEntity {
 
     private Long senderId;
 
+    private String senderNickname;
+
     private String message;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chat_room_id")
     private ChatRoom chatRoom;
 
+    private LocalDateTime createdAt;
+
 
     @Builder
-    private ChatMessage(Long senderId, String message, ChatRoom chatRoom) {
+    private ChatMessage(Long senderId, String senderNickname, String message, ChatRoom chatRoom, LocalDateTime createdAt) {
         this.senderId = senderId;
+        this.senderNickname = senderNickname;
         this.message = message;
         this.chatRoom = chatRoom;
+        this.createdAt = createdAt;
+
     }
 }

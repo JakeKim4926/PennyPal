@@ -1,5 +1,0 @@
-MYSQL_DATASOURCE_URL=jdbc:mysql://3.35.170.191:3307/penny_pal?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-MYSQL_DATASOURCE_USERNAME=root
-MYSQL_DATASOURCE_PASSWORD=108
-SSAFY_BANK_API_KEY=240b64cd4d0e4056837b473405ecc8d1
-SSAFY_BANK_API_SERVER=https://finapi.p.ssafy.io/ssafy/api/v1/

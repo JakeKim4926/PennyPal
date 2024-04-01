@@ -46,7 +46,7 @@ class JwtServiceTest {
                 .memberEmail("Jake95@naver.com")
                 .memberNickname("J크")
                 .memberPassword(passwordEncoder.encode("qwer1234"))
-                .memberBirthDate(LocalDateTime.now())
+                .memberBirthDate(LocalDate.of(1999,4,10))
                 .memberName("Jake")
                 .build();
 
@@ -67,7 +67,7 @@ class JwtServiceTest {
                 .memberEmail("Jake95@naver.com")
                 .memberNickname("J크")
                 .memberPassword(passwordEncoder.encode("qwer1234"))
-                .memberBirthDate(LocalDateTime.now())
+                .memberBirthDate(LocalDate.of(1999,4,10))
                 .memberName("Jake")
                 .build();
 
@@ -88,7 +88,7 @@ class JwtServiceTest {
                 .memberEmail("Jake95@naver.com")
                 .memberNickname("J크")
                 .memberPassword(passwordEncoder.encode("qwer1234"))
-                .memberBirthDate(LocalDateTime.now())
+                .memberBirthDate(LocalDate.of(1999,4,10))
                 .memberName("Jake")
                 .build();
 
@@ -111,7 +111,7 @@ class JwtServiceTest {
                 .memberEmail("Jake95@naver.com")
                 .memberNickname("J크")
                 .memberPassword(passwordEncoder.encode("qwer1234"))
-                .memberBirthDate(LocalDateTime.now())
+                .memberBirthDate(LocalDate.of(1999,4,10))
                 .memberName("Jake")
                 .build();
 

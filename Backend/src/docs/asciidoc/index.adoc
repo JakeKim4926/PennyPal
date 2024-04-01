@@ -29,3 +29,7 @@ include::member/member.adoc[]
 == Stock API
 
 include::stock/stock.adoc[]
+
+== Card API
+
+include::card/card.adoc[]

@@ -6,18 +6,13 @@ spring:
     password: ${MYSQL_DATASOURCE_PASSWORD}
 
 
-
 #logging:
 #  level:
 #    org:
 #      springframework:
 #        web.client.RestTemplate: DEBUG
 #        http: DEBUG
-logging:
-  level:
-    org:
-      springframework:
-        security: DEBUG
+
 ---
 spring:
   profiles:
@@ -30,4 +25,3 @@ spring:
 spring:
   profiles:
     active: local
-

@@ -6,9 +6,9 @@ $GAP: 20px;
     flex-direction: column;
     gap: $GAP;
     box-shadow: 0 0 6px $gray;
+    animation: modalFadein 0.22s ease-in-out;
 
     &__top {
-
         &-image {
             background-color: $sub;
             height: 300px;

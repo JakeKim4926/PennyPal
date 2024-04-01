@@ -1,0 +1,49 @@
+.rankingTable {
+    @mixin TABLE_LAYOUT {
+        display: grid;
+        grid-template-columns: 10% 40% 30% 20%;
+        text-align: center;
+    }
+
+    background-color: $bright;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    padding: 0.6rem;
+    border-radius: 1rem;
+
+    &__header {
+        @include TABLE_LAYOUT();
+        font-weight: 900;
+    }
+
+    &__content {
+        &-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+            &-item {
+                @include TABLE_LAYOUT();
+            }
+        }
+    }
+
+    &__mine {
+        @include TABLE_LAYOUT();
+        margin-top: 0.4rem;
+        padding: 0.6rem 0;
+        background-color: $sub;
+        border-radius: 1rem;
+    }
+
+    &__pagenation {
+        display: flex;
+        justify-content: center;
+
+        &-box {
+            padding: 0.3rem;
+            display: flex;
+            gap: 1rem;
+        }
+    }
+}

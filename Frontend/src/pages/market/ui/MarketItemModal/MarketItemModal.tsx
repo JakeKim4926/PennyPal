@@ -1,11 +1,28 @@
 import { useDispatch } from 'react-redux';
 import { closeMarketItemModal } from '../../model';
+import { useEffect, useCallback } from 'react';
 
 export function MarketItemModal() {
     const dispatch = useDispatch();
 
+    useEffect(() => {
+        function handleClick(e: MouseEvent) {
+            e.stopPropagation();
+            if (e.target instanceof Element) {
+                if ([...e.target.classList].some((it) => it === 'modalContainer')) {
+                    dispatch(closeMarketItemModal());
+                }
+            }
+        }
+        window.addEventListener('click', handleClick);
+
+        return () => {
+            window.removeEventListener('click', handleClick);
+        };
+    });
+
     return (
-        <div className="modalContainer" onClick={() => dispatch(closeMarketItemModal())}>
+        <div className="modalContainer">
             <div className="marketItemModal contentCard">
                 <div className="marketItemModal__top">
                     <div className="marketItemModal__top-image">이미지</div>

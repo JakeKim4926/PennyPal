@@ -1,53 +1,119 @@
-import React, { useTransition } from 'react';
+import { getCookie } from '@/shared';
+import React, { useEffect, useState, useTransition } from 'react';
+import { useDispatch } from 'react-redux';
+import { openTeamLeaveModal } from '../../model/openTeamLeaveModal';
+import { openTeamSettingModal } from '../../model/openTeamSettingModal';
 
-export function TeamInformation() {
-    const teamInfo = {
-        name: '팀명123456',
-        head: 5,
-        ranking: 20,
-        prev: 800000,
-        pres: 400000,
-    };
+type TeamInformationProps = {
+    teamName: string;
+    teamMembers: [];
+    teamLastTotalExpenses: number;
+    teamThisTotalExpenses: number;
+    teamInfo?: 'string';
+    teamRankRealtime: number;
+    teamLeaderId: number;
+    teamId: number;
+};
+
+export function TeamInformation({
+    teamName,
+    teamMembers,
+    teamLastTotalExpenses,
+    teamThisTotalExpenses,
+    teamInfo,
+    teamRankRealtime,
+    teamLeaderId,
+    teamId,
+}: TeamInformationProps) {
+    const dispatch = useDispatch();
+    const [memberId, setMemberId] = useState(0);
+
+    useEffect(() => {
+        const cookieData = getCookie('memberId');
+
+        if (typeof cookieData === 'number') {
+            setMemberId(cookieData);
+        }
+    }, []);
+
     return (
-        <div className="teamTeamInfo">
-            <div className="teamTeamInfo__title">
-                <div className="teamTeamInfo__title-text">TEAM INFO</div>
+        <div className="teamTeamInfo contentCard">
+            <div className="teamTeamInfo__title contentCard__title">
+                <div className="teamTeamInfo__title-text contentCard__title-text">
+                    <div>TEAM INFO</div>
+                    {/* SETTING 버튼 -> 추후 팀장만 보이게끔 조건부 렌더링 */}
+                    {memberId === teamLeaderId ? (
+                        <button
+                            className="teamTeamInfo__title-text-button button"
+                            onClick={() => {
+                                dispatch(openTeamSettingModal({ teamId: teamId, memberId: memberId }));
+                            }}
+                        >
+                            SETTING
+                        </button>
+                    ) : (
+                        <button
+                            className="teamTeamInfo__title-text-button button"
+                            onClick={() => {
+                                dispatch(
+                                    openTeamLeaveModal({
+                                        teamId: teamId,
+                                        memberId: memberId,
+                                    }),
+                                );
+                            }}
+                        >
+                            탈퇴
+                        </button>
+                    )}
+                </div>
             </div>
             <div className="teamTeamInfo__top">
                 <div className="teamTeamInfo__top-name">
-                    <div className="teamTeamInfo__top-name-title">{teamInfo.name}</div>
+                    <div className="teamTeamInfo__top-name-title">{teamName}</div>
                     <div className="teamTeamInfo__top-name-head">
                         <img src="assets/image/person.svg" width={20} />
-                        <div>{teamInfo.head}</div>
+                        <div>{teamMembers.length}</div>
                     </div>
                 </div>
                 <div className="teamTeamInfo__top-ranking">
-                    주간 랭킹 {teamInfo.ranking}
-                    <span className="unit">위</span>
+                    {teamRankRealtime !== 0 ? (
+                        <>
+                            주간 랭킹 {teamRankRealtime}
+                            <span className="unit">위</span>
+                        </>
+                    ) : (
+                        <>순위 없음</>
+                    )}
                 </div>
             </div>
             <div className="teamTeamInfo__middle">
                 <div className="teamTeamInfo__middle-prev">
                     <div className="teamTeamInfo__middle-prev-title subtitle">지난주</div>
                     <div className="teamTeamInfo__middle-prev-value value">
-                        {teamInfo.prev}
+                        {teamLastTotalExpenses.toLocaleString()}
                         <span className="unit">원</span>
                     </div>
                 </div>
                 <div className="teamTeamInfo__middle-pres">
                     <div className="teamTeamInfo__middle-pres-title subtitle">이번주</div>
                     <div className="teamTeamInfo__middle-pres-value value">
-                        {teamInfo.pres}
+                        {teamThisTotalExpenses.toLocaleString()}
                         <span className="unit">원</span>
                     </div>
                 </div>
                 <div className="teamTeamInfo__middle-ratio">
                     <div className="teamTeamInfo__middle-ratio-title subtitle">절감률</div>
                     <div className="teamTeamInfo__middle-ratio-value value">
-                        {((teamInfo.pres / teamInfo.prev) * 100).toFixed(1)}
+                        {isNaN(teamLastTotalExpenses / teamThisTotalExpenses)
+                            ? '0.0'
+                            : ((teamLastTotalExpenses / teamThisTotalExpenses) * 100).toFixed(1)}
                         <span className="unit">%</span>
                     </div>
                 </div>
+            </div>
+            <div className="teamTeamInfo__bottom">
+                <div className="teamTeamInfo__bottom-desc">{teamInfo ?? '팀 소개말이 없습니다.'}</div>
             </div>
         </div>
     );

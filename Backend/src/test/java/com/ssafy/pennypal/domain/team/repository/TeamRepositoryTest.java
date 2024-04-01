@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,7 +31,7 @@ class TeamRepositoryTest {
     @Transactional
     void findByTeamId(){
         // given
-        Member member = createMember("member1@pennypal.site", "짠1", LocalDateTime.now());
+        Member member = createMember("member1@pennypal.site", "짠1", LocalDate.now());
 
         Team team = createTeam("팀이름1", true, 1L, "팀소개1", member);
         Team savedTeam = teamRepository.save(team);
@@ -46,7 +47,7 @@ class TeamRepositoryTest {
 
     }
 
-    private Member createMember(String memberEmail, String memberNickname, LocalDateTime memberBirthDate){
+    private Member createMember(String memberEmail, String memberNickname, LocalDate memberBirthDate){
         return Member.builder()
                 .memberEmail(memberEmail)
                 .memberPassword("1234")

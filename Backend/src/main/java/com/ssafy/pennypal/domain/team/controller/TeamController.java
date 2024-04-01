@@ -4,14 +4,20 @@ import com.ssafy.pennypal.bank.service.api.BankServiceAPIImpl;
 import com.ssafy.pennypal.domain.chat.service.ChatService;
 import com.ssafy.pennypal.domain.team.dto.request.TeamBanishRequest;
 import com.ssafy.pennypal.domain.team.dto.request.TeamCreateRequest;
-import com.ssafy.pennypal.domain.team.dto.request.TeamJoinRequest;
+import com.ssafy.pennypal.domain.team.dto.request.TeamRequestDTO;
 import com.ssafy.pennypal.domain.team.dto.SimpleTeamDto;
 import com.ssafy.pennypal.domain.team.dto.request.TeamModifyRequest;
 import com.ssafy.pennypal.domain.team.dto.response.*;
+import com.ssafy.pennypal.domain.team.entity.Team;
 import com.ssafy.pennypal.domain.team.service.TeamService;
 import com.ssafy.pennypal.global.common.api.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,10 +37,10 @@ public class TeamController {
      * note : 2.1 팀 생성 ( + 팀 채팅방 생성 )
      */
     @PostMapping("/create")
-    public ApiResponse<TeamCreateResponse> createTeam(@Valid @RequestBody TeamCreateRequest request) {
+    public ApiResponse<TeamDetailResponse> createTeam(@Valid @RequestBody TeamCreateRequest request) {
 
         // 팀 생성
-        TeamCreateResponse result = teamService.createTeam(request.toServiceRequest());
+        TeamDetailResponse result = teamService.createTeam(request.toServiceRequest());
 
         // 팀 채팅방 생성
         chatService.createChatRoom(request.getTeamLeaderId());
@@ -44,56 +50,110 @@ public class TeamController {
     }
 
     /**
+     * note : 팀명 중복 체크
+     */
+    @PostMapping("/create/{keyword}")
+    public ApiResponse<Boolean> validTeamName(@PathVariable String keyword){
+
+        Boolean result = teamService.validTeamName(keyword);
+
+        if(result){
+            return ApiResponse.of(HttpStatus.CONFLICT, "NO",result );
+        }else{
+            return ApiResponse.ok(result);
+        }
+    }
+
+
+    /**
      * note : 매주 월요일 오전 12시에 주간 랭킹 업데이트
      */
-    @Scheduled(cron = "0 0 0 * * MON")
-    public void autoRank() {
+    @Scheduled(cron = "00 00 00 * * MON")
+//    @PostMapping("/rank")
+    public void autoRankWeekly() {
         teamService.calculateTeamScore();
         teamService.RankTeamScore();
+
+        // 모든 유저의 출석 일수 초기화
+        teamService.resetMemberAttendance();
     }
 
     /**
      * note : 2.2 팀 주간 랭킹 조회
      */
-    @GetMapping("/rank/weekly")
-    public ApiResponse<List<TeamRankHistoryResponse>> weeklyTeamRanking(){
+    @GetMapping("/rank/weekly/{teamId}")
+    public ApiResponse<Page<TeamRankWeeklyResponse>> weeklyTeamRanking(
+            @PathVariable("teamId") Long teamId,
+            @PageableDefault(page = 0, size = 6, direction = Sort.Direction.ASC)
+            Pageable pageable){
 
-        return ApiResponse.ok(teamService.rankHistoriesForWeeks());
+        return ApiResponse.ok(teamService.rankOfWeeks(teamId, pageable));
+    }
+
+    /**
+     * note : 매 시 정각에 실시간 랭킹 업데이트
+     */
+    @Scheduled(cron = "0 0 * * * *")
+//    @PostMapping("/rankRealtime")
+    public void autoRankRealtime() {
+
+        // 팀 점수 계산
+        teamService.calculateTeamScore();
+
+        // 팀 실시간 등수 계산
+        teamService.RankRealTimeScore();
     }
 
     /**
      * note : 2.2.1 팀 실시간 랭킹 조회
      */
-    @GetMapping("/rank/realtime")
-    public ApiResponse<List<TeamRankResponse>> realtimeTeamRanking() {
+    @GetMapping("/rank/realtime/{teamId}")
+    public ApiResponse<Page<TeamRankRealtimeResponse>> realtimeTeamRanking(
+            @PathVariable("teamId") Long teamId,
+            @PageableDefault(page = 0, size = 6, direction = Sort.Direction.ASC)
+            Pageable pageable) {
 
-        // 팀 점수 계산
-        teamService.calculateTeamScore();
-
-        // 등수 계산
-        List<TeamRankResponse> result = teamService.RankTeamRealTimeScore();
-
-        return ApiResponse.ok(result);
+        return ApiResponse.ok(teamService.rankOfRealtime(teamId, pageable));
     }
 
     /**
      * note : 2.3 팀 전체 조회 + 검색 (팀이름)
      */
     @GetMapping
-    public ApiResponse<List<TeamSearchResponse>> searchTeamList(
-            @RequestParam(name = "keyword", required = false) String teamName
+    public ApiResponse<Page<TeamSearchResponse>> searchTeamList(
+            @RequestParam(name = "keyword", required = false) String teamName,
+            @PageableDefault(page = 0, size = 4, sort = "teamName" , direction = Sort.Direction.ASC)
+            Pageable pageable
     ){
 
-        return ApiResponse.ok(teamService.searchTeamList(teamName));
+        return ApiResponse.ok(teamService.searchTeamList(teamName, pageable));
     }
 
     /**
-     * note : 2.4 팀 상세 조회
+     * note : 2.4 팀 상세 조회 (내 팀)
      */
-    @GetMapping("/{teamId}")
-    public ApiResponse<TeamDetailResponse> detailTeamInfo(@PathVariable Long teamId){
+    @GetMapping("/{memberId}")
+    public ApiResponse<TeamDetailResponse> detailTeamInfo(@PathVariable Long memberId){
 
-        return ApiResponse.ok(teamService.detailTeamInfo(teamId));
+        return ApiResponse.ok(teamService.detailTeamInfo(memberId));
+    }
+
+    /**
+     * note : 팀 상세 조회 (다른 팀)
+     */
+    @GetMapping("detail/{teamId}")
+    public ApiResponse<TeamOtherDetailResponse> detailOtherTeamInfo(@PathVariable Long teamId){
+
+        return ApiResponse.ok(teamService.detailOtherTeamInfo(teamId));
+    }
+
+    /**
+     * note : 가입 대기 유저 조회
+     */
+    @PostMapping("/waitingList")
+    public ApiResponse<List<TeamWaitingListResponse>> waitingList(@RequestBody TeamRequestDTO request){
+
+        return ApiResponse.ok(teamService.waitingList(request));
     }
 
     /**
@@ -108,7 +168,6 @@ public class TeamController {
 
     /**
      * note : 2.5.1 팀원 추방
-     * todo : 응답값 상의 후 수정
      */
     @PostMapping("/ban")
     public ApiResponse<String> banishMember(@RequestBody TeamBanishRequest request){
@@ -122,22 +181,46 @@ public class TeamController {
      * note : 2.5.2 팀 가입 ( + 팀 채팅방 초대 )
      */
     @PostMapping("/join")
-    public ApiResponse<TeamJoinResponse> joinTeam(@RequestBody TeamJoinRequest request) {
+    public ApiResponse<TeamJoinResponse> joinTeam(@RequestBody TeamRequestDTO request) {
 
         TeamJoinResponse result = teamService.joinTeam(request.toServiceRequest());
+
+        if(result == null){
+            // 수동 승인일 때
+            return ApiResponse.of(HttpStatus.ACCEPTED, "Hold", null);
+        }else{
 
         // 팀 채팅방 초대
         chatService.inviteChatRoom(request.getTeamId(), request.getMemberId());
 
         return ApiResponse.ok(result);
+}
+    }
 
+    /**
+     * note : 가입 승인
+     */
+    @PostMapping("/approve")
+    public ApiResponse<String> approveMember(@RequestBody TeamRequestDTO request){
+
+        teamService.approveMember(request);
+
+        return ApiResponse.ok("가입 승인 완료");
+    }
+
+    /**
+     * note : 가입 거절
+     */
+    @PostMapping("/reject")
+    public ApiResponse<String> rejectMember(@RequestBody TeamRequestDTO request){
+        teamService.rejectMember(request);
+        return ApiResponse.ok("가입 거절 완료");
     }
 
     /**
      * note : 2.5.3 팀 탈퇴
-     * todo : 응답값 상의 후 수정
      */
-    @PostMapping("leave")
+    @PostMapping("/leave")
     public ApiResponse<String> leaveTeam(@RequestBody SimpleTeamDto request){
 
         teamService.leaveTeam(request);
@@ -147,7 +230,6 @@ public class TeamController {
 
     /**
      * note : 2.6 팀 삭제
-     * todo : 응답값 상의 후 수정
      */
     @DeleteMapping
     public ApiResponse<String> deleteTeam(@RequestBody SimpleTeamDto request){
