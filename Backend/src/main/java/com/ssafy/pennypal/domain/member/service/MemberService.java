@@ -47,6 +47,7 @@ public class MemberService {
                 .memberPassword(passwordEncoder.encode(memberSignupRequest.getMemberPassword()))
                 .memberBirthDate(memberSignupRequest.getMemberBirthDate())
                 .memberName(memberSignupRequest.getMemberName())
+                .memberAttendance(0)
                 .build();
 
         memberRepository.save(member);
