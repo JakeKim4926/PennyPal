@@ -4,9 +4,9 @@ import { useEffect, useState } from 'react';
 type TeamSettingModal = {
     teamId: number;
     memberId: number;
-    teamName: string;
+    teamName?: string;
     teamInfo?: string;
-    members: [];
+    members?: [];
 };
 
 export function TeamSettingModal({ teamId, memberId, teamName, teamInfo, members }: TeamSettingModal) {
