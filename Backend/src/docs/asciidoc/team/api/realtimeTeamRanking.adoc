@@ -1,9 +1,0 @@
-// [[realtime-team-ranking]]
-// ==== HTTP Request
-//
-// include::{snippets}/realtime-team-ranking/http-request.adoc[]
-//
-// ==== HTTP Response
-//
-// include::{snippets}/realtime-team-ranking/http-response.adoc[]
-// include::{snippets}/realtime-team-ranking/response-fields.adoc[]
