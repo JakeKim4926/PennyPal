@@ -4,6 +4,7 @@ import com.ssafy.pennypal.domain.member.dto.request.MemberLoginRequest;
 import com.ssafy.pennypal.domain.member.dto.request.MemberSignupRequest;
 import com.ssafy.pennypal.domain.member.dto.request.MemberUpdateNicknameRequest;
 import com.ssafy.pennypal.domain.member.dto.request.MemberUpdatePasswordRequest;
+import com.ssafy.pennypal.domain.member.dto.response.MemberEmailResponseDto;
 import com.ssafy.pennypal.domain.member.dto.response.MemberLoginResponse;
 import com.ssafy.pennypal.domain.member.dto.response.MemberSignupResponse;
 import com.ssafy.pennypal.domain.member.entity.Member;
@@ -107,4 +108,12 @@ public class MemberService {
         return ApiResponse.of(HttpStatus.OK, "비밀번호 변경에 성공하셨습니다.", null);
     }
 
+    public MemberEmailResponseDto getMemberEmail(Long memberId) {
+        Member byMemberId = memberRepository.findByMemberId(memberId);
+
+        return MemberEmailResponseDto.builder()
+                .memberId(byMemberId.getMemberId())
+                .memberEmail(byMemberId.getMemberEmail())
+                .build();
+    }
 }

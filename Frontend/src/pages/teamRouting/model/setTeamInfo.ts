@@ -1,5 +1,7 @@
 const SET_TEAM_INFO = 'SET_TEAM_INFO' as const;
 
+type TeamInfo = {};
+
 export function setTeamInfo(teamInfo: object) {
     return { type: SET_TEAM_INFO, data: teamInfo };
 }

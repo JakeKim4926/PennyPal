@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button } from '../../../shared';
+import { Button } from '../../../../shared';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 export function SignUpDone() {

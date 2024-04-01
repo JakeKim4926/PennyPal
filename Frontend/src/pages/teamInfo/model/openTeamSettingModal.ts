@@ -1,7 +1,15 @@
 const OPEN_TEAM_SETTING_MODAL = 'OPEN_TEAM_SETTING_MODAL' as const;
 const CLOSE_TEAM_SETTING_MODAL = 'CLOSE_TEAM_SETTING_MODAL' as const;
 
-export function openTeamSettingModal(data: { teamId: number; memberId: number }) {
+type Data = {
+    teamId: number;
+    memberId: number;
+    teamName?: string;
+    teamInfo?: string;
+    members?: [];
+};
+
+export function openTeamSettingModal(data: Data) {
     return { type: OPEN_TEAM_SETTING_MODAL, payload: data };
 }
 
@@ -13,7 +21,7 @@ type OpenModalAction = ReturnType<typeof openTeamSettingModal> | ReturnType<type
 
 // 관리 할 상태(data)의 타입 지정
 type isTeamSettingModalState = {
-    data: boolean | { teamId: number; memberId: number };
+    data: boolean | Data;
 };
 
 // 초기 상태 지정

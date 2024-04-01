@@ -2,7 +2,9 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { closeTeamDetailModal, registGroup } from '../../model';
 import { getTeamDetail } from '../../api/getTeamDetail';
-import { USER_ID } from '@/shared';
+import { USER_ID, getCookie } from '@/shared';
+import { getTeamInfo } from '@/pages/teamRouting';
+import { setTeamInfo as setTeamInfoState } from '@/pages/teamRouting';
 
 type TeamDetailModalProps = {
     team: any;
@@ -18,6 +20,7 @@ type TeamInfo = {
 export function TeamApplyModal({ team }: TeamDetailModalProps) {
     const dispatch = useDispatch();
     const [teamInfo, setTeamInfo] = useState<TeamInfo | null>(null);
+    const memberId = getCookie('memberId');
 
     useEffect(() => {
         function handleClick(e: MouseEvent) {
@@ -84,8 +87,19 @@ export function TeamApplyModal({ team }: TeamDetailModalProps) {
                         <button
                             className="button"
                             onClick={async () => {
-                                const res = await registGroup({ teamId: team.teamId, memberId: USER_ID });
-                                console.log(res);
+                                const res = await registGroup({ teamId: team.teamId, memberId: memberId });
+
+                                if (res.data.code === 200) {
+                                    dispatch(closeTeamDetailModal());
+                                    alert('팀에 가입했습니다! \n 잠시 후 팀 페이지로 이동합니다.');
+                                    getTeamInfo(`/team/${memberId}`).then((res) => {
+                                        if (res.data.code === 200) {
+                                            setTimeout(() => {
+                                                dispatch(setTeamInfoState(res.data.data));
+                                            }, 1000);
+                                        }
+                                    });
+                                }
                             }}
                         >
                             가입 신청

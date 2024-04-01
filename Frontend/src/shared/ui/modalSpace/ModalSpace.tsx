@@ -3,16 +3,17 @@ import { TeamApplyModal } from '@/pages/team/index';
 import { RootState } from '@/app/appProvider';
 import { useSelector } from 'react-redux';
 import { MarketItemModal } from '@/pages/market/index';
-import { TeamLeaveModal } from '@/pages/teamInfo';
+import { TeamChattingModal, TeamLeaveModal } from '@/pages/teamInfo';
 import { TeamSettingModal } from '@/pages/teamInfo';
 
 export function ModalSpace() {
     return (
         <>
-            <TeamApplyModalSpace />
             <MarketItemModalSpace />
+            <TeamApplyModalSpace />
             <TeamLeaveModalSpace />
             <TeamSettingModalSpace />
+            <TeamChattingModalSpace />
         </>
     );
 }
@@ -42,8 +43,35 @@ function TeamLeaveModalSpace() {
 function TeamSettingModalSpace() {
     const isOpenTeamSettingModal = useSelector((state: RootState) => state.openTeamSettingModalReducer.data);
 
-    if (isOpenTeamSettingModal instanceof Object)
-        return <TeamSettingModal teamId={isOpenTeamSettingModal.teamId} memberId={isOpenTeamSettingModal.memberId} />;
+    if (isOpenTeamSettingModal instanceof Object) {
+        const data = isOpenTeamSettingModal;
+        return (
+            <TeamSettingModal
+                teamId={data.teamId}
+                memberId={data.memberId}
+                teamName={data.teamName}
+                teamInfo={data.teamInfo}
+                members={data.members}
+            />
+        );
+    }
 
+    return null;
+}
+
+function TeamChattingModalSpace() {
+    const isOpenTeamChattingModal = useSelector((state: RootState) => state.openTeamChattingModalReducer.data);
+
+    if (isOpenTeamChattingModal instanceof Object) {
+        const data = isOpenTeamChattingModal;
+        return (
+            <TeamChattingModal
+                teamId={data.teamId}
+                memberId={data.memberId}
+                chatRoomId={data.chatRoomId}
+                client={data.client}
+            />
+        );
+    }
     return null;
 }
