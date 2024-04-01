@@ -1,0 +1,9 @@
+[[getCards]]
+==== HTTP Request
+
+include::{snippets}/getCards/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/getCards/http-response.adoc[]
+include::{snippets}/getCards/response-fields.adoc[]

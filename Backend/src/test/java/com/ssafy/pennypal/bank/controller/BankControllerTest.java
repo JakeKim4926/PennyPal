@@ -670,5 +670,105 @@ public class BankControllerTest extends RestDocsSupport {
         // then
     }
 
+    @DisplayName("사용자 더미데이터 생성")
+    @Test
+    void 더미데이터_생성() throws Exception {
+        // given
+        UserAccountRequestServiceDTO userAccountRequestServiceDTO = UserAccountRequestServiceDTO.builder()
+                .apiKey("82d37624494f4092bf96d5f4dbb634c4")
+                .userId("mine702@naver.com")
+                .build();
+
+        given(bankServiceAPI.getUserAccount(any(UserAccountRequestServiceDTO.class)))
+                .willReturn(UserAccountResponseServiceDTO.builder()
+                        .code("succeed")
+                        .payload(
+                                UserAccountResponseServicePayLoadDTO.builder()
+                                        .userId("mine702@naver.com")
+                                        .userName("mine702")
+                                        .institutionCode("001")
+                                        .userKey("13cefdcf-494f-4092-bf96-d5f4dbb634c4")
+                                        .created("2024-03-04T12:41:30.921299+09:00")
+                                        .modified("2024-03-04T12:41:30.921299+09:00")
+                                        .build()
+                        )
+                        .now("2024-03-18T15:35:34.504746+09:00")
+                        .build());
+
+        given(bankServiceAPI.getUserAccountList(any(GetUserAccountListServiceRequestDTO.class)))
+                .willReturn(UserBankAccountsResponseServiceDTO.builder()
+                        .header(
+                                CommonHeaderResponseDTO.builder()
+                                        .responseCode("H0000")
+                                        .responseMessage("정상처리 되었습니다.")
+                                        .apiName("inquireAccountList")
+                                        .transmissionDate("20240101")
+                                        .transmissionTime("121212")
+                                        .institutionCode("00100")
+                                        .apiKey("82d37624494f4092bf96d5f4dbb634c4")
+                                        .apiServiceCode("inquireAccountList")
+                                        .institutionTransactionUniqueNo("20240215121212123468")
+                                        .build()
+                        )
+                        .REC(
+                                List.of(
+                                        UserAccountListResponseServiceDTO.builder()
+                                                .bankCode("001")
+                                                .bankName("한국은행")
+                                                .userName("test")
+                                                .accountNo("0016826085496269")
+                                                .accountName("한국은행 수시입출금")
+                                                .accountTypeCode("1")
+                                                .accountTypeName("수시입출금")
+                                                .accountCreatedDate("20240304")
+                                                .accountExpiryDate("20290304")
+                                                .dailyTransferLimit("1000000000000")
+                                                .oneTimeTransferLimit("1000000000000")
+                                                .accountBalance("0")
+                                                .build(),
+
+                                        UserAccountListResponseServiceDTO.builder()
+                                                .bankCode("002")
+                                                .bankName("산업은행")
+                                                .userName("test")
+                                                .accountNo("0028889135848149")
+                                                .accountName("산업은행 수시입출금")
+                                                .accountTypeCode("1")
+                                                .accountTypeName("수시입출금")
+                                                .accountCreatedDate("20240304")
+                                                .accountExpiryDate("20290304")
+                                                .dailyTransferLimit("1000000000000")
+                                                .oneTimeTransferLimit("1000000000000")
+                                                .accountBalance("0")
+                                                .build()
+                                )
+                        )
+                        .build());
+        // when
+        // then
+
+        mockMvc.perform(
+                        post("/api/bank/user/dummy/{userEmail}", userAccountRequestServiceDTO.getUserId())
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("set-dummy-data",
+                                preprocessResponse(prettyPrint()),
+                                responseFields(
+                                        fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                                .description("코드"),
+                                        fieldWithPath("status").type(JsonFieldType.STRING)
+                                                .description("상태"),
+                                        fieldWithPath("message").type(JsonFieldType.STRING)
+                                                .description("메시지"),
+                                        fieldWithPath("data").type(JsonFieldType.NULL)
+                                                .description("응답 데이터")
+                                )
+                        )
+                );
+
+    }
+
 
 }

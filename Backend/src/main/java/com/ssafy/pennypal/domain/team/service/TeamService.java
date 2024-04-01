@@ -21,6 +21,8 @@ import com.ssafy.pennypal.domain.team.dto.SimpleTeamDto;
 import com.ssafy.pennypal.domain.team.dto.response.*;
 import com.ssafy.pennypal.domain.team.entity.Team;
 import com.ssafy.pennypal.domain.team.entity.TeamRankHistory;
+import com.ssafy.pennypal.domain.team.exception.AlreadyAppliedJoinException;
+import com.ssafy.pennypal.domain.team.exception.BannedMemberJoinException;
 import com.ssafy.pennypal.domain.team.repository.ITeamRankHistoryRepository;
 import com.ssafy.pennypal.domain.team.repository.ITeamRepository;
 import lombok.RequiredArgsConstructor;
@@ -66,6 +68,10 @@ public class TeamService {
 
         if (member == null) {
             throw new IllegalArgumentException("유저를 찾을 수 없습니다.");
+        }
+
+        if(member.getMemberWaitingTeam() != null){
+            throw new AlreadyAppliedJoinException("가입 신청한 팀이 있어 팀 생성이 불가능합니다.");
         }
 
         // 이미 존재하는 팀명이라면 예외 발생
@@ -152,6 +158,7 @@ public class TeamService {
                 .teamInfo(team.getTeamInfo())
                 .teamScore(team.getTeamScore())
                 .teamRankRealtime(0)
+                .teamIsAutoConfirm(team.getTeamIsAutoConfirm())
                 .teamLastEachTotalExpenses(teamLastEachTotalExpenses)
                 .teamThisEachTotalExpenses(teamThisEachTotalExpenses)
                 .teamLastTotalExpenses(teamLastTotalExpenses)
@@ -189,16 +196,13 @@ public TeamJoinResponse joinTeam(TeamJoinServiceRequest request) {
         }
     }
 
-    // 추방된 유저라면 가입 불가
     if (team.getTeamBanishedList().contains(member)) {
-        throw new IllegalArgumentException("추방 당한 팀에는 가입할 수 없습니다.");
+        throw new BannedMemberJoinException("추방 당한 팀에는 가입할 수 없습니다.");
     }
 
-    // 이미 가입 신청을 한 유저라면 신청 불가
     if (team.getTeamWaitingList().contains(member)) {
-        throw new IllegalArgumentException("이미 가입 신청을 완료한 팀입니다.");
+        throw new AlreadyAppliedJoinException("이미 가입 신청을 완료한 팀입니다.");
     }
-
     // 이미 다른 팀에 가입 신청을 했다면 신청 불가
     if (member.getMemberWaitingTeam() != null) {
         throw new IllegalArgumentException("이미 가입 신청 된 팀이 존재합니다.");
@@ -641,11 +645,13 @@ public TeamDetailResponse detailTeamInfo(Long memberId) {
 
             return TeamDetailResponse.builder()
                     .teamId(team.getTeamId())
+                    .chatRoomId(team.getChatRoom().getChatRoomId())
                     .teamName(team.getTeamName())
                     .teamLeaderId(team.getTeamLeaderId())
                     .teamInfo(team.getTeamInfo())
                     .teamScore(team.getTeamScore())
                     .teamRankRealtime(0)
+                    .teamIsAutoConfirm(team.getTeamIsAutoConfirm())
                     .teamLastEachTotalExpenses(teamLastEachTotalExpenses)
                     .teamThisEachTotalExpenses(teamThisEachTotalExpenses)
                     .teamLastTotalExpenses(teamLastTotalExpenses)
@@ -656,11 +662,13 @@ public TeamDetailResponse detailTeamInfo(Long memberId) {
             // 실시간 랭킹 순위 있을 때
             return TeamDetailResponse.builder()
                     .teamId(team.getTeamId())
+                    .chatRoomId(team.getChatRoom().getChatRoomId())
                     .teamName(team.getTeamName())
                     .teamLeaderId(team.getTeamLeaderId())
                     .teamInfo(team.getTeamInfo())
                     .teamScore(team.getTeamScore())
                     .teamRankRealtime(team.getTeamRankRealtime())
+                    .teamIsAutoConfirm(team.getTeamIsAutoConfirm())
                     .teamLastEachTotalExpenses(teamLastEachTotalExpenses)
                     .teamThisEachTotalExpenses(teamThisEachTotalExpenses)
                     .teamLastTotalExpenses(teamLastTotalExpenses)
@@ -672,11 +680,13 @@ public TeamDetailResponse detailTeamInfo(Long memberId) {
         // 속한 팀이 아예 없다면
         return TeamDetailResponse.builder()
                 .teamId(null)
+                .chatRoomId(null)
                 .teamName(null)
                 .teamLeaderId(null)
                 .teamInfo(null)
                 .teamScore(null)
                 .teamRankRealtime(null)
+                .teamIsAutoConfirm(null)
                 .teamLastEachTotalExpenses(null)
                 .teamThisEachTotalExpenses(null)
                 .teamLastTotalExpenses(null)
