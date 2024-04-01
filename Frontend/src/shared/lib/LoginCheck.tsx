@@ -8,7 +8,6 @@ interface LoginCheckProps {
 
 export const LoginCheck: React.FC<LoginCheckProps> = ({ children }) => {
     const navigate = useNavigate();
-    const [isAllowed, setIsAllowed] = useState<boolean>(true);
     const location = useLocation();
     useEffect(() => {
         const isLogin: boolean = !!getCookie('memberToken');
