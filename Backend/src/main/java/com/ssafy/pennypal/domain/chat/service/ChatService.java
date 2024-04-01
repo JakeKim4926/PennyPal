@@ -16,6 +16,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -104,8 +105,10 @@ public class ChatService {
 
         ChatMessage chatMessage = ChatMessage.builder()
                 .senderId(request.getSenderId())
+                .senderNickname(member.getMemberNickname())
                 .message(request.getContent())
                 .chatRoom(member.getMemberChatRoom())
+                .createdAt(LocalDateTime.now())
                 .build();
         chatMessageRepository.save(chatMessage);
         chatRoom.getChatMessages().add(chatMessage);

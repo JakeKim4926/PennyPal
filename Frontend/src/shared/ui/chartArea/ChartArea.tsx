@@ -27,14 +27,14 @@ export function ChartArea({ data }: CharAreaProps) {
             <div className="chartArea__bottom">
                 <div className="chartArea__bottom-left">
                     <div className="chartArea__bottom-left-prev">
-                        <div className="chartArea__bottom-left-prev-title">이전 주차 지출액</div>
+                        <div className="chartArea__bottom-left-prev-title">지난 주 지출액</div>
                         <div className="chartArea__bottom-left-prev-value">
                             <span className="value">{prevSum.toLocaleString()}</span>
                             <span className="unit">원</span>
                         </div>
                     </div>
                     <div className="chartArea__bottom-left-pres">
-                        <div className="chartArea__bottom-left-pres-title">이번 주차 지출액</div>
+                        <div className="chartArea__bottom-left-pres-title">이번 주 지출액</div>
                         <div className="chartArea__bottom-left-pres-value">
                             <span className="value">{presSum.toLocaleString()}</span>
                             <span className="unit">원</span>
@@ -51,7 +51,7 @@ export function ChartArea({ data }: CharAreaProps) {
                     <div className="chartArea__bottom-right-pres">
                         <div className="chartArea__bottom-right-pres-title">전 주 대비</div>
                         <div className="chartArea__bottom-right-pres-value">
-                            {savingRate !== '100.0' ? `${spendDiff}` : ''} {savingState}
+                            {savingRate !== '100.0' ? `${spendDiff}원` : ''} {savingState}
                         </div>
                     </div>
                 </div>

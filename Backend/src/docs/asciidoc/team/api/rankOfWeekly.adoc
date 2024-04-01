@@ -1,0 +1,9 @@
+[[weekly-team-ranking]]
+==== HTTP Request
+
+include::{snippets}/rank-of-weekly/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/rank-of-weekly/http-response.adoc[]
+include::{snippets}/rank-of-weekly/response-fields.adoc[]

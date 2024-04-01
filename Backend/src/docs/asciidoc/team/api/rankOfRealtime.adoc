@@ -1,0 +1,9 @@
+[[rank-of-realtime]]
+==== HTTP Request
+
+include::{snippets}/rank-of-realtime/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/rank-of-realtime/http-response.adoc[]
+include::{snippets}/rank-of-realtime/response-fields.adoc[]
