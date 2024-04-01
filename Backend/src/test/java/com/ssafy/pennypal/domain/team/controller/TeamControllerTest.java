@@ -86,6 +86,7 @@ public class TeamControllerTest extends RestDocsSupport {
                         .teamInfo("팀 한줄소개")
                         .teamScore(0)
                         .teamRankRealtime(1)
+                        .teamIsAutoConfirm(true)
                         .teamLastTotalExpenses(30000)
                         .teamThisTotalExpenses(200000)
                         .teamLastEachTotalExpenses(List.of(teamLastEachTotalResponse))
@@ -139,6 +140,8 @@ public class TeamControllerTest extends RestDocsSupport {
 
                                         fieldWithPath("data.teamRankRealtime").type(JsonFieldType.NUMBER)
                                                 .description("팀 실시간 랭킹"),
+                                        fieldWithPath("data.teamIsAutoConfirm").type(JsonFieldType.BOOLEAN)
+                                                .description("팀 가입 자동 승인 여부"),
                                         fieldWithPath("data.teamLastTotalExpenses").type(JsonFieldType.NUMBER)
                                                 .description("지난주 총 지출액"),
                                         fieldWithPath("data.teamThisTotalExpenses").type(JsonFieldType.NUMBER)
@@ -412,6 +415,7 @@ public class TeamControllerTest extends RestDocsSupport {
                         .teamInfo("팀 한줄소개")
                         .teamScore(150)
                         .teamRankRealtime(1)
+                        .teamIsAutoConfirm(true)
                         .teamLastTotalExpenses(30000)
                         .teamThisTotalExpenses(200000)
                         .teamLastEachTotalExpenses(List.of(teamLastEachTotalResponse))
@@ -453,6 +457,8 @@ public class TeamControllerTest extends RestDocsSupport {
 
                                 fieldWithPath("data.teamRankRealtime").type(JsonFieldType.NUMBER)
                                         .description("팀 실시간 랭킹"),
+                                fieldWithPath("data.teamIsAutoConfirm").type(JsonFieldType.BOOLEAN)
+                                        .description("팀 가입 자동 승인 여부"),
                                 fieldWithPath("data.teamLastTotalExpenses").type(JsonFieldType.NUMBER)
                                         .description("지난주 총 지출액"),
                                 fieldWithPath("data.teamThisTotalExpenses").type(JsonFieldType.NUMBER)

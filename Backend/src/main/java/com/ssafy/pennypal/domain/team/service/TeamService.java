@@ -158,6 +158,7 @@ public class TeamService {
                 .teamInfo(team.getTeamInfo())
                 .teamScore(team.getTeamScore())
                 .teamRankRealtime(0)
+                .teamIsAutoConfirm(team.getTeamIsAutoConfirm())
                 .teamLastEachTotalExpenses(teamLastEachTotalExpenses)
                 .teamThisEachTotalExpenses(teamThisEachTotalExpenses)
                 .teamLastTotalExpenses(teamLastTotalExpenses)
