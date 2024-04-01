@@ -1,7 +1,9 @@
 import {
+    acceptRegist,
     banTeamMember,
     closeTeamSettingModal,
     deleteTeam,
+    denyRegist,
     getTeamWaitingList,
     modifyTeamInfo,
 } from '@/pages/teamInfo/index';
@@ -115,6 +117,7 @@ export function TeamSettingModal({ teamId, memberId, teamName, teamInfo, members
                                             memberId={it.memberId}
                                             memberNickname={it.memberNickname}
                                             memberMostCategory={it.memberMostCategory}
+                                            teamId={teamId}
                                         />
                                     ),
                                 )}
@@ -188,16 +191,41 @@ type WaitingMemberListItemProps = {
     memberId: number;
     memberNickname: string;
     memberMostCategory: string | null;
+    teamId: number;
 };
 
-function WaitingMemberListItem({ memberId, memberNickname, memberMostCategory }: WaitingMemberListItemProps) {
+function WaitingMemberListItem({ memberId, memberNickname, memberMostCategory, teamId }: WaitingMemberListItemProps) {
     return (
         <div className="waitingMemberListItem">
             {}
             <div className="waitingMemberListItem-name">{memberNickname}</div>
             <div className="waitingMemberListItem-buttons">
-                <button className="waitingMemberListItem-buttons-button">승인</button>
-                <button className="waitingMemberListItem-buttons-button">거절</button>
+                <button
+                    className="waitingMemberListItem-buttons-button"
+                    onClick={async () => {
+                        const dto = {
+                            teamId: teamId,
+                            memberId: memberId,
+                        };
+                        const res = await acceptRegist(dto).catch((err) => err);
+                        console.log(res);
+                    }}
+                >
+                    승인
+                </button>
+                <button
+                    className="waitingMemberListItem-buttons-button"
+                    onClick={async () => {
+                        const dto = {
+                            teamId: teamId,
+                            memberId: memberId,
+                        };
+                        const res = await denyRegist(dto).catch((err) => err);
+                        console.log(res);
+                    }}
+                >
+                    거절
+                </button>
             </div>
         </div>
     );
