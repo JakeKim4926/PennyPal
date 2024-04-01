@@ -10,6 +10,13 @@ type TeamSettingModal = {
     members?: [];
 };
 
+type Member = {
+    memberId: number;
+    memberLastTotalExpenses: number;
+    memberNickname: string;
+    memberThisTotalExpenses: number;
+};
+
 export function TeamSettingModal({ teamId, memberId, teamName, teamInfo, members }: TeamSettingModal) {
     const [waitingList, setWaitingList] = useState([]);
     const dispatch = useDispatch();
@@ -65,9 +72,10 @@ export function TeamSettingModal({ teamId, memberId, teamName, teamInfo, members
                         <div className="teamSettingModal__middle-personnel-current">
                             <div>팀원 현황</div>
                             <div className="teamSettingModal__middle-personnel-current-list">
-                                {members?.map((member) => (
-                                    <MemberListItem member={member} />
-                                ))}
+                                {members?.map((member) => {
+                                    console.log(member);
+                                    return <MemberListItem member={member} memberId={memberId} />;
+                                })}
                             </div>
                         </div>
                         <div className="teamSettingModal__middle-personnel-waiting">
@@ -105,11 +113,16 @@ export function TeamSettingModal({ teamId, memberId, teamName, teamInfo, members
     );
 }
 
-function MemberListItem({ member: [] }) {
+type MemberListItemProps = {
+    member: Member;
+    memberId: number;
+};
+function MemberListItem({ member, memberId }: MemberListItemProps) {
     return (
         <div className="memberListItem">
-            <div className="memberListItem-name">멤버이름</div>
-            <button className="memberListItem-ban">추방</button>
+            <div className="memberListItem-name">{member.memberNickname}</div>
+            {/* [조건부 렌더링] 로그인 유저(팀장)와 해당 memberId가 다를 경우에만 [추방] 버튼 활성화 */}
+            {member.memberId !== memberId ? <button className="memberListItem-ban">추방</button> : null}
         </div>
     );
 }
