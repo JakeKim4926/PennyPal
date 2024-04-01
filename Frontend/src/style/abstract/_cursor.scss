@@ -1,0 +1,17 @@
+.clickable-icon {
+    cursor: pointer;
+
+    &:hover {
+        * {
+            color: $black;
+        }
+    }
+}
+
+.clickable-div {
+    cursor: pointer;
+
+    &:hover {
+        background-color: $line;
+    }
+}

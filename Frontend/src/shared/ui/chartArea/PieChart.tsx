@@ -32,7 +32,13 @@ const PieChart = ({ datas, labels, backgroundColors }: PieChartProps) => {
                 responsive: true,
                 plugins: {
                     legend: {
-                        position: 'bottom',
+                        position: 'right',
+                        labels: {
+                            font: {
+                                family: 'Wanted-Medium',
+                                size: 14,
+                            },
+                        },
                     },
                 },
             },
