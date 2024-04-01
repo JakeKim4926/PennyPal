@@ -39,11 +39,6 @@ export function TeamRouting() {
             .then((res) => {
                 // 1-2. 응답 데이터로 리렌더링
                 dispatch(setTeamInfo(res.data.data));
-                // // 1-3. 응답 데이터 캐싱하기
-                // API_CACHE_DATA.set(REQUEST_URL, {
-                //     data: res.data.data,
-                //     exp: new Date(new Date().getTime() + 1000 * 60),
-                // });
             })
             .catch((err) => console.log(err));
     }, [memberId]);
