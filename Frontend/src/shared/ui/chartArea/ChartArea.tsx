@@ -54,7 +54,7 @@ export function ChartArea({ data }: CharAreaProps) {
                     <div className="chartArea__bottom-right-pres">
                         <div className="chartArea__bottom-right-pres-title">전 주 대비</div>
                         <div className="chartArea__bottom-right-pres-value">
-                            {savingRate !== '100.0' ? `${spendDiff}` : ''} {savingState}
+                            {savingRate !== '100.0' ? `${spendDiff}원` : ''} {savingState}
                         </div>
                     </div>
                 </div>
