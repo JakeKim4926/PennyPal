@@ -24,7 +24,7 @@ public class StockTransaction extends BaseEntity {
     private LocalDate basDt;
 
     @Column(name = "stock_transaction_stckGenrDvdnAmt")
-    private float stckGenrDvdnAmt;
+    private double stckGenrDvdnAmt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "stock_id") // 이 부분은 Stock 엔티티의 기본 키 필드명과 일치해야 합니다.
@@ -32,7 +32,7 @@ public class StockTransaction extends BaseEntity {
 
     @Builder
     @QueryProjection
-    public StockTransaction(LocalDate basDt, Long stckGenrDvdnAmt, Stock stock) {
+    public StockTransaction(LocalDate basDt, double stckGenrDvdnAmt, Stock stock) {
         this.basDt = basDt;
         this.stckGenrDvdnAmt = stckGenrDvdnAmt;
         this.stock = stock;

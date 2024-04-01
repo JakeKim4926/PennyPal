@@ -1,0 +1,9 @@
+[[signup]]
+==== HTTP Request
+
+include::{snippets}/get-stock-transaction/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/get-stock-transaction/http-response.adoc[]
+include::{snippets}/get-stock-transaction/response-fields.adoc[]
