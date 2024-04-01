@@ -11,6 +11,10 @@
     box-shadow: 0 0 0.2rem $bright;
     transition: all 0.22s;
 
+    &:hover {
+        box-shadow: 0 0 0.7rem $bright;
+    }
+
     &__button {
         background-color: transparent;
         border: none;
