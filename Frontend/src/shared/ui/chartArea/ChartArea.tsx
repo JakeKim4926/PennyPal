@@ -69,75 +69,82 @@ type LineCharProps = {
 
 const LineChart = ({ data }: LineCharProps) => {
     const chartContainer = useRef<HTMLCanvasElement | null>(null);
+    const chartInstance = useRef<Chart | null>(null);
 
     useEffect(() => {
         if (!chartContainer.current) return;
 
-        const ctx = chartContainer.current.getContext('2d')!;
+        if (!chartInstance.current) {
+            const ctx = chartContainer.current.getContext('2d')!;
 
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'],
-                datasets: [
-                    {
-                        label: '지난주',
-                        data: data[0],
-                        fill: false,
-                        borderColor: 'rgb(136, 186, 83)',
-                        pointRadius: 5,
-                        pointBackgroundColor: 'rgb(136, 186, 83)',
-                        backgroundColor: 'rgb(136, 186, 83)',
-                        pointStyle: 'circle',
-                        tension: 0.1,
-                    },
-                    {
-                        label: '이번주',
-                        data: data[1],
-                        fill: false,
-                        borderColor: 'rgb(235, 192, 105)',
-                        pointRadius: 5,
-                        pointBackgroundColor: 'rgb(235, 192, 105)',
-                        backgroundColor: 'rgb(235, 192, 105)',
-                        pointStyle: 'circle',
-                        tension: 0.1,
-                    },
-                ],
-            },
-            options: {
-                plugins: {
-                    legend: {
-                        align: 'end',
-                        position: 'top',
-                        onClick: () => {},
-                        labels: {
-                            usePointStyle: true,
+            chartInstance!.current = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'],
+                    datasets: [
+                        {
+                            label: '지난주',
+                            data: data[0],
+                            fill: false,
+                            borderColor: 'rgb(136, 186, 83)',
+                            pointRadius: 5,
+                            pointBackgroundColor: 'rgb(136, 186, 83)',
+                            backgroundColor: 'rgb(136, 186, 83)',
                             pointStyle: 'circle',
+                            tension: 0.1,
                         },
-                    },
+                        {
+                            label: '이번주',
+                            data: data[1],
+                            fill: false,
+                            borderColor: 'rgb(235, 192, 105)',
+                            pointRadius: 5,
+                            pointBackgroundColor: 'rgb(235, 192, 105)',
+                            backgroundColor: 'rgb(235, 192, 105)',
+                            pointStyle: 'circle',
+                            tension: 0.1,
+                        },
+                    ],
                 },
-                scales: {
-                    x: {
-                        grid: {
-                            display: false,
-                        },
-                        offset: true,
-                    },
-                    y: {
-                        ticks: {
-                            callback: function (value) {
-                                return '';
+                options: {
+                    plugins: {
+                        legend: {
+                            align: 'end',
+                            position: 'top',
+                            onClick: () => {},
+                            labels: {
+                                usePointStyle: true,
+                                pointStyle: 'circle',
                             },
                         },
-                        grid: {
-                            display: false,
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false,
+                            },
+                            offset: true,
                         },
-                        offset: true,
+                        y: {
+                            ticks: {
+                                callback: function (value) {
+                                    return '';
+                                },
+                            },
+                            grid: {
+                                display: false,
+                            },
+                            offset: true,
+                        },
                     },
                 },
-            },
-        });
-    }, []);
+            });
+        } else {
+            chartInstance.current!.data.datasets[0].data = data[0];
+            chartInstance.current!.data.datasets[1].data = data[1];
+            chartInstance.current!.update();
+        }
+    }, [data]);
 
     return (
         <div className="teamInfoTeamExpenditure__chartArea">
