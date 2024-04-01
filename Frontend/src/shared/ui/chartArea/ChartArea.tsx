@@ -18,7 +18,10 @@ export function ChartArea({ data }: CharAreaProps) {
         savingState = '증가!';
     }
 
-    const savingRate = (100 - (presSum / prevSum) * 100).toFixed(1); // 절감률
+    const savingRate =
+        100 - (presSum / prevSum) * 100 < 0
+            ? -(100 - (presSum / prevSum) * 100 + 100).toFixed(1)
+            : (100 - (presSum / prevSum) * 100).toFixed(1); // 절감률
     const spendDiff = Math.abs(presSum - prevSum).toLocaleString(); // 지출 차액
 
     return (
