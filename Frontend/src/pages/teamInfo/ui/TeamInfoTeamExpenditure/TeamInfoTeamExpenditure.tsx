@@ -1,11 +1,13 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { ChartArea } from '@/shared';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/app/appProvider';
 
 export function TeamInfoTeamExpenditure() {
-    const data = [
-        [100000, 150000, 170000, 180000, 100000, 2000, 90000],
-        [50000, 100000, 50000, 50000, 50000, 40000, 60000],
-    ];
+    const teamData: any = useSelector((state: RootState) => state.setTeamInfoReducer.data);
+
+    // data: [0] -> 지난주 / [1] -> 이번주
+    const [data, setData] = useState<number[][]>([[0], [0]]);
 
     return (
         <div className="teamInfoTeamExpenditure contentCard">
