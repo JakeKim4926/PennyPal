@@ -88,15 +88,6 @@ export function Expenditure() {
                 <div className="contentCard">
                     <button
                         onClick={async () => {
-                            const a = await customAxios.get('/card/recommend').catch((err) => console.log(err));
-                            console.log(a);
-                        }}
-                    >
-                        추천카드조회
-                    </button>
-
-                    <button
-                        onClick={async () => {
                             const requestData = {
                                 memberIndex: 1,
                             };
@@ -111,7 +102,7 @@ export function Expenditure() {
                             }
                         }}
                     >
-                        특정유저 추천카드조회
+                        유저추천카드조회
                     </button>
 
                     <button
