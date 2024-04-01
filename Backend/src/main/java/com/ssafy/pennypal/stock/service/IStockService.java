@@ -7,4 +7,6 @@ import org.springframework.data.domain.Pageable;
 public interface IStockService {
 
     Page<StockWithLatestTransactionDto> getStockList(Pageable pageable);
+
+    void getStock(String stock);
 }

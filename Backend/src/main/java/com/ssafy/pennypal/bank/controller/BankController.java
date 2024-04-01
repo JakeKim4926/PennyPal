@@ -235,7 +235,7 @@ public class BankController {
         return ApiResponse.ok(null);
     }
 
-    @PostMapping("user/drawingTransfer")
+    @PostMapping("/user/drawingTransfer")
     private ApiResponse<Object> AccountDrawingTransfer(@RequestBody @Validated AccountDrawingTransferControllerDTO accountDrawingTransferControllerDTO) {
         UserAccountResponseControllerDTO userAccountResponseControllerDTO = getUserBankApi(accountDrawingTransferControllerDTO.getUserEmail());
 
@@ -258,10 +258,10 @@ public class BankController {
         return ApiResponse.ok(null);
     }
 
-    @PostMapping("user/dummy/{userEmail}")
+    @PostMapping("/user/dummy/{userEmail}")
     private ApiResponse<Object> Dummy(@PathVariable String userEmail) {
         UserAccountResponseControllerDTO userAccountResponseControllerDTO = getUserBankApi(userEmail);
-
+        log.info("userAccountResponseControllerDTO = {}", userAccountResponseControllerDTO);
         CommonHeaderRequestDTO commonHeaderRequestDTO = CommonHeaderRequestDTO.builder()
                 .apiName("inquireAccountList")
                 .apiKey(SSAFY_BANK_API_KEY)
@@ -278,6 +278,7 @@ public class BankController {
 
         UserDummyAccount userDummyAccount = UserDummyAccount.of(userAccountsResponseControllerDTO);
 
+        log.info("userDummyAccount= {}", userDummyAccount);
         IntStream.range(0, 10).forEach(i -> {
             CommonHeaderRequestDTO commonHeaderRequestDTO3 = CommonHeaderRequestDTO.builder()
                     .apiName("drawingTransfer")
@@ -292,6 +293,7 @@ public class BankController {
                     .transactionBalance(generateRandomAmount())
                     .transactionSummary(DummyTransactionSummary.getRandomData()) // Enum 사용 시 getValue() 메서드 호출 필요
                     .build();
+            
             bankServiceAPI.accountWithdrawal(drawingTransferRequestServiceDTO);
         });
 

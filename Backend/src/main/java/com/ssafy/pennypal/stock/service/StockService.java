@@ -21,4 +21,9 @@ public class StockService implements IStockService {
     public Page<StockWithLatestTransactionDto> getStockList(Pageable pageable) {
         return stockRepository.findStocksWithLatestTransaction(pageable);
     }
+
+    @Override
+    public void getStock(String stock) {
+        
+    }
 }

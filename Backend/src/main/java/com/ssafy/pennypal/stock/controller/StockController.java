@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,5 +28,12 @@ public class StockController {
         log.info("pageable = {}", pageable);
         Page<StockWithLatestTransactionDto> stockList = stockService.getStockList(pageable);
         return ApiResponse.ok(stockList);
+    }
+
+    @GetMapping("{stock}")
+    public ApiResponse<Object> getStock(@PathVariable String stock) {
+        log.info("stock = {}", stock);
+        stockService.getStock(stock);
+        return ApiResponse.ok(null);
     }
 }
