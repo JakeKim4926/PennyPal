@@ -1,6 +1,8 @@
 import { useDispatch } from 'react-redux';
 import { closeMarketItemModal } from '../../model';
 import { useEffect, useCallback } from 'react';
+import { purchaseItem } from '../../api/purchaseItem';
+import { getCookie } from '@/shared';
 type Product = {
     productBrand: string;
     productCategory: string;
@@ -58,7 +60,20 @@ export function MarketItemModal({
                     <div className="marketItemModal__bottom-type">유형 모바일교환권(기프티콘)</div>
                     <div className="marketItemModal__bottom-exp">유효기간 1개월</div>
                 </div>
-                <button className="marketItemModal__button button">PURCHASE</button>
+                <button
+                    className="marketItemModal__button button"
+                    onClick={async () => {
+                        const dto = {
+                            member: getCookie('memberId'),
+                            product: productId,
+                            buyQuantity: 1,
+                        };
+                        const res = await purchaseItem(dto).catch((err) => err);
+                        console.log(res);
+                    }}
+                >
+                    PURCHASE
+                </button>
             </div>
         </div>
     );
