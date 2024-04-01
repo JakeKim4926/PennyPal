@@ -23,7 +23,7 @@ interface TeamInfoData {
 
 export function TeamRouting() {
     const teamInfo: any = useSelector((state: RootState) => state.setTeamInfoReducer.data);
-    const [memberId, setMemberId] = useState<number>(-1);
+    const memberId = getCookie('memberId');
     const dispatch = useDispatch();
 
     // 추후에 hasTeam 초기 값을 동적으로 설정해줄 수 있어야함 -> 팀 존재 여부에 따라
@@ -34,16 +34,9 @@ export function TeamRouting() {
     const fetchData = useCallback((url: string) => getTeamInfo(`/team/${memberId}`), [memberId]);
 
     useEffect(() => {
-        const cookieData = getCookie('memberId');
-
-        if (typeof cookieData === 'number') {
-            setMemberId(cookieData);
-        }
-
         // REQUEST_URL: 요청 주소
         const REQUEST_URL = `/team/${memberId}`;
 
-        // // 1. 캐시 데이터가 없거나 만료된 데이터라면
         // 1-1. API 요청하기
         fetchData(REQUEST_URL)
             .then((res) => {
@@ -56,11 +49,7 @@ export function TeamRouting() {
                 });
             })
             .catch((err) => console.log(err));
-        // } else {
-        //     // 2. 캐시 데이터가 있다면 캐시 데이터 사용하기
-        //     dispatch(setTeamInfo(cacheData.data));
-        // }
-    }, []);
+    }, [memberId]);
 
     useState();
 
