@@ -16,7 +16,7 @@ export function MarketList() {
     const [productList, setProductList] = useState<Product[]>([]);
 
     useEffect(() => {
-        getMarketItemList().then((res) => {
+        getMarketItemList(0).then((res) => {
             if (res.status === 200) {
                 setProductList(res.data.content);
                 console.log(res.data.content);
