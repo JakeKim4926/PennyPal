@@ -115,7 +115,7 @@ export function TeamInformation({
                     <div className="teamTeamInfo__middle-ratio-value value">
                         {isNaN(teamLastTotalExpenses / teamThisTotalExpenses)
                             ? '0.0'
-                            : ((teamLastTotalExpenses / teamThisTotalExpenses) * 100).toFixed(1)}
+                            : (100 - (teamLastTotalExpenses / teamThisTotalExpenses) * 100).toFixed(1)}
                         <span className="unit">%</span>
                     </div>
                 </div>

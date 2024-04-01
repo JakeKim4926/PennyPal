@@ -13,13 +13,13 @@ type TeamData = {
     teamThisTotalExpenses?: number;
     teamLastEachTotalExpenses?: [
         {
-            date: number[];
+            date: string;
             totalAmount: number;
         },
     ];
     teamThisEachTotalExpenses?: [
         {
-            date: number[];
+            date: string;
             totalAmount: number;
         },
     ];
