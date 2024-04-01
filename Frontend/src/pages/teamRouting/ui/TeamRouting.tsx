@@ -23,7 +23,7 @@ interface TeamInfoData {
 
 export function TeamRouting() {
     const teamInfo: any = useSelector((state: RootState) => state.setTeamInfoReducer.data);
-    const [memberId, setMemberId] = useState<number>(-2);
+    const [memberId, setMemberId] = useState<number>(-1);
     const dispatch = useDispatch();
 
     // 추후에 hasTeam 초기 값을 동적으로 설정해줄 수 있어야함 -> 팀 존재 여부에 따라
@@ -38,41 +38,44 @@ export function TeamRouting() {
 
         if (typeof cookieData === 'number') {
             setMemberId(cookieData);
-        } else {
-            setMemberId(-1);
         }
+
+        // REQUEST_URL: 요청 주소
+        const REQUEST_URL = `/team/${memberId}`;
+
+        // // 1. 캐시 데이터가 없거나 만료된 데이터라면
+        // 1-1. API 요청하기
+        fetchData(REQUEST_URL)
+            .then((res) => {
+                // 1-2. 응답 데이터로 리렌더링
+                dispatch(setTeamInfo(res.data.data));
+                // // 1-3. 응답 데이터 캐싱하기
+                API_CACHE_DATA.set(REQUEST_URL, {
+                    data: res.data.data,
+                    exp: new Date(new Date().getTime() + 1000 * 60),
+                });
+            })
+            .catch((err) => console.log(err));
+        // } else {
+        //     // 2. 캐시 데이터가 있다면 캐시 데이터 사용하기
+        //     dispatch(setTeamInfo(cacheData.data));
+        // }
     }, []);
 
-    useEffect(() => {
-        if (memberId !== -1) {
-            // REQUEST_URL: 요청 주소
-            const REQUEST_URL = `/team/${memberId}`;
-
-            // // 1. 캐시 데이터가 없거나 만료된 데이터라면
-            // 1-1. API 요청하기
-            fetchData(REQUEST_URL)
-                .then((res) => {
-                    // 1-2. 응답 데이터로 리렌더링
-                    dispatch(setTeamInfo(res.data.data));
-                    // // 1-3. 응답 데이터 캐싱하기
-                    API_CACHE_DATA.set(REQUEST_URL, {
-                        data: res.data.data,
-                        exp: new Date(new Date().getTime() + 1000 * 60),
-                    });
-                })
-                .catch((err) => console.log(err));
-        }
-    }, [memberId]);
+    useState();
 
     return (
         <div className="teamRouting">
-            {memberId === -2 ? (
+            {/* 1. 로그인 한 상태에서 아직 데이터 받아오기 전 */}
+            {!teamInfo ? (
                 <div className="container" style={{ backgroundColor: 'rgb(64, 64, 64)' }}>
                     로딩중
                 </div>
-            ) : memberId !== -1 ? (
+            ) : teamInfo.teamId ? (
+                // 2. 로그인 후 팀이 있을 때
                 <TeamInfo />
             ) : (
+                // 3. 로그인 후 팀이 없을 때
                 <Team />
             )}
         </div>
