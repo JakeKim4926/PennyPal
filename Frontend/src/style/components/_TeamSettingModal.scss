@@ -1,0 +1,39 @@
+.teamSettingModal {
+    animation: modalFadein 0.22s ease-in-out;
+    background-color: $bright;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    div,
+    button,
+    input {
+        font-family: 'Wanted-Medium';
+    }
+
+    &__top {
+    }
+
+    &__middle {
+        &-teamName,
+        &-teamInfo,
+        &-teamIsAutoConfirm {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        &-teamIsAutoConfirm {
+            &-value {
+                display: flex;
+            }
+        }
+
+        &-personnel {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    &__bottom {
+        &-buttons {
+        }
+    }
+}

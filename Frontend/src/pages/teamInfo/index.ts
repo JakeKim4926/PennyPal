@@ -12,3 +12,4 @@ export * from '@/pages/teamInfo/api/connectTeamChatRoom';
 export * from '@/pages/teamInfo/api/sendTeamChat';
 export * from '@/pages/teamInfo/api/getTeamChatHistory';
 export * from '@/pages/teamInfo/api/getTeamWaitingList';
+export * from '@/pages/teamInfo/api/modifyTeamInfo';
