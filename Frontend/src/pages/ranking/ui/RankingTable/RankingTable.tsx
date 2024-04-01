@@ -8,8 +8,16 @@ type Ranking = {
     name: string;
     score: number;
 };
+
+type MyRanking = {
+    myTeamName: string;
+    myTeamRankNum: number;
+    myTeamScore: number;
+    myTeamRewardPoint?: number;
+};
 export function RankingTable() {
     const [ranking, setRanking] = useState<Ranking[]>([]);
+    const [myRanking, setMyRanking] = useState<MyRanking>();
     const [curPage, setCurpage] = useState(0);
     const memberId = getCookie('memberId');
 
@@ -22,10 +30,18 @@ export function RankingTable() {
             getTeamInfo(REQUEST_URL).then((res) => {
                 if (res.data.code === 200) {
                     if (res.data.data.members.some((it: any) => it.memberId === memberId)) {
-                        API_CACHE_DATA.set(REQUEST_URL, { data: res.data, exp: new Date().getTime() + 1000 * 60 * 10 });
+                        // API_CACHE_DATA.set(REQUEST_URL, { data: res.data, exp: new Date().getTime() + 1000 * 60 * 10 });
 
                         getRanking(`/team/rank/weekly/${res.data.data.teamId}?page=${curPage}`).then((res) => {
-                            setRanking(res.data.data.content[0].teamRanks);
+                            const data = res.data.data.content[0];
+                            setRanking(data.teamRanks);
+
+                            setMyRanking({
+                                myTeamName: data.myTeamName,
+                                myTeamRankNum: data.myTeamRankNum,
+                                myTeamScore: data.myTeamScore,
+                                myTeamRewardPoint: data.myTeamRewardPoint,
+                            });
                         });
                     }
                 }
@@ -33,12 +49,20 @@ export function RankingTable() {
         } else {
             const teamData = cacheData.get(REQUEST_URL);
             if (teamData.data.data.members.some((it: any) => it.memberId === memberId)) {
+                getRanking(`/team/rank/weekly/${teamData.data.data.teamId}?page=${curPage}`).then((res) => {
+                    const data = res.data.data;
+                    setRanking(data.content[0].teamRanks);
+                    setMyRanking({
+                        myTeamName: data.myTeamName,
+                        myTeamRankNum: data.myTeamRankNum,
+                        myTeamScore: data.myTeamScore,
+                    });
+                });
             } else {
             }
         }
     }, [curPage]);
 
-    const myRanking = { id: 20, rank: 23, name: '팀이름', score: '85' };
     return (
         <div className="rankingTable">
             <div className="rankingTable__header">
@@ -60,10 +84,14 @@ export function RankingTable() {
                 </ul>
             </div>
             <div className="rankingTable__mine">
-                <div className="rankingTable__mine-rank">{myRanking.rank}</div>
-                <div className="rankingTable__mine-name">{myRanking.name}</div>
-                <div className="rankingTable__mine-score">{myRanking.score}</div>
-                <div>보상 포인트</div>
+                <div className="rankingTable__mine-rank">
+                    {myRanking && myRanking.myTeamRankNum === 0 ? '-' : myRanking?.myTeamRankNum}
+                </div>
+                <div className="rankingTable__mine-name">{myRanking && myRanking.myTeamName}</div>
+                <div className="rankingTable__mine-score">{myRanking && myRanking.myTeamScore + '점'}</div>
+                <div className="rankingTable__mine-point">
+                    {myRanking && myRanking.myTeamRewardPoint === null ? 0 : myRanking?.myTeamRewardPoint}
+                </div>
             </div>
             <div className="rankingTable__pagenation">
                 <div className="rankingTable__pagenation-box">
