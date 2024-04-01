@@ -1,8 +1,25 @@
 import { useDispatch } from 'react-redux';
 import { closeMarketItemModal } from '../../model';
 import { useEffect, useCallback } from 'react';
+type Product = {
+    productBrand: string;
+    productCategory: string;
+    productId: number;
+    productImg: string;
+    productPrice: number;
+    productQuantity: number;
+    productName: string;
+};
 
-export function MarketItemModal() {
+export function MarketItemModal({
+    productBrand,
+    productCategory,
+    productId,
+    productImg,
+    productPrice,
+    productQuantity,
+    productName,
+}: Product) {
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -25,19 +42,21 @@ export function MarketItemModal() {
         <div className="modalContainer">
             <div className="marketItemModal contentCard">
                 <div className="marketItemModal__top">
-                    <div className="marketItemModal__top-image">이미지</div>
+                    <div className="marketItemModal__top-image">
+                        <img src={productImg}></img>
+                    </div>
                 </div>
                 <div className="marketItemModal__middle">
                     <div className="marketItemModal__middle-left">
-                        <div className="marketItemModal__middle-left-brand">GS25</div>
-                        <div className="marketItemModal__middle-left-name">빙그레) 바나나맛 우유</div>
+                        <div className="marketItemModal__middle-left-brand">{productBrand}</div>
+                        <div className="marketItemModal__middle-left-name">{productName}</div>
                     </div>
 
-                    <div className="marketItemModal__middle-right">[P] 1,700</div>
+                    <div className="marketItemModal__middle-right">[P] {productPrice.toLocaleString()}</div>
                 </div>
                 <div className="marketItemModal__bottom">
                     <div className="marketItemModal__bottom-type">유형 모바일교환권(기프티콘)</div>
-                    <div className="marketItemModal__bottom-exp">유효기간</div>
+                    <div className="marketItemModal__bottom-exp">유효기간 1개월</div>
                 </div>
                 <button className="marketItemModal__button button">PURCHASE</button>
             </div>

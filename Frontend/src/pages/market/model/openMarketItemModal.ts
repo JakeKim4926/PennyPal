@@ -1,7 +1,17 @@
 const OPEN_MARKET_ITEM_MODAL = 'OPEN_MARKET_ITEM_MODAL' as const;
 const CLOSE_MARKET_ITEM_MODAL = 'CLOSE_MARKET_ITEM_MODAL' as const;
 
-export function openMarketItemModal(data: object) {
+type Product = {
+    productBrand: string;
+    productCategory: string;
+    productId: number;
+    productImg: string;
+    productPrice: number;
+    productQuantity: number;
+    productName: string;
+};
+
+export function openMarketItemModal(data: Product) {
     return { type: OPEN_MARKET_ITEM_MODAL, payload: data };
 }
 
@@ -13,7 +23,7 @@ type OpenMarketItemModalAction = ReturnType<typeof openMarketItemModal> | Return
 
 // 관리 할 상태(data)의 타입 지정
 type isMarketItemModalOpenState = {
-    data: boolean | object;
+    data: boolean | Product;
 };
 
 // 초기 상태 지정

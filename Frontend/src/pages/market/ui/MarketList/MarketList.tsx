@@ -29,9 +29,13 @@ export function MarketList() {
             {productList &&
                 productList.map((it) => (
                     <MarketListItem
-                        image={it.productImg}
-                        title={it.productName}
-                        point={it.productPrice}
+                        productBrand={it.productBrand}
+                        productCategory={it.productCategory}
+                        productQuantity={it.productQuantity}
+                        productImg={it.productImg}
+                        productName={it.productName}
+                        productPrice={it.productPrice}
+                        productId={it.productId}
                         key={it.productId}
                     />
                 ))}
