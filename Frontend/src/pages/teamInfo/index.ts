@@ -13,3 +13,4 @@ export * from '@/pages/teamInfo/api/sendTeamChat';
 export * from '@/pages/teamInfo/api/getTeamChatHistory';
 export * from '@/pages/teamInfo/api/getTeamWaitingList';
 export * from '@/pages/teamInfo/api/modifyTeamInfo';
+export * from '@/pages/teamInfo/api/banTeamMember';

@@ -1,4 +1,4 @@
-import { closeTeamSettingModal, deleteTeam, getTeamWaitingList } from '@/pages/teamInfo/index';
+import { banTeamMember, closeTeamSettingModal, deleteTeam, getTeamWaitingList } from '@/pages/teamInfo/index';
 import { memo, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
@@ -19,6 +19,7 @@ type Member = {
 
 export function TeamSettingModal({ teamId, memberId, teamName, teamInfo, members }: TeamSettingModal) {
     const [waitingList, setWaitingList] = useState([]);
+    const [memberList, setMemberList] = useState<Member[]>(members!);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -72,9 +73,16 @@ export function TeamSettingModal({ teamId, memberId, teamName, teamInfo, members
                         <div className="teamSettingModal__middle-personnel-current">
                             <div>팀원 현황</div>
                             <div className="teamSettingModal__middle-personnel-current-list">
-                                {members?.map((member) => {
-                                    console.log(member);
-                                    return <MemberListItem member={member} memberId={memberId} />;
+                                {memberList?.map((member) => {
+                                    return (
+                                        <MemberListItem
+                                            member={member}
+                                            memberId={memberId}
+                                            teamId={teamId}
+                                            memberList={memberList}
+                                            setMemberList={setMemberList}
+                                        />
+                                    );
                                 })}
                             </div>
                         </div>
@@ -116,13 +124,37 @@ export function TeamSettingModal({ teamId, memberId, teamName, teamInfo, members
 type MemberListItemProps = {
     member: Member;
     memberId: number;
+    teamId: number;
+    memberList: Member[];
+    setMemberList: React.Dispatch<React.SetStateAction<Member[]>>;
 };
-function MemberListItem({ member, memberId }: MemberListItemProps) {
+function MemberListItem({ member, memberId, teamId, memberList, setMemberList }: MemberListItemProps) {
     return (
         <div className="memberListItem">
             <div className="memberListItem-name">{member.memberNickname}</div>
             {/* [조건부 렌더링] 로그인 유저(팀장)와 해당 memberId가 다를 경우에만 [추방] 버튼 활성화 */}
-            {member.memberId !== memberId ? <button className="memberListItem-ban">추방</button> : null}
+            {member.memberId !== memberId ? (
+                <button
+                    className="memberListItem-ban"
+                    onClick={async () => {
+                        const postDto = {
+                            teamId: teamId,
+                            teamLeaderId: memberId,
+                            targetMemberId: member.memberId,
+                        };
+
+                        const res = await banTeamMember(postDto).catch((err) => err);
+
+                        if (res.data.code === 200) {
+                            const tmp = [...memberList].filter((it) => it.memberId !== memberId);
+
+                            setMemberList(tmp);
+                        }
+                    }}
+                >
+                    추방
+                </button>
+            ) : null}
         </div>
     );
 }
