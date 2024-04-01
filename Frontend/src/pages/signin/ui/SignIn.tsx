@@ -122,7 +122,7 @@ export function SignIn() {
                         <span>No Account ? </span>
                         <a onClick={handleSignUp}>SIGN UP &#9654;</a>
                     </div>
-                    <div className="socialArea">
+                    {/* <div className="socialArea">
                         <Button
                             child={
                                 <div>
@@ -145,7 +145,7 @@ export function SignIn() {
                                 handleSocial('kakao');
                             }}
                         ></Button>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div>

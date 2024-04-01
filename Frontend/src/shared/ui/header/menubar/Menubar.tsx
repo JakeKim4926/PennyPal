@@ -1,12 +1,19 @@
 // import React from 'react';
 
-import { Link } from 'react-router-dom';
+import { deleteCookie } from '@/shared/lib';
+import { Link, useNavigate } from 'react-router-dom';
 
 type MenubarProps = {
     size: number;
 };
-
 export function Menubar({ size }: MenubarProps) {
+    const navigate = useNavigate();
+    function handleSignOut() {
+        deleteCookie('memberId');
+        deleteCookie('memberToken');
+        deleteCookie('memberNickname');
+        navigate('/main');
+    }
     return (
         <>
             <div className="header__menubar-mission">
@@ -22,6 +29,9 @@ export function Menubar({ size }: MenubarProps) {
                     <img src="assets/image/user.svg" width={size} />
                 </Link>
             </div>
+            <a onClick={handleSignOut}>
+                <img src="assets/image/logout.svg" />
+            </a>
         </>
     );
 }
