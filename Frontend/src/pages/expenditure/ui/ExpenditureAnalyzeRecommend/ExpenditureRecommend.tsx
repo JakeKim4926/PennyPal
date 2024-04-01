@@ -52,13 +52,15 @@ export function ExpenditureRecommend({ favCategory1, favCategory2, items }: IBig
             <div className="expenditureRecommend__content">
                 <div className="expenditureRecommend__content-slider">
                     <div className="expenditureRecommend__content-slider-carousel">
-                        <button onClick={goToPrevious} aria-label="Previous">
+                        <button onClick={goToPrevious} aria-label="Previous" className="clickable-icon">
                             <FontAwesomeIcon icon={faChevronLeft} size="xl" />
                         </button>
                         <div className="expenditureRecommend__content-slider-carousel-item">
-                            <div className="expenditureRecommend__content-slider-carousel-item-img"></div>
+                            <div className="expenditureRecommend__content-slider-carousel-item-imgSpace">
+                                <div className="expenditureRecommend__content-slider-carousel-item-imgSpace-img"></div>
+                            </div>
                             <div className="expenditureRecommend__content-slider-carousel-item-info">
-                                {renderStats(items[carouselIndex].stats)}
+                                {/* {renderStats(items[carouselIndex].stats)} */}
                                 <div className="expenditureRecommend__content-slider-carousel-item-info-title">
                                     <div className="expenditureRecommend__content-slider-carousel-item-info-title-name">
                                         카드명
@@ -69,34 +71,58 @@ export function ExpenditureRecommend({ favCategory1, favCategory2, items }: IBig
                                 </div>
                                 <div className="expenditureRecommend__content-slider-carousel-item-info-benefits">
                                     <div className="expenditureRecommend__content-slider-carousel-item-info-benefits-benefit">
-                                        혜택 1
+                                        <div className="expenditureRecommend__content-slider-carousel-item-info-benefits-benefit-icon">
+                                            <FontAwesomeIcon icon={faChevronLeft} />
+                                        </div>
+                                        <div className="expenditureRecommend__content-slider-carousel-item-info-benefits-benefit-category">
+                                            혜택 1
+                                        </div>
+                                        <div className="expenditureRecommend__content-slider-carousel-item-info-benefits-benefit-amount">
+                                            10%
+                                        </div>
                                     </div>
                                     <div className="expenditureRecommend__content-slider-carousel-item-info-benefits-benefit">
-                                        혜택 2
+                                        <div className="expenditureRecommend__content-slider-carousel-item-info-benefits-benefit-icon">
+                                            <FontAwesomeIcon icon={faChevronLeft} />
+                                        </div>{' '}
+                                        <div className="expenditureRecommend__content-slider-carousel-item-info-benefits-benefit-category">
+                                            혜택 2
+                                        </div>
+                                        <div className="expenditureRecommend__content-slider-carousel-item-info-benefits-benefit-amount">
+                                            10%
+                                        </div>{' '}
                                     </div>
                                     <div className="expenditureRecommend__content-slider-carousel-item-info-benefits-benefit">
-                                        혜택 3
+                                        <div className="expenditureRecommend__content-slider-carousel-item-info-benefits-benefit-icon">
+                                            <FontAwesomeIcon icon={faChevronLeft} />
+                                        </div>{' '}
+                                        <div className="expenditureRecommend__content-slider-carousel-item-info-benefits-benefit-category">
+                                            혜택 3
+                                        </div>
+                                        <div className="expenditureRecommend__content-slider-carousel-item-info-benefits-benefit-amount">
+                                            10%
+                                        </div>{' '}
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <button onClick={goToNext} aria-label="Next">
+                        <button onClick={goToNext} aria-label="Next" className="clickable-icon">
                             <FontAwesomeIcon icon={faChevronRight} size="xl" />
                         </button>
                     </div>
                     <div className="expenditureRecommend__content-slider-indicator">
                         {items.map((item, index) => (
-                            <span
+                            <div
                                 key={item.id}
                                 className={`dot ${index === carouselIndex ? 'active' : ''}`}
                                 onClick={() => setCarouselIndex(index)}
-                            ></span>
+                            ></div>
                         ))}
                     </div>
                 </div>
-                <div className="expenditureRecommend__content-comment">
-                    <span>{favCategory1}</span>, <span>{favCategory2}</span>을 좋아하는 00님을 위한 맞춤 카드 추천
-                </div>
+            </div>
+            <div className="expenditureRecommend__comment">
+                <span>{favCategory1}</span>, <span>{favCategory2}</span>을 좋아하는 00님을 위한 맞춤 카드 추천
             </div>
         </div>
     );

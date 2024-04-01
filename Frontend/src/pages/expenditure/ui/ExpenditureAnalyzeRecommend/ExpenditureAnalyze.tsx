@@ -28,7 +28,7 @@ export function ExpenditureAnalyze() {
                     <div className="expenditureAnalyze__content-data-chart">
                         <PieChart datas={datas} labels={labels} backgroundColors={backgroundColors} />
                     </div>
-                    <div className="expenditureAnalyze__content-data-legend">범례</div>
+                    <div className="expenditureAnalyze__content-data-legend"></div>
                 </div>
                 <div className="expenditureAnalyze__content-info">
                     00님의 누적 최다 지출 카테고리는 <span>식료품</span>, <span>외식</span> 입니다!

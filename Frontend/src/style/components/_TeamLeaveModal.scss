@@ -1,0 +1,41 @@
+.teamLeaveModal {
+    animation: modalFadein 0.22s ease-in-out;
+    background-color: $bright;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    box-shadow: 0 0 0.6rem $gray;
+
+    &__middle {
+        font-family: 'Wanted-Bold';
+        font-size: 1.5rem;
+    }
+
+    &__bottom {
+        display: flex;
+        justify-content: center;
+
+        &-buttons {
+            display: flex;
+            gap: 1rem;
+
+            button {
+                border-radius: 0.3rem;
+                border: none;
+                color: $bright;
+                padding: 0.3rem;
+                font-family: 'Wanted-Medium';
+                font-size: 1.2rem;
+            }
+            :nth-child(1) {
+                background-color: $sub;
+            }
+
+            :nth-child(2) {
+                background-color: $main;
+            }
+        }
+    }
+}

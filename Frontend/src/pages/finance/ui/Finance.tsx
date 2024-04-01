@@ -1,81 +1,44 @@
-import { USER_ID, customAxios } from '@/shared';
-import { CompatClient, Stomp } from '@stomp/stompjs';
-import { useEffect, useRef } from 'react';
-import SockJS from 'sockjs-client';
-import StompJS from '@stomp/stompjs';
+import React, { useEffect, useState } from 'react';
+import CardComponent from '@/pages/finance/ui/CardComponent/CardComponent';
+import StockComponent from '@/pages/finance/ui/StockComponent/StockComponent';
+import SavingsComponent from '@/pages/finance/ui/SavingsComponent/SavingsComponent';
 
 export function Finance() {
-    const client = useRef<CompatClient>();
-
+    const [data, setData] = useState({ cards: [], stocks: [], savings: [] });
+    const fetchData = async () => {
+        // 여기에 API 호출 로직 구현
+        return {
+            cards: [
+                { id: 1, name: '카드1' },
+                { id: 2, name: '카드2' },
+            ],
+            stocks: [
+                { id: 1, name: '주식1' },
+                { id: 2, name: '주식2' },
+            ],
+            savings: [
+                { id: 1, name: '적금1' },
+                { id: 2, name: '적금2' },
+            ],
+        };
+    };
     useEffect(() => {
-        const connectHandler = () => {
-            const socket = new SockJS('http://localhost:8080/');
-            // client.current = Stomp.over(socket);
-            // client.current!.connect(
-            //     {},
-            //     () => {
-            //         // 연결 성공 시 실행될 콜백 함수
-            //         client.current!.subscribe(
-            //             '/sub/chat/22', // 수신
-            //             (message) => {
-            //                 // 메시지 수신 시 실행될 콜백 함수
-            //                 alert(message.body);
-            //             },
-            //         );
-            //     },
-            //     (error: any) => {
-            //         // 에러 처리
-            //         console.error('WebSocket 연결 에러:', error);
-            //     },
-            // );
-        };
-
-        connectHandler(); // 컴포넌트가 마운트될 때 한 번 호출
-
-        return () => {
-            // 컴포넌트가 언마운트될 때 클라이언트 연결 해제
-            if (client.current) {
-                client.current.disconnect();
-            }
-        };
+        fetchData().then();
     }, []);
-
-    function send() {
-        const message = {
-            senderId: USER_ID,
-            content: '하하채팅',
-        };
-        client.current!.send('/pub/22', {}, JSON.stringify(message));
-    }
 
     return (
         <div className="container">
-            <div>websocket 연결 설정 중</div>
-            <button
-                onClick={async () => {
-                    const a = await customAxios.get(`/chat/enter?chatRoomId=24&memberId=3859`);
-                    console.log(a);
-                }}
-            >
-                참여중인 채팅방 상세 조회 테스트
-            </button>
-            <button
-                onClick={async () => {
-                    send();
-                }}
-            >
-                메세지 보내기
-            </button>
-            <button
-                onClick={() => {
-                    customAxios.post('/team/approve', {
-                        teamId: 1783,
-                        memberId: 3861,
-                    });
-                }}
-            >
-                테스트
-            </button>
+            <div className="container">
+                <div className="contentCard">
+                    <div className="contentCard__tile">소비도 투자도 저축도 현명하게</div>
+                </div>
+                <div>금융</div>
+                <div>
+                    <CardComponent cards={data.cards} />
+                    <StockComponent stocks={data.stocks} />
+                    <SavingsComponent savings={data.savings} />
+                </div>
+            </div>
         </div>
     );
 }

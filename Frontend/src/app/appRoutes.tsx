@@ -13,24 +13,116 @@ import { Navigate } from 'react-router-dom';
 import { TeamRouting } from '@/pages/teamRouting';
 import { FindPassword } from '@/pages/signin';
 import { MarketReceipt } from '@/pages/marketReceipt';
+import { LoginCheck } from '@/shared';
 
 export function AppRoutes() {
     return (
         <Routes>
             <Route path="/" element={<Navigate to="/main" />} />
-            <Route path="/main" element={<Main />} />
-            <Route path="/find-password" element={<FindPassword />} />
-            <Route path="/expenditure" element={<Expenditure />} />
-            <Route path="/finance" element={<Finance />} />
-            <Route path="/landing" element={<Landing />} />
-            <Route path="/market" element={<Market />} />
-            <Route path="/receipt" element={<MarketReceipt />} />
-            <Route path="/mission" element={<Mission />} />
-            <Route path="/my-page" element={<MyPage />} />
-            <Route path="/ranking" element={<Ranking />} />
-            <Route path="/signin" element={<SignIn />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/team" element={<TeamRouting />} />
+            <Route
+                path="/main"
+                element={
+                    <LoginCheck>
+                        <Main />
+                    </LoginCheck>
+                }
+            />
+            <Route
+                path="/find-password"
+                element={
+                    <LoginCheck>
+                        <FindPassword />
+                    </LoginCheck>
+                }
+            />
+            <Route
+                path="/expenditure"
+                element={
+                    <LoginCheck>
+                        <Expenditure />
+                    </LoginCheck>
+                }
+            />
+            <Route
+                path="/finance"
+                element={
+                    <LoginCheck>
+                        <Finance />
+                    </LoginCheck>
+                }
+            />
+            <Route
+                path="/landing"
+                element={
+                    <LoginCheck>
+                        <Landing />
+                    </LoginCheck>
+                }
+            />
+            <Route
+                path="/market"
+                element={
+                    <LoginCheck>
+                        <Market />
+                    </LoginCheck>
+                }
+            />
+            <Route
+                path="/receipt"
+                element={
+                    <LoginCheck>
+                        <MarketReceipt />
+                    </LoginCheck>
+                }
+            />
+            <Route
+                path="/mission"
+                element={
+                    <LoginCheck>
+                        <Mission />
+                    </LoginCheck>
+                }
+            />
+            <Route
+                path="/my-page"
+                element={
+                    <LoginCheck>
+                        <MyPage />
+                    </LoginCheck>
+                }
+            />
+            <Route
+                path="/ranking"
+                element={
+                    <LoginCheck>
+                        <Ranking />
+                    </LoginCheck>
+                }
+            />
+            <Route
+                path="/signin"
+                element={
+                    <LoginCheck>
+                        <SignIn />
+                    </LoginCheck>
+                }
+            />
+            <Route
+                path="/signup"
+                element={
+                    <LoginCheck>
+                        <SignUp />
+                    </LoginCheck>
+                }
+            />
+            <Route
+                path="/team"
+                element={
+                    <LoginCheck>
+                        <TeamRouting />
+                    </LoginCheck>
+                }
+            />
         </Routes>
     );
 }
