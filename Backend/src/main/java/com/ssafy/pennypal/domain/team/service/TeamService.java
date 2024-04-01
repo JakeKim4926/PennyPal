@@ -99,14 +99,22 @@ public class TeamService {
         member.setTeam(team);
         memberRepository.save(member);
 
+
+        LocalDate lastWeekStart = MONDAY_OF_LAST_WEEK;
+        LocalDate lastWeekEnd = SUNDAY_OF_LAST_WEEK;
+        LocalDate thisWeekStart = MONDAY_OF_THIS_WEEK;
+        LocalDate thisWeekEnd = SUNDAY_OF_THIS_WEEK;
+
         // 팀원별 지난주와 이번주 지출 총액 계산
         List<TeamMemberExpenseResponse> members = team.getMembers().stream()
                 .filter(Objects::nonNull)
                 .map(m -> {
                     // 각 멤버별로 지난주 및 이번주 지출 총액 계산
                     int lastWeekTotalExpenses = m.getMemberExpensesOfLastWeek().stream()
+                            .filter(expense -> !expense.getExpenseDate().isBefore(lastWeekStart) && !expense.getExpenseDate().isAfter(lastWeekEnd))
                             .mapToInt(Expense::getExpenseAmount).sum();
                     int thisWeekTotalExpenses = m.getMemberExpensesOfThisWeek().stream()
+                            .filter(expense -> !expense.getExpenseDate().isBefore(thisWeekStart) && !expense.getExpenseDate().isAfter(thisWeekEnd))
                             .mapToInt(Expense::getExpenseAmount).sum();
 
                     // 계산된 총액을 TeamMemberExpenseResponse 객체로 반환
@@ -119,27 +127,35 @@ public class TeamService {
                 })
                 .collect(Collectors.toList());
 
-        // 팀 지난주, 이번주 지출 총액 계산
-        int teamLastTotalExpenses = 0;
-        int teamThisTotalExpenses = 0;
-
-        for (TeamMemberExpenseResponse m : members) {
-            teamLastTotalExpenses += m.getMemberLastTotalExpenses();
-            teamThisTotalExpenses += m.getMemberThisTotalExpenses();
-        }
-
         // 팀 지난주, 이번주 일자별 지출 총액 계산
         Map<LocalDate, Integer> lastWeekExpensesMap = new HashMap<>();
         Map<LocalDate, Integer> thisWeekExpensesMap = new HashMap<>();
 
         team.getMembers().forEach(m -> {
-            member.getMemberExpensesOfLastWeek().forEach(expense -> {
-                lastWeekExpensesMap.merge(expense.getExpenseDate(), expense.getExpenseAmount(), Integer::sum);
-            });
-            member.getMemberExpensesOfThisWeek().forEach(expense -> {
-                thisWeekExpensesMap.merge(expense.getExpenseDate(), expense.getExpenseAmount(), Integer::sum);
+            m.getMemberExpensesOfLastWeek().forEach(expense -> {
+                LocalDate expenseDate = expense.getExpenseDate();
+
+                if (!expenseDate.isBefore(lastWeekStart) && expenseDate.isBefore(thisWeekStart)) {
+                    lastWeekExpensesMap.merge(expenseDate, expense.getExpenseAmount(), Integer::sum);
+                } else if (!expenseDate.isBefore(thisWeekStart) && !expenseDate.isAfter(thisWeekEnd)) {
+                    thisWeekExpensesMap.merge(expenseDate, expense.getExpenseAmount(), Integer::sum);
+                }
             });
         });
+
+        // 팀 지난주 지출 총액 계산
+        int teamLastTotalExpenses = team.getMembers().stream()
+                .flatMap(mem -> mem.getMemberExpensesOfLastWeek().stream())
+                .filter(expense -> !expense.getExpenseDate().isBefore(lastWeekStart) && !expense.getExpenseDate().isAfter(lastWeekEnd))
+                .mapToInt(Expense::getExpenseAmount)
+                .sum();
+
+        // 팀 이번주 지출 총액 계산
+        int teamThisTotalExpenses = team.getMembers().stream()
+                .flatMap(mem -> mem.getMemberExpensesOfThisWeek().stream())
+                .filter(expense -> !expense.getExpenseDate().isBefore(thisWeekStart) && !expense.getExpenseDate().isAfter(thisWeekEnd))
+                .mapToInt(Expense::getExpenseAmount)
+                .sum();
 
         // 지난주 일자별 지출 총액 리스트 생성
         List<TeamLastEachTotalResponse> teamLastEachTotalExpenses = lastWeekExpensesMap.entrySet().stream()
@@ -604,14 +620,21 @@ public TeamDetailResponse detailTeamInfo(Long memberId) {
 
     if (team != null) {
 
+        LocalDate lastWeekStart = MONDAY_OF_LAST_WEEK;
+        LocalDate lastWeekEnd = SUNDAY_OF_LAST_WEEK;
+        LocalDate thisWeekStart = MONDAY_OF_THIS_WEEK;
+        LocalDate thisWeekEnd = SUNDAY_OF_THIS_WEEK;
+
         // 팀원별 지난주와 이번주 지출 총액 계산
         List<TeamMemberExpenseResponse> members = team.getMembers().stream()
                 .filter(Objects::nonNull)
                 .map(m -> {
                     // 각 멤버별로 지난주 및 이번주 지출 총액 계산
                     int lastWeekTotalExpenses = m.getMemberExpensesOfLastWeek().stream()
+                            .filter(expense -> !expense.getExpenseDate().isBefore(lastWeekStart) && !expense.getExpenseDate().isAfter(lastWeekEnd))
                             .mapToInt(Expense::getExpenseAmount).sum();
                     int thisWeekTotalExpenses = m.getMemberExpensesOfThisWeek().stream()
+                            .filter(expense -> !expense.getExpenseDate().isBefore(thisWeekStart) && !expense.getExpenseDate().isAfter(thisWeekEnd))
                             .mapToInt(Expense::getExpenseAmount).sum();
 
                     // 계산된 총액을 TeamMemberExpenseResponse 객체로 반환
@@ -624,27 +647,35 @@ public TeamDetailResponse detailTeamInfo(Long memberId) {
                 })
                 .collect(Collectors.toList());
 
-        // 팀 지난주, 이번주 지출 총액 계산
-        int teamLastTotalExpenses = 0;
-        int teamThisTotalExpenses = 0;
-
-        for (TeamMemberExpenseResponse m : members) {
-            teamLastTotalExpenses += m.getMemberLastTotalExpenses();
-            teamThisTotalExpenses += m.getMemberThisTotalExpenses();
-        }
-
         // 팀 지난주, 이번주 일자별 지출 총액 계산
         Map<LocalDate, Integer> lastWeekExpensesMap = new HashMap<>();
         Map<LocalDate, Integer> thisWeekExpensesMap = new HashMap<>();
 
         team.getMembers().forEach(m -> {
-            member.getMemberExpensesOfLastWeek().forEach(expense -> {
-                lastWeekExpensesMap.merge(expense.getExpenseDate(), expense.getExpenseAmount(), Integer::sum);
-            });
-            member.getMemberExpensesOfThisWeek().forEach(expense -> {
-                thisWeekExpensesMap.merge(expense.getExpenseDate(), expense.getExpenseAmount(), Integer::sum);
+            m.getMemberExpensesOfLastWeek().forEach(expense -> {
+                LocalDate expenseDate = expense.getExpenseDate();
+
+                if (!expenseDate.isBefore(lastWeekStart) && expenseDate.isBefore(thisWeekStart)) {
+                    lastWeekExpensesMap.merge(expenseDate, expense.getExpenseAmount(), Integer::sum);
+                } else if (!expenseDate.isBefore(thisWeekStart) && !expenseDate.isAfter(thisWeekEnd)) {
+                    thisWeekExpensesMap.merge(expenseDate, expense.getExpenseAmount(), Integer::sum);
+                }
             });
         });
+
+        // 팀 지난주 지출 총액 계산
+        int teamLastTotalExpenses = team.getMembers().stream()
+                .flatMap(mem -> mem.getMemberExpensesOfLastWeek().stream())
+                .filter(expense -> !expense.getExpenseDate().isBefore(lastWeekStart) && !expense.getExpenseDate().isAfter(lastWeekEnd))
+                .mapToInt(Expense::getExpenseAmount)
+                .sum();
+
+        // 팀 이번주 지출 총액 계산
+        int teamThisTotalExpenses = team.getMembers().stream()
+                .flatMap(mem -> mem.getMemberExpensesOfThisWeek().stream())
+                .filter(expense -> !expense.getExpenseDate().isBefore(thisWeekStart) && !expense.getExpenseDate().isAfter(thisWeekEnd))
+                .mapToInt(Expense::getExpenseAmount)
+                .sum();
 
         // 지난주 일자별 지출 총액 리스트 생성
         List<TeamLastEachTotalResponse> teamLastEachTotalExpenses = lastWeekExpensesMap.entrySet().stream()
@@ -655,7 +686,6 @@ public TeamDetailResponse detailTeamInfo(Long memberId) {
         List<TeamThisEachTotalResponse> teamThisEachTotalExpenses = thisWeekExpensesMap.entrySet().stream()
                 .map(entry -> new TeamThisEachTotalResponse(entry.getKey(), entry.getValue()))
                 .toList();
-
 
         // 실시간 랭킹 순위 없을 때
         if (team.getTeamRankRealtime() == null || team.getTeamRankRealtime().equals(0)) {
