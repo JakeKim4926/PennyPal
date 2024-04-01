@@ -10,9 +10,10 @@ $light: #eeeeee;
 $modalbg: #aaaaaa50;
 
 // 전체 레이아웃
+// $BODY_MIN_WIDTH: 1200px;
 $BODY_MIN_WIDTH: 1400px;
 
-$CONTENT_WIDTH_RATIO: 50%;
+$CONTENT_WIDTH_RATIO: 60rem;
 
 // 헤더, 네브 사이즈
 $HEADER_HEIGHT: 60px;

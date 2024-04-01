@@ -1,0 +1,139 @@
+@mixin listCommon {
+    width: 20rem;
+    height: 18rem;
+    padding: 1rem;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.teamSettingModal {
+    animation: modalFadein 0.22s ease-in-out;
+
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    background-color: $bright;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    div,
+    button,
+    input {
+        font-family: 'Wanted-Medium';
+        font-size: 1.4rem;
+    }
+
+    &__top {
+    }
+
+    &__middle {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+
+        &-info {
+            padding: 1rem;
+            border-radius: 1rem;
+            background-color: $main;
+
+            &-teamName,
+            &-teamInfo,
+            &-teamIsAutoConfirm {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            &-teamIsAutoConfirm {
+                &-value {
+                    display: flex;
+                }
+            }
+
+            &-modify {
+                text-align: end;
+                padding-right: 2rem;
+            }
+        }
+
+        &-personnel {
+            // display: grid;
+            // grid-template-columns: repeat(2, 1fr);
+            display: flex;
+            gap: 1rem;
+
+            &-current {
+                background-color: $dark;
+                @include listCommon();
+
+                &-list {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-around;
+                    gap: 0.3rem;
+                }
+            }
+
+            &-waiting {
+                background-color: $sub;
+                @include listCommon();
+                width: 25rem;
+
+                &-list {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-around;
+                    gap: 0.3rem;
+                    overflow-y: auto;
+                }
+            }
+        }
+    }
+
+    &__bottom {
+        display: flex;
+        justify-content: center;
+
+        &-buttons {
+            display: flex;
+            gap: 1.5rem;
+
+            button {
+                cursor: pointer;
+            }
+        }
+    }
+}
+
+@mixin itemCommon {
+    display: flex;
+    justify-content: space-between;
+}
+
+.memberListItem {
+    @include itemCommon();
+
+    &-name {
+    }
+
+    &-ban {
+        cursor: pointer;
+    }
+}
+
+.waitingMemberListItem {
+    @include itemCommon();
+
+    &-name {
+    }
+
+    &-buttons {
+        display: flex;
+        gap: 0.3rem;
+
+        button {
+            cursor: pointer;
+        }
+    }
+}
