@@ -1,10 +1,14 @@
 @import '@/style/abstract/variables';
 @import '@/style/abstract/fonts';
+@import '@/style/abstract/cursor';
 
 .expenditureRecommend {
     display: flex;
     flex-direction: column;
-    gap: 30px;
+    justify-content: space-between;
+    gap: 40px;
+    height: 100%;
+    font-size: 14px;
 
     &__title {
         display: flex;
@@ -29,7 +33,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 20px;
+            gap: 40px;
             width: 100%;
 
             &-carousel {
@@ -38,22 +42,108 @@
                 justify-content: space-between;
                 width: 100%;
 
+                * {
+                    color: $line;
+                }
+
                 &-item {
                     display: flex;
+                    align-items: center;
                     gap: 30px;
 
-                    &-img {
-                        width: 95px;
-                        height: 150px;
-                        border-radius: 10px;
-                        background-color: red;
-                        box-shadow: 0 3px 5px $modalbg;
+                    &-imgSpace {
+                        position: relative;
+                        width: 140px;
+                        height: 140px;
+                        border-radius: 70%;
+                        background-color: $sub;
+
+                        &-img {
+                            position: absolute;
+                            top: 50%;
+                            left: 50%;
+                            transform: translate(-50%, -50%);
+                            width: 95px;
+                            height: 150px;
+                            border-radius: 10px;
+                            background-color: red;
+                            box-shadow: 0 3px 5px $modalbg;
+                        }
                     }
 
                     &-info {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 15px;
+
+                        * {
+                            color: $black;
+                        }
+
+                        &-title {
+                            display: flex;
+                            flex-direction: column;
+                            gap: 10px;
+
+                            &-name {
+                                font-family: 'Wanted-Bold';
+                                font-size: 16px;
+                            }
+
+                            &-brand {
+                                color: $dark;
+                            }
+                        }
+
+                        &-benefits {
+                            display: flex;
+                            flex-direction: column;
+                            gap: 10px;
+
+                            &-benefit {
+                                display: flex;
+                                align-items: center;
+                                gap: 10px;
+
+                                &-icon {
+                                }
+
+                                &-category {
+                                    font-family: 'Wanted-Medium';
+                                }
+
+                                &-amount {
+                                    font-family: 'Wanted-ExtraBold';
+                                }
+                            }
+                        }
                     }
                 }
             }
+
+            .dot {
+                width: 4px;
+                height: 4px;
+                background-color: $line;
+                border-radius: 50%;
+                display: inline-block;
+                margin: 0 5px;
+            }
+
+            .dot.active {
+                width: 4px;
+                height: 4px;
+                background-color: $black;
+            }
+        }
+    }
+
+    &__comment {
+        padding-bottom: 10px;
+        text-align: center;
+
+        span {
+            font-family: 'Wanted-Bold';
         }
     }
 }
