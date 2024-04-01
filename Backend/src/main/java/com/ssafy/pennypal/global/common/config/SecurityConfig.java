@@ -39,6 +39,7 @@ public class SecurityConfig {
 //                                .requestMatchers("api/**").permitAll()
                                 .requestMatchers("api/member/login").permitAll()
                                 .requestMatchers("api/member/signup").permitAll()
+                                .requestMatchers("api/bank/**").permitAll()
 //                                .requestMatchers("ws/**").permitAll()// WebSocket 경로 허용
                                 .anyRequest()
                                 .authenticated()
