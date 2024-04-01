@@ -61,7 +61,9 @@ export function MarketReceiptContent() {
                 <div className="line">=====================================================================</div>
                 <div className="marketReceiptContent__footer-total">
                     <div className="marketReceiptContent__footer-total-title">합계</div>
-                    <div className="marketReceiptContent__footer-total-value">[P] {0}</div>
+                    <div className="marketReceiptContent__footer-total-value">
+                        [P] {record.reduce((prev, cur) => prev + cur.priceSum, 0)}
+                    </div>
                 </div>
                 <div className="line">=====================================================================</div>
             </div>
