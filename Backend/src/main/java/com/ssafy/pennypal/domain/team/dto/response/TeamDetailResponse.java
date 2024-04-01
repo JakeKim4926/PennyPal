@@ -20,6 +20,7 @@ public class TeamDetailResponse {
     private String teamInfo;
     private Integer teamScore;
     private Integer teamRankRealtime;
+    private Boolean teamIsAutoConfirm;
 
     private Integer teamLastTotalExpenses; // 팀 지난주 지출 총액
     private Integer teamThisTotalExpenses; // 팀 이번주 지출 총액
@@ -29,7 +30,7 @@ public class TeamDetailResponse {
 
     @Builder
     public TeamDetailResponse(Long teamId,Long chatRoomId, String teamName, Long teamLeaderId, String teamInfo, Integer teamScore,
-                              Integer teamRankRealtime, Integer teamLastTotalExpenses, Integer teamThisTotalExpenses,
+                              Integer teamRankRealtime, Boolean teamIsAutoConfirm, Integer teamLastTotalExpenses, Integer teamThisTotalExpenses,
                               List<TeamLastEachTotalResponse> teamLastEachTotalExpenses,
                               List<TeamThisEachTotalResponse> teamThisEachTotalExpenses,
                               List<TeamMemberExpenseResponse> members) {
@@ -40,6 +41,7 @@ public class TeamDetailResponse {
         this.teamInfo = teamInfo;
         this.teamScore = teamScore;
         this.teamRankRealtime = teamRankRealtime;
+        this.teamIsAutoConfirm = teamIsAutoConfirm;
         this.teamLastTotalExpenses = teamLastTotalExpenses;
         this.teamThisTotalExpenses = teamThisTotalExpenses;
         this.teamLastEachTotalExpenses = teamLastEachTotalExpenses;
