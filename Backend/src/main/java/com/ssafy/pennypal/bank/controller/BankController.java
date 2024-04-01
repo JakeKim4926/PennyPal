@@ -1,5 +1,6 @@
 package com.ssafy.pennypal.bank.controller;
 
+import com.ssafy.pennypal.bank.dto.controller.UserDummyAccount;
 import com.ssafy.pennypal.bank.dto.controller.request.AccountDrawingTransferControllerDTO;
 import com.ssafy.pennypal.bank.dto.controller.request.AccountTransactionRequestDTO;
 import com.ssafy.pennypal.bank.dto.controller.request.AccountTransferRequestDTO;
@@ -253,6 +254,46 @@ public class BankController {
                 .build();
 
         bankServiceAPI.accountWithdrawal(drawingTransferRequestServiceDTO);
+
+        return ApiResponse.ok(null);
+    }
+
+    @PostMapping("user/dummy/{userEmail}")
+    private ApiResponse<Object> Dummy(@PathVariable String userEmail) {
+        UserAccountResponseControllerDTO userAccountResponseControllerDTO = getUserBankApi(userEmail);
+
+        CommonHeaderRequestDTO commonHeaderRequestDTO = CommonHeaderRequestDTO.builder()
+                .apiName("inquireAccountList")
+                .apiKey(SSAFY_BANK_API_KEY)
+                .userKey(userAccountResponseControllerDTO.getUserKey())
+                .build();
+
+        GetUserAccountListServiceRequestDTO getUserAccountListServiceRequestDTO = GetUserAccountListServiceRequestDTO.builder()
+                .header(commonHeaderRequestDTO)
+                .build();
+
+        UserAccountsResponseControllerDTO userAccountsResponseControllerDTO = UserAccountsResponseControllerDTO.of(
+                bankServiceAPI.getUserAccountList(getUserAccountListServiceRequestDTO)
+        );
+
+        UserDummyAccount userDummyAccount = UserDummyAccount.of(userAccountsResponseControllerDTO);
+
+        IntStream.range(0, 10).forEach(i -> {
+            CommonHeaderRequestDTO commonHeaderRequestDTO3 = CommonHeaderRequestDTO.builder()
+                    .apiName("drawingTransfer")
+                    .apiKey(SSAFY_BANK_API_KEY)
+                    .userKey(userAccountResponseControllerDTO.getUserKey())
+                    .build();
+
+            DrawingTransferRequestServiceDTO drawingTransferRequestServiceDTO = DrawingTransferRequestServiceDTO.builder()
+                    .header(commonHeaderRequestDTO3)
+                    .bankCode(userDummyAccount.getBankCode())
+                    .accountNo(userDummyAccount.getAccountNo())
+                    .transactionBalance(generateRandomAmount())
+                    .transactionSummary(DummyTransactionSummary.getRandomData()) // Enum 사용 시 getValue() 메서드 호출 필요
+                    .build();
+            bankServiceAPI.accountWithdrawal(drawingTransferRequestServiceDTO);
+        });
 
         return ApiResponse.ok(null);
     }

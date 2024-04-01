@@ -25,3 +25,7 @@ include::api/getAccountTransfer.adoc[]
 === 주식 구매
 
 include::api/getAccountDrawingTransfer.adoc[]
+
+=== 더미데이터 생성
+
+include::api/setDummyData.adoc[]
