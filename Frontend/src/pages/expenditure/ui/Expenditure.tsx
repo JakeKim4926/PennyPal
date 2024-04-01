@@ -1,5 +1,6 @@
 import { useLocation } from 'react-router-dom';
 import { customAxios, PageHeader } from '../../../shared';
+import { getCookie } from '../../../shared/lib/cookieHelper';
 import { ExpenditureWeekly } from './ExpenditureWeekly/ExpenditureWeekly';
 import { ExpenditureGraph } from './ExpenditureGraph/ExpenditureGraph';
 import { ExpenditureAnalyze } from './ExpenditureAnalyzeRecommend/ExpenditureAnalyze';
@@ -75,6 +76,58 @@ export function Expenditure() {
         ],
     };
 
+    const fetchRecommendedCards = async () => {
+        // getCookie 함수를 사용하여 쿠키에서 memberIndex를 가져옵니다.
+        const memberIndex = getCookie('memberId'); // 쿠키에서 memberId(=memberIndex) 값을 읽습니다.
+
+        if (memberIndex === null) {
+            console.error('로그인이 필요합니다.'); // memberIndex가 없으면 오류 메시지를 출력
+            return;
+        }
+
+        const requestData = {
+            // memberIndex: memberIndex, // 여기에 읽어온 memberIndex를 사용
+            memberIndex: 96, // 여기에 읽어온 memberIndex를 사용
+        };
+
+        try {
+            const response = await customAxios.get('/card/recommend', { params: requestData });
+            console.log(response.data); // 응답 데이터를 콘솔에 출력
+        } catch (error) {
+            console.error(error); // 오류 발생 시 콘솔에 오류를 출력
+        }
+    };
+
+    const fetchBankKey = async () => {
+        const memberId = getCookie('memberId');
+        if (!memberId) {
+            console.error('로그인이 필요합니다.');
+            return;
+        }
+
+        try {
+            const response = await customAxios.get(`/bank/user/key/${memberId}`);
+            console.log(response.data);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    const fetchAccountList = async () => {
+        const memberId = getCookie('memberId');
+        if (!memberId) {
+            console.error('로그인이 필요합니다.');
+            return;
+        }
+
+        try {
+            const response = await customAxios.get(`/bank/user/account/${memberId}`);
+            console.log(response.data);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
     return (
         <div className="container expenditure__container ">
             <div className="expenditure">
@@ -86,47 +139,9 @@ export function Expenditure() {
                     <ExpenditureRecommend {...exampleData} />
                 </div>
                 <div className="contentCard">
-                    <button
-                        onClick={async () => {
-                            const requestData = {
-                                memberIndex: 1,
-                            };
-
-                            try {
-                                const response = await customAxios.get('/card/recommend', {
-                                    params: requestData,
-                                });
-                                console.log(response.data); // 응답 데이터를 콘솔에 출력
-                            } catch (error) {
-                                console.error(error); // 오류 발생 시 콘솔에 오류를 출력
-                            }
-                        }}
-                    >
-                        유저추천카드조회
-                    </button>
-
-                    <button
-                        onClick={async () => {
-                            const c = await customAxios
-                                .get('/bank/user/key/mine702@naver.com')
-                                .catch((err) => console.log(err));
-                            console.log(c);
-                        }}
-                    >
-                        은행키조회
-                    </button>
-
-                    <button
-                        onClick={async () => {
-                            const d = await customAxios
-                                .get('/bank/user/account/mine702@naver.com')
-                                .catch((err) => console.log(err));
-                            console.log(d);
-                        }}
-                    >
-                        계좌목록조회
-                    </button>
-
+                    <button onClick={fetchRecommendedCards}>유저추천카드조회</button>|
+                    <button onClick={fetchBankKey}>은행키조회</button>|
+                    <button onClick={fetchAccountList}>계좌목록조회</button>|
                     <button
                         onClick={async () => {
                             const requestData = {
