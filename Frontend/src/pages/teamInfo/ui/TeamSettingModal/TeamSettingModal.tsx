@@ -1,4 +1,11 @@
-import { banTeamMember, closeTeamSettingModal, deleteTeam, getTeamWaitingList } from '@/pages/teamInfo/index';
+import {
+    banTeamMember,
+    closeTeamSettingModal,
+    deleteTeam,
+    getTeamWaitingList,
+    modifyTeamInfo,
+} from '@/pages/teamInfo/index';
+import { getCookie } from '@/shared';
 import { memo, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
@@ -65,7 +72,20 @@ export function TeamSettingModal({ teamId, memberId, teamName, teamInfo, members
                             </div>
                         </div>
                         <div className="teamSettingModal__middle-info-modify">
-                            <button className="teamSettingModal__middle-info-modify-button">수정하기</button>
+                            <button
+                                className="teamSettingModal__middle-info-modify-button"
+                                onClick={async () => {
+                                    const dto = {
+                                        memberId: getCookie('memberId'),
+                                        teamIsAutoConfirm: true,
+                                        teamInfo: '수정테스트!!',
+                                    };
+                                    const res = await modifyTeamInfo(dto, teamId);
+                                    console.log(res);
+                                }}
+                            >
+                                수정하기
+                            </button>
                         </div>
                     </div>
                     <hr />
@@ -89,10 +109,15 @@ export function TeamSettingModal({ teamId, memberId, teamName, teamInfo, members
                         <div className="teamSettingModal__middle-personnel-waiting">
                             <div>가입 대기자</div>
                             <div className="teamSettingModal__middle-personnel-waiting-list">
-                                <WaitingMemberListItem />
-                                <WaitingMemberListItem />
-                                <WaitingMemberListItem />
-                                <WaitingMemberListItem />
+                                {waitingList.map(
+                                    (it: { memberId: number; memberNickname: string; memberMostCategory: string }) => (
+                                        <WaitingMemberListItem
+                                            memberId={it.memberId}
+                                            memberNickname={it.memberNickname}
+                                            memberMostCategory={it.memberMostCategory}
+                                        />
+                                    ),
+                                )}
                             </div>
                         </div>
                     </div>
@@ -159,10 +184,17 @@ function MemberListItem({ member, memberId, teamId, memberList, setMemberList }:
     );
 }
 
-function WaitingMemberListItem() {
+type WaitingMemberListItemProps = {
+    memberId: number;
+    memberNickname: string;
+    memberMostCategory: string | null;
+};
+
+function WaitingMemberListItem({ memberId, memberNickname, memberMostCategory }: WaitingMemberListItemProps) {
     return (
         <div className="waitingMemberListItem">
-            <div className="waitingMemberListItem-name">멤버이름</div>
+            {}
+            <div className="waitingMemberListItem-name">{memberNickname}</div>
             <div className="waitingMemberListItem-buttons">
                 <button className="waitingMemberListItem-buttons-button">승인</button>
                 <button className="waitingMemberListItem-buttons-button">거절</button>
