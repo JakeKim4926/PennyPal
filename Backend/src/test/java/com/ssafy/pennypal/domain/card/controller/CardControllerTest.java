@@ -31,6 +31,8 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -97,6 +99,12 @@ class CardControllerTest extends RestDocsSupport {
                 .andDo(document("getCards",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
+                        queryParameters(
+                                parameterWithName("page").description("페이지 넘버 요청")
+                                        .optional(),
+                                parameterWithName("size").description("페이지 크기 요청")
+                                        .optional()
+                        ),
                         responseFields(
                                 fieldWithPath("code").type(JsonFieldType.NUMBER)
                                         .description("응답 코드"),
