@@ -60,7 +60,11 @@ export function SignIn() {
         // 회원가입 컴포넌트로 이동.
         navigate('/signup');
     }
-
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter') {
+            handleSignIn();
+        }
+    };
     function handleSocial(k: 'google' | 'kakao') {
         // 소셜로그인 api
         if (k === 'google') {
@@ -105,6 +109,7 @@ export function SignIn() {
                             placeholder="패스워드"
                             value={password}
                             onChange={handlePasswordChange}
+                            onKeyDown={handleKeyDown}
                         />
                     </div>
                     <div className="fpButton">
