@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
-@EnableScheduling
 @EnableJpaAuditing
+@EnableScheduling
 public class PennypalApplication {
 
     public static void main(String[] args) {

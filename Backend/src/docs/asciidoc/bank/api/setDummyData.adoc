@@ -1,0 +1,9 @@
+[[set-dummy-data]]
+==== HTTP Request
+
+include::{snippets}/set-dummy-data/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/set-dummy-data/http-response.adoc[]
+include::{snippets}/set-dummy-data/response-fields.adoc[]

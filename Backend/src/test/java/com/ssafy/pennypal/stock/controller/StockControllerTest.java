@@ -2,6 +2,8 @@ package com.ssafy.pennypal.stock.controller;
 
 import com.ssafy.pennypal.common.RestDocsSupport;
 import com.ssafy.pennypal.stock.dto.response.StockWithLatestTransactionDto;
+import com.ssafy.pennypal.stock.dto.response.StockWithTransactionDto;
+import com.ssafy.pennypal.stock.dto.response.StockWithTransactionListDto;
 import com.ssafy.pennypal.stock.service.IStockService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -16,6 +18,7 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import java.time.LocalDate;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
@@ -192,4 +195,71 @@ class StockControllerTest extends RestDocsSupport {
                         )
                 );
     }
+
+    @DisplayName("배당금 금액 전체 조회 하기")
+    @Test
+    void 배당금_금액_전체_조회_하기() throws Exception {
+
+        Long stockId = 1L;
+        // given
+        given(stockService.getStock(anyLong()))
+                .willReturn(
+                        StockWithTransactionDto.builder()
+                                .stockId(1L)
+                                .crno("1101110012809")
+                                .isinCd("KR7000010009")
+                                .stckIssuCmpyNm("신한은행")
+                                .stockWithTransactionListDtoList(
+                                        List.of(
+                                                StockWithTransactionListDto.builder()
+                                                        .basDt(LocalDate.of(2024, 4, 29))
+                                                        .stckGenrDvdnAmt(227.04)
+                                                        .build(),
+                                                StockWithTransactionListDto.builder()
+                                                        .basDt(LocalDate.of(2024, 5, 1))
+                                                        .stckGenrDvdnAmt(227.6)
+                                                        .build()
+                                        )
+                                )
+                                .build()
+                );
+        // when
+        // then
+
+        mockMvc.perform(
+                        get("/api/stock/{stockId}", stockId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                ).andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("get-stock-transaction",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                responseFields(
+                                        fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                                .description("코드"),
+                                        fieldWithPath("status").type(JsonFieldType.STRING)
+                                                .description("상태"),
+                                        fieldWithPath("message").type(JsonFieldType.STRING)
+                                                .description("메시지"),
+                                        fieldWithPath("data").type(JsonFieldType.OBJECT)
+                                                .description("응답 데이터"),
+                                        fieldWithPath("data.stockId").type(JsonFieldType.NUMBER)
+                                                .description("응답 데이터 주식 아이디"),
+                                        fieldWithPath("data.crno").type(JsonFieldType.STRING)
+                                                .description("응답 데이터 주식 CRNO"),
+                                        fieldWithPath("data.isinCd").type(JsonFieldType.STRING)
+                                                .description("응답 데이터 주식 ISINCD "),
+                                        fieldWithPath("data.stckIssuCmpyNm").type(JsonFieldType.STRING)
+                                                .description("응답 데이터 주식 이름"),
+                                        fieldWithPath("data.stockWithTransactionListDtoList").type(JsonFieldType.ARRAY)
+                                                .description("응답 데이터 주식 배당금 리스트"),
+                                        fieldWithPath("data.stockWithTransactionListDtoList[].basDt").type(JsonFieldType.ARRAY)
+                                                .description("응답 데이터 주식 배당금 날짜"),
+                                        fieldWithPath("data.stockWithTransactionListDtoList[].stckGenrDvdnAmt").type(JsonFieldType.NUMBER)
+                                                .description("응답 데이터 주식 배당금 금액")
+                                )
+                        )
+                );
+    }
+
 }

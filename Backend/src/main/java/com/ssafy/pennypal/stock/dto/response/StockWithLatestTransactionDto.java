@@ -20,12 +20,11 @@ public class StockWithLatestTransactionDto {
 
     private LocalDate basDt;
 
-    private float stckGenrDvdnAmt;
+    private double stckGenrDvdnAmt;
 
     @Builder
     @QueryProjection
-
-    public StockWithLatestTransactionDto(Long stockId, String crno, String isinCd, String stckIssuCmpyNm, LocalDate basDt, float stckGenrDvdnAmt) {
+    public StockWithLatestTransactionDto(Long stockId, String crno, String isinCd, String stckIssuCmpyNm, LocalDate basDt, double stckGenrDvdnAmt) {
         this.stockId = stockId;
         this.crno = crno;
         this.isinCd = isinCd;

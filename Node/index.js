@@ -4,13 +4,13 @@ import dotenv from 'dotenv';
 import mysql from 'mysql2/promise';
 
 // 매일 실행될 작업 스케줄링
-
 schedule('30 23 * * *', async () => {
     dotenv.config();
     console.log(new Date() + " start");
     const date = await getDate();
-    const totalCount = await initProcessData(date);
-    await fetchAndProcessData(date, totalCount);
+    console.log(date);
+    // const totalCount = await initProcessData(date);
+    // await fetchAndProcessData(date, totalCount);
     console.log(new Date() + " end");
 });
 
@@ -55,6 +55,7 @@ async function initProcessData(date, retries = 3) {
 }
 
 async function fetchAndProcessData(date, totalCount, retries = 3) {
+    
     const url = process.env.SERVICE_URL;
 
     const params = {
@@ -103,20 +104,22 @@ async function fetchAndProcessData(date, totalCount, retries = 3) {
 }
 
 async function insert(finalItems) {
+    const now = new Date();
+
     for (const item of finalItems) {
         try {
-            const stockId = await insertIntoStockAndGetId(item.crno, item.isinCd, item.stckIssuCmpyNm);
+            const stockId = await insertIntoStockAndGetId(item.crno, item.isinCd, item.stckIssuCmpyNm, now);
             await insertIntoStockTransaction(stockId, {
                 basDt: item.basDt,
                 stckGenrDvdnAmt: item.stckGenrDvdnAmt
-            });
+            }, now);
         } catch (error) {
             console.error('데이터 삽입 중 오류가 발생했습니다:', error);
         }
     }
 }
 
-async function insertIntoStockAndGetId(stockCrno, stockIsinCd, stockIssuCmpyNm) {
+async function insertIntoStockAndGetId(stockCrno, stockIsinCd, stockIssuCmpyNm, now) {
     const connection = await mysql.createConnection({
         host: process.env.MYSQL_HOST,
         port: process.env.MYSQL_PORT,
@@ -137,10 +140,12 @@ async function insertIntoStockAndGetId(stockCrno, stockIsinCd, stockIssuCmpyNm) 
         } else {
             // 새 레코드를 삽입합니다.
             const insertSql = `
-                INSERT INTO stock (stock_crno, stock_isin_cd, stock_stck_issu_cmpy_nm) 
-                VALUES (?, ?, ?)
+                INSERT INTO stock (stock_crno, stock_isin_cd, stock_stck_issu_cmpy_nm, created_date_time, modified_date_time) 
+                VALUES (?, ?, ?, ?, ?)
             `;
-            const [insertResult] = await connection.query(insertSql, [stockCrno, stockIsinCd, stockIssuCmpyNm]);
+            const [insertResult] = await connection.query(insertSql, [
+                stockCrno, stockIsinCd, stockIssuCmpyNm, now, now
+            ]);
 
             return insertResult.insertId;
         }
@@ -152,7 +157,7 @@ async function insertIntoStockAndGetId(stockCrno, stockIsinCd, stockIssuCmpyNm) 
     }
 }
 
-async function insertIntoStockTransaction(stockId, transactionData) {
+async function insertIntoStockTransaction(stockId, transactionData, now) {
     const connection = await mysql.createConnection({
         host: process.env.MYSQL_HOST,
         port: process.env.MYSQL_PORT,
@@ -163,13 +168,15 @@ async function insertIntoStockTransaction(stockId, transactionData) {
 
     try {
         const insertSql = `
-            INSERT INTO stock_transaction (stock_transaction_bas_dt, stock_transaction_stck_genr_dvdn_amt, stock_id) 
-            VALUES (?, ?, ?)
+            INSERT INTO stock_transaction (stock_transaction_bas_dt, stock_transaction_stck_genr_dvdn_amt, stock_id, created_date_time, modified_date_time) 
+            VALUES (?, ?, ?, ?, ?)
         `;
         await connection.query(insertSql, [
             transactionData.basDt,
             transactionData.stckGenrDvdnAmt,
-            stockId
+            stockId,
+            now,
+            now
         ]);
     } catch (error) {
         console.error('stock_transaction 데이터베이스 작업 중 오류가 발생했습니다:', error);
