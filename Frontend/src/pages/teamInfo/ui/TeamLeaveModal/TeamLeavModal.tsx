@@ -1,6 +1,7 @@
 import { customAxios } from '@/shared';
 import { useDispatch } from 'react-redux';
 import { closeTeamLeaveModal } from '../../model/openTeamLeaveModal';
+import { setTeamInfo } from '@/pages/teamRouting';
 
 type TeamLeaveModal = {
     teamId: number;
@@ -22,6 +23,13 @@ export function TeamLeaveModal({ teamId, memberId }: TeamLeaveModal) {
                             onClick={async () => {
                                 const postDto = { teamId, memberId };
                                 const res = await customAxios.post('/team/leave', postDto);
+                                if (res.data.code === 200) {
+                                    alert('탈퇴했습니다. \n 잠시 후 페이지가 이동됩니다.');
+                                    dispatch(closeTeamLeaveModal());
+                                    setTimeout(() => {
+                                        dispatch(setTeamInfo({ teamId: null }));
+                                    }, 1000);
+                                }
                             }}
                         >
                             탈퇴하기
