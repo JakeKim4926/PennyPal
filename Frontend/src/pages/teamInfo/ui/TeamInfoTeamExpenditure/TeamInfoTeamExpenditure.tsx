@@ -52,7 +52,7 @@ export function TeamInfoTeamExpenditure() {
             const dateArr = history.date.split('-');
 
             dayOfWeekIdx = new Date(dateArr.join(',')).getDay();
-            console.log(dayOfWeekIdx);
+
             arr[dayOfWeekIdx] += history.totalAmount;
         }
 
@@ -62,7 +62,7 @@ export function TeamInfoTeamExpenditure() {
     useEffect(() => {
         const lastWeekSpend = calDailySpend(teamData?.teamLastEachTotalExpenses!);
         const thisWeekSpend = calDailySpend(teamData?.teamThisEachTotalExpenses!);
-        // setData([lastWeekSpend, thisWeekSpend]);
+        setData([lastWeekSpend, thisWeekSpend]);
         console.log(lastWeekSpend, thisWeekSpend);
     }, []);
 
