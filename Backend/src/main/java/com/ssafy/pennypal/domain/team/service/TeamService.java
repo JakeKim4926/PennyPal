@@ -459,6 +459,24 @@ public void RankTeamScore() {
 
         currentTeam.getTeamRankHistories().add(newRankHistory);
         teamRepository.save(currentTeam);
+
+        /**
+         * 순위에 따라 포인트 차등 지급
+         * 7000 4000 3000 2000 1000
+         */
+
+        int pointsToAdd = switch (rankNum) {
+            case 1 -> 7000;
+            case 2 -> 4000;
+            case 3 -> 3000;
+            case 4 -> 2000;
+            case 5 -> 1000;
+            default -> 0; // 순위가 5보다 낮은 경우, 추가 점수 없음
+        };
+
+        for (Member mem : currentTeam.getMembers()) {
+            mem.setMemberPoint(mem.getMemberPoint() + pointsToAdd);
+        }
     }
 
 }
