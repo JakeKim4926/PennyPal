@@ -49,13 +49,11 @@ public class MemberController {
 
     @GetMapping("/attend/state")
     public ApiResponse<Boolean> attend(@RequestParam Long memberId) {
-        log.info("ㅎㅇ");
         return attendService.getIsAttended(memberId);
     }
 
     @GetMapping("/{memberId}")
     public ApiResponse<Object> getMemberEmail(@PathVariable Long memberId){
-        log.info("memberId = {}", memberId);
         MemberEmailResponseDto memberEmail = memberService.getMemberEmail(memberId);
         return ApiResponse.ok(memberEmail);
     }

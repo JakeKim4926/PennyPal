@@ -5,67 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="590e91e7-8499-4b51-bd6a-05ca195e5fce" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../Frontend/public/assets/image/background_Main.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Frontend/public/assets/image/logout.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Frontend/src/pages/finance/ui/CardComponent/CardComponent.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Frontend/src/pages/finance/ui/SavingsComponent/SavingsComponent.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Frontend/src/pages/finance/ui/StockComponent/StockComponent.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Frontend/src/pages/teamInfo/api/banTeamMember.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Frontend/src/pages/teamInfo/api/connectTeamChatRoom.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Frontend/src/pages/teamInfo/api/getTeamChatHistory.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Frontend/src/pages/teamInfo/api/getTeamWaitingList.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Frontend/src/pages/teamInfo/api/modifyTeamInfo.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Frontend/src/pages/teamInfo/api/sendTeamChat.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Frontend/src/pages/teamInfo/model/openTeamChattingModal.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Frontend/src/pages/teamInfo/ui/TeamChattingModal/TeamChattingModal.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Frontend/src/shared/lib/LoginCheck.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Frontend/src/style/abstract/_cursor.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Frontend/src/style/components/_TeamChattingModal.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Frontend/src/style/components/_TeamLeaveModal.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Frontend/src/style/components/_TeamSettingModal.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Frontend/src/style/pages/Main.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Backend/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/app/appProvider.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/app/appProvider.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/app/appRoutes.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/app/appRoutes.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/pages/expenditure/ui/Expenditure.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/pages/expenditure/ui/Expenditure.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/pages/expenditure/ui/ExpenditureAnalyzeRecommend/ExpenditureAnalyze.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/pages/expenditure/ui/ExpenditureAnalyzeRecommend/ExpenditureAnalyze.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/pages/expenditure/ui/ExpenditureAnalyzeRecommend/ExpenditureRecommend.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/pages/expenditure/ui/ExpenditureAnalyzeRecommend/ExpenditureRecommend.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/pages/expenditure/ui/ExpenditureWeekly/ExpenditureWeekly.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/pages/expenditure/ui/ExpenditureWeekly/ExpenditureWeekly.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/pages/expenditure/ui/ExpenditureWeekly/item/ExpenditureWeeklyDaily.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/pages/expenditure/ui/ExpenditureWeekly/item/ExpenditureWeeklyDaily.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/pages/finance/ui/Finance.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/pages/finance/ui/Finance.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/pages/main/ui/Main.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/pages/main/ui/Main.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/pages/signin/ui/SignIn.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/pages/signin/ui/SignIn.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/pages/signup/ui/Agreement.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/pages/signup/ui/Agreement/Agreement.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/pages/signup/ui/SignUp.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/pages/signup/ui/SignUp.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/pages/signup/ui/SignUpDone.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/pages/signup/ui/SignUpDone/SignUpDone.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/pages/signup/ui/SignUpForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/pages/signup/ui/SignUpForm/SignUpForm.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/pages/team/ui/TeamApplyModal/TeamApplyModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/pages/team/ui/TeamApplyModal/TeamApplyModal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/pages/teamInfo/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/pages/teamInfo/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/pages/teamInfo/model/openTeamSettingModal.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/pages/teamInfo/model/openTeamSettingModal.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/pages/teamInfo/ui/TeamInfo.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/pages/teamInfo/ui/TeamInfo.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/pages/teamInfo/ui/TeamInfoChatButton/TeamInfoChatButton.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/pages/teamInfo/ui/TeamInfoChatButton/TeamInfoChatButton.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/pages/teamInfo/ui/TeamInfoTeamExpenditure/TeamInfoTeamExpenditure.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/pages/teamInfo/ui/TeamInfoTeamExpenditure/TeamInfoTeamExpenditure.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/pages/teamInfo/ui/TeamInfomation/TeamInformation.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/pages/teamInfo/ui/TeamInfomation/TeamInformation.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/pages/teamInfo/ui/TeamLeaveModal/TeamLeavModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/pages/teamInfo/ui/TeamLeaveModal/TeamLeavModal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/pages/teamInfo/ui/TeamSettingModal/TeamSettingModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/pages/teamInfo/ui/TeamSettingModal/TeamSettingModal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/pages/teamRouting/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/pages/teamRouting/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/pages/teamRouting/model/setTeamInfo.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/pages/teamRouting/model/setTeamInfo.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/pages/teamRouting/ui/TeamRouting.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/pages/teamRouting/ui/TeamRouting.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/shared/lib/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/shared/lib/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/shared/ui/chartArea/PieChart.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/shared/ui/chartArea/PieChart.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/shared/ui/header/menubar/Menubar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/shared/ui/header/menubar/Menubar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/shared/ui/modalSpace/ModalSpace.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/shared/ui/modalSpace/ModalSpace.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/style/abstract/_variables.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/style/abstract/_variables.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/style/components/Expenditure/ExpenditureRecommend.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/style/components/Expenditure/ExpenditureRecommend.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/style/components/Expenditure/_ExpenditureGraph.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/style/components/Expenditure/_ExpenditureGraph.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/style/components/Expenditure/_ExpenditureWeekly.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/style/components/Expenditure/_ExpenditureWeekly.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/style/components/_Button.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/style/components/_Button.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/style/components/_TeamCreateTeam.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/style/components/_TeamCreateTeam.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/style/components/_TeamInfoChatButton.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/style/components/_TeamInfoChatButton.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/style/main.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/style/main.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/style/pages/Expenditure.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/style/pages/Expenditure.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/style/pages/SignIn.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/style/pages/SignIn.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/style/pages/TeamInfo.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/style/pages/TeamInfo.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -124,7 +65,7 @@
     "Python.mysql.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "Merging release",
+    "git-widget-placeholder": "feature/BE-card",
     "last_opened_file_path": "C:/S10P22B108/flask/handledata",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -155,7 +96,7 @@
       <recent name="C:\S10P22B108\flask\handledata\category\cardcategory" />
     </key>
   </component>
-  <component name="RunManager" selected="Flask server.flaskProject">
+  <component name="RunManager" selected="Python.flaskProject">
     <configuration name="CardService" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="flaskProject" />
       <option name="ENV_FILES" value="" />
@@ -359,6 +300,7 @@
       <workItem from="1711344857855" duration="667000" />
       <workItem from="1711949742697" duration="1663000" />
       <workItem from="1711952403171" duration="688000" />
+      <workItem from="1711969319483" duration="1331000" />
     </task>
     <servers />
   </component>

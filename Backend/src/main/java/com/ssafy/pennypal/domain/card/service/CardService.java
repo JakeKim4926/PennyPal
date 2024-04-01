@@ -5,12 +5,15 @@ import com.ssafy.pennypal.domain.card.entity.Card;
 import com.ssafy.pennypal.domain.card.repository.ICardRepository;
 import com.ssafy.pennypal.global.common.api.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -18,12 +21,9 @@ import java.util.List;
 public class CardService {
     private final ICardRepository repository;
 
-    public ApiResponse<List<CardResponse>> getCards() {
-        List<Card> cards = repository.findAll();
-        List<CardResponse> cardResponses = new ArrayList<>();
-        for(Card card : cards) {
-            cardResponses.add(convertToResponse(card));
-        }
+    public ApiResponse<Page<CardResponse>> getCards(Pageable pageable) {
+        Page<Card> cardPage = repository.findAll(pageable);
+        Page<CardResponse> cardResponses = cardPage.map(this::convertToResponse);
 
         if(cardResponses.isEmpty())
             ApiResponse.of(HttpStatus.NO_CONTENT, "데이터가 존재하지 않습니다.");
