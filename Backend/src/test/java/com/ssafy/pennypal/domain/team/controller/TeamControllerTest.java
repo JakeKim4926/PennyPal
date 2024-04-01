@@ -15,11 +15,14 @@ import com.ssafy.pennypal.domain.team.entity.Team;
 import com.ssafy.pennypal.domain.team.service.TeamService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,6 +34,8 @@ import static org.mockito.Mockito.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -95,61 +100,61 @@ public class TeamControllerTest extends RestDocsSupport {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andDo(document("create-team",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        responseFields(
-                                fieldWithPath("code").type(JsonFieldType.NUMBER)
-                                        .description("코드"),
-                                fieldWithPath("status").type(JsonFieldType.STRING)
-                                        .description("상태"),
-                                fieldWithPath("message").type(JsonFieldType.STRING)
-                                        .description("메시지"),
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                responseFields(
+                                        fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                                .description("코드"),
+                                        fieldWithPath("status").type(JsonFieldType.STRING)
+                                                .description("상태"),
+                                        fieldWithPath("message").type(JsonFieldType.STRING)
+                                                .description("메시지"),
 
-                                fieldWithPath("data").type(JsonFieldType.OBJECT)
-                                        .description("응답 데이터"),
-                                fieldWithPath("data.teamId").type(JsonFieldType.NUMBER)
-                                        .description("팀 ID"),
-                                fieldWithPath("data.teamName").type(JsonFieldType.STRING)
-                                        .description("팀 명"),
-                                fieldWithPath("data.teamLeaderId").type(JsonFieldType.NUMBER)
-                                        .description("팀장 ID"),
-                                fieldWithPath("data.teamInfo").type(JsonFieldType.STRING)
-                                        .description("팀 한줄 소개"),
-                                fieldWithPath("data.teamScore").type(JsonFieldType.NUMBER)
-                                        .description("팀 포인트"),
+                                        fieldWithPath("data").type(JsonFieldType.OBJECT)
+                                                .description("응답 데이터"),
+                                        fieldWithPath("data.teamId").type(JsonFieldType.NUMBER)
+                                                .description("팀 ID"),
+                                        fieldWithPath("data.teamName").type(JsonFieldType.STRING)
+                                                .description("팀 명"),
+                                        fieldWithPath("data.teamLeaderId").type(JsonFieldType.NUMBER)
+                                                .description("팀장 ID"),
+                                        fieldWithPath("data.teamInfo").type(JsonFieldType.STRING)
+                                                .description("팀 한줄 소개"),
+                                        fieldWithPath("data.teamScore").type(JsonFieldType.NUMBER)
+                                                .description("팀 포인트"),
 
-                                fieldWithPath("data.teamRankRealtime").type(JsonFieldType.NUMBER)
-                                        .description("팀 실시간 랭킹"),
-                                fieldWithPath("data.teamLastTotalExpenses").type(JsonFieldType.NUMBER)
-                                        .description("지난주 총 지출액"),
-                                fieldWithPath("data.teamThisTotalExpenses").type(JsonFieldType.NUMBER)
-                                        .description("이번주 총 지출액"),
+                                        fieldWithPath("data.teamRankRealtime").type(JsonFieldType.NUMBER)
+                                                .description("팀 실시간 랭킹"),
+                                        fieldWithPath("data.teamLastTotalExpenses").type(JsonFieldType.NUMBER)
+                                                .description("지난주 총 지출액"),
+                                        fieldWithPath("data.teamThisTotalExpenses").type(JsonFieldType.NUMBER)
+                                                .description("이번주 총 지출액"),
 
-                                fieldWithPath("data.teamLastEachTotalExpenses").type(JsonFieldType.ARRAY)
-                                        .description("지난주 일자 별 총 지출액"),
-                                fieldWithPath("data.teamLastEachTotalExpenses[].date").type(JsonFieldType.ARRAY)
-                                        .description("일자"),
-                                fieldWithPath("data.teamLastEachTotalExpenses[].totalAmount").type(JsonFieldType.NUMBER)
-                                        .description("지출액"),
+                                        fieldWithPath("data.teamLastEachTotalExpenses").type(JsonFieldType.ARRAY)
+                                                .description("지난주 일자 별 총 지출액"),
+                                        fieldWithPath("data.teamLastEachTotalExpenses[].date").type(JsonFieldType.ARRAY)
+                                                .description("일자"),
+                                        fieldWithPath("data.teamLastEachTotalExpenses[].totalAmount").type(JsonFieldType.NUMBER)
+                                                .description("지출액"),
 
-                                fieldWithPath("data.teamThisEachTotalExpenses").type(JsonFieldType.ARRAY)
-                                        .description("이번주 일자 별 총 지출액"),
-                                fieldWithPath("data.teamThisEachTotalExpenses[].date").type(JsonFieldType.ARRAY)
-                                        .description("일자"),
-                                fieldWithPath("data.teamThisEachTotalExpenses[].totalAmount").type(JsonFieldType.NUMBER)
-                                        .description("지출액"),
+                                        fieldWithPath("data.teamThisEachTotalExpenses").type(JsonFieldType.ARRAY)
+                                                .description("이번주 일자 별 총 지출액"),
+                                        fieldWithPath("data.teamThisEachTotalExpenses[].date").type(JsonFieldType.ARRAY)
+                                                .description("일자"),
+                                        fieldWithPath("data.teamThisEachTotalExpenses[].totalAmount").type(JsonFieldType.NUMBER)
+                                                .description("지출액"),
 
-                                fieldWithPath("data.members").type(JsonFieldType.ARRAY)
-                                        .description("팀 멤버"),
-                                fieldWithPath("data.members[].memberId").type(JsonFieldType.NUMBER)
-                                        .description("멤버 ID"),
-                                fieldWithPath("data.members[].memberNickname").type(JsonFieldType.STRING)
-                                        .description("멤버 닉네임"),
-                                fieldWithPath("data.members[].memberLastTotalExpenses").type(JsonFieldType.NUMBER)
-                                        .description("멤버 지난주 지출 총액"),
-                                fieldWithPath("data.members[].memberThisTotalExpenses").type(JsonFieldType.NUMBER)
-                                        .description("멤버 이번주 지출 총액")
-                        )
+                                        fieldWithPath("data.members").type(JsonFieldType.ARRAY)
+                                                .description("팀 멤버"),
+                                        fieldWithPath("data.members[].memberId").type(JsonFieldType.NUMBER)
+                                                .description("멤버 ID"),
+                                        fieldWithPath("data.members[].memberNickname").type(JsonFieldType.STRING)
+                                                .description("멤버 닉네임"),
+                                        fieldWithPath("data.members[].memberLastTotalExpenses").type(JsonFieldType.NUMBER)
+                                                .description("멤버 지난주 지출 총액"),
+                                        fieldWithPath("data.members[].memberThisTotalExpenses").type(JsonFieldType.NUMBER)
+                                                .description("멤버 이번주 지출 총액")
+                                )
                         )
                 );
         verify(teamService).createTeam(any(TeamCreateServiceRequest.class));
@@ -226,6 +231,146 @@ public class TeamControllerTest extends RestDocsSupport {
 
         // 테스트에서 반환된 결과 확인
         verify(teamService).joinTeam(any(TeamJoinServiceRequest.class));
+    }
+
+    @DisplayName("팀 전체 조회")
+    @Test
+    void searchTeamList() throws Exception {
+        // given
+        Pageable pageable = PageRequest.of(0, 4);
+
+        List<TeamSearchResponse> content = List.of(
+                TeamSearchResponse.builder()
+                        .teamId(1L)
+                        .teamName("teamName1")
+                        .teamMembersNum(4)
+                        .teamLeaderNickname("리더 닉네임1")
+                        .teamIsAutoConfirm(false)
+                        .teamInfo("팀소개1")
+                        .build(),
+
+                TeamSearchResponse.builder()
+                        .teamId(2L)
+                        .teamName("teamName2")
+                        .teamMembersNum(6)
+                        .teamLeaderNickname("리더 닉네임2")
+                        .teamIsAutoConfirm(true)
+                        .teamInfo("팀소개2")
+                        .build(),
+                TeamSearchResponse.builder()
+                        .teamId(3L)
+                        .teamName("teamName3")
+                        .teamMembersNum(6)
+                        .teamLeaderNickname("리더 닉네임3")
+                        .teamIsAutoConfirm(false)
+                        .teamInfo("팀소개3")
+                        .build(),
+                TeamSearchResponse.builder()
+                        .teamId(4L)
+                        .teamName("teamName4")
+                        .teamMembersNum(5)
+                        .teamLeaderNickname("리더 닉네임4")
+                        .teamIsAutoConfirm(false)
+                        .teamInfo("팀소개4")
+                        .build()
+        );
+
+        Page<TeamSearchResponse> page = new PageImpl<>(content, pageable, content.size());
+
+        given(teamService.searchTeamList(any(String.class), any(Pageable.class)))
+                .willReturn(page);
+
+        mockMvc.perform(
+                        get("/api/team")
+                                .param("keyword", "name")
+                                .param("page", "0")
+                                .param("size", "4")
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("search-team-list",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        queryParameters(
+                                parameterWithName("keyword").description("팀 이름 검색 키워드")
+                                        .optional(),
+                                parameterWithName("page").description("페이지 넘버 요청")
+                                        .optional(),
+                                parameterWithName("size").description("페이지 크기 요청")
+                                        .optional()
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data").type(JsonFieldType.OBJECT)
+                                        .description("응답 데이터"),
+                                fieldWithPath("data.content").type(JsonFieldType.ARRAY)
+                                        .description("응답 데이터 배열"),
+
+                                fieldWithPath("data.content[].teamId").type(JsonFieldType.NUMBER)
+                                        .description("팀 ID"),
+                                fieldWithPath("data.content[].teamName").type(JsonFieldType.STRING)
+                                        .description("팀 이름"),
+                                fieldWithPath("data.content[].teamMembersNum").type(JsonFieldType.NUMBER)
+                                        .description("팀 인원 수"),
+                                fieldWithPath("data.content[].teamLeaderNickname").type(JsonFieldType.STRING)
+                                        .description("팀 리더 닉네임"),
+                                fieldWithPath("data.content[].teamIsAutoConfirm").type(JsonFieldType.BOOLEAN)
+                                        .description("팀 가입 자동 승인 여부"),
+                                fieldWithPath("data.content[].teamInfo").type(JsonFieldType.STRING)
+                                        .description("팀 한줄 소개"),
+
+                                fieldWithPath("data.pageable").type(JsonFieldType.OBJECT)
+                                        .description("응답 데이터 페이지 정보"),
+                                fieldWithPath("data.pageable.pageNumber").type(JsonFieldType.NUMBER)
+                                        .description("응답 데이터 페이지 현재 페이지 넘버"),
+                                fieldWithPath("data.pageable.pageSize").type(JsonFieldType.NUMBER)
+                                        .description("응답 데이터 페이지 현재 페이지 크기"),
+                                fieldWithPath("data.pageable.sort").type(JsonFieldType.OBJECT)
+                                        .description("응답 데이터 페이지 현재 페이지 정렬"),
+                                fieldWithPath("data.pageable.sort.empty").type(JsonFieldType.BOOLEAN)
+                                        .description("응답 데이터 페이지 현재 페이지 정렬 데이터"),
+                                fieldWithPath("data.pageable.sort.unsorted").type(JsonFieldType.BOOLEAN)
+                                        .description("응답 데이터 페이지 현재 페이지 정렬 데이터"),
+                                fieldWithPath("data.pageable.sort.sorted").type(JsonFieldType.BOOLEAN)
+                                        .description("응답 데이터 페이지 현재 페이지 정렬 데이터"),
+                                fieldWithPath("data.pageable.offset").type(JsonFieldType.NUMBER)
+                                        .description("응답 데이터 페이지 offset"),
+                                fieldWithPath("data.pageable.paged").type(JsonFieldType.BOOLEAN)
+                                        .description("응답 데이터 페이지 paged"),
+                                fieldWithPath("data.pageable.unpaged").type(JsonFieldType.BOOLEAN)
+                                        .description("응답 데이터 페이지 unpaged"),
+                                fieldWithPath("data.last").type(JsonFieldType.BOOLEAN)
+                                        .description("응답 데이터 마지막 페이지 여부"),
+                                fieldWithPath("data.totalElements").type(JsonFieldType.NUMBER)
+                                        .description("응답 데이터 총 숫자"),
+                                fieldWithPath("data.totalPages").type(JsonFieldType.NUMBER)
+                                        .description("응답 데이터 총 페이지"),
+                                fieldWithPath("data.first").type(JsonFieldType.BOOLEAN)
+                                        .description("응답 데이터 첫페이지 여부"),
+                                fieldWithPath("data.numberOfElements").type(JsonFieldType.NUMBER)
+                                        .description("응답 데이터 크기"),
+                                fieldWithPath("data.size").type(JsonFieldType.NUMBER)
+                                        .description("응답 데이터 크기"),
+                                fieldWithPath("data.number").type(JsonFieldType.NUMBER)
+                                        .description("응답 데이터 페이지 넘버"),
+                                fieldWithPath("data.sort").type(JsonFieldType.OBJECT)
+                                        .description("응답 데이터 정렬"),
+                                fieldWithPath("data.sort.empty").type(JsonFieldType.BOOLEAN)
+                                        .description("응답 데이터 정렬 empty"),
+                                fieldWithPath("data.sort.unsorted").type(JsonFieldType.BOOLEAN)
+                                        .description("응답 데이터 정렬 unsorted"),
+                                fieldWithPath("data.sort.sorted").type(JsonFieldType.BOOLEAN)
+                                        .description("응답 데이터 정렬 sorted"),
+                                fieldWithPath("data.empty").type(JsonFieldType.BOOLEAN)
+                                        .description("응답 데이터 empty")
+                        )
+                ));
     }
 
     @DisplayName("팀 상세 조회")

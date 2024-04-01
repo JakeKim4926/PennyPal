@@ -3,6 +3,8 @@
 include::api/createTeam.adoc[]
 === 팀명 중복 체크
 include::api/validTeamName.adoc[]
+=== 2.3 팀 전체 조회 + 검색
+include::api/searchTeamList.adoc[]
 === 2.4 팀 상세 조회
 include::api/detailTeam.adoc[]
 === 다른 팀 상세 조회
