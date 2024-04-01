@@ -17,7 +17,7 @@ import java.util.List;
 public class CardController {
     private final CardService cardService;
 
-    @GetMapping("")
+    @GetMapping
     public ApiResponse<List<CardResponse>> getCards() {
         return cardService.getCards();
     }
