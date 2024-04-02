@@ -41,6 +41,9 @@ export function RankingTable() {
                             myTeamRewardPoint: '-',
                         });
                     });
+                    getRealtimeRanking(`/team/rank/realtime/${res.data.data.teamId}?page=${curPage}&size=5`).then(
+                        (res) => console.log('리얼타임 랭킹: ', res.data),
+                    );
                 } else if (res.data.data.members.some((it: any) => it.memberId === memberId)) {
                     getRanking(`/team/rank/weekly/${res.data.data.teamId}?page=${curPage}&size=5`).then((res) => {
                         const data = res.data.data.content[0];
@@ -54,9 +57,9 @@ export function RankingTable() {
                         });
                     });
 
-                    // getRealtimeRanking(`/team/rank/realtime/${res.data.data.teamId}?page=${curPage}&size=5`).then(
-                    //     (res) => console.log(res.data),
-                    // );
+                    getRealtimeRanking(`/team/rank/realtime/${res.data.data.teamId}?page=${curPage}&size=5`).then(
+                        (res) => console.log('리얼타임 랭킹: ', res.data),
+                    );
                 }
             }
         });
