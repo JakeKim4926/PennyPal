@@ -3,6 +3,7 @@ import { Button } from '@/shared';
 import { useDispatch } from 'react-redux';
 import { setSignUpStep } from '@/pages/signup/model/signUpStepReducer';
 import { doSignUp } from '@/pages/signup/model/doSignUp';
+import { useEffect } from 'react';
 export function SignUpForm() {
     // 여기에 핸들러 함수 및 유효성 검사 로직 추가
     const {
