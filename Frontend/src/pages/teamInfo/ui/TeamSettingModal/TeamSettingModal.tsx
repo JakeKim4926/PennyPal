@@ -154,6 +154,7 @@ export function TeamSettingModal({
                     <div className="teamSettingModal__middle-personnel">
                         <div className="teamSettingModal__middle-personnel-current">
                             <div>팀원 현황</div>
+                            <hr />
                             <div className="teamSettingModal__middle-personnel-current-list">
                                 {memberList?.map((member) => {
                                     return (
@@ -170,6 +171,7 @@ export function TeamSettingModal({
                         </div>
                         <div className="teamSettingModal__middle-personnel-waiting">
                             <div>가입 대기자</div>
+                            <hr />
                             <div className="teamSettingModal__middle-personnel-waiting-list">
                                 {waitingList.map((it: WaitingMember) => (
                                     <WaitingMemberListItem
