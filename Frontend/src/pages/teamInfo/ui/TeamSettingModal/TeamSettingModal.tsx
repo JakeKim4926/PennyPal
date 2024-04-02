@@ -17,6 +17,7 @@ type TeamSettingModal = {
     teamName?: string;
     teamInfo?: string;
     members?: [];
+    teamIsAutoConfirm?: boolean;
 };
 
 type Member = {
@@ -26,7 +27,14 @@ type Member = {
     memberThisTotalExpenses: number;
 };
 
-export function TeamSettingModal({ teamId, memberId, teamName, teamInfo, members }: TeamSettingModal) {
+export function TeamSettingModal({
+    teamId,
+    memberId,
+    teamName,
+    teamInfo,
+    members,
+    teamIsAutoConfirm,
+}: TeamSettingModal) {
     const [waitingList, setWaitingList] = useState([]);
     const [memberList, setMemberList] = useState<Member[]>(members!);
     const dispatch = useDispatch();

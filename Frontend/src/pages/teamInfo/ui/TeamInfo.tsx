@@ -28,6 +28,7 @@ export function TeamInfo() {
                     teamRankRealtime={teamData.teamRankRealtime}
                     teamLeaderId={teamData.teamLeaderId}
                     teamId={teamData.teamId}
+                    teamIsAutoConfirm={teamData.teamIsAutoConfirm}
                 />
                 <TeamInfoMember teamLeaderId={teamData.teamLeaderId} teamMembers={teamData.members} />
                 <TeamInfoTeamExpenditure />

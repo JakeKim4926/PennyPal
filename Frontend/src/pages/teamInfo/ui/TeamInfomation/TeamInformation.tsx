@@ -13,6 +13,7 @@ type TeamInformationProps = {
     teamRankRealtime: number;
     teamLeaderId: number;
     teamId: number;
+    teamIsAutoConfirm: boolean;
 };
 
 export function TeamInformation({
@@ -24,6 +25,7 @@ export function TeamInformation({
     teamRankRealtime,
     teamLeaderId,
     teamId,
+    teamIsAutoConfirm,
 }: TeamInformationProps) {
     const dispatch = useDispatch();
     const [memberId, setMemberId] = useState(0);
@@ -53,6 +55,7 @@ export function TeamInformation({
                                         teamName,
                                         teamInfo,
                                         members: teamMembers,
+                                        teamIsAutoConfirm,
                                     }),
                                 );
                             }}
