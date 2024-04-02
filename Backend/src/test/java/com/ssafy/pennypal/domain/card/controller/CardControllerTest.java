@@ -1,13 +1,9 @@
 package com.ssafy.pennypal.domain.card.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.ssafy.pennypal.common.RestDocsSupport;
+import com.ssafy.pennypal.domain.card.dto.request.SearchCard;
 import com.ssafy.pennypal.domain.card.dto.response.CardResponse;
-import com.ssafy.pennypal.domain.card.entity.Card;
 import com.ssafy.pennypal.domain.card.service.CardService;
-import com.ssafy.pennypal.domain.team.dto.response.TeamSearchResponse;
 import com.ssafy.pennypal.global.common.api.ApiResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,19 +14,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -50,39 +42,39 @@ class CardControllerTest extends RestDocsSupport {
     public void getCards() throws Exception {
         // given
         Pageable pageable = PageRequest.of(0, 4);
-        List<CardResponse> cardResponses  = List.of(
+        List<CardResponse> cardResponses = List.of(
                 CardResponse.builder()
-                .cardId(1L)
-                .cardType("신용")
-                .cardCompany("신한카드")
-                .cardName("신한카드 Mr.Life")
-                .cardBenefitType("할인형")
-                .cardImg("https://api.card-gorilla.com:8080/storage/card/13/card_img/28201/13card.png")
-                .cardTopCategory("공과금, 마트/편의점, 푸드")
-                .cardCategory("공과금/렌탈, 교통, 기타, 마트/편의점, 병원/약국, 쇼핑, 주유, 통신, 푸드")
-                .cardRequired(300000)
-                .cardDomestic(0)
-                .cardAbroad(15000)
-                .build(),
+                        .cardId(1L)
+                        .cardType("신용")
+                        .cardCompany("신한카드")
+                        .cardName("신한카드 Mr.Life")
+                        .cardBenefitType("할인형")
+                        .cardImg("https://api.card-gorilla.com:8080/storage/card/13/card_img/28201/13card.png")
+                        .cardTopCategory("공과금, 마트/편의점, 푸드")
+                        .cardCategory("공과금/렌탈, 교통, 기타, 마트/편의점, 병원/약국, 쇼핑, 주유, 통신, 푸드")
+                        .cardRequired(300000)
+                        .cardDomestic(0)
+                        .cardAbroad(15000)
+                        .build(),
 
                 CardResponse.builder()
-                .cardId(2L)
-                .cardType("신용")
-                .cardCompany("KB국민카드")
-                .cardName("KB국민 My WE:SH 카드")
-                .cardBenefitType("할인형")
-                .cardImg("https://api.card-gorilla.com:8080/storage/card/2441/card_img/28283/2441card.png")
-                .cardTopCategory("간편결제, 푸드, 선택형")
-                .cardCategory("간편결제, 교통, 기타, 레저/스포츠, 마트/편의점, 뷰티/피트니스, 영화/문화, 카페/디저트, 통신, 푸드")
-                .cardRequired(400000)
-                .cardDomestic(15000)
-                .cardAbroad(15000)
-                .build()
+                        .cardId(2L)
+                        .cardType("신용")
+                        .cardCompany("KB국민카드")
+                        .cardName("KB국민 My WE:SH 카드")
+                        .cardBenefitType("할인형")
+                        .cardImg("https://api.card-gorilla.com:8080/storage/card/2441/card_img/28283/2441card.png")
+                        .cardTopCategory("간편결제, 푸드, 선택형")
+                        .cardCategory("간편결제, 교통, 기타, 레저/스포츠, 마트/편의점, 뷰티/피트니스, 영화/문화, 카페/디저트, 통신, 푸드")
+                        .cardRequired(400000)
+                        .cardDomestic(15000)
+                        .cardAbroad(15000)
+                        .build()
         );
 
         Page<CardResponse> page = new PageImpl<>(cardResponses, pageable, cardResponses.size());
 
-        given(cardService.getCards(any(Pageable.class)))
+        given(cardService.getCards(any(Pageable.class), any(SearchCard.class)))
                 .willReturn(ApiResponse.ok(page));
 
         // when
@@ -92,6 +84,12 @@ class CardControllerTest extends RestDocsSupport {
                         get("/api/card")
                                 .param("page", "0")
                                 .param("size", "4")
+                                .param("cardName", "신한")
+                                .param("cardCompany", "")
+                                .param("startCardRequired", "")
+                                .param("endCardRequired", "")
+                                .param("startCardDomestic", "")
+                                .param("endCardDomestic", "")
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
@@ -103,6 +101,18 @@ class CardControllerTest extends RestDocsSupport {
                                 parameterWithName("page").description("페이지 넘버 요청")
                                         .optional(),
                                 parameterWithName("size").description("페이지 크기 요청")
+                                        .optional(),
+                                parameterWithName("cardName").description("검색 카드 이름")
+                                        .optional(),
+                                parameterWithName("cardCompany").description("검색 카드 회사")
+                                        .optional(),
+                                parameterWithName("startCardRequired").description("검색 카드 전월 실적 시작 금액")
+                                        .optional(),
+                                parameterWithName("endCardRequired").description("검색 카드 전월 실적 종료 금액")
+                                        .optional(),
+                                parameterWithName("startCardDomestic").description("검색 카드 연회비 시작 금액")
+                                        .optional(),
+                                parameterWithName("endCardDomestic").description("검색 카드 연회비 종료 금액")
                                         .optional()
                         ),
                         responseFields(
@@ -185,7 +195,7 @@ class CardControllerTest extends RestDocsSupport {
                                 fieldWithPath("data.empty").type(JsonFieldType.BOOLEAN)
                                         .description("응답 데이터 empty")
 
-                                )
+                        )
                 ));
 
     }

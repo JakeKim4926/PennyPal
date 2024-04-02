@@ -1,9 +1,10 @@
 package com.ssafy.pennypal.domain.card.entity;
 
 
+import com.querydsl.core.annotations.QueryProjection;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -13,7 +14,6 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class Card {
 
     @Id
@@ -35,13 +35,13 @@ public class Card {
     private String cardBenefitType;                             // 카드 보상 타입
 
     @Column(name = "card_img")
-    private String  cardImg;                                    // 카드 이미지 url
+    private String cardImg;                                    // 카드 이미지 url
 
     @Column(name = "card_top_category")
-    private String  cardTopCategory;                            // 카드 혜택 top3
+    private String cardTopCategory;                            // 카드 혜택 top3
 
     @Column(name = "card_category")
-    private String  cardCategory;                               // 카드 혜택
+    private String cardCategory;                               // 카드 혜택
 
     @Column(name = "card_required")
     private Integer cardRequired;                               // 전월 실적
@@ -59,4 +59,22 @@ public class Card {
 
     private List<String> cardTopBenefits = new ArrayList<>();   // 카드 top3 혜택
     private List<String> cardBenefits = new ArrayList<>();      // 카드 혜택
+
+    @Builder
+    @QueryProjection
+    public Card(String cardType, String cardCompany, String cardName, String cardBenefitType, String cardImg, String cardTopCategory, String cardCategory, Integer cardRequired, Integer cardDomestic, Integer cardAbroad, Category category, List<String> cardTopBenefits, List<String> cardBenefits) {
+        this.cardType = cardType;
+        this.cardCompany = cardCompany;
+        this.cardName = cardName;
+        this.cardBenefitType = cardBenefitType;
+        this.cardImg = cardImg;
+        this.cardTopCategory = cardTopCategory;
+        this.cardCategory = cardCategory;
+        this.cardRequired = cardRequired;
+        this.cardDomestic = cardDomestic;
+        this.cardAbroad = cardAbroad;
+        this.category = category;
+        this.cardTopBenefits = cardTopBenefits;
+        this.cardBenefits = cardBenefits;
+    }
 }
