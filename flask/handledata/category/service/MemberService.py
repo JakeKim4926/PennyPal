@@ -1,7 +1,10 @@
 from handledata.category.dao import Repository
 import requests
+import os
+from dotenv import load_dotenv
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+
 import numpy as np
 
 
@@ -41,12 +44,12 @@ class MemberService:
         try:
             self.member_email = self.repository.getEmail(index)
             # Replace this URL with the actual URL you need to call
-            request_url = 'http://localhost:8080/api/bank/user/account/' + self.member_email
+            request_url = os.getenv("SPRING_API") + 'api/bank/user/account/' + self.member_email
 
             response_data = requests.get(request_url)
 
             if response_data.status_code != 200:
-                request_url = 'https://localhost:8080/api/bank/user/account/' + self.member_email
+                request_url = os.getenv("SPRING_API") + 'api/bank/user/account/' + self.member_email
                 response_data = requests.get(request_url)
 
             response = response_data.json()
@@ -74,10 +77,10 @@ class MemberService:
         }
 
         # POST 요청 보내기
-        response = requests.post('http://localhost:8080/api/bank/user/account/transaction', json=data)
+        response = requests.post(os.getenv("SPRING_API") + 'api/bank/user/account/transaction', json=data)
 
         if response.status_code != 200:
-            response = requests.post('https://localhost:8080/api/bank/user/account/transaction', json=data)
+            response = requests.post(os.getenv("SPRING_API") + 'https://localhost:8080/api/bank/user/account/transaction', json=data)
 
 
         # 응답 확인
