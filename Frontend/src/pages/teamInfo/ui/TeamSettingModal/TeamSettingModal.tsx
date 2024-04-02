@@ -104,7 +104,7 @@ export function TeamSettingModal({
                             </button>
                         </div>
                     </div>
-                    <hr />
+
                     <div className="teamSettingModal__middle-personnel">
                         <div className="teamSettingModal__middle-personnel-current">
                             <div>팀원 현황</div>
@@ -139,6 +139,7 @@ export function TeamSettingModal({
                         </div>
                     </div>
                 </div>
+
                 <div className="teamSettingModal__bottom">
                     <div className="teamSettingModal__bottom-buttons">
                         <button
