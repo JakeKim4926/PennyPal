@@ -103,3 +103,26 @@
         }
     }
 }
+
+.showContentButton {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+
+    font-family: 'Wanted-Bold';
+    font-size: 20px;
+
+    &__reload {
+        &-img {
+            display: flex;
+            align-items: center;
+
+            padding: 10px;
+            border-radius: 70%;
+            border: 3px solid $black;
+            background-color: $sub;
+            box-shadow: 0 3px 0 $black;
+        }
+    }
+}

@@ -21,8 +21,8 @@ export function TeamTeamListPagenation({ curPage, setCurPage, maxPage }: TeamTea
     return (
         <div className="teamTeamListPagenation">
             <div className="teamTeamListPagenation__value">
-                <button>{`<<`}</button>
-                <button>{`<`}</button>
+                {/* <button>{`<<`}</button>
+                <button>{`<`}</button> */}
                 <div className="teamTeamListPagenation__value-wrapper">
                     {pageNumList.map((it) => (
                         <button
@@ -36,8 +36,8 @@ export function TeamTeamListPagenation({ curPage, setCurPage, maxPage }: TeamTea
                         </button>
                     ))}
                 </div>
-                <button>{`>`}</button>
-                <button>{`>>`}</button>
+                {/* <button>{`>`}</button>
+                <button>{`>>`}</button> */}
             </div>
         </div>
     );

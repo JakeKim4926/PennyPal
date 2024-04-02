@@ -29,7 +29,7 @@ export function SignUpDone() {
                 <p>당신도 이젠 절약칭구 PennyPal !</p>
             </div>
             <p>{countdown}초 뒤 메인으로 이동합니다...</p>
-            <Button child={'MOVE NOW'} color={'color-main'} onClick={() => navigate('/main')} />
+            <Button child={'MOVE NOW'} color={'color-main'} onClick={() => setCountdown(0)} />
         </div>
     );
 }

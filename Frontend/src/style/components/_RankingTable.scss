@@ -1,4 +1,8 @@
 .rankingTable {
+    div {
+        font-family: 'Wanted-Regular';
+    }
+
     @mixin TABLE_LAYOUT {
         display: grid;
         grid-template-columns: 10% 40% 30% 20%;
@@ -9,21 +13,63 @@
     display: flex;
     flex-direction: column;
     gap: 0.3rem;
-    padding: 0.6rem;
     border-radius: 1rem;
 
     &__header {
         @include TABLE_LAYOUT();
         font-weight: 900;
+        background-color: $main;
+        padding: 0.7rem 0;
+        border-top-right-radius: 1rem;
+        border-top-left-radius: 1rem;
+
+        div {
+            color: $bright;
+            font-size: 1.3rem;
+            font-family: 'Wanted-Regular' !important;
+        }
     }
 
     &__content {
+        .first {
+            div {
+                font-family: 'Wanted-Bold';
+                font-size: 1.5rem;
+            }
+        }
+        .second {
+            div {
+                font-family: 'Wanted-Bold';
+                font-size: 1.3rem;
+            }
+        }
+        div {
+            font-family: 'Wanted-Regular';
+        }
+
         &-list {
             display: flex;
             flex-direction: column;
             gap: 0.7rem;
+            height: 292.8px;
             &-item {
                 @include TABLE_LAYOUT();
+            }
+
+            &-none {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                font-size: 2.5rem;
+                font-family: 'Esa-Bold';
+                gap: 1rem;
+
+                &-icon {
+                    height: 5rem;
+                }
             }
         }
     }
@@ -34,6 +80,18 @@
         padding: 0.6rem 0;
         background-color: $sub;
         border-radius: 1rem;
+
+        &-noteam {
+            display: flex;
+            width: 100%;
+            justify-content: center;
+            margin-top: 0.4rem;
+            padding: 0.6rem 0;
+            background-color: $sub;
+
+            font-family: 'Wanted-Bold' !important;
+            font-size: 1.3rem;
+        }
     }
 
     &__pagenation {

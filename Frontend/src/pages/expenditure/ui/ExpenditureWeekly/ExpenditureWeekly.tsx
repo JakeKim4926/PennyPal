@@ -1,5 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { ExpenditureWeeklyDaily } from './item/ExpenditureWeeklyDaily';
+import { customAxios } from '@/shared/lib/customAxios';
+import { getCookie } from '@/shared/lib/cookieHelper';
+
+import ExpenditureWeeklyDaily from './item/ExpenditureWeeklyDaily';
+import { Spending } from '../../model/spending';
+
+import {
+    fetchTodayAccountTransactions,
+    fetchMemberAttendance,
+    fetchAccountTransactions,
+} from '../../model/fetchFunctions';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faCircleChevronLeft,
@@ -8,6 +19,14 @@ import {
     faArrowsRotate,
     faXmark,
 } from '@fortawesome/free-solid-svg-icons';
+
+const spendingsData: Spending[] = [
+    { id: 1, date: '2024-04-01', label: '교통비', amount: '10,000원' },
+    { id: 1, date: '2024-04-01', label: '교통비', amount: '10,000원' },
+    { id: 2, date: '2024-04-02', label: '식료품', amount: '25,000원' },
+    { id: 2, date: '2024-04-02', label: '식료품', amount: '25,000원' },
+    // 추가 지출 데이터...
+];
 
 const getCurrentDate = (): string => {
     const now = new Date();
@@ -20,10 +39,18 @@ const getCurrentDate = (): string => {
 
 const getWeekDates = (currentWeekStart: Date): { rangeText: string; dates: Date[] } => {
     const dates = Array.from({ length: 7 }).map((_, i) => {
-        return new Date(new Date(currentWeekStart).setDate(currentWeekStart.getDate() + i));
+        const utcDate = new Date(
+            Date.UTC(
+                currentWeekStart.getUTCFullYear(),
+                currentWeekStart.getUTCMonth(),
+                currentWeekStart.getUTCDate() + i,
+            ),
+        );
+        return utcDate;
     });
 
-    const format = (date: Date): string => `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`;
+    const format = (date: Date): string =>
+        `${date.getUTCFullYear()}년 ${date.getUTCMonth() + 1}월 ${date.getUTCDate()}일`;
     const rangeText = `${format(dates[0])} - ${format(dates[6])}`;
 
     return { rangeText, dates };
@@ -32,8 +59,45 @@ const getWeekDates = (currentWeekStart: Date): { rangeText: string; dates: Date[
 export function ExpenditureWeekly() {
     const [coverVisible, setCoverVisible] = useState(true); // 가림막 div의 표시 상태
 
+    const checkAttendanceState = async () => {
+        const memberIndex = getCookie('memberId'); // 쿠키에서 memberId를 가져옵니다.
+        if (!memberIndex) {
+            console.error('로그인이 필요합니다.');
+            alert('로그인이 필요합니다');
+            return;
+        }
+
+        try {
+            const response = await customAxios.get(`/member/attend/state`, {
+                params: { memberIndex },
+            });
+
+            if (response.data && response.data.data === false) {
+                // 금일 출석을 진행하지 않았을 경우
+                setCoverVisible(true);
+            } else {
+                // 이미 출석을 한 경우
+                setCoverVisible(false);
+            }
+        } catch (error) {
+            console.error('출석 여부 확인 중 오류가 발생했습니다:', error);
+        }
+    };
+
+    const handleShowContentButtonClick = async () => {
+        try {
+            await fetchMemberAttendance();
+            removeCover();
+            await fetchTodayAccountTransactions();
+        } catch (error) {
+            // 오류 처리
+            console.error('오류가 발생했습니다:', error);
+            alert('오류가 발생했습니다. 다시 시도해주세요.');
+        }
+    };
+
     const removeCover = () => {
-        setCoverVisible(false); // 가림막 div를 제거
+        setCoverVisible(false);
     };
 
     const [currentWeekStart, setCurrentWeekStart] = useState(
@@ -41,7 +105,7 @@ export function ExpenditureWeekly() {
     );
 
     useEffect(() => {
-        // 주가 변경될 때 추가 로직이 필요한 경우 여기에 작성
+        checkAttendanceState();
     }, [currentWeekStart]);
 
     const { rangeText, dates } = getWeekDates(currentWeekStart);
@@ -56,11 +120,6 @@ export function ExpenditureWeekly() {
 
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-
-    const handleDailyClick = (date: Date) => {
-        setSelectedDate(date);
-        setIsModalVisible(true);
-    };
 
     const formatDate = (date: Date): string => {
         const year = date.getFullYear();
@@ -114,8 +173,13 @@ export function ExpenditureWeekly() {
         <div className={`expenditureWeekly contentCard`} style={{ position: 'relative' }}>
             {coverVisible && (
                 <div className="coverDiv">
-                    <button onClick={removeCover} className="showContentButton">
+                    <button onClick={handleShowContentButtonClick} className="showContentButton">
                         출석하고 오늘의 지출내역 불러오기!
+                        <div className="showContentButton__reload clickable-btn">
+                            <div className="showContentButton__reload-img">
+                                <FontAwesomeIcon icon={faArrowsRotate} size="xl" />
+                            </div>
+                        </div>
                     </button>
                 </div>
             )}
@@ -140,20 +204,25 @@ export function ExpenditureWeekly() {
             </div>
 
             <div className="expenditureWeekly__content">
-                {dates.map((date, index) => (
-                    <ExpenditureWeeklyDaily key={index} date={date} onClick={() => handleDailyClick(date)} />
-                ))}
+                {dates.map((date, index) => {
+                    const dateStr = date.toISOString().slice(0, 10); // 'YYYY-MM-DD' 형식으로 변환
+                    const dailySpendings = spendingsData.filter((spending) => spending.date === dateStr);
+
+                    return <ExpenditureWeeklyDaily key={index} date={date} spendings={dailySpendings} />;
+                })}
             </div>
 
             <div className="expenditureWeekly__footer">
                 <div className="expenditureWeekly__footer-alert">
                     <FontAwesomeIcon icon={faCircleExclamation} size="lg" />
-                    <span>카테고리가 미설정된 소비내역을 편집해주세요!</span>
+                    <span>열심히 활동해봅시다!</span>
                 </div>
-                <div className="expenditureWeekly__footer-reload">
-                    <span className="expenditureWeekly__footer-reload-text">이 주의 지출내역 불러오기</span>
+                <div className="expenditureWeekly__footer-reload clickable" onClick={fetchAccountTransactions}>
+                    <span className="expenditureWeekly__footer-reload-text">지출내역 불러오기!</span>
                     <div className="expenditureWeekly__footer-reload-button">
-                        <FontAwesomeIcon icon={faArrowsRotate} size="2xl" />
+                        <div className="expenditureWeekly__footer-reload-button-img">
+                            <FontAwesomeIcon icon={faArrowsRotate} size="2xl" />
+                        </div>
                     </div>
                 </div>
             </div>
