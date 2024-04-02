@@ -22,7 +22,7 @@ export function forceRenderReducer(
 ): forceRenderState {
     switch (action.type) {
         case FORCE_RENDER:
-            return { data: !state };
+            return { data: !state.data };
         default:
             return state;
     }

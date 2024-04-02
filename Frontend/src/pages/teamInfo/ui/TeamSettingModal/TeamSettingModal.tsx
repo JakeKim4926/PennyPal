@@ -1,3 +1,4 @@
+import { RootState } from '@/app/appProvider';
 import {
     acceptRegist,
     banTeamMember,
@@ -10,6 +11,7 @@ import {
 import { forceRender } from '@/pages/teamRouting';
 import { getCookie } from '@/shared';
 import { memo, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 
 type TeamSettingModal = {
@@ -54,8 +56,7 @@ export function TeamSettingModal({
         });
 
         return () => {
-            // dispatch(forceRender());
-            alert('sfsd');
+            dispatch(forceRender());
         };
     }, []);
 

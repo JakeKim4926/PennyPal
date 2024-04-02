@@ -103,8 +103,13 @@ export function TeamApplyModal({ team }: TeamDetailModalProps) {
                                     case 202:
                                         alert('가입 신청이 완료됐습니다.');
                                         break;
+                                    case 401:
+                                        alert('추방당한 팀에는 가입할 수 없습니다.');
+                                        break;
                                     case 409:
                                         alert('이미 가입 신청을 완료한 팀입니다.');
+                                    default:
+                                        break;
                                 }
                                 dispatch(closeTeamDetailModal());
                             }}
