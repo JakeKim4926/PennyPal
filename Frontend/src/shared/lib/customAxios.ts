@@ -19,6 +19,11 @@ customAxios.interceptors.request.use(
     },
     (error) => {
         // 요청 설정 중 오류가 발생한 경우 처리합니다.
+        console.log(error);
+        // 에러403인경우 토큰이 만료되어서 재로그인을 필요로함.
+
+        //로그인 페이지로, 혹은 모달로 처리.  모달처리가 더 낫다. 작업중이던 페이지를 유지시키기위해서.
+        // 페이지로 구현한 SignIn.tsx를 모달로 가능??
         return Promise.reject(error);
     },
 );

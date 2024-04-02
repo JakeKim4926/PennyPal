@@ -1,0 +1,6 @@
+.infinite-scroll-component {
+    // all: initial;
+    overflow-y: scroll; /* y축으로 스크롤 가능 */
+    height: 500px; /* 스크롤 컨테이너의 높이를 지정, 적절한 값으로 조정 필요 */
+    overflow-x: hidden; /* x축 스크롤 방지 */
+}

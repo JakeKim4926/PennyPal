@@ -3,6 +3,7 @@ import CardComponent from '@/pages/finance/ui/CardComponent/CardComponent';
 import StockComponent from '@/pages/finance/ui/StockComponent/StockComponent';
 import SavingsComponent from '@/pages/finance/ui/SavingsComponent/SavingsComponent';
 import { StockDetail, StockListUp } from '@/pages/finance/model';
+import { useNavigate } from 'react-router-dom';
 interface Stock {
     stockId: number;
     crno: string;
@@ -14,6 +15,7 @@ interface Stock {
 
 export function Finance() {
     const [data, setData] = useState<Stock[]>([]);
+    const navigate = useNavigate();
     // const [detaildata, setDetailData] = useState<
     useEffect(() => {
         const fetchData = async () => {
@@ -52,6 +54,7 @@ export function Finance() {
                     <div className="stock__header">
                         <p>주식은 단타가 아냐</p>
                         <h2>배당률 좋은 주식 어때요?</h2>
+                        <a onClick={() => navigate('/financedetail')}>더보기</a>
                     </div>
                     <div className="stock__content">
                         {data.map((stock) => (
