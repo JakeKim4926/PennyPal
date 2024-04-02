@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import CardComponent from '@/pages/finance/ui/CardComponent/CardComponent';
 import StockComponent from '@/pages/finance/ui/StockComponent/StockComponent';
 import SavingsComponent from '@/pages/finance/ui/SavingsComponent/SavingsComponent';
-import { StockListUp } from '../model';
+import { StockDetail, StockListUp } from '@/pages/finance/model';
+import { each } from 'chart.js/dist/helpers/helpers.core';
 interface Stock {
     stockId: number;
     crno: string;
@@ -14,7 +15,7 @@ interface Stock {
 
 export function Finance() {
     const [data, setData] = useState<Stock[]>([]);
-
+    // const [detaildata, setDetailData] = useState<
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -30,23 +31,34 @@ export function Finance() {
         fetchData();
     }, []);
     useEffect(() => {
-        // 테스트용
-        console.log(data);
+        const fetchDetail = async () => {
+            try {
+                for (const el of data) {
+                    const res = await StockDetail(el.stockId);
+                    console.log(res.data);
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        };
+        fetchDetail();
     }, [data]);
-
     return (
         <div className="container">
             <div className="container">
                 <div className="contentCard">
                     <div className="contentCard__title">소비도 투자도 저축도 현명하게</div>
                 </div>
-                <div className="finance">
-                    <div className="finance__header">금융 정보</div>
-                    <div className="finance__content">
+                <div className="stock">
+                    <div className="stock__header">
+                        <p>주식은 단타가 아냐</p>
+                        <h2>배당률 좋은 주식 어때요?</h2>
+                    </div>
+                    <div className="stock__content">
                         {data.map((stock) => (
-                            <div key={stock.stockId} className="finance__item">
-                                <div className="finance__item__companyName">{stock.stckIssuCmpyNm}</div>
-                                <div className="finance__item__info">
+                            <div key={stock.stockId} className="stock__content--item">
+                                <div className="stock__content--companyName">{stock.stckIssuCmpyNm}</div>
+                                <div className="stock__content--info">
                                     <span>CRNO: {stock.crno}/</span>
                                     <span>ISIN Code: {stock.isinCd}/</span>
                                     <span>배당금: {stock.stckGenrDvdnAmt.toLocaleString()} 원/</span>

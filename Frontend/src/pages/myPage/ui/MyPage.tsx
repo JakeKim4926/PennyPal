@@ -1,5 +1,5 @@
 import { Button, getCookie } from '@/shared';
-import { useSignUpFormModel } from '@/pages/signup/model/signUpFormModel';
+import { useSignUpFormModel } from '@/pages/signup/model/useSignupFormmodel';
 import { ChangeEvent, useState } from 'react';
 import { doSubmit } from '../model/doSubmit';
 

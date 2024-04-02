@@ -9,11 +9,11 @@ export function SignUp() {
     const renderCurrentStep = () => {
         switch (currentStep) {
             case 1:
-                return <Agreement />;
+                return <SignUpForm />;
             case 2:
                 return <SignUpDone />;
             default:
-                return <SignUpForm />;
+                return <Agreement />;
         }
     };
 

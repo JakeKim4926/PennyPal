@@ -1,9 +1,8 @@
-import { useSignUpFormModel } from '@/pages/signup/model/signUpFormModel';
+import { useSignUpFormModel } from '@/pages/signup/model/useSignupFormmodel';
 import { Button } from '@/shared';
 import { useDispatch } from 'react-redux';
 import { setSignUpStep } from '@/pages/signup/model/signUpStepReducer';
-import axios from 'axios';
-
+import { doSignUp } from '@/pages/signup/model/doSignUp';
 export function SignUpForm() {
     // 여기에 핸들러 함수 및 유효성 검사 로직 추가
     const {
@@ -22,25 +21,21 @@ export function SignUpForm() {
     const allFieldsValid =
         emailValid && passwordValid && confirmPasswordValid && nameValid && birthdayValid && nickNameValid;
     const handleNext = async () => {
+        const data = {
+            memberEmail: userData.email,
+            memberPassword: userData.password,
+            memberName: userData.name,
+            memberNickname: userData.nickName,
+            memberBirthDate: userData.birthday,
+        };
         try {
-            const data = {
-                memberEmail: userData.email,
-                memberPassword: userData.password,
-                memberName: userData.name,
-                memberNickname: userData.nickName,
-                memberBirthDate: userData.birthday,
-            };
-            console.log(data);
-            const response = await axios.post('http://localhost:8080/api/member/signup', data);
-            console.log(response.data.message); // 서버로부터 받은 응답 message 데이터 출력
+            const response = await doSignUp(data);
+            console.log(response);
+            if (response.data.status === 'OK') {
+                dispatch(setSignUpStep(2));
+            } else alert(response.data.message); // 서버로부터 받은 응답 message 데이터 출력
         } catch (error) {
             console.error('Error:', error);
-        }
-        if (allFieldsValid) {
-            dispatch(setSignUpStep(1));
-            // 리덕스 상태관리로 다음 창으로 이동.
-        } else {
-            console.error('입력한 값이 유효하지 않습니다.');
         }
     };
 
@@ -135,7 +130,7 @@ export function SignUpForm() {
                 </div>
             </div>
             <div className="nextButton">
-                <Button child={'NEXT'} color={'color-main'} disabled={!allFieldsValid} onClick={handleNext} />
+                <Button child={'REGISTER'} color={'color-main'} disabled={!allFieldsValid} onClick={handleNext} />
             </div>
         </div>
     );
