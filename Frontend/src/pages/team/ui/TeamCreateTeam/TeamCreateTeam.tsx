@@ -58,6 +58,7 @@ function Content() {
                     onClick={() => {
                         moveNext(contentRef, 1);
                     }}
+                    tabIndex={-1}
                 >
                     팀 생성하기
                 </button>
@@ -132,6 +133,7 @@ function NameArea({ moveNext, registName }: NameAreaProps) {
                     <div>팀명을 입력해주세요</div>
                     <div className="teamCreateTeam__content-inner-second-name-input">
                         <input
+                            tabIndex={-1}
                             type="text"
                             placeholder="팀명"
                             onChange={handleChange}
@@ -149,6 +151,7 @@ function NameArea({ moveNext, registName }: NameAreaProps) {
                             }}
                         ></input>
                         <button
+                            tabIndex={-1}
                             className={`teamCreateTeam__content-inner-second-name-input-button ${
                                 check !== 'VALID' ? 'button-disabled' : 'button'
                             }`}
@@ -164,6 +167,7 @@ function NameArea({ moveNext, registName }: NameAreaProps) {
                 </div>
             </div>
             <button
+                tabIndex={-1}
                 disabled={check !== VALIDATION_CHECK.PASS}
                 onClick={() => {
                     moveNext();
@@ -244,6 +248,7 @@ function DescArea({ moveBack, moveNext, registInfo }: DescAreaProps) {
     return (
         <div className="teamCreateTeam__content-inner">
             <button
+                tabIndex={-1}
                 onClick={() => {
                     moveBack();
                 }}
@@ -255,6 +260,7 @@ function DescArea({ moveBack, moveNext, registInfo }: DescAreaProps) {
                     <div>우리 팀을 한 줄로 소개해주세요</div>
                     <div className="teamCreateTeam__content-inner-second-name-input">
                         <input
+                            tabIndex={-1}
                             type="text"
                             placeholder="소개 (40자 이내)"
                             onChange={handleChange}
@@ -271,6 +277,7 @@ function DescArea({ moveBack, moveNext, registInfo }: DescAreaProps) {
                 </div>
             </div>
             <button
+                tabIndex={-1}
                 disabled={check === VALIDATION_CHECK.INVALID}
                 onClick={() => {
                     registInfo(inputRef.current!.value.trim());
@@ -323,6 +330,7 @@ function ConfirmArea({ registConfirm, moveNext, teamDto }: ConfirmArea) {
                     <div className="confirm">팀원 가입 신청을 자동으로 승인할까요?</div>
                     <div className="teamCreateTeam__content-inner-second-name-buttons">
                         <button
+                            tabIndex={-1}
                             className="teamCreateTeam__content-inner-second-name-buttons-button yes"
                             onClick={() => {
                                 handleRegist(true);
@@ -331,6 +339,7 @@ function ConfirmArea({ registConfirm, moveNext, teamDto }: ConfirmArea) {
                             네
                         </button>
                         <button
+                            tabIndex={-1}
                             className="teamCreateTeam__content-inner-second-name-buttons-button no"
                             onClick={() => {
                                 handleRegist(false);
