@@ -12,9 +12,9 @@ type Ranking = {
 
 type MyRanking = {
     myTeamName: string;
-    myTeamRankNum: number;
-    myTeamScore: number;
-    myTeamRewardPoint?: number;
+    myTeamRankNum: number | string;
+    myTeamScore: number | string;
+    myTeamRewardPoint?: number | string;
 };
 export function RankingTable() {
     const [ranking, setRanking] = useState<Ranking[]>([]);
@@ -25,48 +25,55 @@ export function RankingTable() {
     useEffect(() => {
         const REQUEST_URL = `/team/${memberId}`;
 
-        const cacheData = API_CACHE_DATA.get(REQUEST_URL);
+        getTeamInfo(REQUEST_URL).then((res) => {
+            if (res.data.code === 200) {
+                if (!res.data.data.members) {
+                    getRanking(`/team/rank/weekly/-1?page=${curPage}&size=5`).then((res) => {
+                        const data = res.data.data.content[0];
+                        setRanking(data.teamRanks);
 
-        if (!cacheData || cacheData.exp.getTime() < new Date().getTime()) {
-            getTeamInfo(REQUEST_URL).then((res) => {
-                if (res.data.code === 200) {
-                    if (res.data.data.members.some((it: any) => it.memberId === memberId)) {
-                        // API_CACHE_DATA.set(REQUEST_URL, { data: res.data, exp: new Date().getTime() + 1000 * 60 * 10 });
-
-                        getRanking(`/team/rank/weekly/${res.data.data.teamId}?page=${curPage}&size=5`).then((res) => {
-                            const data = res.data.data.content[0];
-                            setRanking(data.teamRanks);
-
-                            setMyRanking({
-                                myTeamName: data.myTeamName,
-                                myTeamRankNum: data.myTeamRankNum,
-                                myTeamScore: data.myTeamScore,
-                                myTeamRewardPoint: data.myTeamRewardPoint,
-                            });
+                        setMyRanking({
+                            myTeamName: '소속된 팀이 없습니다.',
+                            myTeamRankNum: '-',
+                            myTeamScore: '-',
+                            myTeamRewardPoint: '-',
                         });
-
-                        getRealtimeRanking(`/team/rank/realtime/${res.data.data.teamId}?page=${curPage}&size=5`).then(
-                            (res) => console.log(res.data),
-                        );
-                    }
-                }
-            });
-        } else {
-            const teamData = cacheData.get(REQUEST_URL);
-            if (teamData.data.data.members.some((it: any) => it.memberId === memberId)) {
-                getRanking(`/team/rank/weekly/${teamData.data.data.teamId}?page=${curPage}`).then((res) => {
-                    console.log(res.data);
-                    const data = res.data.data;
-                    setRanking(data.content[0].teamRanks);
-                    setMyRanking({
-                        myTeamName: data.myTeamName,
-                        myTeamRankNum: data.myTeamRankNum,
-                        myTeamScore: data.myTeamScore,
                     });
-                });
-            } else {
+                } else if (res.data.data.members.some((it: any) => it.memberId === memberId)) {
+                    getRanking(`/team/rank/weekly/${res.data.data.teamId}?page=${curPage}&size=5`).then((res) => {
+                        const data = res.data.data.content[0];
+                        setRanking(data.teamRanks);
+
+                        setMyRanking({
+                            myTeamName: data.myTeamName,
+                            myTeamRankNum: data.myTeamRankNum,
+                            myTeamScore: data.myTeamScore,
+                            myTeamRewardPoint: data.myTeamRewardPoint,
+                        });
+                    });
+
+                    // getRealtimeRanking(`/team/rank/realtime/${res.data.data.teamId}?page=${curPage}&size=5`).then(
+                    //     (res) => console.log(res.data),
+                    // );
+                }
             }
-        }
+        });
+        // } else {
+        //     const teamData = cacheData.get(REQUEST_URL);
+        //     if (teamData.data.data.members.some((it: any) => it.memberId === memberId)) {
+        //         getRanking(`/team/rank/weekly/${teamData.data.data.teamId}?page=${curPage}&size=5`).then((res) => {
+        //             const data = res.data.data;
+        //             setRanking(data.content[0].teamRanks);
+        //             setMyRanking({
+        //                 myTeamName: data.myTeamName,
+        //                 myTeamRankNum: data.myTeamRankNum,
+        //                 myTeamScore: data.myTeamScore,
+        //                 myTeamRewardPoint: data.myTeamRewardPoint,
+        //             });
+        //         });
+        //     } else {
+        //     }
+        // }
     }, [curPage]);
 
     return (
