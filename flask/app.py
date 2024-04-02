@@ -48,6 +48,24 @@ def get_most_category():
         error_message = "[Error] can't connect mysql or error happened during extract recommendation: {}".format(e)
         return jsonify({"error": error_message}), 500
 
+@app.route("/api/member/category", methods=['GET'])
+def get_category_percentage():
+    try:
+        # memberIndex 파라미터를 쿼리 스트링으로부터 받음
+        member_index = request.args.get('memberIndex', default=None, type=int)
+
+        # memberIndex가 제공되지 않았을 경우의 처리
+        if member_index is None:
+            return jsonify({"error": "No memberIndex provided"}), 400
+
+        # Assuming card_service.get_card_by_similarity() is the method that interacts with the database
+        result = member_service.getMemberCategoryPercentage(member_index)
+
+        return jsonify({"memberCategoryPercentage": result}), 200
+    except Exception as e:
+        # Handle the exception when unable to connect to the database
+        error_message = "[Error] can't connect mysql or error happened during extract recommendation: {}".format(e)
+        return jsonify({"error": error_message}), 500
 
 @app.route("/")
 def default_message():

@@ -5,6 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="590e91e7-8499-4b51-bd6a-05ca195e5fce" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../Backend/src/main/java/com/ssafy/pennypal/global/common/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/com/ssafy/pennypal/global/common/config/SecurityConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/handledata/category/service/MemberService.py" beforeDir="false" afterPath="$PROJECT_DIR$/handledata/category/service/MemberService.py" afterDir="false" />
@@ -47,41 +48,41 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Flask server.Flask (app.py).executor": "Run",
-    "Flask server.flaskProject.executor": "Run",
-    "Python.CardService.executor": "Run",
-    "Python.DataMain.executor": "Run",
-    "Python.JsonToCsv.executor": "Run",
-    "Python.MemberService (1).executor": "Run",
-    "Python.Repository (1).executor": "Run",
-    "Python.SaveCardCategory.executor": "Run",
-    "Python.SetCardCategory (1).executor": "Run",
-    "Python.SetCardCategory.executor": "Run",
-    "Python.SetUserCategory.executor": "Run",
-    "Python.Similarity.executor": "Run",
-    "Python.flaskProject.executor": "Run",
-    "Python.main.executor": "Run",
-    "Python.mysql.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "feature/BE-classification",
-    "last_opened_file_path": "C:/S10P22B108/flask/handledata",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Flask server.Flask (app.py).executor&quot;: &quot;Run&quot;,
+    &quot;Flask server.flaskProject.executor&quot;: &quot;Run&quot;,
+    &quot;Python.CardService.executor&quot;: &quot;Run&quot;,
+    &quot;Python.DataMain.executor&quot;: &quot;Run&quot;,
+    &quot;Python.JsonToCsv.executor&quot;: &quot;Run&quot;,
+    &quot;Python.MemberService (1).executor&quot;: &quot;Run&quot;,
+    &quot;Python.Repository (1).executor&quot;: &quot;Run&quot;,
+    &quot;Python.SaveCardCategory.executor&quot;: &quot;Run&quot;,
+    &quot;Python.SetCardCategory (1).executor&quot;: &quot;Run&quot;,
+    &quot;Python.SetCardCategory.executor&quot;: &quot;Run&quot;,
+    &quot;Python.SetUserCategory.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Similarity.executor&quot;: &quot;Run&quot;,
+    &quot;Python.flaskProject.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;Python.mysql.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/BE-classification&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/S10P22B108/flask/handledata&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "mysql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\S10P22B108\flask\handledata" />
@@ -301,6 +302,7 @@
       <workItem from="1711344857855" duration="667000" />
       <workItem from="1711949742697" duration="1663000" />
       <workItem from="1711952403171" duration="688000" />
+      <workItem from="1712029977541" duration="456000" />
     </task>
     <servers />
   </component>
@@ -363,7 +365,7 @@
     <SUITE FILE_PATH="coverage/flask$Repository__1_.coverage" NAME="Repository (1) Coverage Results" MODIFIED="1710994781709" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/handledata/category/mysql" />
     <SUITE FILE_PATH="coverage/flask$Similarity.coverage" NAME="Similarity Coverage Results" MODIFIED="1711020502366" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/handledata/category/cbf" />
     <SUITE FILE_PATH="coverage/flask$SaveCardCategory.coverage" NAME="SaveCardCategory Coverage Results" MODIFIED="1711692933197" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/handledata/category/cardcategory" />
-    <SUITE FILE_PATH="coverage/flask$Flask__app_py_.coverage" NAME="Flask (app.py) Coverage Results" MODIFIED="1712024193519" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/flask$Flask__app_py_.coverage" NAME="Flask (app.py) Coverage Results" MODIFIED="1712030005578" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/flaskProject$JsonToCsv.coverage" NAME="JsonToCsv Coverage Results" MODIFIED="1710317089633" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/handledata" />
     <SUITE FILE_PATH="coverage/flask$MemberService__1_.coverage" NAME="MemberService (1) Coverage Results" MODIFIED="1711695346678" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/handledata/category/service" />
     <SUITE FILE_PATH="coverage/flask$SetCardCategory.coverage" NAME="SetCardCategory Coverage Results" MODIFIED="1710906315394" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/handledata/category/cardcategory" />
