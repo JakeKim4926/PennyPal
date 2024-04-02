@@ -42,7 +42,7 @@
         padding: 0.5rem 1rem;
         display: flex;
         flex-direction: column;
-        gap: 1.5rem;
+        gap: 1rem;
     }
 
     &__bottom {
@@ -82,6 +82,10 @@
 
 .messageListItem {
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+
     &__nickname {
         @include nicknameCommon();
     }
@@ -91,6 +95,9 @@
     }
 
     &Mine {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
         width: 100%;
         text-align: end;
         align-self: flex-end;
