@@ -3,7 +3,6 @@ import CardComponent from '@/pages/finance/ui/CardComponent/CardComponent';
 import StockComponent from '@/pages/finance/ui/StockComponent/StockComponent';
 import SavingsComponent from '@/pages/finance/ui/SavingsComponent/SavingsComponent';
 import { StockDetail, StockListUp } from '@/pages/finance/model';
-import { each } from 'chart.js/dist/helpers/helpers.core';
 interface Stock {
     stockId: number;
     crno: string;
