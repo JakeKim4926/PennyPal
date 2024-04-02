@@ -8,6 +8,23 @@
     border: 2px solid $line;
 }
 
+@mixin itemCommon {
+    display: flex;
+    justify-content: space-between;
+    background-color: $dark;
+    padding: 0.5rem;
+    border-radius: 0.3rem;
+}
+
+@mixin buttonCommon {
+    cursor: pointer;
+    color: $gray;
+    transition: all 0.1s ease-in-out;
+    &:hover {
+        color: $bright;
+    }
+}
+
 .teamSettingModal {
     animation: modalFadein 0.22s ease-in-out;
 
@@ -114,30 +131,20 @@
             gap: 1.5rem;
 
             button {
-                cursor: pointer;
             }
         }
     }
 }
 
-@mixin itemCommon {
-    display: flex;
-    justify-content: space-between;
-}
-
 .memberListItem {
     @include itemCommon();
-    background-color: $dark;
-    padding: 0.3rem;
-    div {
-        color: $line;
-    }
 
-    &-name {
+    div {
+        color: $bright;
     }
 
     &-ban {
-        cursor: pointer;
+        @include buttonCommon();
     }
 }
 
@@ -145,14 +152,15 @@
     @include itemCommon();
 
     &-name {
+        color: $bright;
     }
 
     &-buttons {
         display: flex;
-        gap: 0.3rem;
+        gap: 0.7rem;
 
         button {
-            cursor: pointer;
+            @include buttonCommon();
         }
     }
 }

@@ -30,6 +30,8 @@ type Member = {
     memberThisTotalExpenses: number;
 };
 
+type WaitingMember = { memberId: number; memberNickname: string; memberMostCategory: string };
+
 export function TeamSettingModal({
     teamId,
     memberId,
@@ -38,12 +40,13 @@ export function TeamSettingModal({
     members,
     teamIsAutoConfirm,
 }: TeamSettingModal) {
-    const [waitingList, setWaitingList] = useState([]);
+    const [waitingList, setWaitingList] = useState<WaitingMember[]>([]);
     const [memberList, setMemberList] = useState<Member[]>(members!);
 
     const dispatch = useDispatch();
 
     const modalRef = useRef<HTMLDivElement>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         const postDto = {
@@ -58,10 +61,25 @@ export function TeamSettingModal({
             }
         });
 
+        function handleClick(e: MouseEvent) {
+            if ([...(e.target as HTMLElement).classList].some((it) => it === 'modalContainer')) {
+                closeModal();
+            }
+        }
+        window.addEventListener('click', handleClick);
+
         return () => {
             dispatch(forceRender());
+            window.removeEventListener('click', handleClick);
         };
     }, []);
+
+    function closeModal(e?: MouseEvent) {
+        modalRef.current?.classList.add('fadeOut');
+        setTimeout(() => {
+            dispatch(closeTeamSettingModal());
+        }, 220);
+    }
 
     return (
         <div className="modalContainer">
@@ -75,6 +93,7 @@ export function TeamSettingModal({
                         <div className="teamSettingModal__middle-info-teamInfo">
                             <div className="teamSettingModal__middle-info-teamInfo-key">팀소개</div>
                             <input
+                                ref={inputRef}
                                 className="teamSettingModal__middle-info-teamInfo-value"
                                 defaultValue={teamInfo ?? '팀 소개말이 없습니다.'}
                             />
@@ -95,7 +114,7 @@ export function TeamSettingModal({
                                     const dto = {
                                         memberId: getCookie('memberId'),
                                         teamIsAutoConfirm: true,
-                                        teamInfo: '수정테스트!!',
+                                        teamInfo: inputRef.current!.value,
                                     };
                                     const res = await modifyTeamInfo(dto, teamId);
                                 }}
@@ -125,16 +144,16 @@ export function TeamSettingModal({
                         <div className="teamSettingModal__middle-personnel-waiting">
                             <div>가입 대기자</div>
                             <div className="teamSettingModal__middle-personnel-waiting-list">
-                                {waitingList.map(
-                                    (it: { memberId: number; memberNickname: string; memberMostCategory: string }) => (
-                                        <WaitingMemberListItem
-                                            memberId={it.memberId}
-                                            memberNickname={it.memberNickname}
-                                            memberMostCategory={it.memberMostCategory}
-                                            teamId={teamId}
-                                        />
-                                    ),
-                                )}
+                                {waitingList.map((it: WaitingMember) => (
+                                    <WaitingMemberListItem
+                                        memberId={it.memberId}
+                                        memberNickname={it.memberNickname}
+                                        memberMostCategory={it.memberMostCategory}
+                                        teamId={teamId}
+                                        waitingMemberList={waitingList}
+                                        setWaitingMemberList={setWaitingList}
+                                    />
+                                ))}
                             </div>
                         </div>
                     </div>
@@ -152,11 +171,7 @@ export function TeamSettingModal({
                         </button>
                         <button
                             onClick={() => {
-                                //
-                                modalRef.current?.classList.add('fadeOut');
-                                setTimeout(() => {
-                                    dispatch(closeTeamSettingModal());
-                                }, 220);
+                                closeModal();
                             }}
                         >
                             나가기
@@ -193,8 +208,7 @@ function MemberListItem({ member, memberId, teamId, memberList, setMemberList }:
                         const res = await banTeamMember(postDto).catch((err) => err);
 
                         if (res.data.code === 200) {
-                            const tmp = [...memberList].filter((it) => it.memberId !== memberId);
-
+                            const tmp = [...memberList].filter((it) => it.memberId !== postDto.targetMemberId);
                             setMemberList(tmp);
                         }
                     }}
@@ -211,9 +225,18 @@ type WaitingMemberListItemProps = {
     memberNickname: string;
     memberMostCategory: string | null;
     teamId: number;
+    waitingMemberList: WaitingMember[];
+    setWaitingMemberList: React.Dispatch<React.SetStateAction<WaitingMember[]>>;
 };
 
-function WaitingMemberListItem({ memberId, memberNickname, memberMostCategory, teamId }: WaitingMemberListItemProps) {
+function WaitingMemberListItem({
+    memberId,
+    memberNickname,
+    memberMostCategory,
+    teamId,
+    waitingMemberList,
+    setWaitingMemberList,
+}: WaitingMemberListItemProps) {
     return (
         <div className="waitingMemberListItem">
             {}
@@ -227,7 +250,11 @@ function WaitingMemberListItem({ memberId, memberNickname, memberMostCategory, t
                             memberId: memberId,
                         };
                         const res = await acceptRegist(dto).catch((err) => err);
-                        console.log(res);
+                        if (res.data.code === 200) {
+                            alert('가입 신청이 승인됐습니다.');
+                            const tmp = [...waitingMemberList].filter((it) => it.memberId !== dto.memberId);
+                            setWaitingMemberList(tmp);
+                        }
                     }}
                 >
                     승인
@@ -240,7 +267,11 @@ function WaitingMemberListItem({ memberId, memberNickname, memberMostCategory, t
                             memberId: memberId,
                         };
                         const res = await denyRegist(dto).catch((err) => err);
-                        console.log(res);
+                        if (res.data.code === 200) {
+                            alert('가입 신청을 거절했습니다.');
+                            const tmp = [...waitingMemberList].filter((it) => it.memberId !== dto.memberId);
+                            setWaitingMemberList(tmp);
+                        }
                     }}
                 >
                     거절
