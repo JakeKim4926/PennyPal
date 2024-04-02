@@ -49,25 +49,32 @@
                 &-item {
                     display: flex;
                     align-items: center;
-                    gap: 30px;
+                    gap: 40px;
 
-                    &-imgSpace {
+                    &-imgBg {
                         position: relative;
                         width: 140px;
                         height: 140px;
                         border-radius: 70%;
                         background-color: $sub;
 
-                        &-img {
+                        &-imgSpace {
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+
                             position: absolute;
                             top: 50%;
                             left: 50%;
                             transform: translate(-50%, -50%);
-                            width: 95px;
-                            height: 150px;
-                            border-radius: 10px;
-                            background-color: red;
-                            box-shadow: 0 3px 5px $modalbg;
+
+                            &-img {
+                                width: 150px;
+                                height: 150px;
+                                background-size: contain;
+                                background-position: center;
+                                background-repeat: no-repeat;
+                            }
                         }
                     }
 
@@ -104,9 +111,6 @@
                                 display: flex;
                                 align-items: center;
                                 gap: 10px;
-
-                                &-icon {
-                                }
 
                                 &-category {
                                     font-family: 'Wanted-Medium';
