@@ -13,11 +13,15 @@ public class TeamRankCalculateResponse {
     @Setter
     private Integer teamRankNum;
 
+    @Setter
+    private Integer rewardPoint;
+
     @Builder
-    public TeamRankCalculateResponse(Long teamId, String teamName, Integer teamScore, Integer teamRankNum) {
+    public TeamRankCalculateResponse(Long teamId, String teamName, Integer teamScore, Integer teamRankNum, Integer rewardPoint) {
         this.teamId = teamId;
         this.teamName = teamName;
         this.teamScore = teamScore;
         this.teamRankNum = teamRankNum;
+        this.rewardPoint = rewardPoint;
     }
 }
