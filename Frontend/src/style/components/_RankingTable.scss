@@ -13,12 +13,21 @@
     display: flex;
     flex-direction: column;
     gap: 0.3rem;
-    padding: 0.6rem;
     border-radius: 1rem;
 
     &__header {
         @include TABLE_LAYOUT();
         font-weight: 900;
+        background-color: $main;
+        padding: 0.7rem 0;
+        border-top-right-radius: 1rem;
+        border-top-left-radius: 1rem;
+
+        div {
+            color: $bright;
+            font-size: 1.3rem;
+            font-family: 'Wanted-Regular' !important;
+        }
     }
 
     &__content {
@@ -55,6 +64,18 @@
         padding: 0.6rem 0;
         background-color: $sub;
         border-radius: 1rem;
+
+        &-noteam {
+            display: flex;
+            width: 100%;
+            justify-content: center;
+            margin-top: 0.4rem;
+            padding: 0.6rem 0;
+            background-color: $sub;
+
+            font-family: 'Wanted-Bold' !important;
+            font-size: 1.3rem;
+        }
     }
 
     &__pagenation {

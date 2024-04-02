@@ -98,35 +98,29 @@ export function RankingTable() {
                             <div>{it.rewardPoint}</div>
                         </li>
                     ))}
-                    <li>3</li>
-                    <li>4</li>
-                    <li>5</li>
-                    <li>6</li>
-                    <li>7</li>
-                    <li>8</li>
-                    <li>9</li>
-                    <li>10</li>
                 </ul>
             </div>
-            <div className="rankingTable__mine">
-                <div className="rankingTable__mine-rank">
-                    {myRanking && myRanking.myTeamRankNum === 0 ? '-' : myRanking?.myTeamRankNum}
+            {myRanking?.myTeamScore === '-' ? (
+                <div className="rankingTable__mine-noteam">소속된 팀이 없습니다</div>
+            ) : (
+                <div className="rankingTable__mine">
+                    <>
+                        <div className="rankingTable__mine-rank">
+                            {myRanking && myRanking.myTeamRankNum === 0 ? '-' : myRanking?.myTeamRankNum}
+                        </div>
+                        <div className="rankingTable__mine-name">{myRanking && myRanking.myTeamName}</div>
+                        <div className="rankingTable__mine-score">
+                            {myRanking && myRanking.myTeamScore !== '-' ? `${myRanking.myTeamScore}점` : '-'}
+                        </div>
+                        <div className="rankingTable__mine-point">
+                            {myRanking && myRanking.myTeamRewardPoint === null ? 0 : myRanking?.myTeamRewardPoint}
+                        </div>
+                    </>
                 </div>
-                <div className="rankingTable__mine-name">{myRanking && myRanking.myTeamName}</div>
-                <div className="rankingTable__mine-score">
-                    {myRanking && myRanking.myTeamScore !== '-' ? `${myRanking.myTeamScore}점` : '-'}
-                </div>
-                <div className="rankingTable__mine-point">
-                    {myRanking && myRanking.myTeamRewardPoint === null ? 0 : myRanking?.myTeamRewardPoint}
-                </div>
-            </div>
+            )}
             <div className="rankingTable__pagenation">
                 <div className="rankingTable__pagenation-box">
                     <div>1</div>
-                    {/* <div>2</div>
-                    <div>3</div>
-                    <div>4</div>
-                    <div>5</div> */}
                 </div>
             </div>
         </div>
