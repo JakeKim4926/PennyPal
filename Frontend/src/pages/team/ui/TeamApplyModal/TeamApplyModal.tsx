@@ -5,6 +5,7 @@ import { getTeamDetail } from '../../api/getTeamDetail';
 import { USER_ID, getCookie } from '@/shared';
 import { getTeamInfo } from '@/pages/teamRouting';
 import { setTeamInfo as setTeamInfoState } from '@/pages/teamRouting';
+import Swal from 'sweetalert2';
 
 type TeamDetailModalProps = {
     team: any;
@@ -88,7 +89,10 @@ export function TeamApplyModal({ team }: TeamDetailModalProps) {
                             className="button"
                             onClick={async () => {
                                 const res = await registGroup({ teamId: team.teamId, memberId: memberId });
-
+                                Swal.fire({
+                                    title: '하하',
+                                    icon: 'warning',
+                                });
                                 switch (res && res.data && res.data.code) {
                                     case 200:
                                         alert('팀에 가입했습니다! \n 잠시 후 팀 페이지로 이동합니다.');
