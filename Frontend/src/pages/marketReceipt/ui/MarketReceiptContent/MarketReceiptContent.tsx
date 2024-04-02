@@ -7,6 +7,7 @@ import { faStore } from '@fortawesome/free-solid-svg-icons';
 type Record = {
     orderId: number;
     productId: number;
+    productName: string;
     buyQuantity: number;
     priceSum: number;
     orderDate: string;
@@ -50,7 +51,7 @@ export function MarketReceiptContent() {
                     {record.map((it) => (
                         <li className="marketReceiptContent__main-list-item">
                             <div>{it.orderDate}</div>
-                            <div>{it.orderId}</div>
+                            <div>{it.productName}</div>
                             <div>{it.buyQuantity}</div>
                             <div>{it.priceSum}</div>
                         </li>
