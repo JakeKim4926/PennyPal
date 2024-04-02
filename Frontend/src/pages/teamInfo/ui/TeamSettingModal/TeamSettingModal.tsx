@@ -10,7 +10,7 @@ import {
 } from '@/pages/teamInfo/index';
 import { forceRender } from '@/pages/teamRouting';
 import { getCookie } from '@/shared';
-import { memo, useEffect, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 
@@ -40,7 +40,10 @@ export function TeamSettingModal({
 }: TeamSettingModal) {
     const [waitingList, setWaitingList] = useState([]);
     const [memberList, setMemberList] = useState<Member[]>(members!);
+
     const dispatch = useDispatch();
+
+    const modalRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const postDto = {
@@ -62,7 +65,7 @@ export function TeamSettingModal({
 
     return (
         <div className="modalContainer">
-            <div className="teamSettingModal">
+            <div className="teamSettingModal" ref={modalRef}>
                 <div className="teamSettingModal__middle">
                     <div className="teamSettingModal__middle-info">
                         <div className="teamSettingModal__middle-info-teamName">
@@ -95,7 +98,6 @@ export function TeamSettingModal({
                                         teamInfo: '수정테스트!!',
                                     };
                                     const res = await modifyTeamInfo(dto, teamId);
-                                    console.log(res);
                                 }}
                             >
                                 수정하기
@@ -149,7 +151,11 @@ export function TeamSettingModal({
                         </button>
                         <button
                             onClick={() => {
-                                dispatch(closeTeamSettingModal());
+                                //
+                                modalRef.current?.classList.add('fadeOut');
+                                setTimeout(() => {
+                                    dispatch(closeTeamSettingModal());
+                                }, 220);
                             }}
                         >
                             나가기
