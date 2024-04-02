@@ -27,7 +27,7 @@ public class Team extends BaseEntity {
 
     @Setter
     @Column(name = "team_score")
-    private Integer teamScore;                                                          // 팀 점수
+    private Integer teamScore;                                                          // 팀 실시간 점수
 
     @Column(
             name = "team_is_auto_confirm",
