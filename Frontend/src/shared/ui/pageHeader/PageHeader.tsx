@@ -67,7 +67,7 @@ export function PageHeader({ page }: PageHeaderProps) {
     };
 
     return (
-        <div className="pageHeader">
+        <div className={`pageHeader ${page === 'ranking' ? 'ranking' : ''}`}>
             <FontAwesomeIcon className="pageHeader__icon" icon={items[page].icon} />
             <div className="pageHeader__title">{[...items[page].title]}</div>
             <div className="pageHeader__description">{items[page].description}</div>
