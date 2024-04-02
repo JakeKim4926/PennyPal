@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 public class OrderResponseDTO {
     private Long orderId;
     private Long productId;
+    private String productName;
     private Integer buyQuantity;
     private Integer priceSum;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
@@ -22,6 +23,7 @@ public class OrderResponseDTO {
     public OrderResponseDTO(Order order) {
         this.orderId = order.getOrderId();
         this.productId = order.getProduct().getProductId();
+        this.productName = order.getProduct().getProductName();
         this.buyQuantity = order.getBuyQuantity();
         this.priceSum = order.getPriceSum();
         this.orderDate = order.getOrderDate();
