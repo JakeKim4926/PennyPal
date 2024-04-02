@@ -7,6 +7,7 @@ type Data = {
     teamName?: string;
     teamInfo?: string;
     members?: [];
+    teamIsAutoConfirm?: boolean;
 };
 
 export function openTeamSettingModal(data: Data) {

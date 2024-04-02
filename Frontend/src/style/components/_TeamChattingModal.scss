@@ -2,7 +2,7 @@
     background-color: $bright;
     border-radius: 1rem;
     width: 20rem;
-    animation: modalFadein 0.22s ease-in-out;
+    animation: modalFadein 0.3s ease-in-out;
     position: absolute;
     bottom: 80px;
     right: 50px;
@@ -42,7 +42,7 @@
         padding: 0.5rem 1rem;
         display: flex;
         flex-direction: column;
-        gap: 1.5rem;
+        gap: 1rem;
     }
 
     &__bottom {
@@ -82,6 +82,10 @@
 
 .messageListItem {
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+
     &__nickname {
         @include nicknameCommon();
     }
@@ -91,6 +95,9 @@
     }
 
     &Mine {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
         width: 100%;
         text-align: end;
         align-self: flex-end;

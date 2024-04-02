@@ -19,10 +19,9 @@
             width: 100%;
 
             &-button {
-                $padding: 3px;
+                $padding: 0.4rem;
                 letter-spacing: 3px;
-                padding-left: $padding + 4px;
-                padding-right: $padding;
+                padding: $padding;
 
                 color: $bright;
                 background-color: black;

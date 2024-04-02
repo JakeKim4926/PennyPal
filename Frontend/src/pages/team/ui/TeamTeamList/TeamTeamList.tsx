@@ -46,7 +46,7 @@ export const TeamTeamList = React.memo(({ searchedPage, keyword }: TeamTeamListP
                     // 1-3. 응답 데이터 캐싱하기
                     API_CACHE_DATA.set(REQUEST_URL, {
                         data: res.data.data,
-                        exp: new Date(new Date().getTime() + 1000 * 60),
+                        exp: new Date(new Date().getTime() + 1000 * 10),
                     });
                 })
                 .catch((err) => console.log(err));

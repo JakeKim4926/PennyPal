@@ -67,6 +67,7 @@ function TeamSettingModalSpace() {
                 teamName={data.teamName}
                 teamInfo={data.teamInfo}
                 members={data.members}
+                teamIsAutoConfirm={data.teamIsAutoConfirm}
             />
         );
     }
