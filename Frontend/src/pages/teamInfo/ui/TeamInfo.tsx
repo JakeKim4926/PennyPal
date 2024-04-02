@@ -8,13 +8,20 @@ import { RootState } from '@/app/appProvider';
 import { useEffect, useRef } from 'react';
 import { connectTeamChatRoom } from '../api/connectTeamChatRoom';
 import { CompatClient } from '@stomp/stompjs';
+import { useDispatch } from 'react-redux';
+import { setTeamInfo } from '@/pages/teamRouting';
 
 export function TeamInfo() {
     const teamData: any = useSelector((state: RootState) => state.setTeamInfoReducer.data);
-
+    const dispatch = useDispatch();
     // client: 채팅 연결 주체
     const client = useRef<CompatClient>();
 
+    useEffect(() => {
+        return () => {
+            dispatch(setTeamInfo(null));
+        };
+    }, []);
     return (
         <div className="container teamInfo__container">
             <div className="teamInfo">
@@ -28,6 +35,7 @@ export function TeamInfo() {
                     teamRankRealtime={teamData.teamRankRealtime}
                     teamLeaderId={teamData.teamLeaderId}
                     teamId={teamData.teamId}
+                    teamIsAutoConfirm={teamData.teamIsAutoConfirm}
                 />
                 <TeamInfoMember teamLeaderId={teamData.teamLeaderId} teamMembers={teamData.members} />
                 <TeamInfoTeamExpenditure />

@@ -2,42 +2,75 @@ import React, { useEffect, useState } from 'react';
 import CardComponent from '@/pages/finance/ui/CardComponent/CardComponent';
 import StockComponent from '@/pages/finance/ui/StockComponent/StockComponent';
 import SavingsComponent from '@/pages/finance/ui/SavingsComponent/SavingsComponent';
+import { StockDetail, StockListUp } from '@/pages/finance/model';
+import { useNavigate } from 'react-router-dom';
+interface Stock {
+    stockId: number;
+    crno: string;
+    isinCd: string;
+    stckIssuCmpyNm: string;
+    basDt: number[];
+    stckGenrDvdnAmt: number;
+}
 
 export function Finance() {
-    const [data, setData] = useState({ cards: [], stocks: [], savings: [] });
-    const fetchData = async () => {
-        // 여기에 API 호출 로직 구현
-        return {
-            cards: [
-                { id: 1, name: '카드1' },
-                { id: 2, name: '카드2' },
-            ],
-            stocks: [
-                { id: 1, name: '주식1' },
-                { id: 2, name: '주식2' },
-            ],
-            savings: [
-                { id: 1, name: '적금1' },
-                { id: 2, name: '적금2' },
-            ],
-        };
-    };
+    const [data, setData] = useState<Stock[]>([]);
+    const navigate = useNavigate();
+    // const [detaildata, setDetailData] = useState<
     useEffect(() => {
-        fetchData().then();
-    }, []);
+        const fetchData = async () => {
+            try {
+                const res = await StockListUp();
+                if (res.data.code === 200) {
+                    setData(res.data.data.content);
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        };
 
+        fetchData();
+    }, []);
+    useEffect(() => {
+        const fetchDetail = async () => {
+            try {
+                for (const el of data) {
+                    const res = await StockDetail(el.stockId);
+                    console.log(res.data);
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        };
+        fetchDetail();
+    }, [data]);
     return (
         <div className="container">
             <div className="container">
                 <div className="contentCard">
-                    <div className="contentCard__tile">소비도 투자도 저축도 현명하게</div>
+                    <div className="contentCard__title">소비도 투자도 저축도 현명하게</div>
                 </div>
-                <div>금융</div>
-                <div>
-                    <CardComponent cards={data.cards} />
-                    <StockComponent stocks={data.stocks} />
-                    <SavingsComponent savings={data.savings} />
+                <div className="stock">
+                    <div className="stock__header">
+                        <p>주식은 단타가 아냐</p>
+                        <h2>배당률 좋은 주식 어때요?</h2>
+                        <a onClick={() => navigate('/financedetail')}>더보기</a>
+                    </div>
+                    <div className="stock__content">
+                        {data.map((stock) => (
+                            <div key={stock.stockId} className="stock__content--item">
+                                <div className="stock__content--companyName">{stock.stckIssuCmpyNm}</div>
+                                <div className="stock__content--info">
+                                    <span>CRNO: {stock.crno}/</span>
+                                    <span>ISIN Code: {stock.isinCd}/</span>
+                                    <span>배당금: {stock.stckGenrDvdnAmt.toLocaleString()} 원/</span>
+                                    <span>기준 날짜: {stock.basDt}</span>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
+                {/* 추가적인 컴포넌트 렌더링 */}
             </div>
         </div>
     );

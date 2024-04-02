@@ -1,16 +1,13 @@
 package com.ssafy.pennypal.domain.member.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class Expense {
 
     @Id
@@ -18,9 +15,11 @@ public class Expense {
     @Column(name = "expense_id")
     private Long expenseId;                                     // 지출 내역 id
 
+    @Setter
     @Column(name = "expense_date")
     private LocalDate expenseDate;                              // 지출 일자
 
+    @Setter
     @Column(name = "expense_amount")
     private Integer expenseAmount;                              // 지출 금액
 

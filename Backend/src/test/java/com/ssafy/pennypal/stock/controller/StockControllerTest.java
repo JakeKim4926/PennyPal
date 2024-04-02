@@ -1,6 +1,7 @@
 package com.ssafy.pennypal.stock.controller;
 
 import com.ssafy.pennypal.common.RestDocsSupport;
+import com.ssafy.pennypal.stock.dto.request.SearchStockRequestDto;
 import com.ssafy.pennypal.stock.dto.response.StockWithLatestTransactionDto;
 import com.ssafy.pennypal.stock.dto.response.StockWithTransactionDto;
 import com.ssafy.pennypal.stock.dto.response.StockWithTransactionListDto;
@@ -50,6 +51,12 @@ class StockControllerTest extends RestDocsSupport {
     void 주식_리스트_불러오기() throws Exception {
         // given
         Pageable pageable = PageRequest.of(0, 5);
+
+        SearchStockRequestDto searchStockRequestDto = SearchStockRequestDto.builder()
+                .stckIssuCmpyNm("")
+                .startPrice(0.0)
+                .endPrice(0.0)
+                .build();
 
         // 테스트 데이터 준비
         List<StockWithLatestTransactionDto> content = List.of(
@@ -101,7 +108,7 @@ class StockControllerTest extends RestDocsSupport {
 
         Page<StockWithLatestTransactionDto> page = new PageImpl<>(content, pageable, content.size());
 
-        given(stockService.getStockList(any(Pageable.class)))
+        given(stockService.getStockList(any(SearchStockRequestDto.class), any(Pageable.class)))
                 .willReturn(page);
         // when
         log.info("pageable = {}", pageable);
@@ -111,6 +118,9 @@ class StockControllerTest extends RestDocsSupport {
                         get("/api/stock/list")
                                 .param("page", "0")
                                 .param("size", "5")
+                                .param("stckIssuCmpyNm", "")
+                                .param("startPrice", "0.0")
+                                .param("endPrice", "0.0")
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
@@ -122,6 +132,12 @@ class StockControllerTest extends RestDocsSupport {
                                         parameterWithName("page").description("페이지 넘버 요청")
                                                 .optional(),
                                         parameterWithName("size").description("페이지 크기 요청")
+                                                .optional(),
+                                        parameterWithName("stckIssuCmpyNm").description("검색 주식 이름")
+                                                .optional(),
+                                        parameterWithName("startPrice").description("검색 시작 가격")
+                                                .optional(),
+                                        parameterWithName("endPrice").description("검색 종료 가격")
                                                 .optional()
                                 ),
                                 responseFields(

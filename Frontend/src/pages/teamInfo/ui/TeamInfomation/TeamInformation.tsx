@@ -13,6 +13,7 @@ type TeamInformationProps = {
     teamRankRealtime: number;
     teamLeaderId: number;
     teamId: number;
+    teamIsAutoConfirm: boolean;
 };
 
 export function TeamInformation({
@@ -24,6 +25,7 @@ export function TeamInformation({
     teamRankRealtime,
     teamLeaderId,
     teamId,
+    teamIsAutoConfirm,
 }: TeamInformationProps) {
     const dispatch = useDispatch();
     const [memberId, setMemberId] = useState(0);
@@ -53,6 +55,7 @@ export function TeamInformation({
                                         teamName,
                                         teamInfo,
                                         members: teamMembers,
+                                        teamIsAutoConfirm,
                                     }),
                                 );
                             }}
@@ -113,9 +116,11 @@ export function TeamInformation({
                 <div className="teamTeamInfo__middle-ratio">
                     <div className="teamTeamInfo__middle-ratio-title subtitle">절감률</div>
                     <div className="teamTeamInfo__middle-ratio-value value">
-                        {isNaN(teamLastTotalExpenses / teamThisTotalExpenses)
+                        {isNaN(teamThisTotalExpenses / teamLastTotalExpenses)
                             ? '0.0'
-                            : ((teamLastTotalExpenses / teamThisTotalExpenses) * 100).toFixed(1)}
+                            : teamThisTotalExpenses / teamLastTotalExpenses === Infinity
+                            ? '-'
+                            : (100 - (teamThisTotalExpenses / teamLastTotalExpenses) * 100).toFixed(1)}
                         <span className="unit">%</span>
                     </div>
                 </div>
