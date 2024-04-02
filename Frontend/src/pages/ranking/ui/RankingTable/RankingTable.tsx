@@ -35,7 +35,7 @@ export function RankingTable() {
                         getRanking(`/team/rank/weekly/${res.data.data.teamId}?page=${curPage}`).then((res) => {
                             const data = res.data.data.content[0];
                             setRanking(data.teamRanks);
-
+                            console.log(res.data);
                             setMyRanking({
                                 myTeamName: data.myTeamName,
                                 myTeamRankNum: data.myTeamRankNum,
@@ -50,6 +50,7 @@ export function RankingTable() {
             const teamData = cacheData.get(REQUEST_URL);
             if (teamData.data.data.members.some((it: any) => it.memberId === memberId)) {
                 getRanking(`/team/rank/weekly/${teamData.data.data.teamId}?page=${curPage}`).then((res) => {
+                    console.log(res.data);
                     const data = res.data.data;
                     setRanking(data.content[0].teamRanks);
                     setMyRanking({
@@ -81,12 +82,12 @@ export function RankingTable() {
             </button>
             <div className="rankingTable__content">
                 <ul className="rankingTable__content-list">
-                    {ranking.map((it) => (
+                    {ranking.map((it: any) => (
                         <li className="rankingTable__content-list-item">
-                            <div>{it.rank}</div>
-                            <div>{it.name}</div>
-                            <div>{it.score}</div>
-                            <div>P 5,000</div>
+                            <div>{it.rankNum}</div>
+                            <div>{it.teamName}</div>
+                            <div>{it.teamScore}</div>
+                            <div>{it.rewardPoint}</div>
                         </li>
                     ))}
                 </ul>
