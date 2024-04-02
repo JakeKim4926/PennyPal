@@ -1,6 +1,6 @@
 # 💸 페니팔 (PennyPal) - 짠돌이 도전 서비스
 
-이미지 삽입.. 멋쥔,,
+<img src="/uploads/c02eb5437edc4cdfbc2d2fcb90b89c38/image.png" width="700px" />
 
 ### ✨ 웹 서비스 소개
 
