@@ -19,9 +19,11 @@ export function ChartArea({ data }: CharAreaProps) {
     }
 
     const savingRate =
-        100 - (presSum / prevSum) * 100 < 0
-            ? -(100 - (presSum / prevSum) * 100 + 100).toFixed(1)
-            : (100 - (presSum / prevSum) * 100).toFixed(1); // 절감률
+        presSum / prevSum !== Infinity
+            ? 100 - (presSum / prevSum) * 100 < 0
+                ? -(100 - (presSum / prevSum) * 100 + 100).toFixed(1)
+                : (100 - (presSum / prevSum) * 100).toFixed(1)
+            : '-'; // 절감률
     const spendDiff = Math.abs(presSum - prevSum).toLocaleString(); // 지출 차액
 
     return (
@@ -48,7 +50,9 @@ export function ChartArea({ data }: CharAreaProps) {
                     <div className="chartArea__bottom-right-prev">
                         <div className="chartArea__bottom-right-prev-title">전 주 대비</div>
                         <div className="chartArea__bottom-right-prev-value">
-                            {savingRate !== '0.0' ? `${savingRate === 'NaN' ? '' : savingRate + '%'}` : ''}
+                            {savingRate !== '0.0'
+                                ? `${savingRate === 'NaN' || savingRate === '-' ? '' : savingRate + '%'}`
+                                : ''}
                             {savingState}
                         </div>
                     </div>

@@ -23,8 +23,11 @@ interface TeamInfoData {
 }
 
 export function TeamRouting() {
-    const teamInfo: any = useSelector((state: RootState) => state.setTeamInfoReducer.data);
     const dispatch = useDispatch();
+
+    const forceRender: boolean = useSelector((state: RootState) => state.forceRenderReducer.data);
+    const teamInfo: any = useSelector((state: RootState) => state.setTeamInfoReducer.data);
+
     const memberId = getCookie('memberId');
 
     // fetchData: 해당 유저 팀 정보 가져오기
@@ -41,7 +44,7 @@ export function TeamRouting() {
                 dispatch(setTeamInfo(res.data.data));
             })
             .catch((err) => console.log(err));
-    }, [memberId]);
+    }, [memberId, forceRender]);
 
     return (
         <div className="teamRouting">

@@ -7,6 +7,7 @@ import {
     getTeamWaitingList,
     modifyTeamInfo,
 } from '@/pages/teamInfo/index';
+import { forceRender } from '@/pages/teamRouting';
 import { getCookie } from '@/shared';
 import { memo, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -45,15 +46,17 @@ export function TeamSettingModal({
             memberId,
         };
 
-        // if: 팀 가입이 수동 승인일 때
-        // if (!teamIsAutoConfirm) {
         // 1. 가입 승인 대기자 리스트 가져오기
         getTeamWaitingList(postDto).then((res) => {
             if (res.data.code === 200) {
                 setWaitingList(res.data.data);
             }
         });
-        // }
+
+        return () => {
+            // dispatch(forceRender());
+            alert('sfsd');
+        };
     }, []);
 
     return (
