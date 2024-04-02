@@ -65,7 +65,8 @@ export function TeamInfoTeamExpenditure() {
     useEffect(() => {
         const lastWeekSpend = calDailySpend(teamData?.teamLastEachTotalExpenses!);
         const thisWeekSpend = calDailySpend(teamData?.teamThisEachTotalExpenses!);
-        setData([lastWeekSpend, thisWeekSpend]);
+        const tmp = [lastWeekSpend, thisWeekSpend];
+        setData([...tmp]);
     }, []);
 
     return (

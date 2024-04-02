@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import Chart from 'chart.js/auto';
 
 type CharAreaProps = {
@@ -8,15 +8,7 @@ type CharAreaProps = {
 export function ChartArea({ data }: CharAreaProps) {
     const prevSum = data[0].reduce((prev, cur) => prev + cur, 0); // 이전주 지출 총액
     const presSum = data[1].reduce((prev, cur) => prev + cur, 0); // 이번주 지출 총액
-
-    let savingState; // 지출 상태 (절감 / 유지 / 증가)
-    if (prevSum > presSum) {
-        savingState = '절감!';
-    } else if (prevSum === presSum) {
-        savingState = '유지 중!';
-    } else {
-        savingState = '증가!';
-    }
+    const [savingState, setSavingState] = useState(''); // 지출 상태 (절감 / 유지 / 증가)
 
     const savingRate =
         presSum / prevSum !== Infinity
@@ -25,7 +17,15 @@ export function ChartArea({ data }: CharAreaProps) {
                 : (100 - (presSum / prevSum) * 100).toFixed(1)
             : '-'; // 절감률
     const spendDiff = Math.abs(presSum - prevSum).toLocaleString(); // 지출 차액
-
+    useEffect(() => {
+        if (prevSum > presSum) {
+            setSavingState('절감!');
+        } else if (prevSum === presSum) {
+            setSavingState('유지 중!');
+        } else {
+            setSavingState('증가!');
+        }
+    }, [data]);
     return (
         <>
             <LineChart data={data} />

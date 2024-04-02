@@ -83,12 +83,33 @@
             &-teamIsAutoConfirm {
                 &-value {
                     display: flex;
+                    gap: 2rem;
+
+                    div {
+                        padding: 0.3rem;
+                        cursor: pointer;
+                        transition: all 0.3s;
+                    }
+
+                    .focus {
+                        background-color: $main;
+                        color: $light;
+                    }
                 }
             }
 
             &-modify {
                 text-align: end;
                 padding-right: 2rem;
+
+                &-button {
+                    color: $gray;
+                    transition: all 0.2s;
+
+                    &:hover {
+                        color: $black;
+                    }
+                }
             }
         }
 

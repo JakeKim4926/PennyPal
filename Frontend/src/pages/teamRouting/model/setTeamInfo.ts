@@ -33,7 +33,7 @@ type TeamData = {
     ];
 };
 
-export function setTeamInfo(teamInfo: TeamData) {
+export function setTeamInfo(teamInfo: TeamData | null) {
     return { type: SET_TEAM_INFO, data: teamInfo };
 }
 

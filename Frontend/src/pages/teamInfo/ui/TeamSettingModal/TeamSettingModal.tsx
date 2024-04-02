@@ -47,6 +47,9 @@ export function TeamSettingModal({
 
     const modalRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
+    const yesRef = useRef<HTMLButtonElement>(null);
+    const noRef = useRef<HTMLButtonElement>(null);
+    let isAutoConfirm = teamIsAutoConfirm;
 
     useEffect(() => {
         const postDto = {
@@ -96,6 +99,7 @@ export function TeamSettingModal({
                                 ref={inputRef}
                                 className="teamSettingModal__middle-info-teamInfo-value"
                                 defaultValue={teamInfo ?? '팀 소개말이 없습니다.'}
+                                maxLength={40}
                             />
                         </div>
                         <div className="teamSettingModal__middle-info-teamIsAutoConfirm">
@@ -103,8 +107,28 @@ export function TeamSettingModal({
                                 가입 자동 승인 여부
                             </div>
                             <div className="teamSettingModal__middle-info-teamIsAutoConfirm-value">
-                                <div>YES</div>
-                                <div>NO</div>
+                                <button
+                                    ref={yesRef}
+                                    className={`${teamIsAutoConfirm && 'focus'}`}
+                                    onClick={(e: any) => {
+                                        e.target.classList.add('focus');
+                                        noRef.current!.classList.remove('focus');
+                                        isAutoConfirm = true;
+                                    }}
+                                >
+                                    YES
+                                </button>
+                                <button
+                                    ref={noRef}
+                                    className={`${!teamIsAutoConfirm && 'focus'}`}
+                                    onClick={(e: any) => {
+                                        e.target.classList.add('focus');
+                                        yesRef.current!.classList.remove('focus');
+                                        isAutoConfirm = false;
+                                    }}
+                                >
+                                    NO
+                                </button>
                             </div>
                         </div>
                         <div className="teamSettingModal__middle-info-modify">
@@ -113,10 +137,13 @@ export function TeamSettingModal({
                                 onClick={async () => {
                                     const dto = {
                                         memberId: getCookie('memberId'),
-                                        teamIsAutoConfirm: true,
+                                        teamIsAutoConfirm: isAutoConfirm,
                                         teamInfo: inputRef.current!.value,
                                     };
                                     const res = await modifyTeamInfo(dto, teamId);
+                                    if (res.data.code === 200) {
+                                        alert('팀 정보 수정이 완료됐습니다.');
+                                    }
                                 }}
                             >
                                 수정하기
@@ -164,7 +191,7 @@ export function TeamSettingModal({
                         <button
                             onClick={async () => {
                                 const deleteDto = { teamId, memberId };
-                                const res = await deleteTeam(deleteDto);
+                                const res = await deleteTeam(deleteDto).catch((err) => err);
                             }}
                         >
                             팀삭제하기
@@ -210,6 +237,7 @@ function MemberListItem({ member, memberId, teamId, memberList, setMemberList }:
                         if (res.data.code === 200) {
                             const tmp = [...memberList].filter((it) => it.memberId !== postDto.targetMemberId);
                             setMemberList(tmp);
+                            alert('팀원을 추방했습니다.');
                         }
                     }}
                 >
