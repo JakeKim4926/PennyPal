@@ -7,7 +7,7 @@ import {
     getTeamWaitingList,
     modifyTeamInfo,
 } from '@/pages/teamInfo/index';
-import { forceRender } from '@/pages/teamRouting';
+import { forceRender, setTeamInfo } from '@/pages/teamRouting';
 import { getCookie } from '@/shared';
 import { useEffect, useRef, useState } from 'react';
 
@@ -212,7 +212,10 @@ export function TeamSettingModal({
                                                 Swal.fire({
                                                     title: '팀 삭제 완료',
                                                     text: '팀 삭제가 완료되었습니다.',
-                                                }).then(() => dispatch(closeTeamSettingModal())),
+                                                }).then(() => {
+                                                    dispatch(setTeamInfo(null));
+                                                    dispatch(closeTeamSettingModal());
+                                                }),
                                             )
                                             .catch((err) => err);
                                     }
