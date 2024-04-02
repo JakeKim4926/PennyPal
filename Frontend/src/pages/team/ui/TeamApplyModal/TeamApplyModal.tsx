@@ -89,30 +89,47 @@ export function TeamApplyModal({ team }: TeamDetailModalProps) {
                             className="button"
                             onClick={async () => {
                                 const res = await registGroup({ teamId: team.teamId, memberId: memberId });
-                                Swal.fire({
-                                    title: '하하',
-                                    icon: 'warning',
-                                });
+
                                 switch (res && res.data && res.data.code) {
                                     case 200:
-                                        alert('팀에 가입했습니다! \n 잠시 후 팀 페이지로 이동합니다.');
-                                        getTeamInfo(`/team/${memberId}`).then((res) => {
-                                            if (res.data.code === 200) {
-                                                setTimeout(() => {
+                                        Swal.fire({
+                                            title: '팀 가입',
+                                            text: '팀에 가입했습니다!\n팀 페이지로 이동합니다.',
+                                            icon: 'success',
+                                        }).then(() =>
+                                            getTeamInfo(`/team/${memberId}`).then((res) => {
+                                                if (res.data.code === 200) {
                                                     dispatch(setTeamInfoState(res.data.data));
-                                                }, 1000);
-                                            }
-                                        });
+                                                }
+                                            }),
+                                        );
                                         break;
                                     case 202:
-                                        alert('가입 신청이 완료됐습니다.');
+                                        Swal.fire({
+                                            title: '가입 신청',
+                                            text: '가입 신청이 완료되었습니다.',
+                                            icon: 'success',
+                                        });
                                         break;
                                     case 401:
-                                        alert('추방당한 팀에는 가입할 수 없습니다.');
+                                        Swal.fire({
+                                            title: '가입 실패',
+                                            text: '추방당한 팀에는 가입할 수 없습니다.',
+                                            icon: 'warning',
+                                        });
                                         break;
                                     case 409:
-                                        alert('이미 가입 신청을 완료한 팀입니다.');
+                                        Swal.fire({
+                                            title: '가입 실패',
+                                            text: '이미 가입 신청한 팀입니다.',
+                                            icon: 'info',
+                                        });
                                     default:
+                                        Swal.fire({
+                                            title: 'Error',
+                                            text: '예기치 못한 에러가 발생했습니다.\n다시 시도해주세요.',
+                                            icon: 'question',
+                                        });
                                         break;
                                 }
                                 dispatch(closeTeamDetailModal());
