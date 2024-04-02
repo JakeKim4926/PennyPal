@@ -17,14 +17,16 @@ class Repository:
         load_dotenv()
 
         # Access to dao
-        self.mydb = pymysql.connect(
-            host=os.getenv("MYSQL_DATASOURCE_ADDRESS"),
-            user=os.getenv("MYSQL_DATASOURCE_USERNAME"),
-            password=os.getenv("MYSQL_DATASOURCE_PASSWORD"),
-            port=int(os.getenv("MYSQL_DATASOURCE_PORT")),  # Make sure port is an integer
-            database=os.getenv("MYSQL_DATASOURCE_DATABASE"),
-            # cursorclass=pymysql.cursors.DictCursor  # Use DictCursor to work with dictionaries
-        )
+        try:
+            self.mydb = pymysql.connect(
+                host=os.getenv("MYSQL_DATASOURCE_ADDRESS"),
+                user=os.getenv("MYSQL_DATASOURCE_USERNAME"),
+                password=os.getenv("MYSQL_DATASOURCE_PASSWORD"),
+                port=int(os.getenv("MYSQL_DATASOURCE_PORT")),
+                database=os.getenv("MYSQL_DATASOURCE_DATABASE"),
+            )
+        except Exception as e:
+            print(f"Failed to connect to MySQL: {e}")
 
         self.file_path = '../../../static/data/result/'
         self.member_email = "blah@naver.com"
