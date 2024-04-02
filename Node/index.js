@@ -9,10 +9,11 @@ schedule('30 23 * * *', async () => {
     console.log(new Date() + " start");
     const date = await getDate();
     console.log(date);
-    // const totalCount = await initProcessData(date);
-    // await fetchAndProcessData(date, totalCount);
+    const totalCount = await initProcessData(date);
+    await fetchAndProcessData(date, totalCount);
     console.log(new Date() + " end");
 });
+
 
 async function getDate() {
     const currentDate = new Date();
