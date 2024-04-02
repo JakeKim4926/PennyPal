@@ -514,7 +514,7 @@ public class TeamService {
         }
 
         // 원하는 조건(이번주 월요일)에 해당하는 모든 팀의 랭킹 기록 조회
-        List<TeamRankHistory> histories = teamRankHistoryRepository.findByRankDate(TUESDAY_OF_THIS_WEEK);
+        List<TeamRankHistory> histories = teamRankHistoryRepository.findByRankDate(MONDAY_OF_THIS_WEEK);
 
         // 조회된 히스토리를 rankNum 기준으로 오름차순 정렬하고 TeamRankHistoryResponse로 변환
         List<TeamRankHistoryResponse> sortedResponses = histories.stream()
@@ -1020,34 +1020,41 @@ public class TeamService {
     }
 
     public List<Expense> calculateThisWeekExpenses(List<Expense> allExpenses) {
-
-        List<Expense> expensesOfThisWeek = new ArrayList<>();
+        Map<LocalDate, Expense> expensesByDate = new HashMap<>();
 
         for (Expense expense : allExpenses) {
             LocalDate expenseDate = expense.getExpenseDate();
-            // 지난주 일요일 이후 ~ 다음주 월요일 이전 : 이번주 월~일요일
+            // 이번주 월요일 이후 ~ 다음주 월요일 이전: 이번주 월~일요일
             if (expenseDate.isAfter(SUNDAY_OF_LAST_WEEK) && expenseDate.isBefore(MONDAY_OF_NEXT_WEEK)) {
-                expensesOfThisWeek.add(expense);
+                expensesByDate.merge(expenseDate, expense, (existingExpense, newExpense) ->
+                        new Expense(
+                                expenseDate,
+                                existingExpense.getExpenseAmount() + newExpense.getExpenseAmount(),
+                                expense.getMember()
+                        ));
             }
         }
 
-        return expensesOfThisWeek;
-
+        return new ArrayList<>(expensesByDate.values());
     }
 
     public List<Expense> calculateLastWeekExpenses(List<Expense> allExpenses) {
 
-        List<Expense> expensesOfLastWeek = new ArrayList<>();
+        Map<LocalDate, Expense> expensesByDate = new HashMap<>();
 
         for (Expense expense : allExpenses) {
             LocalDate expenseDate = expense.getExpenseDate();
-            // 지지난주 일요일 이후 ~ 이번주 월요일 이전 : 지난주 월~일요일
+            // 이번주 월요일 이후 ~ 다음주 월요일 이전: 이번주 월~일요일
             if (expenseDate.isAfter(SUNDAY_OF_TWO_LAST_WEEK) && expenseDate.isBefore(MONDAY_OF_THIS_WEEK)) {
-                expensesOfLastWeek.add(expense);
+                expensesByDate.merge(expenseDate, expense, (existingExpense, newExpense) ->
+                        new Expense(
+                                expenseDate,
+                                existingExpense.getExpenseAmount() + newExpense.getExpenseAmount(),
+                                expense.getMember()
+                        ));
             }
         }
-
-        return expensesOfLastWeek;
+        return new ArrayList<>(expensesByDate.values());
 
     }
 

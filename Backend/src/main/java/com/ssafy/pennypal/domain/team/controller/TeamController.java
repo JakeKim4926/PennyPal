@@ -68,8 +68,8 @@ public class TeamController {
     /**
      * note : 매주 월요일 오전 12시에 주간 랭킹 업데이트
      */
-//    @Scheduled(cron = "00 00 00 * * MON")
-    @PostMapping("/rank")
+    @Scheduled(cron = "00 00 00 * * MON")
+//    @PostMapping("/rank")
     public void autoRankWeekly() {
         teamService.calculateTeamScore();
         teamService.RankTeamScore();

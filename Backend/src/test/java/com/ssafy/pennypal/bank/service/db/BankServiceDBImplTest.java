@@ -28,7 +28,7 @@ class BankServiceDBImplTest {
         // given
         UserApiKeyRequestDTO userApiKeyRequestDTO = UserApiKeyRequestDTO.builder()
                 .userKey("1234567890")
-                .userId("mine702@naver.com")
+                .userId("yewon1@test.com")
                 .build();
         // when
         bankServiceDB.InsertUserKey(userApiKeyRequestDTO);
