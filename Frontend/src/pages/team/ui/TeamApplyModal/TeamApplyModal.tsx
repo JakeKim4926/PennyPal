@@ -89,17 +89,24 @@ export function TeamApplyModal({ team }: TeamDetailModalProps) {
                             onClick={async () => {
                                 const res = await registGroup({ teamId: team.teamId, memberId: memberId });
 
-                                if (res.data.code === 200) {
-                                    dispatch(closeTeamDetailModal());
-                                    alert('팀에 가입했습니다! \n 잠시 후 팀 페이지로 이동합니다.');
-                                    getTeamInfo(`/team/${memberId}`).then((res) => {
-                                        if (res.data.code === 200) {
-                                            setTimeout(() => {
-                                                dispatch(setTeamInfoState(res.data.data));
-                                            }, 1000);
-                                        }
-                                    });
+                                switch (res && res.data && res.data.code) {
+                                    case 200:
+                                        alert('팀에 가입했습니다! \n 잠시 후 팀 페이지로 이동합니다.');
+                                        getTeamInfo(`/team/${memberId}`).then((res) => {
+                                            if (res.data.code === 200) {
+                                                setTimeout(() => {
+                                                    dispatch(setTeamInfoState(res.data.data));
+                                                }, 1000);
+                                            }
+                                        });
+                                        break;
+                                    case 202:
+                                        alert('가입 신청이 완료됐습니다.');
+                                        break;
+                                    case 409:
+                                        alert('이미 가입 신청을 완료한 팀입니다.');
                                 }
+                                dispatch(closeTeamDetailModal());
                             }}
                         >
                             가입 신청
