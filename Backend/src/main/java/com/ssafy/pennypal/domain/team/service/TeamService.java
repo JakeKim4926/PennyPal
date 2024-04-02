@@ -436,7 +436,7 @@ public class TeamService {
         // 등수 계산
 
         // 등수
-        int rankNum = 0;
+        int rankNum = 1;
         // 이전 팀의 점수
         int previousScore = 0;
         // 동점인 팀이 있는지?
@@ -504,8 +504,14 @@ public class TeamService {
     }
 
     public Page<TeamRankWeeklyResponse> rankOfWeeks(Long teamId, Pageable pageable) {
-        // 조회하는 유저의 팀 정보
-        Team myTeam = getTeam(teamId);
+
+        Team myTeam;
+
+        if (teamId != -1) {
+            myTeam = getTeam(teamId);
+        } else {
+            myTeam = null;
+        }
 
         // 원하는 조건(이번주 월요일)에 해당하는 모든 팀의 랭킹 기록 조회
         List<TeamRankHistory> histories = teamRankHistoryRepository.findByRankDate(TUESDAY_OF_THIS_WEEK);
@@ -522,25 +528,40 @@ public class TeamService {
                         .build())
                 .collect(Collectors.toList());
 
+        TeamRankWeeklyResponse teamRankWeeklyResponse = null;
+
         // 내 팀의 랭킹 정보 추출
-        TeamRankHistoryResponse myTeamRank = sortedResponses.stream()
-                .filter(response -> response.getTeamName().equals(myTeam.getTeamName()))
-                .findFirst()
-                .orElse(TeamRankHistoryResponse.builder()
-                        .teamName(myTeam.getTeamName())
-                        .rankNum(0) // 팀 랭킹이 없는 경우 -1로 설정
-                        .teamScore(myTeam.getTeamScore())
-                        .build());
+        if(myTeam != null) {
 
-        // 모든 팀의 랭킹 정보와 내 팀의 랭킹 정보를 포함하는 TeamRankWeeklyResponse 객체 생성
-        TeamRankWeeklyResponse teamRankWeeklyResponse = TeamRankWeeklyResponse.builder()
-                .teamRanks(sortedResponses)
-                .myTeamName(myTeamRank.getTeamName())
-                .myTeamScore(myTeamRank.getTeamScore())
-                .myTeamRankNum(myTeamRank.getRankNum())
-                .myTeamRewardPoint(myTeamRank.getRewardPoint())
-                .build();
+            TeamRankHistoryResponse myTeamRank = sortedResponses.stream()
+                    .filter(response -> response.getTeamName().equals(myTeam.getTeamName()))
+                    .findFirst()
+                    .orElse(TeamRankHistoryResponse.builder()
+                            .teamName(myTeam.getTeamName())
+                            .rankNum(0) // 팀 랭킹이 없는 경우 0로 설정
+                            .teamScore(myTeam.getTeamScore())
+                            .build());
 
+            // 모든 팀의 랭킹 정보와 내 팀의 랭킹 정보를 포함하는 TeamRankWeeklyResponse 객체 생성
+            teamRankWeeklyResponse = TeamRankWeeklyResponse.builder()
+                    .teamRanks(sortedResponses)
+                    .myTeamName(myTeamRank.getTeamName())
+                    .myTeamScore(myTeamRank.getTeamScore())
+                    .myTeamRankNum(myTeamRank.getRankNum())
+                    .myTeamRewardPoint(myTeamRank.getRewardPoint())
+                    .build();
+        }else{
+
+            // 팀이 없는 유저
+            teamRankWeeklyResponse = TeamRankWeeklyResponse.builder()
+                    .teamRanks(sortedResponses)
+                    .myTeamName(null)
+                    .myTeamScore(null)
+                    .myTeamRankNum(null)
+                    .myTeamRewardPoint(null)
+                    .build();
+
+        }
         // 결과를 페이지화하여 반환
         return new PageImpl<>(Collections.singletonList(teamRankWeeklyResponse), pageable, 1);
     }
