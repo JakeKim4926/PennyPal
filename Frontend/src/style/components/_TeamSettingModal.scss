@@ -30,6 +30,16 @@
     }
 }
 
+@keyframes focus {
+    0% {
+        background-color: transparent;
+        color: $black;
+    }
+    100% {
+        background-color: $main;
+    }
+}
+
 .teamSettingModal {
     animation: modalFadein 0.22s ease-in-out;
 
@@ -76,6 +86,11 @@
 
                 &-value {
                     width: calc(100% - 13rem);
+
+                    button {
+                        width: 4rem;
+                        text-align: center;
+                    }
                 }
             }
 
@@ -87,8 +102,8 @@
 
             &-teamIsAutoConfirm {
                 &-value {
-                    display: flex;
-                    gap: 2rem;
+                    border: 2px solid $line;
+                    width: 8.2rem;
 
                     div {
                         padding: 0.3rem;
@@ -99,6 +114,7 @@
                     .focus {
                         background-color: $main;
                         color: $light;
+                        animation: focus 0.2s ease-in-out;
                     }
                 }
             }

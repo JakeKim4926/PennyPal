@@ -196,11 +196,30 @@ export function TeamSettingModal({
                     <div className="teamSettingModal__bottom-buttons">
                         <button
                             onClick={async () => {
-                                const deleteDto = { teamId, memberId };
-                                const res = await deleteTeam(deleteDto).catch((err) => err);
+                                Swal.fire({
+                                    title: '팀 삭제',
+                                    text: '정말로 팀을 삭제할까요?',
+                                    icon: 'warning',
+
+                                    showCancelButton: true,
+                                    confirmButtonText: '삭제',
+                                    cancelButtonText: '취소',
+                                }).then((step) => {
+                                    if (step.isConfirmed) {
+                                        const deleteDto = { teamId, memberId };
+                                        deleteTeam(deleteDto)
+                                            .then((res) =>
+                                                Swal.fire({
+                                                    title: '팀 삭제 완료',
+                                                    text: '팀 삭제가 완료되었습니다.',
+                                                }).then(() => dispatch(closeTeamSettingModal())),
+                                            )
+                                            .catch((err) => err);
+                                    }
+                                });
                             }}
                         >
-                            팀삭제하기
+                            팀 삭제
                         </button>
                         <button
                             onClick={() => {
