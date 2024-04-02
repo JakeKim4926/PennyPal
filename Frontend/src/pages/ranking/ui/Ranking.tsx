@@ -9,17 +9,6 @@ export function Ranking() {
         <div className="ranking__container container">
             <div className="ranking">
                 <PageHeader page={'ranking'} />
-                <button
-                    onClick={async () => {
-                        const res1 = await customAxios.post('/team/rank').catch((err) => err);
-                        const res2 = await customAxios.post('/team/rankRealtime').catch((err) => err);
-
-                        console.log(res1);
-                        console.log(res2);
-                    }}
-                >
-                    랭킹
-                </button>
                 <RankingTable />
             </div>
         </div>

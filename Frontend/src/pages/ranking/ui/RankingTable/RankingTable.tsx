@@ -3,6 +3,8 @@ import { API_CACHE_DATA, customAxios, getCookie } from '@/shared';
 import { useEffect, useState } from 'react';
 import { getRanking } from '../../api/getRanking';
 import { getRealtimeRanking } from '../../api/getRealtimeRanking';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFaceSadTear } from '@fortawesome/free-regular-svg-icons';
 
 type Ranking = {
     rank: number;
@@ -86,18 +88,32 @@ export function RankingTable() {
             </div>
             <div className="rankingTable__content">
                 <ul className="rankingTable__content-list">
-                    {ranking.map((it: any) => (
-                        <li
-                            className={`rankingTable__content-list-item ${it.rankNum === 1 ? 'first' : ''} ${
-                                it.rankNum === 2 ? 'second' : ''
-                            }`}
-                        >
-                            <div>{it.rankNum === 0 ? '-' : it.rankNum}</div>
-                            <div>{it.teamName}</div>
-                            <div>{it.teamScore} 점</div>
-                            <div>{it.rewardPoint}</div>
-                        </li>
-                    ))}
+                    {ranking.length > 0 ? (
+                        ranking.map((it: any) => (
+                            <li
+                                className={`rankingTable__content-list-item ${it.rankNum === 1 ? 'first' : ''} ${
+                                    it.rankNum === 2 ? 'second' : ''
+                                }`}
+                            >
+                                <div>{it.rankNum === 0 ? '-' : it.rankNum}</div>
+                                <div>{it.teamName}</div>
+                                <div>{it.teamScore} 점</div>
+                                <div>{it.rewardPoint}</div>
+                            </li>
+                        ))
+                    ) : (
+                        <>
+                            <li className="rankingTable__content-list-none">
+                                <div>
+                                    <FontAwesomeIcon
+                                        icon={faFaceSadTear}
+                                        className="rankingTable__content-list-none-icon"
+                                    />
+                                </div>
+                                <div>아직 랭킹 산정이 이루어진 팀이 없어요!</div>
+                            </li>
+                        </>
+                    )}
                 </ul>
             </div>
             {myRanking?.myTeamScore === '-' ? (
