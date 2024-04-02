@@ -98,6 +98,7 @@ public class TeamService {
                 .teamName(request.getTeamName())
                 .teamIsAutoConfirm(request.getTeamIsAutoConfirm())
                 .teamLeaderId(request.getTeamLeaderId())
+                .teamInfo(request.getTeamInfo())
                 .member(member)
                 .build();
 
