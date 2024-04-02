@@ -87,13 +87,25 @@ export function RankingTable() {
             <div className="rankingTable__content">
                 <ul className="rankingTable__content-list">
                     {ranking.map((it: any) => (
-                        <li className="rankingTable__content-list-item">
+                        <li
+                            className={`rankingTable__content-list-item ${it.rankNum === 1 ? 'first' : ''} ${
+                                it.rankNum === 2 ? 'second' : ''
+                            }`}
+                        >
                             <div>{it.rankNum === 0 ? '-' : it.rankNum}</div>
                             <div>{it.teamName}</div>
-                            <div>{it.teamScore}</div>
+                            <div>{it.teamScore} 점</div>
                             <div>{it.rewardPoint}</div>
                         </li>
                     ))}
+                    <li>3</li>
+                    <li>4</li>
+                    <li>5</li>
+                    <li>6</li>
+                    <li>7</li>
+                    <li>8</li>
+                    <li>9</li>
+                    <li>10</li>
                 </ul>
             </div>
             <div className="rankingTable__mine">
@@ -101,7 +113,9 @@ export function RankingTable() {
                     {myRanking && myRanking.myTeamRankNum === 0 ? '-' : myRanking?.myTeamRankNum}
                 </div>
                 <div className="rankingTable__mine-name">{myRanking && myRanking.myTeamName}</div>
-                <div className="rankingTable__mine-score">{myRanking && myRanking.myTeamScore + '점'}</div>
+                <div className="rankingTable__mine-score">
+                    {myRanking && myRanking.myTeamScore !== '-' ? `${myRanking.myTeamScore}점` : '-'}
+                </div>
                 <div className="rankingTable__mine-point">
                     {myRanking && myRanking.myTeamRewardPoint === null ? 0 : myRanking?.myTeamRewardPoint}
                 </div>
@@ -109,10 +123,10 @@ export function RankingTable() {
             <div className="rankingTable__pagenation">
                 <div className="rankingTable__pagenation-box">
                     <div>1</div>
-                    <div>2</div>
+                    {/* <div>2</div>
                     <div>3</div>
                     <div>4</div>
-                    <div>5</div>
+                    <div>5</div> */}
                 </div>
             </div>
         </div>

@@ -1,4 +1,8 @@
 .rankingTable {
+    div {
+        font-family: 'Wanted-Regular';
+    }
+
     @mixin TABLE_LAYOUT {
         display: grid;
         grid-template-columns: 10% 40% 30% 20%;
@@ -18,10 +22,27 @@
     }
 
     &__content {
+        .first {
+            div {
+                font-family: 'Wanted-Bold';
+                font-size: 1.5rem;
+            }
+        }
+        .second {
+            div {
+                font-family: 'Wanted-Bold';
+                font-size: 1.3rem;
+            }
+        }
+        div {
+            font-family: 'Wanted-Regular';
+        }
+
         &-list {
             display: flex;
             flex-direction: column;
             gap: 0.7rem;
+
             &-item {
                 @include TABLE_LAYOUT();
             }
