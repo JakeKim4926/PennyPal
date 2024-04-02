@@ -30,9 +30,9 @@ export function TeamInfoMember({ teamLeaderId, teamMembers }: TeamInfoMember) {
                         />
                     ))}
             </div>
-            <div className="teamInfoMember__invite">
+            {/* <div className="teamInfoMember__invite">
                 <button className="teamInfoMember__invite-button">팀원 초대 링크 공유하기</button>
-            </div>
+            </div> */}
         </div>
     );
 }
