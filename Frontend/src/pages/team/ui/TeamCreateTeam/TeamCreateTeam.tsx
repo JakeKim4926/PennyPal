@@ -148,9 +148,13 @@ function NameArea({ moveNext, registName }: NameAreaProps) {
                         <button
                             tabIndex={-1}
                             className={`teamCreateTeam__content-inner-second-name-input-button ${
-                                check !== 'VALID' ? 'button-disabled' : 'button'
+                                check !== VALIDATION_CHECK.PASS
+                                    ? check !== VALIDATION_CHECK.VALID
+                                        ? 'button-disabled'
+                                        : 'button'
+                                    : 'checked'
                             }`}
-                            disabled={check !== 'VALID'}
+                            disabled={check !== VALIDATION_CHECK.VALID}
                             onClick={() => {
                                 handleCheck();
                             }}
@@ -162,6 +166,7 @@ function NameArea({ moveNext, registName }: NameAreaProps) {
                 </div>
             </div>
             <button
+                className={`${check !== VALIDATION_CHECK.PASS ? 'button-disabled' : ''}`}
                 tabIndex={-1}
                 disabled={check !== VALIDATION_CHECK.PASS}
                 onClick={() => {
@@ -183,9 +188,9 @@ function NameCheck({ state }: NameCheckProps) {
     const text: () => string | JSX.Element = () => {
         switch (state) {
             case 'CHAR':
-                return '팀명은 한글, 숫자, 영문만 허용됩니다.';
+                return <span className="red">팀명은 한글, 숫자, 영문만 허용됩니다.</span>;
             case 'LENGTH':
-                return '팀명은 4자 이상, 20자 이하만 허용됩니다.';
+                return <span className="red">팀명은 4자 이상, 20자 이하만 허용됩니다.</span>;
             case 'VALID':
                 return <span className="green">유효한 팀명입니다. 중복체크를 진행해주세요.</span>;
             case 'PASS':
