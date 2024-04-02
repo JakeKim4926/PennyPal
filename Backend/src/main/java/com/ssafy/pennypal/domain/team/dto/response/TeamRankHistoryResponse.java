@@ -19,14 +19,15 @@ public class TeamRankHistoryResponse {
     private LocalDate rankDate;
     private Integer rankNum;
     private Integer teamScore;
-
+    private Integer rewardPoint;
 
     @Builder
-    public TeamRankHistoryResponse(String teamName, LocalDate rankDate, Integer rankNum, Integer teamScore) {
+    public TeamRankHistoryResponse(String teamName, LocalDate rankDate, Integer rankNum, Integer teamScore, Integer rewardPoint) {
         this.teamName = teamName;
         this.rankDate = rankDate;
         this.rankNum = rankNum;
         this.teamScore = teamScore;
+        this.rewardPoint = rewardPoint;
     }
 
     public static TeamRankHistoryResponse of(TeamRankHistory history) {
@@ -35,6 +36,7 @@ public class TeamRankHistoryResponse {
                 .rankDate(history.getRankDate())
                 .rankNum(history.getRankNum())
                 .teamScore(history.getTeam().getTeamScore())
+                .rewardPoint(history.getRewardPoint())
                 .build();
     }
 }

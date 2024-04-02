@@ -24,10 +24,14 @@ public class TeamRankHistory {
     @Column(name = "rank_num")
     private Integer rankNum;
 
+    @Column(name = "reward_point")
+    private Integer rewardPoint;
+
     @Builder
-    private TeamRankHistory(Team team, LocalDate rankDate, Integer rankNum) {
+    private TeamRankHistory(Team team, LocalDate rankDate, Integer rankNum, Integer rewardPoint) {
         this.team = team;
         this.rankDate = rankDate;
         this.rankNum = rankNum;
+        this.rewardPoint = rewardPoint;
     }
 }
