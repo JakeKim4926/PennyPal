@@ -31,6 +31,7 @@ export const fetchMemberAttendance = async (): Promise<void> => {
 
         const response = await customAxios.post('/api/member/attend', requestData);
 
+        console.log(today);
         console.log(response.data); // 성공 응답 처리
         alert('출석 인증에 성공하셨습니다! 포인트가 지급됩니다!');
         // setCoverVisible은 React useState에서 정의된 상태 설정 함수를 가정
@@ -65,47 +66,59 @@ export const fetchBankKey = async (): Promise<void> => {
 };
 
 // 계좌 목록을 가져오는 함수
-export const fetchAccountList = async (): Promise<void> => {
+export const fetchAccountList = async (): Promise<string[]> => {
     const memberId = getCookie('memberId');
 
     if (!memberId) {
         console.error('로그인이 필요합니다.');
         alert('로그인 필요');
-        return;
+        return [];
     }
 
     try {
-        const response = await customAxios.get(`/bank/user/account/${memberId}`);
+        const memberEmail = await fetchMemberEmail(memberId.toString());
+        const response = await customAxios.get(`/bank/user/account/${memberEmail}`);
+
+        const accountNumbers = response.data.data.rec.map((record: { accountNo: string }) => record.accountNo);
+
         console.log(response.data);
         alert('계좌목록 불러오기 성공');
+
+        return accountNumbers;
     } catch (error) {
         console.error(error);
         alert('계좌목록 불러오기 실패');
+        return [];
     }
 };
 
 // 계좌 거래 내역을 가져오는 함수
 export const fetchTodayAccountTransactions = async (): Promise<void> => {
     const memberIdRaw = getCookie('memberId');
-
     if (!memberIdRaw) {
         console.error('로그인이 필요합니다.');
         alert('로그인이 필요합니다!');
         return;
     }
-
     const memberId = String(memberIdRaw);
 
     try {
         const memberEmail = await fetchMemberEmail(memberId);
+
+        const accountNumbers = await fetchAccountList();
+        if (accountNumbers.length === 0) {
+            console.log('계좌 번호를 불러올 수 없습니다.');
+            return;
+        }
+        const accountNo = accountNumbers[0];
 
         const currentDate = new Date().toISOString().slice(0, 10).replace(/-/g, '');
         const requestData = {
             userEmail: memberEmail,
             bankCode: '001',
             transactionType: 'A',
-            accountNo: '0013386179553277',
-            startDate: currentDate,
+            accountNo: accountNo,
+            startDate: '20000101',
             endDate: currentDate,
         };
 
@@ -120,24 +133,31 @@ export const fetchTodayAccountTransactions = async (): Promise<void> => {
 
 export const fetchAccountTransactions = async (): Promise<void> => {
     const memberIdRaw = getCookie('memberId');
-
     if (!memberIdRaw) {
         console.error('로그인이 필요합니다.');
         alert('로그인이 필요합니다!');
         return;
     }
-
     const memberId = String(memberIdRaw);
 
     try {
         const memberEmail = await fetchMemberEmail(memberId);
+
+        const accountNumbers = await fetchAccountList();
+        if (accountNumbers.length === 0) {
+            console.log('계좌 번호를 불러올 수 없습니다.');
+            return;
+        }
+        const accountNo = accountNumbers[0];
+
+        const currentDate = new Date().toISOString().slice(0, 10).replace(/-/g, '');
         const requestData = {
             userEmail: memberEmail,
             bankCode: '001',
             transactionType: 'A',
-            accountNo: '0013386179553277',
-            startDate: '20240101',
-            endDate: '20241231',
+            accountNo: accountNo,
+            startDate: '20000101',
+            endDate: currentDate,
         };
 
         const response = await customAxios.post('/bank/user/account/transaction', requestData);
@@ -149,20 +169,37 @@ export const fetchAccountTransactions = async (): Promise<void> => {
     }
 };
 
-// 추천 카드 정보를 가져오는 함수
-export const fetchRecommendedCards = async (): Promise<void> => {
+// 추천 카드
+export interface Card {
+    cardId: number;
+    cardCompany: string;
+    cardName: string;
+    cardTopCategory: string;
+    cardImg: string;
+}
+
+export const fetchRecommendedCards = async (): Promise<Card[]> => {
     // const memberIndex = getCookie('memberId');
-    const memberIndex = 1;
+    const memberIndex = 53;
 
     if (!memberIndex) {
         console.error('로그인이 필요합니다.');
-        return;
+        return [];
     }
 
     try {
         const response = await customAxios.get('/card/recommend', { params: { memberIndex } });
         console.log(response.data);
+
+        const dataWithCardId = response.data.map((item: any, index: number) => ({
+            ...item,
+            cardId: index + 1, // 인덱스에 1을 더해 순서대로 cardId를 할당
+        }));
+        console.log(dataWithCardId);
+
+        return dataWithCardId;
     } catch (error) {
         console.error(error);
+        return [];
     }
 };

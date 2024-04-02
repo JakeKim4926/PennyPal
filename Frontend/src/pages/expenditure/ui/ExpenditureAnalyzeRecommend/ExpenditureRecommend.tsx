@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ExpenditureRecommendCard from './item/ExpenditureRecommendCard';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { Card, fetchRecommendedCards } from '../../model/fetchFunctions';
 
 interface IBigDataRecommendingProps {
     favCategory: String;
@@ -21,6 +22,17 @@ interface DataStat {
 }
 
 export function ExpenditureRecommend({ favCategory, items }: IBigDataRecommendingProps) {
+    const [cards, setCards] = useState<Card[]>([]);
+
+    useEffect(() => {
+        const loadCards = async () => {
+            const fetchedCards = await fetchRecommendedCards();
+            setCards(fetchedCards);
+        };
+
+        loadCards();
+    }, []);
+
     const [carouselIndex, setCarouselIndex] = useState(0);
 
     const goToNext = () => {
@@ -32,6 +44,22 @@ export function ExpenditureRecommend({ favCategory, items }: IBigDataRecommendin
 
     return (
         <div className="expenditureRecommend contentCard">
+            <div className="example">
+                {cards.map((card, index) => (
+                    <div key={index} style={{ margin: '10px', padding: '10px', border: '1px solid #ccc' }}>
+                        <img src={card.cardImg} alt={card.cardName} style={{ width: '100px', height: 'auto' }} />
+                        <div>
+                            <strong>회사:</strong> {card.cardCompany}
+                        </div>
+                        <div>
+                            <strong>카드 이름:</strong> {card.cardName}
+                        </div>
+                        <div>
+                            <strong>카테고리:</strong> {card.cardTopCategory}
+                        </div>
+                    </div>
+                ))}
+            </div>
             <div className="expenditureRecommend__title contentCard__title">
                 <div className="contentCard__title-text">BIGDATA RECOMMENDING</div>
                 <div className="expenditureRecommend__title-text">

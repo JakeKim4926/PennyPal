@@ -121,11 +121,6 @@ export function ExpenditureWeekly() {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
-    const handleDailyClick = (date: Date) => {
-        setSelectedDate(date);
-        setIsModalVisible(true);
-    };
-
     const formatDate = (date: Date): string => {
         const year = date.getFullYear();
         const month = date.getMonth() + 1; // getMonth()는 0부터 시작하므로 1을 더해줍니다.
@@ -223,7 +218,7 @@ export function ExpenditureWeekly() {
                     <span>열심히 활동해봅시다!</span>
                 </div>
                 <div className="expenditureWeekly__footer-reload clickable" onClick={fetchAccountTransactions}>
-                    <span className="expenditureWeekly__footer-reload-text">이 주의 지출내역 불러오기</span>
+                    <span className="expenditureWeekly__footer-reload-text">지출내역 불러오기!</span>
                     <div className="expenditureWeekly__footer-reload-button">
                         <div className="expenditureWeekly__footer-reload-button-img">
                             <FontAwesomeIcon icon={faArrowsRotate} size="2xl" />

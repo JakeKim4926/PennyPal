@@ -43,7 +43,7 @@ function ExpenditureRecommendCard({ card }: ExpenditureRecommendCardProps) {
                             className="expenditureRecommend__content-slider-carousel-item-info-benefits-benefit"
                         >
                             <div className="expenditureRecommend__content-slider-carousel-item-info-benefits-benefit-category">
-                                {stat.label} 카테고리 혜택!
+                                {stat.label}
                             </div>
                         </div>
                     ))}
