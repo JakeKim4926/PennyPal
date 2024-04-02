@@ -1,4 +1,3 @@
-import { RootState } from '@/app/appProvider';
 import {
     acceptRegist,
     banTeamMember,
@@ -10,9 +9,10 @@ import {
 } from '@/pages/teamInfo/index';
 import { forceRender } from '@/pages/teamRouting';
 import { getCookie } from '@/shared';
-import { memo, useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useEffect, useRef, useState } from 'react';
+
 import { useDispatch } from 'react-redux';
+import Swal from 'sweetalert2';
 
 type TeamSettingModal = {
     teamId: number;
@@ -142,7 +142,11 @@ export function TeamSettingModal({
                                     };
                                     const res = await modifyTeamInfo(dto, teamId);
                                     if (res.data.code === 200) {
-                                        alert('팀 정보 수정이 완료됐습니다.');
+                                        Swal.fire({
+                                            title: '팀 정보 수정',
+                                            text: '팀 정보 수정이 완료됐습니다.',
+                                            icon: 'success',
+                                        });
                                     }
                                 }}
                             >
@@ -239,7 +243,11 @@ function MemberListItem({ member, memberId, teamId, memberList, setMemberList }:
                         if (res.data.code === 200) {
                             const tmp = [...memberList].filter((it) => it.memberId !== postDto.targetMemberId);
                             setMemberList(tmp);
-                            alert('팀원을 추방했습니다.');
+                            Swal.fire({
+                                title: '팀원 추방',
+                                text: '팀원을 추방했습니다.',
+                                icon: 'success',
+                            });
                         }
                     }}
                 >
@@ -281,7 +289,12 @@ function WaitingMemberListItem({
                         };
                         const res = await acceptRegist(dto).catch((err) => err);
                         if (res.data.code === 200) {
-                            alert('가입 신청이 승인됐습니다.');
+                            Swal.fire({
+                                title: '가입 승인',
+                                text: '가입 신청이 승인됐습니다.',
+                                icon: 'success',
+                            });
+
                             const tmp = [...waitingMemberList].filter((it) => it.memberId !== dto.memberId);
                             setWaitingMemberList(tmp);
                         }
@@ -298,7 +311,11 @@ function WaitingMemberListItem({
                         };
                         const res = await denyRegist(dto).catch((err) => err);
                         if (res.data.code === 200) {
-                            alert('가입 신청을 거절했습니다.');
+                            Swal.fire({
+                                title: '가입 거절',
+                                text: '가입 신청을 거절했습니다.',
+                                icon: 'success',
+                            });
                             const tmp = [...waitingMemberList].filter((it) => it.memberId !== dto.memberId);
                             setWaitingMemberList(tmp);
                         }
