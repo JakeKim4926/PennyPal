@@ -1,14 +1,6 @@
 import { useDispatch } from 'react-redux';
 import { openTeamDetailModal } from '@/pages/team/model/openTeamDetailModal';
-
-type TeamTeamListItemProps = {
-    teamId: number;
-    name: string;
-    head: number;
-    leader: string;
-    description: string;
-    teamIsAutoConfirm: boolean;
-};
+import { TeamTeamListItemProps } from '@/entities/';
 
 export function TeamTeamListItem({
     teamId,

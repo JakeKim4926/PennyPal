@@ -1,12 +1,12 @@
 import React from 'react';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { scrollTeamCreateArea } from '../../model/scrollTeamCreateArea';
 import { useDispatch } from 'react-redux';
 import { createGroup } from '../../api/createGroup';
 import { checkTeamName } from '../../model';
 import { setTeamInfo } from '@/pages/teamRouting/model/setTeamInfo';
-import { getTeamInfo } from '@/pages/teamRouting/api/getTeamInfo';
-import { USER_ID, getCookie } from '@/shared';
+import { getCookie } from '@/shared';
+import { NameAreaProps } from '@/entities/index';
 
 export function TeamCreateTeam() {
     return (
@@ -74,11 +74,6 @@ function Content() {
         </div>
     );
 }
-
-type NameAreaProps = {
-    moveNext: () => void;
-    registName: (name: string) => void;
-};
 
 function NameArea({ moveNext, registName }: NameAreaProps) {
     enum VALIDATION_CHECK {
