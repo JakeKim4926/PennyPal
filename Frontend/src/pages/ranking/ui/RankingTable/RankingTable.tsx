@@ -2,6 +2,7 @@ import { getTeamInfo } from '@/pages/teamRouting';
 import { API_CACHE_DATA, customAxios, getCookie } from '@/shared';
 import { useEffect, useState } from 'react';
 import { getRanking } from '../../api/getRanking';
+import { getRealtimeRanking } from '../../api/getRealtimeRanking';
 
 type Ranking = {
     rank: number;
@@ -32,10 +33,10 @@ export function RankingTable() {
                     if (res.data.data.members.some((it: any) => it.memberId === memberId)) {
                         // API_CACHE_DATA.set(REQUEST_URL, { data: res.data, exp: new Date().getTime() + 1000 * 60 * 10 });
 
-                        getRanking(`/team/rank/weekly/${res.data.data.teamId}?page=${curPage}`).then((res) => {
+                        getRanking(`/team/rank/weekly/${res.data.data.teamId}?page=${curPage}&size=5`).then((res) => {
                             const data = res.data.data.content[0];
                             setRanking(data.teamRanks);
-                            console.log(res.data);
+
                             setMyRanking({
                                 myTeamName: data.myTeamName,
                                 myTeamRankNum: data.myTeamRankNum,
@@ -43,6 +44,10 @@ export function RankingTable() {
                                 myTeamRewardPoint: data.myTeamRewardPoint,
                             });
                         });
+
+                        getRealtimeRanking(`/team/rank/realtime/${res.data.data.teamId}?page=${curPage}&size=5`).then(
+                            (res) => console.log(res.data),
+                        );
                     }
                 }
             });
@@ -72,19 +77,11 @@ export function RankingTable() {
                 <div>점수</div>
                 <div>보상 포인트</div>
             </div>
-            <button
-                onClick={() => {
-                    customAxios.post('/team/rank').catch((err) => console.log(err));
-                    customAxios.post('/team/rankRealtime').catch((err) => console.log(err));
-                }}
-            >
-                랭킹
-            </button>
             <div className="rankingTable__content">
                 <ul className="rankingTable__content-list">
                     {ranking.map((it: any) => (
                         <li className="rankingTable__content-list-item">
-                            <div>{it.rankNum}</div>
+                            <div>{it.rankNum === 0 ? '-' : it.rankNum}</div>
                             <div>{it.teamName}</div>
                             <div>{it.teamScore}</div>
                             <div>{it.rewardPoint}</div>
