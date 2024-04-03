@@ -1,7 +1,7 @@
-import { customAxios } from '../../../shared';
+import { customAxios, dataAxios } from '../../../shared';
 import { getCookie } from '../../../shared/lib/cookieHelper';
 
-// memberId를 이용해 memberEmail을 조회하는 함수
+// 이메일 조회
 export const fetchMemberEmail = async (memberId: string): Promise<string> => {
     try {
         const response = await customAxios.get(`/member/${memberId}`);
@@ -12,6 +12,7 @@ export const fetchMemberEmail = async (memberId: string): Promise<string> => {
     }
 };
 
+// 출석
 export const fetchMemberAttendance = async (): Promise<void> => {
     const memberIndex = getCookie('memberId');
 
@@ -29,7 +30,7 @@ export const fetchMemberAttendance = async (): Promise<void> => {
             memberDate: today,
         };
 
-        const response = await customAxios.post('/api/member/attend', requestData);
+        const response = await customAxios.post('/member/attend', requestData);
 
         console.log(today);
         console.log(response.data); // 성공 응답 처리
@@ -42,9 +43,24 @@ export const fetchMemberAttendance = async (): Promise<void> => {
     }
 };
 
-// export const fetchMemberAttendance
+// 출석여부 확인
+export const fetchCheckMemberAttendance = async (): Promise<void> => {
+    const memberId = getCookie('memberId');
 
-// 은행 키 정보를 가져오는 함수
+    if (!memberId) {
+        console.error('로그인이 필요합니다.');
+        return;
+    }
+
+    try {
+        const response = await customAxios.get('/member/attend/state', { params: { memberId } });
+        console.log(response.data);
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+// 사용자 은행키 조회
 export const fetchBankKey = async (): Promise<void> => {
     const memberId = getCookie('memberId');
 
@@ -65,7 +81,7 @@ export const fetchBankKey = async (): Promise<void> => {
     }
 };
 
-// 계좌 목록을 가져오는 함수
+// 사용자 계좌목록 조회
 export const fetchAccountList = async (): Promise<string[]> => {
     const memberId = getCookie('memberId');
 
@@ -92,7 +108,7 @@ export const fetchAccountList = async (): Promise<string[]> => {
     }
 };
 
-// 계좌 거래 내역을 가져오는 함수
+// 사용자 거래내역 조회
 export const fetchTodayAccountTransactions = async (): Promise<void> => {
     const memberIdRaw = getCookie('memberId');
     if (!memberIdRaw) {
@@ -131,12 +147,21 @@ export const fetchTodayAccountTransactions = async (): Promise<void> => {
     }
 };
 
-export const fetchAccountTransactions = async (): Promise<void> => {
+// 사용자 전체 거래내역 조회
+export interface Expense {
+    transactionUniqueId: number;
+    transactionType: number;
+    transactionDate: string;
+    transactionSummary: string;
+    transactionBalance: string;
+}
+
+export const fetchAccountTransactions = async (): Promise<Expense[]> => {
     const memberIdRaw = getCookie('memberId');
     if (!memberIdRaw) {
         console.error('로그인이 필요합니다.');
         alert('로그인이 필요합니다!');
-        return;
+        return [];
     }
     const memberId = String(memberIdRaw);
 
@@ -146,7 +171,7 @@ export const fetchAccountTransactions = async (): Promise<void> => {
         const accountNumbers = await fetchAccountList();
         if (accountNumbers.length === 0) {
             console.log('계좌 번호를 불러올 수 없습니다.');
-            return;
+            return [];
         }
         const accountNo = accountNumbers[0];
 
@@ -163,13 +188,75 @@ export const fetchAccountTransactions = async (): Promise<void> => {
         const response = await customAxios.post('/bank/user/account/transaction', requestData);
         console.log(response.data);
         alert('내역을 불러왔습니다!');
+
+        const expenses: Expense[] = response.data.data.rec.map((item: any) => ({
+            transactionUniqueId: parseInt(item.transactionUniqueNo, 10),
+            transactionType: parseInt(item.transactionType, 10),
+            transactionDate: item.transactionDate,
+            transactionSummary: item.transactionSummary,
+            transactionBalance: item.transactionBalance,
+        }));
+
+        alert('내역 데이터를 가져왔습니다!');
+        return expenses;
     } catch (error) {
         console.error(error);
         alert('계좌 불러오기 중 오류가 발생했습니다. 다시 시도해주세요.');
+        return [];
     }
 };
 
-// 추천 카드
+// 사용자 지출비율 조회
+export interface MemberCategoryPercentage {
+    category_car: number;
+    category_culture: number;
+    category_education: number;
+    category_financial_insurance: number;
+    category_food: number;
+    category_housing_communication: number;
+    category_medical: number;
+    category_others: number;
+    category_shopping: number;
+    category_transportation: number;
+    category_travel: number;
+}
+
+export const fetchExpensePie = async (): Promise<void> => {
+    const memberIndex = getCookie('memberId');
+
+    if (!memberIndex) {
+        console.error('로그인이 필요합니다.');
+        return;
+    }
+
+    try {
+        const response = await dataAxios.get('/member/category', { params: { memberIndex } });
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        return;
+    }
+};
+
+// 사용자 최고지출 조회
+export const fetchFavCategory = async (): Promise<void> => {
+    const memberIndex = getCookie('memberId');
+
+    if (!memberIndex) {
+        console.error('로그인이 필요합니다.');
+        return;
+    }
+
+    try {
+        const response = await dataAxios.get('/member/mostCategory', { params: { memberIndex } });
+        console.log(response.data);
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+// 사용자 카드 추천
 export interface Card {
     cardId: number;
     cardCompany: string;
@@ -179,8 +266,7 @@ export interface Card {
 }
 
 export const fetchRecommendedCards = async (): Promise<Card[]> => {
-    // const memberIndex = getCookie('memberId');
-    const memberIndex = 53;
+    const memberIndex = getCookie('memberId');
 
     if (!memberIndex) {
         console.error('로그인이 필요합니다.');
@@ -188,7 +274,7 @@ export const fetchRecommendedCards = async (): Promise<Card[]> => {
     }
 
     try {
-        const response = await customAxios.get('/card/recommend', { params: { memberIndex } });
+        const response = await dataAxios.get('/card/recommend', { params: { memberIndex } });
         console.log(response.data);
 
         const dataWithCardId = response.data.map((item: any, index: number) => ({
