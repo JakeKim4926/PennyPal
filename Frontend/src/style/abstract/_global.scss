@@ -10,7 +10,7 @@
     color: $black;
 
     user-select: none;
-    font-family: 'Wanted Sans Variable';
+    font-family: 'Wanted-Medium';
 }
 
 ::-webkit-scrollbar {
@@ -57,6 +57,8 @@ body {
     position: fixed;
     top: 0;
     left: 0;
+
+    animation: fadein 0.22s ease-in-out;
 }
 
 .button {
@@ -74,4 +76,8 @@ body {
         box-shadow: 0 1px 1px $black;
         transform: translateY(3px);
     }
+}
+
+.fadeOut {
+    animation: modalFadeout 0.22s ease-in-out;
 }

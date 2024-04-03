@@ -1,12 +1,12 @@
 import { Button, getCookie } from '@/shared';
-import { useSignUpFormModel } from '@/pages/signup/model/signUpFormModel';
+import { useSignUpFormModel } from '@/pages/signup/model/useSignupFormmodel';
 import { ChangeEvent, useState } from 'react';
 import { doSubmit } from '../model/doSubmit';
 
 export function MyPage() {
     const { userData, passwordValid, confirmPasswordValid, nickNameValid, handleChange } = useSignUpFormModel();
     const [nowpassword, setNowPassword] = useState<string>('');
-    const nowNick = getCookie('memberNickname') ? getCookie('memberNickname') : undefined;
+    // const nowNick :string = getCookie('memberNickname') === ;
     async function handleSubmit(type: 'nickname' | 'password') {
         let data = {};
         if (type === 'nickname') {
@@ -29,6 +29,10 @@ export function MyPage() {
         console.log(res);
     }
 
+    function handleWithdraw() {
+        // 탈퇴 aPI
+    }
+
     return (
         <div className="container contentCard">
             <div className="contentCard__title">
@@ -42,7 +46,11 @@ export function MyPage() {
                     <p>Nickname</p>
                     <div className="input-container">
                         <img src="assets/image/icons_mini/Name.svg" />
-                        <input type="text" placeholder={'새 닉네임'} onChange={(e) => handleChange(e, 'nickName')} />
+                        <input
+                            type="text"
+                            placeholder={'새로운 닉네임'}
+                            onChange={(e) => handleChange(e, 'nickName')}
+                        />
                         <div className="message-container">
                             {nickNameValid === true ? (
                                 <p className="message-container--valid">유효한 닉네임입니다.</p>
@@ -53,7 +61,7 @@ export function MyPage() {
                     </div>
                     <div className="">
                         <Button
-                            child={'변경'}
+                            child={'닉네임 변경'}
                             color={'color-main'}
                             disabled={!nickNameValid}
                             onClick={() => {
@@ -113,11 +121,22 @@ export function MyPage() {
                     </div>
                     <div className="">
                         <Button
-                            child={'NEXT'}
+                            child={'비밀번호 변경'}
                             color={'color-main'}
                             disabled={!(passwordValid && confirmPasswordValid)}
                             onClick={() => {
                                 handleSubmit('password');
+                            }}
+                        />
+                    </div>
+                    <br />
+                    <div className="">
+                        <Button
+                            child={'회원탈퇴'}
+                            color={'color-sub'}
+                            disabled={!(passwordValid && confirmPasswordValid)}
+                            onClick={() => {
+                                handleWithdraw;
                             }}
                         />
                     </div>

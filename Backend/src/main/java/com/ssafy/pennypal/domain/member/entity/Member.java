@@ -56,7 +56,7 @@ public class Member extends BaseEntity implements UserDetails {
 
     @ManyToOne(
             fetch = FetchType.LAZY,
-            cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REMOVE}
+            cascade = CascadeType.ALL
     )
     @JoinColumn(name = "team_id")
     @Setter
@@ -77,7 +77,8 @@ public class Member extends BaseEntity implements UserDetails {
 
     @ManyToOne(
             fetch = FetchType.LAZY,
-            cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST}
+    )
     @JoinColumn(name = "team_waiting_list")
     @Setter
     private Team memberWaitingTeam;                                               // 사용자가 가입 요청한 팀
@@ -85,7 +86,17 @@ public class Member extends BaseEntity implements UserDetails {
     @OneToMany(
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL,
-            mappedBy = "member")
+            mappedBy = "member"
+    )
+    @Column(name = "member_expenses_of_two_last_week")
+    @Setter
+    private List<Expense> memberExpensesOfTwoLastWeek = new ArrayList<>();           // 지지난 주 지출 내역
+
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            mappedBy = "member"
+    )
     @Column(name = "member_expenses_of_last_week")
     @Setter
     private List<Expense> memberExpensesOfLastWeek = new ArrayList<>();           // 지난 주 지출 내역

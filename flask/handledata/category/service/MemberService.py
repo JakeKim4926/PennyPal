@@ -1,9 +1,13 @@
 from handledata.category.dao import Repository
 import requests
+import os
+from dotenv import load_dotenv
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+
 import numpy as np
 
+from handledata.category.service.Run import Run
 
 class MemberService:
     _instance = None
@@ -36,17 +40,18 @@ class MemberService:
             "category_others": ["애완동물", "비즈니스"]
         }
         self.user_vector = None
+        self.run_instance = Run()
 
     def getBankInfo(self, index):
         try:
             self.member_email = self.repository.getEmail(index)
             # Replace this URL with the actual URL you need to call
-            request_url = 'http://localhost:8080/api/bank/user/account/' + self.member_email
+            request_url = os.getenv("SPRING_API") + 'api/bank/user/account/' + self.member_email
 
             response_data = requests.get(request_url)
 
             if response_data.status_code != 200:
-                request_url = 'https://localhost:8080/api/bank/user/account/' + self.member_email
+                request_url = os.getenv("SPRING_API") + 'api/bank/user/account/' + self.member_email
                 response_data = requests.get(request_url)
 
             response = response_data.json()
@@ -62,7 +67,6 @@ class MemberService:
             return {"error": str(e)}
 
     def getMemberReceipts(self, index):
-
         res = self.getBankInfo(index)
         data = {
             "userEmail": self.member_email,
@@ -73,72 +77,147 @@ class MemberService:
             "endDate": self.end_date
         }
 
-        # POST 요청 보내기
-        response = requests.post('http://localhost:8080/api/bank/user/account/transaction', json=data)
+        response = requests.post(os.getenv("SPRING_API") + 'api/bank/user/account/transaction', json=data)
 
-        if response.status_code != 200:
-            response = requests.post('https://localhost:8080/api/bank/user/account/transaction', json=data)
-
-
-        # 응답 확인
         if response.status_code == 200:
-            # 성공적으로 데이터를 받았을 경우의 처리
             result_data = response.json()
-            total_summaries = len(result_data["data"]["rec"])
             transaction_summaries = [rec["transactionSummary"] for rec in result_data["data"]["rec"]]
 
-            # 각 카테고리에 대한 트랜잭션 요약 빈도수 계산
-            category_distribution = {category: 0 for category in self.categories_keywords}
-
-            # 각 트랜잭션 요약에 대해 카테고리를 판별하고 빈도수를 업데이트
-            for summary in transaction_summaries:
-                for category, keywords in self.categories_keywords.items():
-                    if any(keyword in summary for keyword in keywords):
-                        category_distribution[category] += 1
-                        break  # 각 요약은 하나의 카테고리에만 속한다고 가정
-                        # # 카테고리 분석이 안됬으니 기타에 1 추가
-                        # category_distribution['category_others'] += 1
-
-            # 각 카테고리의 백분율을 계산
-            category_percentages = {category: (count / total_summaries) * 100 for category, count in
-                                    category_distribution.items()}
-
-            # 사용자 벡터 (위에서 정의한 것을 사용)
-            user_vector = np.array([0.2, 0.2, 0.1, 0, 0.1, 0, 0.1, 0.1, 0.1, 0.1, 0])
-            self.user_vector = np.array(
-                [category_percentages.get(f"category_{i + 1}", 0) for i in range(len(user_vector))])
-
-            category_percentages_decimal = {category: count / total_summaries for category, count in
-                                            category_distribution.items()}
-            category_indices = {
-                "category_shopping": 0,
-                "category_culture": 1,
-                "category_transportation": 2,
-                "category_car": 3,
-                "category_food": 4,
-                "category_education": 5,
-                "category_housing_communication": 6,
-                "category_travel": 7,
-                "category_medical": 8,
-                "category_financial_insurance": 9,
-                "category_others": 10
+            category_distribution = {
+                "쇼핑": 0,
+                "여가/문화": 0,
+                "교통": 0,
+                "자동차": 0,
+                "푸드": 0,
+                "교육": 0,
+                "주거/통신": 0,
+                "여행/항공": 0,
+                "의료": 0,
+                "금융/보험": 0,
+                "기타": 0
             }
 
-            # 각 카테고리의 소수 비율에 따라 사용자 벡터를 생성합니다.
-            category_vector = np.zeros(len(user_vector))
-            for category, index in category_indices.items():
-                category_vector[index] = category_percentages_decimal.get(category, 0)
+            for summary in transaction_summaries:
+                predicted_category = self.run_instance.predict(summary)  # 각 요약에 대한 카테고리를 예측합니다.
 
-            self.user_vector = category_vector
+                if predicted_category in category_distribution:
+                    category_distribution[predicted_category] += 1  # 예측된 카테고리의 빈도수를 업데이트합니다.
+                else:
+                    category_distribution["기타"] += 1  # 정의되지 않은 카테고리는 '기타'로 분류합니다.
+
+            # 여기서부터는 category_distribution을 사용하여 필요한 처리를 수행하면 됩니다.
+            # 예를 들어, 백분율 계산 또는 결과 출력 등
+            # 각 카테고리의 백분율을 계산
+            total_summaries = sum(category_distribution.values())
+            category_percentages = {category: (count / total_summaries) * 100 for category, count in
+                                    category_distribution.items()}
+            # category_result에 매핑
+            category_result = {
+                "category_shopping": category_percentages.get("쇼핑", 0),
+                "category_culture": category_percentages.get("여가/문화", 0),
+                "category_transportation": category_percentages.get("교통", 0),
+                "category_car": category_percentages.get("자동차", 0),
+                "category_food": category_percentages.get("푸드", 0),
+                "category_education": category_percentages.get("교육", 0),
+                "category_housing_communication": category_percentages.get("주거/통신", 0),
+                "category_travel": category_percentages.get("여행/항공", 0),
+                "category_medical": category_percentages.get("의료", 0),
+                "category_financial_insurance": category_percentages.get("금융/보험", 0),
+                "category_others": category_percentages.get("기타", 0)
+            }
+
+            # 사용자 벡터 (위에서 정의한 것을 사용)
+            category_order = [
+                "쇼핑", "여가/문화", "교통", "자동차", "푸드",
+                "교육", "주거/통신", "여행/항공", "의료", "금융/보험", "기타"
+            ]
+
+            # category_percentages 딕셔너리에서 각 카테고리의 백분율을 가져와서 user_vector 배열을 생성합니다.
+            # 카테고리가 없는 경우 기본값으로 0을 사용합니다.
+            self.user_vector = np.array([category_percentages.get(category, 0) for category in category_order])
 
         else:
             # 오류 처리
             print(f"Failed with status code: {response.status_code}")
             print(response.text)
 
+    def getMemberBestCategory(self, index):
+        self.getMemberReceipts(index)
 
+        category_names = ["쇼핑", "여가/문화", "교통", "자동차", "푸드", "교육", "주거/통신", "여행/항공", "의료", "금융/보험", "기타"]
 
-if __name__ == '__main__':
-    setUserCategory = MemberService()
-    index = 96
-    setUserCategory.getMemberReceipts(index)
+        # 각 카테고리의 소수 비율에 따라 사용자 벡터를 생성합니다.
+        max_index = np.argmax(self.user_vector)
+
+        return category_names[max_index]
+
+    def getMemberCategoryPercentage(self, index):
+        res = self.getBankInfo(index)
+        data = {
+            "userEmail": self.member_email,
+            "bankCode": self.bank_code,
+            "transactionType": self.transaction_type,
+            "accountNo": self.account_no,
+            "startDate": self.start_date,
+            "endDate": self.end_date
+        }
+
+        response = requests.post(os.getenv("SPRING_API") + 'api/bank/user/account/transaction', json=data)
+
+        if response.status_code == 200:
+            result_data = response.json()
+            transaction_summaries = [rec["transactionSummary"] for rec in result_data["data"]["rec"]]
+
+            category_distribution = {
+                "쇼핑": 0,
+                "여가/문화": 0,
+                "교통": 0,
+                "자동차": 0,
+                "푸드": 0,
+                "교육": 0,
+                "주거/통신": 0,
+                "여행/항공": 0,
+                "의료": 0,
+                "금융/보험": 0,
+                "기타": 0
+            }
+
+            for summary in transaction_summaries:
+                predicted_category = self.run_instance.predict(summary)  # 각 요약에 대한 카테고리를 예측합니다.
+
+                if predicted_category in category_distribution:
+                    category_distribution[predicted_category] += 1  # 예측된 카테고리의 빈도수를 업데이트합니다.
+                else:
+                    category_distribution["기타"] += 1  # 정의되지 않은 카테고리는 '기타'로 분류합니다.
+
+            # 여기서부터는 category_distribution을 사용하여 필요한 처리를 수행하면 됩니다.
+            # 예를 들어, 백분율 계산 또는 결과 출력 등
+            # 각 카테고리의 백분율을 계산
+            total_summaries = sum(category_distribution.values())
+            category_percentages = {category: (count / total_summaries) * 100 for category, count in
+                                    category_distribution.items()}
+            # category_result에 매핑
+            category_result = {
+                "category_shopping": category_percentages.get("쇼핑", 0),
+                "category_culture": category_percentages.get("여가/문화", 0),
+                "category_transportation": category_percentages.get("교통", 0),
+                "category_car": category_percentages.get("자동차", 0),
+                "category_food": category_percentages.get("푸드", 0),
+                "category_education": category_percentages.get("교육", 0),
+                "category_housing_communication": category_percentages.get("주거/통신", 0),
+                "category_travel": category_percentages.get("여행/항공", 0),
+                "category_medical": category_percentages.get("의료", 0),
+                "category_financial_insurance": category_percentages.get("금융/보험", 0),
+                "category_others": category_percentages.get("기타", 0)
+            }
+
+            return category_result
+
+        else:
+            print(f"Failed with status code: {response.status_code}")
+            print(response.text)
+
+# if __name__ == '__main__':
+#     member_service = MemberService()
+#     index = 19
+#     print(member_service.getMemberBestCategory(index))

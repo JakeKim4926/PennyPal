@@ -1,12 +1,12 @@
 import React from 'react';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { scrollTeamCreateArea } from '../../model/scrollTeamCreateArea';
 import { useDispatch } from 'react-redux';
 import { createGroup } from '../../api/createGroup';
 import { checkTeamName } from '../../model';
 import { setTeamInfo } from '@/pages/teamRouting/model/setTeamInfo';
-import { getTeamInfo } from '@/pages/teamRouting/api/getTeamInfo';
-import { USER_ID, getCookie } from '@/shared';
+import { getCookie } from '@/shared';
+import { NameAreaProps } from '@/entities/index';
 
 export function TeamCreateTeam() {
     return (
@@ -58,6 +58,7 @@ function Content() {
                     onClick={() => {
                         moveNext(contentRef, 1);
                     }}
+                    tabIndex={-1}
                 >
                     팀 생성하기
                 </button>
@@ -73,11 +74,6 @@ function Content() {
         </div>
     );
 }
-
-type NameAreaProps = {
-    moveNext: () => void;
-    registName: (name: string) => void;
-};
 
 function NameArea({ moveNext, registName }: NameAreaProps) {
     enum VALIDATION_CHECK {
@@ -132,6 +128,7 @@ function NameArea({ moveNext, registName }: NameAreaProps) {
                     <div>팀명을 입력해주세요</div>
                     <div className="teamCreateTeam__content-inner-second-name-input">
                         <input
+                            tabIndex={-1}
                             type="text"
                             placeholder="팀명"
                             onChange={handleChange}
@@ -149,10 +146,15 @@ function NameArea({ moveNext, registName }: NameAreaProps) {
                             }}
                         ></input>
                         <button
+                            tabIndex={-1}
                             className={`teamCreateTeam__content-inner-second-name-input-button ${
-                                check !== 'VALID' ? 'button-disabled' : 'button'
+                                check !== VALIDATION_CHECK.PASS
+                                    ? check !== VALIDATION_CHECK.VALID
+                                        ? 'button-disabled'
+                                        : 'button'
+                                    : 'checked'
                             }`}
-                            disabled={check !== 'VALID'}
+                            disabled={check !== VALIDATION_CHECK.VALID}
                             onClick={() => {
                                 handleCheck();
                             }}
@@ -164,6 +166,8 @@ function NameArea({ moveNext, registName }: NameAreaProps) {
                 </div>
             </div>
             <button
+                className={`${check !== VALIDATION_CHECK.PASS ? 'button-disabled' : ''}`}
+                tabIndex={-1}
                 disabled={check !== VALIDATION_CHECK.PASS}
                 onClick={() => {
                     moveNext();
@@ -184,9 +188,9 @@ function NameCheck({ state }: NameCheckProps) {
     const text: () => string | JSX.Element = () => {
         switch (state) {
             case 'CHAR':
-                return '팀명은 한글, 숫자, 영문만 허용됩니다.';
+                return <span className="red">팀명은 한글, 숫자, 영문만 허용됩니다.</span>;
             case 'LENGTH':
-                return '팀명은 4자 이상, 20자 이하만 허용됩니다.';
+                return <span className="red">팀명은 4자 이상, 20자 이하만 허용됩니다.</span>;
             case 'VALID':
                 return <span className="green">유효한 팀명입니다. 중복체크를 진행해주세요.</span>;
             case 'PASS':
@@ -244,6 +248,7 @@ function DescArea({ moveBack, moveNext, registInfo }: DescAreaProps) {
     return (
         <div className="teamCreateTeam__content-inner">
             <button
+                tabIndex={-1}
                 onClick={() => {
                     moveBack();
                 }}
@@ -255,6 +260,7 @@ function DescArea({ moveBack, moveNext, registInfo }: DescAreaProps) {
                     <div>우리 팀을 한 줄로 소개해주세요</div>
                     <div className="teamCreateTeam__content-inner-second-name-input">
                         <input
+                            tabIndex={-1}
                             type="text"
                             placeholder="소개 (40자 이내)"
                             onChange={handleChange}
@@ -271,6 +277,7 @@ function DescArea({ moveBack, moveNext, registInfo }: DescAreaProps) {
                 </div>
             </div>
             <button
+                tabIndex={-1}
                 disabled={check === VALIDATION_CHECK.INVALID}
                 onClick={() => {
                     registInfo(inputRef.current!.value.trim());
@@ -323,6 +330,7 @@ function ConfirmArea({ registConfirm, moveNext, teamDto }: ConfirmArea) {
                     <div className="confirm">팀원 가입 신청을 자동으로 승인할까요?</div>
                     <div className="teamCreateTeam__content-inner-second-name-buttons">
                         <button
+                            tabIndex={-1}
                             className="teamCreateTeam__content-inner-second-name-buttons-button yes"
                             onClick={() => {
                                 handleRegist(true);
@@ -331,6 +339,7 @@ function ConfirmArea({ registConfirm, moveNext, teamDto }: ConfirmArea) {
                             네
                         </button>
                         <button
+                            tabIndex={-1}
                             className="teamCreateTeam__content-inner-second-name-buttons-button no"
                             onClick={() => {
                                 handleRegist(false);

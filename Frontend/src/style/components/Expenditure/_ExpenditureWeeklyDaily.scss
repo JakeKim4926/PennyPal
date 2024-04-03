@@ -31,8 +31,10 @@
         gap: 15px;
 
         width: 100%;
-        min-height: 150px;
+        height: 300px;
         padding: 10px;
+        overflow: scroll;
+
         border-bottom: 1px solid $line;
 
         &-expend {

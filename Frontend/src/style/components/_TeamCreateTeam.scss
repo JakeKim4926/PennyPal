@@ -20,6 +20,14 @@
             gap: 10px;
             font-size: 1.3rem;
 
+            .green {
+                color: $main;
+            }
+
+            .red {
+                color: darken($sub, 20%);
+            }
+
             &-last {
                 display: flex;
                 flex-direction: column;
@@ -79,6 +87,10 @@
 
                         .button-disabled {
                             background-color: $gray;
+                        }
+
+                        .checked {
+                            background-color: $main;
                         }
                     }
 

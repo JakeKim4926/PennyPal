@@ -11,10 +11,8 @@ export function Agreement() {
         setIsChecked(e.target.checked);
     };
     const handleNext = () => {
-        // 회원가입 요청 API
-
         // 리덕스 상태관리 다음으로 넘어감.
-        dispatch(setSignUpStep(2));
+        dispatch(setSignUpStep(1));
     };
 
     return (
@@ -51,7 +49,7 @@ export function Agreement() {
                 <input type="checkbox" id="myCheckbox" checked={isChecked} onChange={handleChange} />
                 <label htmlFor="myCheckbox">개인정보 수집 및 활용을 위한 위 사항에 동의합니다.</label>
             </div>
-            <Button child={'REGISTER'} color={'light'} disabled={!isChecked} onClick={handleNext} />
+            <Button child={'NEXT'} color={'light'} disabled={!isChecked} onClick={handleNext} />
         </div>
     );
 }

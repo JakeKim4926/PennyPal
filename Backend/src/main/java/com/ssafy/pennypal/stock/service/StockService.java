@@ -1,5 +1,6 @@
 package com.ssafy.pennypal.stock.service;
 
+import com.ssafy.pennypal.stock.dto.request.SearchStockRequestDto;
 import com.ssafy.pennypal.stock.dto.response.StockWithLatestTransactionDto;
 import com.ssafy.pennypal.stock.dto.response.StockWithTransactionDto;
 import com.ssafy.pennypal.stock.repository.stock.IStockRepository;
@@ -19,12 +20,13 @@ public class StockService implements IStockService {
     private final IStockTransactionRepository stockTransactionRepository;
 
     @Override
-    public Page<StockWithLatestTransactionDto> getStockList(Pageable pageable) {
-        return stockRepository.findStocksWithLatestTransaction(pageable);
+    public Page<StockWithLatestTransactionDto> getStockList(SearchStockRequestDto searchStockRequestDto, Pageable pageable) {
+        return stockRepository.findStocksWithLatestTransaction(searchStockRequestDto, pageable);
     }
 
     @Override
     public StockWithTransactionDto getStock(Long stockId) {
         return stockRepository.findStocksWithTransaction(stockId);
     }
+    
 }

@@ -1,3 +1,17 @@
+.clickable {
+    cursor: pointer;
+}
+
+.clickable-btn {
+    cursor: pointer;
+
+    &:hover {
+        * {
+            background-color: $main;
+        }
+    }
+}
+
 .clickable-icon {
     cursor: pointer;
 

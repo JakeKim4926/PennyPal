@@ -1,6 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import { Expenditure } from '@/pages/expenditure';
-import { Finance } from '@/pages/finance';
+import { Finance, FinanceDetail } from '@/pages/finance';
 import { Landing } from '@/pages/landing';
 import { Main } from '@/pages/main';
 import { Market } from '@/pages/market';
@@ -48,6 +48,14 @@ export function AppRoutes() {
                 element={
                     <LoginCheck>
                         <Finance />
+                    </LoginCheck>
+                }
+            />
+            <Route
+                path="/financedetail"
+                element={
+                    <LoginCheck>
+                        <FinanceDetail />
                     </LoginCheck>
                 }
             />

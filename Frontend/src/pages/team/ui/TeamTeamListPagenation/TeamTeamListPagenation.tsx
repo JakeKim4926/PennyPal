@@ -1,10 +1,5 @@
 import React, { useMemo, useState } from 'react';
-
-type TeamTeamListPagenationProps = {
-    curPage: number;
-    setCurPage: React.Dispatch<React.SetStateAction<number>>;
-    maxPage: number;
-};
+import { TeamTeamListPagenationProps } from '@/entities';
 
 export function TeamTeamListPagenation({ curPage, setCurPage, maxPage }: TeamTeamListPagenationProps) {
     const idxRange = [Math.floor(curPage / 5), Math.floor(curPage / 5) + 5];
@@ -21,8 +16,8 @@ export function TeamTeamListPagenation({ curPage, setCurPage, maxPage }: TeamTea
     return (
         <div className="teamTeamListPagenation">
             <div className="teamTeamListPagenation__value">
-                <button>{`<<`}</button>
-                <button>{`<`}</button>
+                {/* <button>{`<<`}</button>
+                <button>{`<`}</button> */}
                 <div className="teamTeamListPagenation__value-wrapper">
                     {pageNumList.map((it) => (
                         <button
@@ -36,8 +31,8 @@ export function TeamTeamListPagenation({ curPage, setCurPage, maxPage }: TeamTea
                         </button>
                     ))}
                 </div>
-                <button>{`>`}</button>
-                <button>{`>>`}</button>
+                {/* <button>{`>`}</button>
+                <button>{`>>`}</button> */}
             </div>
         </div>
     );

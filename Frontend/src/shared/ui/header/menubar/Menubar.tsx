@@ -12,6 +12,7 @@ export function Menubar({ size }: MenubarProps) {
         deleteCookie('memberId');
         deleteCookie('memberToken');
         deleteCookie('memberNickname');
+        alert('로그아웃 되었습니다.');
         navigate('/main');
     }
     return (

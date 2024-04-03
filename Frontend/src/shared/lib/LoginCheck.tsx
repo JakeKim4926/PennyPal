@@ -19,10 +19,12 @@ export const LoginCheck: React.FC<LoginCheckProps> = ({ children }) => {
         // 로그인하지 않은 상태에서 로그인, 회원가입, 비밀번호 찾기 페이지 외 접근 시 로그인 페이지로 리디렉션
         if (!isLogin && !['/signin', '/signup', '/find-password', '/main'].includes(pathname)) {
             navigate('/signin');
+            setIsAllowed(false);
         }
         // 로그인한 상태에서 로그인, 회원가입, 비밀번호 찾기 페이지 접근 시 지출 페이지로 리디렉션
         else if (isLogin && ['/signin', '/signup', '/find-password'].includes(pathname)) {
             navigate('/expenditure');
+            setIsAllowed(false);
         }
     }, [navigate]);
 

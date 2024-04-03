@@ -6,4 +6,5 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
 public interface IStockRepository extends JpaRepository<Stock, Long>, QuerydslPredicateExecutor<Stock>, IStockRepositoryCustom {
 
+
 }

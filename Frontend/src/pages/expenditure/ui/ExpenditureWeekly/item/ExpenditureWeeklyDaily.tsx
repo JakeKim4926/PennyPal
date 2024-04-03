@@ -1,13 +1,11 @@
 import React from 'react';
+import SpendingItem from './SpendingItem';
+import { Spending, SpendingItemProps, ExpenditureWeeklyDailyProps } from '@/pages/expenditure/model/spending';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBus, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
-interface ExpenditureWeeklyDailyProps {
-    date: Date;
-    onClick: () => void;
-}
-
-export function ExpenditureWeeklyDaily({ date, onClick }: ExpenditureWeeklyDailyProps) {
+function ExpenditureWeeklyDaily({ date, spendings }: ExpenditureWeeklyDailyProps) {
     const format = (date: Date): string => {
         const month = date.getMonth() + 1;
         const day = date.getDate();
@@ -15,35 +13,33 @@ export function ExpenditureWeeklyDaily({ date, onClick }: ExpenditureWeeklyDaily
     };
     const dayOfWeek = date.toLocaleDateString('ko-KR', { weekday: 'short' });
 
+    const totalAmount = spendings.reduce((sum, spending) => {
+        const amountNumber = parseInt(spending.transactionBalance.replace(/,/g, '').replace('원', ''), 10);
+        return sum + amountNumber;
+    }, 0);
+
+    // 숫자를 '10,000원' 형식으로 변환
+    const formattedTotalAmount = `${totalAmount.toLocaleString()}원`;
+
     return (
-        <div className="expenditureWeeklyDaily" onClick={onClick}>
+        <div className="expenditureWeeklyDaily">
             <div className="expenditureWeeklyDaily__date">
                 <span>{format(date)}</span>
                 <span>{dayOfWeek.toUpperCase()}</span>
             </div>
 
             <div className="expenditureWeeklyDaily__spendings clickable-div">
-                <div className="expenditureWeeklyDaily__spendings-expend">
-                    <FontAwesomeIcon icon={faBus} />
-                    <div className="expenditureWeeklyDaily__spendings-expend-info">
-                        <p className="expenditureWeeklyDaily__spendings-expend-info-deposit">후불대중교통</p>
-                        <p className="expenditureWeeklyDaily__spendings-expend-info-amount">10,480</p>
-                    </div>
-                </div>
-
-                <div className="expenditureWeeklyDaily__spendings-expend">
-                    <FontAwesomeIcon icon={faBus} />
-                    <div className="expenditureWeeklyDaily__spendings-expend-info">
-                        <p className="expenditureWeeklyDaily__spendings-expend-info-deposit">후불대중교통</p>
-                        <p className="expenditureWeeklyDaily__spendings-expend-info-amount">10,480</p>
-                    </div>
-                </div>
+                {spendings.map((spending) => (
+                    <SpendingItem key={spending.transactionUniqueId} spending={spending} />
+                ))}
             </div>
 
             <div className="expenditureWeeklyDaily__sum">
                 <FontAwesomeIcon icon={faArrowRight} size="xs" />
-                <span>50,680원</span>
+                <span>{formattedTotalAmount}</span>
             </div>
         </div>
     );
 }
+
+export default ExpenditureWeeklyDaily;

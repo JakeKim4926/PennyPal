@@ -28,7 +28,22 @@ function TeamApplyModalSpace() {
 function MarketItemModalSpace() {
     const openMarketItemModal = useSelector((state: RootState) => state.openMarketItem.data);
 
-    if (openMarketItemModal) return <MarketItemModal />;
+    if (openMarketItemModal) {
+        const data = openMarketItemModal;
+        if (data instanceof Object) {
+            return (
+                <MarketItemModal
+                    productBrand={data.productBrand}
+                    productCategory={data.productBrand}
+                    productId={data.productId}
+                    productImg={data.productImg}
+                    productPrice={data.productPrice}
+                    productQuantity={data.productQuantity}
+                    productName={data.productName}
+                />
+            );
+        }
+    }
     return null;
 }
 
@@ -52,6 +67,7 @@ function TeamSettingModalSpace() {
                 teamName={data.teamName}
                 teamInfo={data.teamInfo}
                 members={data.members}
+                teamIsAutoConfirm={data.teamIsAutoConfirm}
             />
         );
     }

@@ -1,23 +1,47 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { MarketListItem } from '../MarketListItem/MarketListItem';
+import { getMarketItemList } from '../../model/getMarketItemList';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '@/app/appProvider';
+import { setMarketItemList } from '../../model';
+
+type Product = {
+    productBrand: string;
+    productCategory: string;
+    productId: number;
+    productImg: string;
+    productPrice: number;
+    productQuantity: number;
+    productName: string;
+};
 
 export function MarketList() {
-    const props = [
-        { id: 1, image: 'image', title: '상품1', point: 2500 },
-        { id: 1, image: 'image', title: '상품1', point: 2500 },
-        { id: 1, image: 'image', title: '상품1', point: 2500 },
-        { id: 1, image: 'image', title: '상품1', point: 2500 },
-        { id: 1, image: 'image', title: '상품1', point: 2500 },
-        { id: 1, image: 'image', title: '상품1', point: 2500 },
-        { id: 1, image: 'image', title: '상품1', point: 2500 },
-        { id: 1, image: 'image', title: '상품1', point: 2500 },
-    ];
+    const dispatch = useDispatch();
+    const productList: any = useSelector((state: RootState) => state.setMarketItemListReducer.data);
+
+    useEffect(() => {
+        getMarketItemList(0).then((res) => {
+            if (res.status === 200) {
+                dispatch(setMarketItemList(res.data.content));
+            }
+        });
+    }, []);
 
     return (
         <div className="marketList">
-            {props.map((it) => (
-                <MarketListItem image={it.image} title={it.title} point={it.point} key={it.id} />
-            ))}
+            {productList.length > 0 &&
+                productList.map((it: Product) => (
+                    <MarketListItem
+                        productBrand={it.productBrand}
+                        productCategory={it.productCategory}
+                        productQuantity={it.productQuantity}
+                        productImg={it.productImg}
+                        productName={it.productName}
+                        productPrice={it.productPrice}
+                        productId={it.productId}
+                        key={it.productId}
+                    />
+                ))}
         </div>
     );
 }
