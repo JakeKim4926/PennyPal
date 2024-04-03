@@ -12,6 +12,7 @@ import com.ssafy.pennypal.bank.dto.service.response.UserBankAccountsResponseServ
 import com.ssafy.pennypal.bank.service.api.BankServiceAPIImpl;
 import com.ssafy.pennypal.domain.chat.entity.ChatRoom;
 import com.ssafy.pennypal.domain.chat.repository.IChatRoomRepository;
+import com.ssafy.pennypal.domain.member.dto.ExpenseDto;
 import com.ssafy.pennypal.domain.member.dto.response.*;
 import com.ssafy.pennypal.domain.member.entity.Member;
 import com.ssafy.pennypal.domain.member.entity.Expense;
@@ -68,7 +69,7 @@ public class TeamService {
 
     private static final LocalDate MONDAY_OF_NEXT_WEEK = MONDAY_OF_THIS_WEEK.plusDays(7);
 
-    private static final LocalDate TUESDAY_OF_THIS_WEEK = TODAY.with(DayOfWeek.TUESDAY);
+    private static final LocalDate WEDNESDAY_OF_THIS_WEEK = TODAY.with(DayOfWeek.WEDNESDAY);
 
     @Transactional
     public TeamDetailResponse createTeam(TeamCreateServiceRequest request) {
@@ -637,7 +638,7 @@ public class TeamService {
         }
 
         // 원하는 조건(이번주 월요일)에 해당하는 모든 팀의 랭킹 기록 조회
-        List<TeamRankHistory> histories = teamRankHistoryRepository.findByRankDate(TUESDAY_OF_THIS_WEEK);
+        List<TeamRankHistory> histories = teamRankHistoryRepository.findByRankDate(WEDNESDAY_OF_THIS_WEEK);
 
         // 조회된 히스토리를 rankNum 기준으로 오름차순 정렬하고 TeamRankHistoryResponse로 변환
         List<TeamRankHistoryResponse> sortedResponses = histories.stream()
@@ -1385,6 +1386,30 @@ public class TeamService {
             team.setTeamScore(savingScore + attendanceScore);
 
         }
+    }
+
+    @Transactional
+    public List<ExpenseDto> test3(Long memberId) {
+
+        Member member = memberRepository.findByMemberId(memberId);
+
+        // 유저의 모든 지출 내역을 가져옴
+        List<Expense> allExpenses = expenseRepository.findByMember(member);
+
+        List<ExpenseDto> result = new ArrayList<>();
+
+        for(Expense expense : allExpenses){
+            ExpenseDto dto = ExpenseDto.builder()
+                    .expenseDate(expense.getExpenseDate())
+                    .expenseAmount(expense.getExpenseAmount())
+                    .build();
+
+            result.add(dto);
+        }
+
+
+        return result;
+
     }
 
 }
