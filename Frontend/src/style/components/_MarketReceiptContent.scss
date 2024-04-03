@@ -44,15 +44,16 @@
 
             &-none {
                 text-align: center;
+                margin: 3rem 0;
 
                 &-icon {
-                    font-size: 10rem;
+                    font-size: 4rem;
                     color: $bright;
                 }
 
                 &-text {
-                    font-size: 2rem;
-                    font-family: 'Wanted-Bold';
+                    font-size: 1.5rem;
+                    font-family: 'Wanted-Medium';
                 }
             }
         }
