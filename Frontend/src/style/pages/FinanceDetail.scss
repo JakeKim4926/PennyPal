@@ -73,3 +73,7 @@
     justify-content: center; /* 가운데 정렬 */
     align-items: center; /* 세로 방향 가운데 정렬 */
 }
+.card {
+    transform: scale(0.8);
+    transform-origin: center; /* 축소 기준점을 설정합니다 (예: 왼쪽 상단) */
+}

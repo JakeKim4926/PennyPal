@@ -123,20 +123,49 @@ export function Finance() {
                             fill: false,
                             borderColor: 'rgb(75, 192, 192)',
                             tension: 0.1,
+                            pointBackgroundColor: '#fff', // 데이터 포인트 배경 색상
+                            pointBorderColor: '#007bff', // 데이터 포인트 테두리 색상
+                            pointHoverBackgroundColor: '#007bff', // 호버 시 데이터 포인트 배경 색상
+                            pointHoverBorderColor: '#fff', // 호버 시 데이터 포인트 테두리 색상
                         },
                     ],
                 },
                 options: {
-                    // 애니메이션 옵션 추가
-                    animation: {
-                        onComplete: () => {}, // 애니메이션이 완료된 후 실행될 함수 (필요한 경우 사용)
-                        duration: 2000, // 애니메이션 지속 시간 (밀리초 단위)
-                    },
                     scales: {
                         y: {
-                            beginAtZero: true,
+                            display: false, // y축 단위값 숨김
+                        },
+                        x: {
+                            grid: {
+                                display: false, // x축 격자 무늬 숨김
+                            },
                         },
                     },
+                    plugins: {
+                        tooltip: {
+                            enabled: true, // 데이터 호버링 시 툴팁 활성화
+                            mode: 'index',
+                            intersect: false,
+                        },
+                        legend: {
+                            display: false, // 범례 숨김
+                        },
+                    },
+                    elements: {
+                        line: {
+                            borderWidth: 2, // 선 두께 조정
+                        },
+                        point: {
+                            radius: 5, // 데이터 포인트 반지름
+                            hoverRadius: 7, // 호버 시 데이터 포인트 반지름
+                        },
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'nearest',
+                    },
+                    responsive: true, // 반응형 차트 설정
+                    maintainAspectRatio: false, // 차트의 종횡비 유지 여부
                 },
             };
 
@@ -232,7 +261,9 @@ export function Finance() {
                         ))}
                     </div>
                 </div>
-                <canvas ref={canvasRef} id="myChart" width="600" height="250"></canvas>
+                <div>
+                    <canvas ref={canvasRef} id="myChart" width="600" height="250"></canvas>
+                </div>
             </div>
         </div>
     );
