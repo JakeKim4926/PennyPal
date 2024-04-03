@@ -25,7 +25,7 @@ export function Market() {
             <div className="market">
                 <PageHeader page={page.pathname.substring(1)} />
                 <MarketTop point={point} />
-                {/* <MarketCategory /> */}
+                <MarketCategory />
                 <MarketList />
             </div>
         </div>

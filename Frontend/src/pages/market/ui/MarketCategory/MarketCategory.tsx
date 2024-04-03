@@ -1,4 +1,5 @@
 import React from 'react';
+import { getMarketItemByCategory } from '../../api/getMarketItemByCategory';
 
 export function MarketCategory() {
     const categories = [
@@ -18,24 +19,17 @@ export function MarketCategory() {
             icon: '아이콘',
             title: '초콜릿',
         },
-        {
-            icon: '아이콘',
-            title: '젤리',
-        },
-        {
-            icon: '아이콘',
-            title: '사탕',
-        },
-        {
-            icon: '아이콘',
-            title: '기타',
-        },
     ];
 
     return (
         <div className="marketCategory">
             {categories.map((it) => (
-                <button className="marketCategory__item">
+                <button
+                    className="marketCategory__item"
+                    onClick={async () => {
+                        const res = await getMarketItemByCategory(it.title);
+                    }}
+                >
                     <div className="marketCategory__item-icon">{it.icon}</div>
                     <div className="marketCategory__item-title">{it.title}</div>
                 </button>
