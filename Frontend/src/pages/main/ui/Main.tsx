@@ -11,40 +11,41 @@ export function Main() {
     }, []);
 
     return (
-        <main>
+        <div className="container">
             <div className="slide1">
                 <div className="slide1__content">
                     <h1 className="slide1__content-mainPhase">Save Now, Fire Later!</h1>
                     <FontAwesomeIcon icon={faFire} bounce />
-                    <div className="slide1__content-subPhase"></div>
+                    <div className="slide1__content-subPhase">
+                        <span>파이어족으로 가는 첫 걸음,</span>
+                        <span>PennyPal과 함께 시작해요!</span>
+                    </div>
                 </div>
             </div>
-            <div className="container">
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <Button
-                    child="시작하기"
-                    color="color-main"
-                    onClick={() => {
-                        navigate('/signin');
-                    }}
-                />
-            </div>
-        </main>
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <Button
+                child="시작하기"
+                color="color-main"
+                onClick={() => {
+                    navigate('/signin');
+                }}
+            />
+        </div>
     );
 }

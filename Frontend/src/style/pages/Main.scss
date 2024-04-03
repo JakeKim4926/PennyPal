@@ -4,7 +4,8 @@
     background-position: center; /* 배경 이미지를 화면 중앙에 배치 */
 }
 
-main {
-    background-image: url('@/../public/assets/image/landing1.png');
-    opacity: 0.2;
+.container {
+    overflow: scroll;
+
+    background-image: url('@/../public/assets/image/background.svg');
 }

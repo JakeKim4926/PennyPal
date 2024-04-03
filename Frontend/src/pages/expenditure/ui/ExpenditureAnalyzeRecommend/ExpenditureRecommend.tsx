@@ -4,6 +4,80 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { Card, fetchRecommendedCards } from '../../model/fetchFunctions';
 
+const exampleData = {
+    favCategory: '식료품',
+    items: [
+        {
+            id: 1,
+            cardName: '카드명',
+            cardCompany: '카드사명',
+            cardImg: 'https://api.card-gorilla.com:8080/storage/card/508/card_img/21197/508card.png',
+            cardTopCategory: [
+                {
+                    label: '교통',
+                },
+                {
+                    label: '교통',
+                },
+                {
+                    label: '교통',
+                },
+            ],
+        },
+        {
+            id: 2,
+            cardName: '카드명',
+            cardCompany: '카드사명',
+            cardImg: 'https://api.card-gorilla.com:8080/storage/card/508/card_img/21197/508card.png',
+            cardTopCategory: [
+                {
+                    label: '교통',
+                },
+                {
+                    label: '교통',
+                },
+                {
+                    label: '교통',
+                },
+            ],
+        },
+        {
+            id: 3,
+            cardName: '카드명',
+            cardCompany: '카드사명',
+            cardImg: 'https://api.card-gorilla.com:8080/storage/card/508/card_img/21197/508card.png',
+            cardTopCategory: [
+                {
+                    label: '교통',
+                },
+                {
+                    label: '교통',
+                },
+                {
+                    label: '교통',
+                },
+            ],
+        },
+        {
+            id: 4,
+            cardName: '카드명',
+            cardCompany: '카드사명',
+            cardImg: 'https://api.card-gorilla.com:8080/storage/card/508/card_img/21197/508card.png',
+            cardTopCategory: [
+                {
+                    label: '교통',
+                },
+                {
+                    label: '교통',
+                },
+                {
+                    label: '교통',
+                },
+            ],
+        },
+    ],
+};
+
 interface IBigDataRecommendingProps {
     favCategory: String;
     items: CardData[];
