@@ -69,7 +69,7 @@ public class TeamService {
 
     private static final LocalDate MONDAY_OF_NEXT_WEEK = MONDAY_OF_THIS_WEEK.plusDays(7);
 
-    private static final LocalDate WEDNESDAY_OF_THIS_WEEK = TODAY.with(DayOfWeek.WEDNESDAY);
+    private static final LocalDate TUESDAY_OF_THIS_WEEK = TODAY.with(DayOfWeek.TUESDAY);
 
     @Transactional
     public TeamDetailResponse createTeam(TeamCreateServiceRequest request) {
@@ -638,7 +638,7 @@ public class TeamService {
         }
 
         // 원하는 조건(이번주 월요일)에 해당하는 모든 팀의 랭킹 기록 조회
-        List<TeamRankHistory> histories = teamRankHistoryRepository.findByRankDate(WEDNESDAY_OF_THIS_WEEK);
+        List<TeamRankHistory> histories = teamRankHistoryRepository.findByRankDate(TUESDAY_OF_THIS_WEEK);
 
         // 조회된 히스토리를 rankNum 기준으로 오름차순 정렬하고 TeamRankHistoryResponse로 변환
         List<TeamRankHistoryResponse> sortedResponses = histories.stream()
