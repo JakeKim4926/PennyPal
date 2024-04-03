@@ -30,15 +30,15 @@ export function SignUp() {
         };
     }, []);
     return (
-        <div className="signup container">
+        <div className="welcomebox__container container">
             <div className="welcomebox">
-                <p className="welcomebox__text">WELCOME TO PENNYPAL !</p>
-                <div className="welcomebox__logo">
+                <div className="welcomebox__top">
+                    <p className="welcomebox__top-title">WELCOME TO PENNYPAL !</p>
                     <img src="assets/image/main-logo-colored.svg" />
+                    <p className="welcomebox__top-sub">SIGN UP</p>
                 </div>
-                <p className="welcomebox__singup">SIGN UP</p>
+                <div className="signupStep">{renderCurrentStep()}</div>
             </div>
-            <div className="signup-process container">{renderCurrentStep()}</div>
         </div>
     );
 }

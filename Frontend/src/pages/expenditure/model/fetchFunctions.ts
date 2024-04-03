@@ -213,13 +213,13 @@ export const fetchDailyExpense = async (): Promise<{ expenseDate: string; expens
         const response = await customAxios.get(`/team/expenditure/${memberId}`);
         console.log(response.data);
         if (response.data && response.data.data) {
-            alert('일간지출조회 성공');
+            // alert('일간지출조회 성공');
             return response.data.data; // 실제 지출 데이터를 반환합니다.
         }
         return [];
     } catch (error) {
         console.error(error);
-        alert('일간지출조회 실패');
+        // alert('일간지출조회 실패');
         return [];
     }
 };

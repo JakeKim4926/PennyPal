@@ -16,15 +16,15 @@ export function Agreement() {
     };
 
     return (
-        <div>
-            <div>
-                Agreement
-                <div className="contentCard">
-                    <div>
-                        <p>서비스 이용을 위한</p>
-                        <p>사용자의 계좌내역 수집 및 활용에 동의합니다.</p>
+        <div className="agreement">
+            <div className="agreement__top">
+                <div className="agreement__top-title">Agreement</div>
+                <div className="agreement__top-content">
+                    <div className="agreement__top-content-top">
+                        <div>서비스 이용을 위한</div>
+                        <div>사용자의 계좌내역 수집 및 활용에 동의합니다.</div>
                     </div>
-                    <div>
+                    <div className="agreement__top-content-middle">
                         <img src="assets/image/icons_mini/handShake.svg" />
                         <div>
                             <p>수집항목</p>
@@ -33,7 +33,7 @@ export function Agreement() {
                             </ul>
                         </div>
                     </div>
-                    <div>
+                    <div className="agreement__top-content-bottom">
                         <img src="assets/image/icons_mini/handShake.svg" />
                         <div>
                             <p>이용목적</p>
@@ -46,10 +46,23 @@ export function Agreement() {
                         </div>
                     </div>
                 </div>
-                <input type="checkbox" id="myCheckbox" checked={isChecked} onChange={handleChange} />
-                <label htmlFor="myCheckbox">개인정보 수집 및 활용을 위한 위 사항에 동의합니다.</label>
+                <div className="agreement__top-input">
+                    <input type="checkbox" id="myCheckbox" checked={isChecked} onChange={handleChange} />
+                    <label htmlFor="myCheckbox">개인정보 수집 및 활용을 위한 위 사항에 동의합니다.</label>
+                </div>
             </div>
-            <Button child={'NEXT'} color={'light'} disabled={!isChecked} onClick={handleNext} />
+            <button
+                className="agreement-button button"
+                disabled={!isChecked}
+                onClick={() => {
+                    if (isChecked) {
+                        handleNext();
+                    }
+                }}
+            >
+                NEXT
+            </button>
+            {/* <Button child={'NEXT'} color={'light'} disabled={!isChecked} onClick={handleNext} /> */}
         </div>
     );
 }

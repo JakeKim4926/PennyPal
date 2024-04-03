@@ -1,37 +1,6 @@
-@mixin inputArea {
-    &-title {
-        font-family: 'Wanted-ExtraBlack';
-        color: $gray;
-    }
+@import '@/style/abstract/mixin';
 
-    &-sub {
-        display: flex;
-        position: relative;
-
-        img {
-            position: absolute;
-            left: 0.7rem;
-            top: 50%;
-            transform: translateY(-50%);
-            height: 1rem;
-        }
-
-        input {
-            padding-left: 2rem;
-            border-radius: 0.5rem;
-            font-size: 1rem;
-            font-family: 'Wanted-Bold';
-            height: 3rem;
-            width: 22rem;
-
-            &:focus {
-                background-color: $light;
-            }
-        }
-    }
-}
-
-.signin {
+.welcomebox {
     background-color: $bright;
     box-shadow: 0 0 1rem $gray;
     padding: 2rem;
@@ -39,6 +8,7 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    margin: 2rem 0;
 
     &__container {
         background-image: url('@/style/abstract/background.svg');
@@ -46,7 +16,7 @@
         position: relative;
 
         ::after {
-            position: absolute;
+            position: fixed;
             background-color: $bright;
             z-index: -1;
             width: 100%;
@@ -60,26 +30,6 @@
         display: flex;
         align-items: center;
         justify-content: center;
-    }
-
-    &__top {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 0.3rem;
-
-        &-title {
-            color: $sub;
-            letter-spacing: 0.3rem;
-            font-family: 'Wanted-Bold';
-        }
-
-        &-sub {
-            color: $main;
-            font-family: 'Wanted-Bold';
-            font-size: 1.7rem;
-            letter-spacing: 0.3rem;
-        }
     }
 
     &__middle {
@@ -138,4 +88,8 @@
             }
         }
     }
+}
+
+.welcomebox {
+    @include welcomebox();
 }
