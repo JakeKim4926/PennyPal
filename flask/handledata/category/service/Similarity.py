@@ -52,7 +52,7 @@ class Similarity(object):
         top_n = 4
         # 먼저 사용자의 카테고리 부터 계산하자
         self.member_service.getMemberReceipts(index)
-        self.user_vector = self.member_service.user_vector
+        self.user_vector = self.member_service.user_vector / 100.0
 
         # 유사도를 저장할 리스트 초기화
         similarities = []
