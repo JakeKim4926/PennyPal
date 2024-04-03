@@ -1,22 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { CardListUp, StockListUp } from '@/pages/finance/model';
+import { CardListUp, StockListUp, StockSubDetail } from '@/pages/finance/model';
 import InfiniteScroll from 'react-infinite-scroll-component';
-// interface Stock {
-//     stockId: number;
-//     crno: string;
-//     isinCd: string;
-//     stckIssuCmpyNm: string;
-//     basDt: number[];
-//     stckGenrDvdnAmt: number;
-// }
-// interface Card {
-//     cardName: string;
-//     cardCompany: string;
-//     startCardRequired: number;
-//     endCardRequired: number;
-//     startCardDomestic: number;
-//     endCardDomestic: number;
-// }
 
 interface Card {
     cardId: number;
@@ -39,10 +23,31 @@ interface Stock {
     basDt: number[];
     stckGenrDvdnAmt: number;
 }
+interface SubDetail {
+    basDt: string; // 기준일
+    srtnCd: string; // 단축코드
+    isinCd: string; // 국제증권식별번호
+    itmsNm: string; // 항목명, 예: "한국앤컴퍼니"
+    mrktCtg: string; // 시장 카테고리, 예: "KOSPI"
+    clpr: string; // 종가
+    vs: string; // 변동
+    fltRt: string; // 변동률
+    mkp: string; // 시가
+    hipr: string; // 고가
+    lopr: string; // 저가
+    trqu: string; // 거래량
+    trPrc: string; // 거래 가격
+    lstgStCnt: string; // 상장 주식 수
+    mrktTotAmt: string; // 시장 총액
+}
 
+interface StockWithDetail {
+    stock: Stock;
+    subDetail?: SubDetail; // 세부 정보는 선택적으로 존재할 수 있습니다.
+}
 export function FinanceDetail() {
     const [category, setCategory] = useState<'card' | 'stock'>('card');
-    const [stockItems, setStockItems] = useState<Stock[]>([]);
+    const [stockItems, setStockItems] = useState<StockWithDetail[]>([]);
     const [cardItems, setCardItems] = useState<Card[]>([]);
     const [page, setPage] = useState(0);
     const [hasMore, setHasMore] = useState(true);
@@ -72,11 +77,24 @@ export function FinanceDetail() {
 
         if (category === 'stock') {
             try {
-                const response = await StockListUp(0, 10, word, startPrice, endPrice); // page와 size를 고정값으로 사용
-                setStockItems((prevItems) => [...prevItems, ...response.data.data.content]);
-                if (response.data.data.content.length < 10) setHasMore(false);
-            } catch (error) {
-                console.error('Fetching stock items failed', error);
+                const res = await StockListUp(0, 20, word, startPrice, endPrice);
+                if (res.data.code === 200) {
+                    let stocks: StockWithDetail[] = res.data.data.content.map((stock: Stock) => ({
+                        stock: stock,
+                    }));
+                    // stocks 배열의 각 요소에 대해 비동기 요청을 수행
+                    for (let i = 0; i < stocks.length; i++) {
+                        const res2 = await StockSubDetail(stocks[i].stock.isinCd);
+                        if (res2.data && res2.data.item.length > 0) {
+                            // 구조분해 할당을 사용해 stocks 배열의 i번째 요소의 subDetail 프로퍼티에 할당
+                            stocks[i].subDetail = res2.data.item[0];
+                        }
+                    }
+                    // 모든 요청이 완료된 후, 업데이트된 stocks 배열로 상태를 업데이트
+                    setStockItems((prevItems) => [...prevItems, ...stocks]);
+                }
+            } catch (err) {
+                console.error(err);
             }
         } else if (category === 'card') {
             try {
@@ -247,18 +265,30 @@ export function FinanceDetail() {
                     hasMore={hasMore}
                     loader={<h4>Loading...</h4>}
                     endMessage={<h2>더 표시할 데이터가 없어요ㅠㅠ</h2>}
-                    scrollThreshold={0.8}
+                    scrollThreshold={category === 'card' ? 0.8 : 0.6}
                     scrollableTarget="infiniteScroll"
                 >
-                    {category === 'stock' &&
-                        stockItems.map((item) => (
-                            <div key={item.stockId}>
-                                {item.stckIssuCmpyNm} : {item.stckGenrDvdnAmt.toLocaleString()} 원
-                            </div>
-                        ))}
+                    {category === 'stock' && (
+                        <div className="stock__content">
+                            {stockItems.map((stock, index) => (
+                                <div key={index} className="stock__content--item">
+                                    <div className="stock__content--companyName">{stock.stock.stckIssuCmpyNm}</div>
+                                    <div className="stock__content--info">
+                                        {stock.stock.stckGenrDvdnAmt.toLocaleString()} 원
+                                    </div>
+                                    <div className="stock__content--info">
+                                        {parseInt(stock.subDetail?.mkp ?? '0', 10).toLocaleString()}원
+                                    </div>
+                                    <div className="stock__content--info">
+                                        {parseInt(stock.subDetail?.mrktTotAmt ?? '0', 10).toLocaleString()}원
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                     {category === 'card' &&
-                        cardItems.map((item) => (
-                            <div key={item.cardId}>
+                        cardItems.map((item, index) => (
+                            <div key={index}>
                                 <div className="item">
                                     <div className="image-container">
                                         <img src={item.cardImg} onLoad={adjustImageStyle} />
