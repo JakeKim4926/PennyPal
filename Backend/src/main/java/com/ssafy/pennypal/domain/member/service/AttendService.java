@@ -37,7 +37,13 @@ public class AttendService {
             Attend save = attendRepository.save(attend);
 
             member.setAttendId(save.getAttendId());
-            member.setMemberAttendance(1);
+
+            Integer attendance = member.getMemberAttendance();
+            member.setMemberAttendance(attendance + 1);
+
+            Integer point = member.getMemberPoint();
+            member.setMemberPoint(point + 50);
+
             memberRepository.save(member);
 
             return ApiResponse.ok("출석 인증에 성공하셨습니다.");

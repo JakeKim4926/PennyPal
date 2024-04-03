@@ -3,6 +3,7 @@ import { getPurchaseHistory } from '../../api/getPurchaseHistory';
 import { getCookie } from '@/shared';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStore } from '@fortawesome/free-solid-svg-icons';
+import { CgSmileNone } from 'react-icons/cg';
 
 type Record = {
     orderId: number;
@@ -48,14 +49,23 @@ export function MarketReceiptContent() {
             </div>
             <div className="marketReceiptContent__main">
                 <ul className="marketReceiptContent__main-list">
-                    {record.map((it) => (
-                        <li className="marketReceiptContent__main-list-item">
-                            <div>{it.orderDate}</div>
-                            <div>{it.productName}</div>
-                            <div>{it.buyQuantity}</div>
-                            <div>{it.priceSum}</div>
-                        </li>
-                    ))}
+                    {record.length > 0 ? (
+                        record.map((it) => (
+                            <li className="marketReceiptContent__main-list-item">
+                                <div>{it.orderDate}</div>
+                                <div>{it.productName}</div>
+                                <div>{it.buyQuantity}</div>
+                                <div>{it.priceSum}</div>
+                            </li>
+                        ))
+                    ) : (
+                        <div className="marketReceiptContent__main-list-none">
+                            <div className="marketReceiptContent__main-list-none-icon">
+                                <CgSmileNone />
+                            </div>
+                            <div className="marketReceiptContent__main-list-none-text">아직 구매 내역이 없습니다.</div>
+                        </div>
+                    )}
                 </ul>
             </div>
             <div className="marketReceiptContent__footer">
@@ -63,18 +73,14 @@ export function MarketReceiptContent() {
                 <div className="marketReceiptContent__footer-total">
                     <div className="marketReceiptContent__footer-total-title">합계</div>
                     <div className="marketReceiptContent__footer-total-value">
-                        [P] {record.reduce((prev, cur) => prev + cur.priceSum, 0)}
+                        <img src="assets/image/point.svg" height={20} />
+                        <div>{record.reduce((prev, cur) => prev + cur.priceSum, 0).toLocaleString()}</div>
                     </div>
                 </div>
                 <div className="line">=====================================================================</div>
             </div>
             <div className="marketReceiptContent__pagenation">
-                <div className="marketReceiptContent__pagenation-box">
-                    <div>1</div>
-                    <div>2</div>
-                    <div>3</div>
-                    <div>4</div>
-                </div>
+                <div className="marketReceiptContent__pagenation-box"></div>
             </div>
             <div className="marketReceiptContent__deco top"></div>
             <div className="marketReceiptContent__deco bottom"></div>

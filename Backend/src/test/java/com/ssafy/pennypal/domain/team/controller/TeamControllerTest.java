@@ -953,36 +953,42 @@ public class TeamControllerTest extends RestDocsSupport {
                         .rankDate(LocalDate.of(2024, 4, 1))
                         .rankNum(1)
                         .teamScore(600)
+                        .rewardPoint(1000)
                         .build(),
                 TeamRankHistoryResponse.builder()
                         .teamName("팀이름2")
                         .rankDate(LocalDate.of(2024, 4, 1))
                         .rankNum(2)
                         .teamScore(500)
+                        .rewardPoint(500)
                         .build(),
                 TeamRankHistoryResponse.builder()
                         .teamName("팀이름3")
                         .rankDate(LocalDate.of(2024, 4, 1))
                         .rankNum(3)
                         .teamScore(400)
+                        .rewardPoint(400)
                         .build(),
                 TeamRankHistoryResponse.builder()
                         .teamName("팀이름4")
                         .rankDate(LocalDate.of(2024, 4, 1))
                         .rankNum(4)
                         .teamScore(300)
+                        .rewardPoint(300)
                         .build(),
                 TeamRankHistoryResponse.builder()
                         .teamName("팀이름5")
                         .rankDate(LocalDate.of(2024, 4, 1))
                         .rankNum(5)
                         .teamScore(200)
+                        .rewardPoint(200)
                         .build(),
                 TeamRankHistoryResponse.builder()
                         .teamName("팀이름6")
                         .rankDate(LocalDate.of(2024, 4, 1))
                         .rankNum(6)
                         .teamScore(100)
+                        .rewardPoint(0)
                         .build()
         );
 
@@ -992,6 +998,7 @@ public class TeamControllerTest extends RestDocsSupport {
                         .myTeamName("팀이름2")
                         .myTeamScore(500)
                         .myTeamRankNum(2)
+                        .myTeamRewardPoint(500)
                         .build()
         );
 
@@ -1031,6 +1038,8 @@ public class TeamControllerTest extends RestDocsSupport {
                                         .description("랭킹 순위"),
                                 fieldWithPath("data.content[].teamRanks[].teamScore").type(JsonFieldType.NUMBER)
                                         .description("팀 점수"),
+                                fieldWithPath("data.content[].teamRanks[].rewardPoint").type(JsonFieldType.NUMBER)
+                                        .description("보상 포인트"),
 
                                 fieldWithPath("data.content[].myTeamName").type(JsonFieldType.STRING)
                                         .description("조회하는 유저의 팀 이름"),
@@ -1038,6 +1047,8 @@ public class TeamControllerTest extends RestDocsSupport {
                                         .description("조회하는 유저의 팀 순위"),
                                 fieldWithPath("data.content[].myTeamScore").type(JsonFieldType.NUMBER)
                                         .description("조회하는 유저의 팀 점수"),
+                                fieldWithPath("data.content[].myTeamRewardPoint").type(JsonFieldType.NUMBER)
+                                        .description("조회하는 유저의 팀 보상 포인트"),
 
 
                                 fieldWithPath("data.pageable").type(JsonFieldType.OBJECT)

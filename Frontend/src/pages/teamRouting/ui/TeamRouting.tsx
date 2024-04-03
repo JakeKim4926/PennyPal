@@ -1,13 +1,12 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import { TeamInfo } from '../../teamInfo/index';
 import { Team } from '../../team/index';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/app/appProvider';
 import { getTeamInfo } from '../api/getTeamInfo';
-import { API_CACHE_DATA, USER_ID, getCookie } from '@/shared';
+import { getCookie } from '@/shared';
 import { useDispatch } from 'react-redux';
 import { setTeamInfo } from '../model/setTeamInfo';
-import { TeamRoutingInvitation } from './TeamRoutingInvitation.tsx/TeamRoutingInvitation';
 
 interface TeamInfoData {
     teamId?: number;
@@ -24,19 +23,17 @@ interface TeamInfoData {
 
 export function TeamRouting() {
     const dispatch = useDispatch();
-
-    const forceRender: boolean = useSelector((state: RootState) => state.forceRenderReducer.data);
     const teamInfo: any = useSelector((state: RootState) => state.setTeamInfoReducer.data);
 
+    const forceRender: boolean = useSelector((state: RootState) => state.forceRenderReducer.data);
     const memberId = getCookie('memberId');
+    const fetchData = useCallback((url: string) => getTeamInfo(`/team/${memberId}`), [memberId]);
 
     // fetchData: 해당 유저 팀 정보 가져오기
-    const fetchData = useCallback((url: string) => getTeamInfo(`/team/${memberId}`), [memberId]);
 
     useEffect(() => {
         // REQUEST_URL: 요청 주소
         const REQUEST_URL = `/team/${memberId}`;
-
         // 1-1. API 요청하기
         fetchData(REQUEST_URL)
             .then((res) => {
@@ -44,7 +41,7 @@ export function TeamRouting() {
                 dispatch(setTeamInfo(res.data.data));
             })
             .catch((err) => console.log(err));
-    }, [memberId, forceRender]);
+    }, [fetchData, forceRender]);
 
     return (
         <div className="teamRouting">

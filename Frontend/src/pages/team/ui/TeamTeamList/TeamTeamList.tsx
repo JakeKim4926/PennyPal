@@ -2,22 +2,9 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { TeamTeamListItem } from '@/pages/team/ui/TeamTeamListItem/TeamTeamListItem';
 import { TeamTeamListPagenation } from '@/pages/team/ui/TeamTeamListPagenation/TeamTeamListPagenation';
 import { getTeamList } from '@/pages/team/index';
+import { Team, TeamTeamListProps } from '@/entities/index';
 import { API_CACHE_DATA } from '@/shared'; // API 응답 데이터 캐싱에 사용할 MAP
 // API_CACHE_DATA: 페이지 변할 때 마다 API를 계속해서 요청하는 것 방지하기 위함
-
-type Team = {
-    teamId: number;
-    teamIsAutoConfirm: boolean;
-    teamLeaderNickname: string;
-    teamMembersNum: number;
-    teamName: string;
-    teamInfo: string;
-};
-
-type TeamTeamListProps = {
-    searchedPage: number;
-    keyword: string;
-};
 
 export const TeamTeamList = React.memo(({ searchedPage, keyword }: TeamTeamListProps) => {
     const [curPage, setCurPage] = useState<number>(searchedPage);

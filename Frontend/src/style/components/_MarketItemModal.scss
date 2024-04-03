@@ -10,9 +10,11 @@ $GAP: 20px;
 
     &__top {
         &-image {
-            background-color: $sub;
+            // background-color: $sub;
             height: 300px;
             border-radius: 20px;
+            display: flex;
+            justify-content: center;
         }
     }
 
@@ -27,6 +29,17 @@ $GAP: 20px;
             display: flex;
             flex-direction: column;
             gap: 5px;
+
+            &-name {
+                font-family: 'Wanted-Black';
+                font-size: 1.3rem;
+            }
+        }
+
+        &-right {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
         }
     }
 
@@ -34,6 +47,16 @@ $GAP: 20px;
         display: flex;
         flex-direction: column;
         gap: 5px;
+
+        &-type {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        &-exp {
+            display: flex;
+            gap: 0.5rem;
+        }
     }
 
     &__button {
@@ -42,5 +65,6 @@ $GAP: 20px;
         padding: 5px;
         border-radius: 10px;
         font-size: 20px;
+        text-align: center;
     }
 }

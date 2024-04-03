@@ -3,6 +3,9 @@ import { closeMarketItemModal } from '../../model';
 import { useEffect, useCallback } from 'react';
 import { purchaseItem } from '../../api/purchaseItem';
 import { getCookie } from '@/shared';
+import Swal from 'sweetalert2';
+import { forceRender } from '@/pages/teamRouting';
+
 type Product = {
     productBrand: string;
     productCategory: string;
@@ -37,6 +40,7 @@ export function MarketItemModal({
 
         return () => {
             window.removeEventListener('click', handleClick);
+            dispatch(forceRender());
         };
     });
 
@@ -45,7 +49,7 @@ export function MarketItemModal({
             <div className="marketItemModal contentCard">
                 <div className="marketItemModal__top">
                     <div className="marketItemModal__top-image">
-                        <img src={productImg}></img>
+                        <img src={productImg} height={300}></img>
                     </div>
                 </div>
                 <div className="marketItemModal__middle">
@@ -54,22 +58,46 @@ export function MarketItemModal({
                         <div className="marketItemModal__middle-left-name">{productName}</div>
                     </div>
 
-                    <div className="marketItemModal__middle-right">[P] {productPrice.toLocaleString()}</div>
+                    <div className="marketItemModal__middle-right">
+                        <img src={'assets/image/point.svg'} height={25} />
+                        <div> {productPrice.toLocaleString()}</div>
+                    </div>
                 </div>
                 <div className="marketItemModal__bottom">
-                    <div className="marketItemModal__bottom-type">유형 모바일교환권(기프티콘)</div>
-                    <div className="marketItemModal__bottom-exp">유효기간 1개월</div>
+                    <div className="marketItemModal__bottom-type">
+                        <img src={'assets/image/barcode.svg'} />
+                        <div>유형 모바일교환권(기프티콘)</div>
+                    </div>
+                    <div className="marketItemModal__bottom-exp">
+                        <img src={'assets/image/calander.svg'} />
+                        <div>유효기간 1개월</div>
+                    </div>
                 </div>
                 <button
                     className="marketItemModal__button button"
-                    onClick={async () => {
+                    onClick={() => {
                         const dto = {
-                            member: getCookie('memberId'),
-                            product: productId,
+                            memberId: getCookie('memberId'),
+                            productId: productId,
                             buyQuantity: 1,
                         };
-                        const res = await purchaseItem(dto).catch((err) => err);
-                        console.log(res);
+                        purchaseItem(dto)
+                            .then((res) => {
+                                if (res.status === 201) {
+                                    Swal.fire({
+                                        title: '상품 구매 완료',
+                                        text: `상품을 구매했습니다.`,
+                                        icon: `success`,
+                                    });
+                                }
+                            })
+                            .catch((err) =>
+                                Swal.fire({
+                                    title: '포인트 부족',
+                                    text: '상품 구매를 위한 포인트가 부족합니다.',
+                                    icon: 'warning',
+                                }),
+                            );
                     }}
                 >
                     PURCHASE
