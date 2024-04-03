@@ -275,17 +275,24 @@ public class TeamService {
             throw new IllegalArgumentException("대기 리스트에서 해당 유저를 찾을 수 없습니다.");
         } else {
 
-            team.getMembers().add(member);
-            team.getTeamWaitingList().remove(member);
-            teamRepository.save(team);
+            if (team.getMembers().size() < 6) {
 
-            chatRoom.getMembers().add(member);
-            chatRoomRepository.save(chatRoom);
+                team.getMembers().add(member);
+                team.getTeamWaitingList().remove(member);
+                teamRepository.save(team);
 
-            member.setMemberWaitingTeam(null);
-            member.setTeam(team);
-            member.setMemberChatRoom(chatRoom);
-            memberRepository.save(member);
+                chatRoom.getMembers().add(member);
+                chatRoomRepository.save(chatRoom);
+
+                member.setMemberWaitingTeam(null);
+                member.setTeam(team);
+                member.setMemberChatRoom(chatRoom);
+                memberRepository.save(member);
+
+            } else {
+                throw new IllegalArgumentException("팀 인원이 다 찼습니다.");
+
+            }
         }
     }
 
@@ -1391,7 +1398,7 @@ public class TeamService {
 
         List<ExpenseDto> result = new ArrayList<>();
 
-        for(Expense expense : allExpenses){
+        for (Expense expense : allExpenses) {
             ExpenseDto dto = ExpenseDto.builder()
                     .expenseDate(expense.getExpenseDate())
                     .expenseAmount(expense.getExpenseAmount())
