@@ -36,8 +36,11 @@ customAxios.interceptors.response.use(
     (error) => {
         if (error.response && error.response.status === 403) {
             //로그인 모달을 띄우거나, 로그인 페이지로 리다이렉트
-            alert('토큰이 만료되었습니다. 재로그인이 필요합니다.');
+            // alert('토큰이 만료되었습니다. 재로그인이 필요합니다.');
             // deleteCookie('memberToken');
+            // 에러403인경우 토큰이 만료되어서 재로그인을 필요로함.
+            //로그인 페이지로, 혹은 모달로 처리.  모달처리가 더 낫다. 작업중이던 페이지를 유지시키기위해서.
+            // 페이지로 구현한 SignIn.tsx를 모달로 가능??
         }
         return Promise.reject(error);
     },
@@ -57,10 +60,7 @@ dataAxios.interceptors.request.use(
     (error) => {
         // 요청 설정 중 오류가 발생한 경우 처리합니다.
         console.log(error);
-        // 에러403인경우 토큰이 만료되어서 재로그인을 필요로함.
 
-        //로그인 페이지로, 혹은 모달로 처리.  모달처리가 더 낫다. 작업중이던 페이지를 유지시키기위해서.
-        // 페이지로 구현한 SignIn.tsx를 모달로 가능??
         return Promise.reject(error);
     },
 );

@@ -2,9 +2,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import CardComponent from '@/pages/finance/ui/CardComponent/CardComponent';
 import StockComponent from '@/pages/finance/ui/StockComponent/StockComponent';
 import SavingsComponent from '@/pages/finance/ui/SavingsComponent/SavingsComponent';
-import { CardListUp, StockDetail, StockListUp } from '@/pages/finance/model';
+import { CardListUp, StockDetail, StockListUp, StockSubDetail } from '@/pages/finance/model';
 import { useNavigate } from 'react-router-dom';
 import { Chart, ChartConfiguration } from 'chart.js';
+import { PageHeader } from '@/shared';
 interface Stock {
     stockId: number;
     crno: string;
@@ -12,6 +13,28 @@ interface Stock {
     stckIssuCmpyNm: string;
     basDt: number[];
     stckGenrDvdnAmt: number;
+}
+interface SubDetail {
+    basDt: string; // 기준일
+    srtnCd: string; // 단축코드
+    isinCd: string; // 국제증권식별번호
+    itmsNm: string; // 항목명, 예: "한국앤컴퍼니"
+    mrktCtg: string; // 시장 카테고리, 예: "KOSPI"
+    clpr: string; // 종가
+    vs: string; // 변동
+    fltRt: string; // 변동률
+    mkp: string; // 시가
+    hipr: string; // 고가
+    lopr: string; // 저가
+    trqu: string; // 거래량
+    trPrc: string; // 거래 가격
+    lstgStCnt: string; // 상장 주식 수
+    mrktTotAmt: string; // 시장 총액
+}
+
+interface StockWithDetail {
+    stock: Stock;
+    subDetail?: SubDetail; // 세부 정보는 선택적으로 존재할 수 있습니다.
 }
 interface StockTransaction {
     basDt: string;
@@ -32,7 +55,7 @@ interface Card {
 }
 
 export function Finance() {
-    const [data, setData] = useState<Stock[]>([]);
+    const [data, setData] = useState<StockWithDetail[]>([]);
     const [data1, setData1] = useState<Card[]>([]);
     const navigate = useNavigate();
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -185,13 +208,16 @@ export function Finance() {
             try {
                 const res = await StockListUp();
                 if (res.data.code === 200) {
-                    setData(res.data.data.content);
+                    const stocks: StockWithDetail[] = res.data.data.content.map((stock: Stock) => ({
+                        stock: stock,
+                    }));
+                    setData(stocks);
                 }
             } catch (err) {
                 console.error(err);
             }
             try {
-                const res = await CardListUp();
+                const res = await CardListUp(0, 4);
                 if (res.data.code === 200) {
                     setData1(res.data.data.content);
                 }
@@ -203,33 +229,41 @@ export function Finance() {
         fetchData();
     }, []);
     useEffect(() => {
-        const fetchDetail = async () => {
+        const fetchSubDetail = async () => {
             try {
                 for (const el of data) {
-                    const res = await StockDetail(el.stockId);
-                    console.log(res.data);
+                    const res = await StockSubDetail(el.stock.isinCd);
+                    console.log(res);
                 }
             } catch (err) {
                 console.log(err);
             }
         };
-        fetchDetail();
+
+        fetchSubDetail();
     }, [data]);
     return (
-        <div className="container">
-            <div className="container">
-                <div className="contentCard">
-                    <div className="contentCard__title">소비도 투자도 저축도 현명하게</div>
-                </div>
+        <div className="container bg-grey">
+            <div className="finance">
+                <PageHeader page="finance"></PageHeader>
+                <br />
                 <div className="card">
-                    <a onClick={() => navigate('/financedetail')}>더보기</a>
+                    <div className="stock__header">
+                        <p>다양한 혜택 분야!</p>
+                        <h2>혜택 좋은 카드 어때요?</h2>
+                    </div>
+                    <div className="finance__morebutton">
+                        <a onClick={() => navigate('/financedetail')}>
+                            <img src="@/../assets/image/arrowHorizontal.svg" />
+                        </a>
+                    </div>
                     <div className="card__content">
                         {data1.map((card) => (
                             <div key={card.cardId} className="card__content--item">
                                 <div className="image-container">
                                     <img src={card.cardImg} onLoad={adjustImageStyle} />
                                 </div>
-                                <div>
+                                <div className="namebox">
                                     <h3>{card.cardName}</h3>
                                     <span>{card.cardCompany}</span>
                                 </div>
@@ -237,23 +271,30 @@ export function Finance() {
                         ))}
                     </div>
                 </div>
+                <br />
                 <div className="stock">
                     <div className="stock__header">
                         <p>주식은 단타가 아냐</p>
                         <h2>배당률 좋은 주식 어때요?</h2>
-                        <a onClick={() => navigate('/financedetail')}>더보기</a>
+                    </div>
+                    <div className="finance__morebutton">
+                        <a onClick={() => navigate('/financedetail')}>
+                            <img src="@/../assets/image/arrowHorizontal.svg" />
+                        </a>
                     </div>
                     <div className="stock__content">
                         {data.map((stock) => (
                             <div
-                                key={stock.stockId}
+                                key={stock.stock.stockId}
                                 className="stock__content--item"
-                                onMouseEnter={() => handleMouseEnter(stock.stockId)} // 마우스 호버 이벤트 핸들러
+                                onMouseEnter={() => handleMouseEnter(stock.stock.stockId)} // 마우스 호버 이벤트 핸들러
                             >
-                                <div className="stock__content--companyName">{stock.stckIssuCmpyNm}</div>
+                                <div className="stock__content--companyName">{stock.stock.stckIssuCmpyNm}</div>
                                 <div className="stock__content--info">
-                                    <span>배당금: {stock.stckGenrDvdnAmt.toLocaleString()} 원/</span>
-                                    <span>기준일: {stock.basDt}</span>
+                                    <span>배당금: {stock.stock.stckGenrDvdnAmt.toLocaleString()} 원</span>
+                                </div>
+                                <div className="stock__content--info">
+                                    <span>기준일: {stock.stock.basDt}</span>
                                 </div>
                             </div>
                         ))}

@@ -24,16 +24,11 @@
     gap: 20px; /* 이미지와 텍스트 사이의 간격 */
 }
 
-// .item img {
-//     //     width: 200px; /* 너비를 200px로 고정 */
-//     //     height: auto; /* 높이를 자동으로 조절하여 비율 유지 */
-//     // object-fit: cover; /* 이미지 비율을 유지하면서 요소의 크기에 맞춤 */
-// }
 .image-container {
-    width: 200px; /* 원하는 크기로 설정 */
-    height: 200px; /* 원하는 크기로 설정, 원 모양을 만들기 위해 너비와 높이가 같아야 함 */
+    width: 180px; /* 원하는 크기로 설정 */
+    height: 180px; /* 원하는 크기로 설정, 원 모양을 만들기 위해 너비와 높이가 같아야 함 */
     border-radius: 50%; /* 원형으로 만듦 */
-    background-color: #f0f0f0; /* 옅은 회색 배경 */
+    background-color: #aaaaaa; /* 옅은 회색 배경 */
     display: flex;
     align-items: center; /* 세로 중앙 정렬 */
     justify-content: center; /* 가로 중앙 정렬 */
@@ -68,12 +63,68 @@
 
 .card__content {
     display: flex; /* 플렉스박스 레이아웃 적용 */
-    flex-wrap: wrap; /* 내용이 넘칠 경우 다음 줄로 넘김 */
+    // flex-wrap: wrap; /* 내용이 넘칠 경우 다음 줄로 넘김 */
     gap: 20px; /* 아이템 간격 설정 */
     justify-content: center; /* 가운데 정렬 */
     align-items: center; /* 세로 방향 가운데 정렬 */
+    &--item {
+        .namebox {
+            display: flex;
+            flex-direction: column; // 아이템을 세로로 나열
+            align-items: center; // 아이템을 가로축(center)에 정렬
+            justify-content: center; // 아이템을 세로축(center)에 정렬 (필요한 경우)
+        }
+        &:hover .image-container {
+            background-color: #88ba53;
+        }
+    }
 }
 .card {
-    transform: scale(0.8);
+    transform: scale(1);
     transform-origin: center; /* 축소 기준점을 설정합니다 (예: 왼쪽 상단) */
+}
+.finance {
+    width: 50rem;
+    max-width: 55rem;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    gap: 20px;
+    padding-bottom: 20px;
+
+    &__container {
+        background-color: $black;
+        width: 100%;
+    }
+    &__morebutton {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end; // 우측 정렬
+        gap: 20px;
+        a {
+            &:hover {
+                cursor: pointer; // 마우스 호버 시 손가락 모양으로 변경
+            }
+        }
+    }
+}
+.bg-grey {
+    background-color: #eeeeee;
+}
+.stock__content {
+    background-color: #fcfcfc;
+    border-radius: 20px;
+    padding: 10px 20px;
+    &--item {
+        display: flex; // Flexbox 레이아웃을 활성화합니다.
+        flex-wrap: wrap; // 요소들이 너비를 초과할 경우 다음 줄로 넘깁니다.
+        justify-content: space-between; // 요소들 사이에 가능한 많은 공간을 둡니다.
+        align-items: center; // 요소들을 세로 중앙에 정렬합니다.
+        padding: 10px 20px;
+        border-radius: 20px;
+        transition: background-color 0.3s ease-in-out;
+        &:hover {
+            background-color: #88ba53;
+        }
+    }
 }
