@@ -1,4 +1,4 @@
-$BORDER_RADIUS: 10px; 
+$BORDER_RADIUS: 10px;
 $PADDING: 10px;
 $LETTER_SPACING: 2px;
 
@@ -6,22 +6,28 @@ $LETTER_SPACING: 2px;
     display: flex;
     justify-content: space-between;
 
-    div, button {
+    div,
+    button {
         font-family: 'Wanted-Medium';
         letter-spacing: $LETTER_SPACING;
     }
 
     &__point {
         display: flex;
-        
+        align-items: center;
+
         &-title {
             padding: $PADDING;
             background-color: $gray;
             border-top-left-radius: $BORDER_RADIUS;
             border-bottom-left-radius: $BORDER_RADIUS;
             color: $bright;
+
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
         }
-        
+
         &-value {
             padding: $PADDING;
             background-color: $bright;
@@ -29,10 +35,10 @@ $LETTER_SPACING: 2px;
             border-bottom-right-radius: $BORDER_RADIUS;
         }
     }
-    
+
     &__search {
         display: flex;
-        
+
         &-input {
             background-color: $bright;
             border: none;
@@ -41,7 +47,7 @@ $LETTER_SPACING: 2px;
             border-bottom-left-radius: $BORDER_RADIUS;
             font-size: 16px;
         }
-        
+
         &-button {
             background-color: $gray;
             border: none;
@@ -54,14 +60,14 @@ $LETTER_SPACING: 2px;
     }
 
     &__record {
-        
+        display: flex;
+        align-items: center;
         &-item {
             background-color: $gray;
             padding: $PADDING;
             border-radius: $BORDER_RADIUS;
             color: $bright;
             border: none;
-            height: 100%;
             cursor: pointer;
         }
     }
