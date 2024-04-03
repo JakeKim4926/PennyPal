@@ -204,8 +204,7 @@ export const fetchDailyExpense = async (): Promise<{ expenseDate: string; expens
     const memberId = getCookie('memberId');
 
     if (!memberId) {
-        console.error('로그인이 필요합니다.');
-        alert('로그인 필요');
+        console.error('일간지출조회는 로그인 필요.');
         return [];
     }
 
@@ -213,13 +212,11 @@ export const fetchDailyExpense = async (): Promise<{ expenseDate: string; expens
         const response = await customAxios.get(`/team/expenditure/${memberId}`);
         console.log(response.data);
         if (response.data && response.data.data) {
-            // alert('일간지출조회 성공');
             return response.data.data; // 실제 지출 데이터를 반환합니다.
         }
         return [];
     } catch (error) {
         console.error(error);
-        // alert('일간지출조회 실패');
         return [];
     }
 };
@@ -298,7 +295,6 @@ export const fetchRecommendedCards = async (): Promise<Card[]> => {
 
     try {
         const response = await dataAxios.get('/card/recommend', { params: { memberIndex } });
-        console.log(response.data);
 
         const dataWithCardId = response.data.map((item: any, index: number) => ({
             ...item,

@@ -36,6 +36,8 @@
 @import '@/style/components/SignupForm';
 @import '@/style/components/Agreement';
 @import '@/style/components/SignupDone';
+@import '@/style/components/Loading';
+@import '@/style/components/FinanceDetail';
 
 @import '@/style/pages/SignUp';
 @import '@/style/pages/TeamInfo';
@@ -43,6 +45,7 @@
 @import '@/style/pages/SignIn';
 @import '@/style/pages/Market';
 @import '@/style/pages/Ranking';
+
 @import '@/style/pages/Expenditure';
 @import '@/style/components/Expenditure/ExpenditureWeekly';
 @import '@/style/components/Expenditure/ExpenditureWeeklyDaily';
@@ -50,4 +53,4 @@
 @import '@/style/components/Expenditure/ExpenditureAnalyze';
 @import '@/style/components/Expenditure/ExpenditureRecommend';
 @import '@/style/pages/Main';
-@import '@/style/pages/FinanceDetail';
+@import '@/style/pages/Finance';

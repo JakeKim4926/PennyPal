@@ -1,0 +1,70 @@
+.financeDetail {
+    width: 40rem;
+
+    &__container {
+        display: flex;
+        justify-content: center;
+
+        width: 100%;
+    }
+
+    &__inputList {
+        background-color: $light;
+        padding: 1rem;
+        border-radius: 1rem;
+
+        &-main {
+        }
+
+        &-sub {
+            display: flex;
+            justify-content: space-around;
+
+            input {
+                width: 5rem;
+            }
+        }
+    }
+
+    &__tabButton {
+        display: flex;
+        justify-content: space-around;
+        font-family: 'Wanted-Bold';
+    }
+
+    &__inputList {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+
+        &-main {
+            &-input {
+                width: 100%;
+            }
+        }
+
+        &-sub {
+            display: flex;
+
+            &-company {
+                display: flex;
+            }
+
+            &-req {
+                display: flex;
+            }
+
+            &-fee {
+                display: flex;
+            }
+        }
+    }
+
+    .cardItem {
+        display: flex;
+
+        &__content {
+            display: flex;
+        }
+    }
+}
