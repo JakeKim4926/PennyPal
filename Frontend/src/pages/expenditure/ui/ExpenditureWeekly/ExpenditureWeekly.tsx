@@ -83,6 +83,7 @@ export function ExpenditureWeekly() {
         };
 
         loadExpense();
+        checkAttendanceState();
     }, []);
 
     const [coverVisible, setCoverVisible] = useState(true); // 가림막 div의 표시 상태

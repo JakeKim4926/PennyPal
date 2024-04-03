@@ -39,7 +39,7 @@ export const fetchMemberAttendance = async (): Promise<void> => {
         // setCoverVisible(false); // 이 줄은 setCoverVisible이 정의된 컴포넌트의 컨텍스트 내에서 실행되어야 함
     } catch (error) {
         console.error('출석 인증 중 오류 발생:', error);
-        alert('출석 인증 중 오류가 발생했습니다. 다시 시도해주세요.');
+        alert('출석 인증 중 오류가 발생했습니다. 새로고침 후 다시 시도해주세요.');
     }
 };
 
@@ -66,7 +66,6 @@ export const fetchBankKey = async (): Promise<void> => {
 
     if (!memberId) {
         console.error('로그인이 필요합니다.');
-        alert('로그인 필요');
         return;
     }
 
@@ -74,10 +73,8 @@ export const fetchBankKey = async (): Promise<void> => {
         const memberEmail = await fetchMemberEmail(memberId.toString());
         const response = await customAxios.get(`/bank/user/key/${memberEmail}`);
         console.log(response.data);
-        alert('은행키 조회 성공');
     } catch (error) {
         console.error(error);
-        alert('은행키 조회 실패');
     }
 };
 
@@ -87,7 +84,6 @@ export const fetchAccountList = async (): Promise<string[]> => {
 
     if (!memberId) {
         console.error('로그인이 필요합니다.');
-        alert('로그인 필요');
         return [];
     }
 
@@ -98,12 +94,10 @@ export const fetchAccountList = async (): Promise<string[]> => {
         const accountNumbers = response.data.data.rec.map((record: { accountNo: string }) => record.accountNo);
 
         console.log(response.data);
-        alert('계좌목록 불러오기 성공');
 
         return accountNumbers;
     } catch (error) {
         console.error(error);
-        alert('계좌목록 불러오기 실패');
         return [];
     }
 };
@@ -123,7 +117,6 @@ export const fetchTodayAccountTransactions = async (): Promise<void> => {
 
         const accountNumbers = await fetchAccountList();
         if (accountNumbers.length === 0) {
-            console.log('계좌 번호를 불러올 수 없습니다.');
             return;
         }
         const accountNo = accountNumbers[0];
@@ -140,10 +133,8 @@ export const fetchTodayAccountTransactions = async (): Promise<void> => {
 
         const response = await customAxios.post('/bank/user/account/transaction', requestData);
         console.log(response.data);
-        alert('내역을 불러왔습니다!');
     } catch (error) {
         console.error(error);
-        alert('계좌 불러오기 중 오류가 발생했습니다. 다시 시도해주세요.');
     }
 };
 
@@ -187,7 +178,6 @@ export const fetchAccountTransactions = async (): Promise<Expense[]> => {
 
         const response = await customAxios.post('/bank/user/account/transaction', requestData);
         console.log(response.data);
-        alert('내역을 불러왔습니다!');
 
         const expenses: Expense[] = response.data.data.rec.map((item: any) => ({
             transactionUniqueId: parseInt(item.transactionUniqueNo, 10),
@@ -197,11 +187,39 @@ export const fetchAccountTransactions = async (): Promise<Expense[]> => {
             transactionBalance: item.transactionBalance,
         }));
 
-        alert('내역 데이터를 가져왔습니다!');
         return expenses;
     } catch (error) {
         console.error(error);
-        alert('계좌 불러오기 중 오류가 발생했습니다. 다시 시도해주세요.');
+        return [];
+    }
+};
+
+// 일간 지출 조회
+export interface DailyExpense {
+    expenseDate: string;
+    expenseAmount: number;
+}
+
+export const fetchDailyExpense = async (): Promise<{ expenseDate: string; expenseAmount: number }[]> => {
+    const memberId = getCookie('memberId');
+
+    if (!memberId) {
+        console.error('로그인이 필요합니다.');
+        alert('로그인 필요');
+        return [];
+    }
+
+    try {
+        const response = await customAxios.get(`/team/expenditure/${memberId}`);
+        console.log(response.data);
+        if (response.data && response.data.data) {
+            alert('일간지출조회 성공');
+            return response.data.data; // 실제 지출 데이터를 반환합니다.
+        }
+        return [];
+    } catch (error) {
+        console.error(error);
+        alert('일간지출조회 실패');
         return [];
     }
 };
@@ -221,21 +239,26 @@ export interface MemberCategoryPercentage {
     category_travel: number;
 }
 
-export const fetchExpensePie = async (): Promise<void> => {
+interface ExpensePieResponse {
+    memberCategoryPercentage: {
+        [category: string]: number;
+    };
+}
+
+export const fetchExpensePie = async (): Promise<ExpensePieResponse | null> => {
     const memberIndex = getCookie('memberId');
 
     if (!memberIndex) {
         console.error('로그인이 필요합니다.');
-        return;
+        return null; // 로그인이 필요한 경우 null 반환
     }
 
     try {
-        const response = await dataAxios.get('/member/category', { params: { memberIndex } });
-        console.log(response.data);
-        return response.data;
+        const response = await dataAxios.get<ExpensePieResponse>('/member/category', { params: { memberIndex } });
+        return response.data; // 실제 데이터 반환
     } catch (error) {
         console.error(error);
-        return;
+        return null; // 오류 발생 시 null 반환
     }
 };
 
