@@ -2,8 +2,7 @@ import { useSignUpFormModel } from '@/pages/signup/model/useSignupFormmodel';
 import { Button } from '@/shared';
 import { useDispatch } from 'react-redux';
 import { setSignUpStep } from '@/pages/signup/model/signUpStepReducer';
-import { doSignUp } from '@/pages/signup/model/doSignUp';
-import { useEffect } from 'react';
+import { doSignUp, createUserKey } from '@/pages/signup/model/doSignUp';
 export function SignUpForm() {
     // 여기에 핸들러 함수 및 유효성 검사 로직 추가
     const {
@@ -31,8 +30,8 @@ export function SignUpForm() {
         };
         try {
             const response = await doSignUp(data);
-            console.log(response);
-            if (response.data.status === 'OK') {
+            const response2 = await createUserKey(data.memberEmail);
+            if (response.data.status === 'OK' && response2.data.code === 200) {
                 dispatch(setSignUpStep(2));
             } else alert(response.data.message); // 서버로부터 받은 응답 message 데이터 출력
         } catch (error) {

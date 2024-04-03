@@ -2,6 +2,8 @@ package com.ssafy.pennypal.domain.team.controller;
 
 import com.ssafy.pennypal.bank.service.api.BankServiceAPIImpl;
 import com.ssafy.pennypal.domain.chat.service.ChatService;
+import com.ssafy.pennypal.domain.member.dto.ExpenseDto;
+import com.ssafy.pennypal.domain.member.entity.Expense;
 import com.ssafy.pennypal.domain.team.dto.request.TeamBanishRequest;
 import com.ssafy.pennypal.domain.team.dto.request.TeamCreateRequest;
 import com.ssafy.pennypal.domain.team.dto.request.TeamRequestDTO;
@@ -129,6 +131,17 @@ public class TeamController {
         ////////////////////////////////////////////////////////////////
 
         return ApiResponse.ok(teamService.rankOfRealtime(teamId, pageable));
+    }
+
+    /**
+     * note : 시연 용 내 지출 내역 가져오기 api
+     */
+    @GetMapping("/expenditure/{memberId}")
+    public ApiResponse<List<ExpenseDto>> expenditure(@PathVariable Long memberId){
+
+        List<ExpenseDto> result = teamService.test3(memberId);
+
+        return ApiResponse.ok( result);
     }
 
     /**

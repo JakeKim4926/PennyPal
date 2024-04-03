@@ -12,6 +12,7 @@ import com.ssafy.pennypal.bank.dto.service.response.UserBankAccountsResponseServ
 import com.ssafy.pennypal.bank.service.api.BankServiceAPIImpl;
 import com.ssafy.pennypal.domain.chat.entity.ChatRoom;
 import com.ssafy.pennypal.domain.chat.repository.IChatRoomRepository;
+import com.ssafy.pennypal.domain.member.dto.ExpenseDto;
 import com.ssafy.pennypal.domain.member.dto.response.*;
 import com.ssafy.pennypal.domain.member.entity.Member;
 import com.ssafy.pennypal.domain.member.entity.Expense;
@@ -98,6 +99,7 @@ public class TeamService {
                 .teamName(request.getTeamName())
                 .teamIsAutoConfirm(request.getTeamIsAutoConfirm())
                 .teamLeaderId(request.getTeamLeaderId())
+                .teamInfo(request.getTeamInfo())
                 .member(member)
                 .build();
 
@@ -273,17 +275,24 @@ public class TeamService {
             throw new IllegalArgumentException("대기 리스트에서 해당 유저를 찾을 수 없습니다.");
         } else {
 
-            team.getMembers().add(member);
-            team.getTeamWaitingList().remove(member);
-            teamRepository.save(team);
+            if (team.getMembers().size() < 6) {
 
-            chatRoom.getMembers().add(member);
-            chatRoomRepository.save(chatRoom);
+                team.getMembers().add(member);
+                team.getTeamWaitingList().remove(member);
+                teamRepository.save(team);
 
-            member.setMemberWaitingTeam(null);
-            member.setTeam(team);
-            member.setMemberChatRoom(chatRoom);
-            memberRepository.save(member);
+                chatRoom.getMembers().add(member);
+                chatRoomRepository.save(chatRoom);
+
+                member.setMemberWaitingTeam(null);
+                member.setTeam(team);
+                member.setMemberChatRoom(chatRoom);
+                memberRepository.save(member);
+
+            } else {
+                throw new IllegalArgumentException("팀 인원이 다 찼습니다.");
+
+            }
         }
     }
 
@@ -611,15 +620,15 @@ public class TeamService {
             //다음 팀으로 넘어가기 전에 현재 팀의 점수 저장
             previousScore = currentTeamResponse.getTeamScore();
 
-            // 팀 랭킹 기록 저장
-            TeamRankHistory newRankHistory = TeamRankHistory.builder()
-                    .team(currentTeam)
-                    .rankDate(today)
-                    .rankNum(rankNum)
-                    .rewardPoint(pointsToAdd)
-                    .build();
+//            // 팀 랭킹 기록 저장
+//            TeamRankHistory newRankHistory = TeamRankHistory.builder()
+//                    .team(currentTeam)
+//                    .rankDate(today)
+//                    .rankNum(rankNum)
+//                    .rewardPoint(pointsToAdd)
+//                    .build();
 
-            currentTeam.getTeamRankHistories().add(newRankHistory);
+//            currentTeam.getTeamRankHistories().add(newRankHistory);
             teamRepository.save(currentTeam);
         }
 
@@ -1302,13 +1311,6 @@ public class TeamService {
             // 출석 점수 계산
             Integer attendanceScore = calculateAttendanceScore(totalAttendance, team.getMembers().size());
 
-            System.out.println("/////////////////////////////////////////////////////");
-            System.out.println("team Id = " + team.getTeamId());
-            System.out.println("savingScore = " + savingScore);
-            System.out.println("attendanceScore= " + attendanceScore);
-            System.out.println("/////////////////////////////////////////////////////");
-
-
             // 팀 점수 저장
             team.setTeamScore(savingScore + attendanceScore);
 
@@ -1384,6 +1386,30 @@ public class TeamService {
             team.setTeamScore(savingScore + attendanceScore);
 
         }
+    }
+
+    @Transactional
+    public List<ExpenseDto> test3(Long memberId) {
+
+        Member member = memberRepository.findByMemberId(memberId);
+
+        // 유저의 모든 지출 내역을 가져옴
+        List<Expense> allExpenses = expenseRepository.findByMember(member);
+
+        List<ExpenseDto> result = new ArrayList<>();
+
+        for (Expense expense : allExpenses) {
+            ExpenseDto dto = ExpenseDto.builder()
+                    .expenseDate(expense.getExpenseDate())
+                    .expenseAmount(expense.getExpenseAmount())
+                    .build();
+
+            result.add(dto);
+        }
+
+
+        return result;
+
     }
 
 }

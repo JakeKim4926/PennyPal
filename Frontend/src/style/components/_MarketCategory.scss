@@ -3,16 +3,22 @@
     justify-content: space-around;
     text-align: center;
 
+    .bold {
+        transition: all 0.2s;
+        div {
+            font-family: 'Wanted-Bold';
+            font-size: 1.3rem;
+        }
+    }
+
     &__item {
         padding: 10px;
         width: 100%;
 
         &__icon {
-    
         }
-    
+
         &__title {
-    
         }
     }
 }

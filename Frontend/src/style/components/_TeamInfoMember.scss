@@ -1,8 +1,8 @@
 .teamInfoMember {
     &__itemList {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        place-items: center;
         gap: 40px;
         margin-top: 20px;
     }

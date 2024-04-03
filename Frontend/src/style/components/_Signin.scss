@@ -1,0 +1,115 @@
+@mixin inputArea {
+    &-title {
+        font-family: 'Wanted-ExtraBlack';
+        color: $gray;
+    }
+
+    &-sub {
+        display: flex;
+        position: relative;
+
+        img {
+            position: absolute;
+            left: 0.7rem;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 1rem;
+        }
+
+        input {
+            padding-left: 2rem;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-family: 'Wanted-Bold';
+            height: 3rem;
+            width: 100%;
+
+            &:focus {
+                background-color: $light;
+            }
+        }
+    }
+}
+
+.signin {
+    background-color: $bright;
+    box-shadow: 0 0 1rem $gray;
+    padding: 2rem;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    &__container {
+        background-color: $black;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &__top {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.3rem;
+
+        &-title {
+            color: $sub;
+            letter-spacing: 0.3rem;
+            font-family: 'Wanted-Bold';
+        }
+
+        &-sub {
+            color: $main;
+            font-family: 'Wanted-Bold';
+            font-size: 1.7rem;
+            letter-spacing: 0.3rem;
+        }
+    }
+
+    &__middle {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        gap: 1rem;
+
+        &-email {
+            @include inputArea();
+        }
+
+        &-pw {
+            @include inputArea();
+        }
+    }
+
+    &__bottom {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.3rem;
+
+        &-forgot {
+            align-self: end;
+            font-family: 'Wanted-ExtraBold';
+        }
+
+        &-account {
+            margin-top: 1.2rem;
+            display: flex;
+            gap: 1rem;
+            align-content: center;
+
+            div,
+            button {
+                font-family: 'Wanted-ExtraBold';
+            }
+
+            button {
+                color: $main;
+                text-decoration: underline;
+            }
+        }
+    }
+}

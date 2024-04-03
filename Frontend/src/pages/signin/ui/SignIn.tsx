@@ -56,7 +56,7 @@ export function SignIn() {
         //패스워드 찾기 컴포넌트로 이동.
         navigate('/find-password');
     }
-    function handleSignUp(e: React.MouseEvent<HTMLAnchorElement>) {
+    function handleSignUp(e: React.MouseEvent<HTMLButtonElement>) {
         // 회원가입 컴포넌트로 이동.
         navigate('/signup');
     }
@@ -79,48 +79,52 @@ export function SignIn() {
             emailRef.current.focus();
         }
     }, []);
+
     return (
-        <div className="signin container">
-            <div className="welcomebox">
-                <p className="welcomebox__text">WELCOME TO PENNYPAL !</p>
-                <div className="welcomebox__logo">
-                    <img src="assets/image/main-logo-colored.svg" />
+        <div className="signin__container ">
+            <div className="signin">
+                <div className="signin__top">
+                    <div className="signin__top-title">WELCOME TO PENNYPAL !</div>
+                    <img src="assets/image/main-logo-colored.svg" height={80} />
+                    <div className="signin__top-sub">SIGN IN</div>
                 </div>
-                <p className="welcomebox__singIn">SIGN IN</p>
-            </div>
-            <div className="signin-progress container">
-                <div>
-                    <p>E-mail</p>
-                    <div className="input-container">
-                        <img src="assets/image/icons_mini/Email.svg" />
-                        <input
-                            type="text"
-                            placeholder="이메일"
-                            ref={emailRef}
-                            value={email}
-                            onChange={handleEmailChange}
-                        />
+                <div className="signin__middle">
+                    <div className="signin__middle-email">
+                        <div className="signin__middle-email-title">E-mail</div>
+                        <div className="signin__middle-email-sub">
+                            <img src="assets/image/icons_mini/Email.svg" height={20} />
+                            <input type="text" ref={emailRef} value={email} onChange={handleEmailChange} />
+                        </div>
                     </div>
-                    <p>Password</p>
-                    <div className="input-container">
-                        <img src="assets/image/icons_mini/password.svg" />
-                        <input
-                            type="password"
-                            placeholder="패스워드"
-                            value={password}
-                            onChange={handlePasswordChange}
-                            onKeyDown={handleKeyDown}
-                        />
+                    <div className="signin__middle-pw">
+                        <div className="signin__middle-pw-title">Password</div>
+                        <div className="signin__middle-pw-sub">
+                            <img src="assets/image/icons_mini/password.svg" />
+                            <input
+                                type="password"
+                                value={password}
+                                onChange={handlePasswordChange}
+                                onKeyDown={handleKeyDown}
+                            />
+                        </div>
                     </div>
-                    <div className="fpButton">
-                        <button onClick={handlePassword}>fotgot Password ? &#9654;</button>
+                </div>
+                <div className="signin__bottom">
+                    <div className="signin__bottom-forgot">
+                        <button onClick={handlePassword}>Forgot Password ? &#9654;</button>
                     </div>
-                    <div className="signInButton">
+                    <div className="signin__bottom-login">
                         <Button child={'LOGIN'} color={'color-sub'} onClick={handleSignIn} />
                     </div>
-                    <div className="signUpArea">
-                        <span>No Account ? </span>
-                        <a onClick={handleSignUp}>SIGN UP &#9654;</a>
+                    <div className="signin__bottom-account">
+                        <div>No Account ? </div>
+                        <button
+                            onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                                handleSignUp(e);
+                            }}
+                        >
+                            SIGN UP
+                        </button>
                     </div>
                     {/* <div className="socialArea">
                         <Button
