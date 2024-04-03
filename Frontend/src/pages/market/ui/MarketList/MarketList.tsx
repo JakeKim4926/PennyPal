@@ -20,7 +20,7 @@ export function MarketList() {
     const productList: any = useSelector((state: RootState) => state.setMarketItemListReducer.data);
 
     useEffect(() => {
-        getMarketItemList('', 0).then((res) => {
+        getMarketItemList(0).then((res) => {
             if (res.status === 200) {
                 dispatch(setMarketItemList(res.data.content));
             }

@@ -1,4 +1,4 @@
-$BORDER_RADIUS: 1.3rem;
+$BORDER_RADIUS: 1.5rem;
 $PADDING: 10px;
 $LETTER_SPACING: 2px;
 
@@ -22,6 +22,7 @@ $LETTER_SPACING: 2px;
             border-top-left-radius: $BORDER_RADIUS;
             border-bottom-left-radius: $BORDER_RADIUS;
             box-shadow: 0 0.2rem 0 $black;
+            height: 100%;
 
             color: $bright;
 
