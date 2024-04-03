@@ -1,5 +1,5 @@
 import React from 'react';
-import { getMarketItemByCategory } from '../../api/getMarketItemByCategory';
+import { getMarketItemByCategory } from '@/pages/market/api/getMarketItemByCategory';
 
 export function MarketCategory() {
     const categories = [

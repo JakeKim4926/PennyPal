@@ -3,6 +3,8 @@ import { closeMarketItemModal } from '../../model';
 import { useEffect, useCallback } from 'react';
 import { purchaseItem } from '../../api/purchaseItem';
 import { getCookie } from '@/shared';
+import Swal from 'sweetalert2';
+
 type Product = {
     productBrand: string;
     productCategory: string;
@@ -73,11 +75,18 @@ export function MarketItemModal({
                     className="marketItemModal__button button"
                     onClick={async () => {
                         const dto = {
-                            member: getCookie('memberId'),
-                            product: productId,
+                            memberId: getCookie('memberId'),
+                            productId: productId,
                             buyQuantity: 1,
                         };
                         const res = await purchaseItem(dto).catch((err) => err);
+                        if (res.status === 201) {
+                            Swal.fire({
+                                title: '상품 구매 완료',
+                                text: `상품을 구매했습니다.`,
+                                icon: `success`,
+                            });
+                        }
                     }}
                 >
                     PURCHASE
