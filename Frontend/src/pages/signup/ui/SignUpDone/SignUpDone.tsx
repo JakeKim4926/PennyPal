@@ -17,9 +17,9 @@ export function SignUpDone() {
 
     useEffect(() => {
         // countdown 값이 0이 되면 '/main' 경로로 이동.
-        // if (countdown === 0) {
-        //     navigate('/signin');
-        // }
+        if (countdown === 0) {
+            navigate('/signin');
+        }
     }, [countdown]);
 
     return (
