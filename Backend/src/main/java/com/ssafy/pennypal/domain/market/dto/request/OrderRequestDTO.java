@@ -15,18 +15,24 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class OrderRequestDTO {
-    private Member member;
-    private Product product;
-    private Integer buyQuantity;
+    private Long memberId; // Member 엔티티의 ID
+    private Long productId; // Product 엔티티의 ID
+    private Integer buyQuantity; // 구매 수량
+
+
+
+//    private Member member;
+//    private Product product;
+//    private Integer buyQuantity;
 
     // 주문 생성
-    public Order createOrder(Member member, Product product) {
-        return Order.builder()
-                .member(member)
-                .product(product)
-                .buyQuantity(this.buyQuantity)
-                .priceSum(this.product.getProductPrice() * this.buyQuantity)
-                .orderDate(LocalDateTime.now())
-                .build();
-    }
+//    public Order createOrder(Member member, Product product) {
+//        return Order.builder()
+//                .member(member)
+//                .product(product)
+//                .buyQuantity(this.buyQuantity)
+//                .priceSum(this.product.getProductPrice() * this.buyQuantity)
+//                .orderDate(LocalDateTime.now())
+//                .build();
+//    }
 }
