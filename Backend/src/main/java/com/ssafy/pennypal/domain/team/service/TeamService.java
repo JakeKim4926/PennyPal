@@ -613,15 +613,15 @@ public class TeamService {
             //다음 팀으로 넘어가기 전에 현재 팀의 점수 저장
             previousScore = currentTeamResponse.getTeamScore();
 
-            // 팀 랭킹 기록 저장
-            TeamRankHistory newRankHistory = TeamRankHistory.builder()
-                    .team(currentTeam)
-                    .rankDate(today)
-                    .rankNum(rankNum)
-                    .rewardPoint(pointsToAdd)
-                    .build();
+//            // 팀 랭킹 기록 저장
+//            TeamRankHistory newRankHistory = TeamRankHistory.builder()
+//                    .team(currentTeam)
+//                    .rankDate(today)
+//                    .rankNum(rankNum)
+//                    .rewardPoint(pointsToAdd)
+//                    .build();
 
-            currentTeam.getTeamRankHistories().add(newRankHistory);
+//            currentTeam.getTeamRankHistories().add(newRankHistory);
             teamRepository.save(currentTeam);
         }
 
@@ -1303,13 +1303,6 @@ public class TeamService {
 
             // 출석 점수 계산
             Integer attendanceScore = calculateAttendanceScore(totalAttendance, team.getMembers().size());
-
-            System.out.println("/////////////////////////////////////////////////////");
-            System.out.println("team Id = " + team.getTeamId());
-            System.out.println("savingScore = " + savingScore);
-            System.out.println("attendanceScore= " + attendanceScore);
-            System.out.println("/////////////////////////////////////////////////////");
-
 
             // 팀 점수 저장
             team.setTeamScore(savingScore + attendanceScore);
