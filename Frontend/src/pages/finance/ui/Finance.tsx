@@ -208,12 +208,18 @@ export function Finance() {
             try {
                 const res = await StockListUp(15, 5);
                 if (res.data.code === 200) {
-                    const res2 = await StockSubDetail(res.data.data.content.isinCd);
-                    console.log(res2);
-                    const stocks: StockWithDetail[] = res.data.data.content.map((stock: Stock) => ({
+                    let stocks: StockWithDetail[] = res.data.data.content.map((stock: Stock) => ({
                         stock: stock,
-                        subDetail: res2.data.item[0],
                     }));
+                    // stocks 배열의 각 요소에 대해 비동기 요청을 수행
+                    for (let i = 0; i < stocks.length; i++) {
+                        const res2 = await StockSubDetail(stocks[i].stock.isinCd);
+                        if (res2.data && res2.data.item.length > 0) {
+                            // 구조분해 할당을 사용해 stocks 배열의 i번째 요소의 subDetail 프로퍼티에 할당
+                            stocks[i].subDetail = res2.data.item[0];
+                        }
+                    }
+                    // 모든 요청이 완료된 후, 업데이트된 stocks 배열로 상태를 업데이트
                     setData(stocks);
                 }
             } catch (err) {
@@ -231,6 +237,7 @@ export function Finance() {
 
         fetchData();
     }, []);
+
     return (
         <div className="container bg-grey">
             <div className="finance">
@@ -288,8 +295,12 @@ export function Finance() {
                                 <td className="stock__content--info">
                                     {stock.stock.stckGenrDvdnAmt.toLocaleString()} 원
                                 </td>
-                                <td className="stock__content--info">{stock.subDetail?.mkp}</td>
-                                <td className="stock__content--info">{stock.subDetail?.mrktTotAmt}</td>
+                                <td className="stock__content--info">
+                                    {parseInt(stock.subDetail?.mkp ?? '0', 10).toLocaleString()}원
+                                </td>
+                                <td className="stock__content--info">
+                                    {parseInt(stock.subDetail?.mrktTotAmt ?? '0', 10).toLocaleString()}원
+                                </td>
                             </tr>
                         ))}
                     </table>

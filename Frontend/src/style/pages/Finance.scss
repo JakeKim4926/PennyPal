@@ -114,17 +114,28 @@
 }
 .stock__content {
     background-color: #fcfcfc;
-    border-radius: 20px;
+    // border-radius: 20px;
     padding: 10px 20px;
-    width: 500px;
+    // width: 500px;
+    width: 100%;
+    border-collapse: collapse; // 격자 사이의 간격을 없애기
+    th,
+    td {
+        padding: 8px; // 셀 내부의 여백
+        text-align: left; // 텍스트 정렬
+        border-bottom: 1px solid #ddd; // 가로선만 표시
+        border-left: none; // 세로 경계선 없애기
+        border-right: none; // 세로 경계선 없애기
+    }
+
     &--item {
         // display: flex; // Flexbox 레이아웃을 활성화합니다.
         // flex-wrap: wrap; // 요소들이 너비를 초과할 경우 다음 줄로 넘깁니다.
         // justify-content: space-between; // 요소들 사이에 가능한 많은 공간을 둡니다.
         // align-items: center; // 요소들을 세로 중앙에 정렬합니다.
         padding: 10px 20px;
-        border-radius: 20px;
         transition: background-color 0.3s ease-in-out;
+        border-radius: 20px;
         &:hover {
             background-color: #88ba53;
             cursor: pointer;
