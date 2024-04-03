@@ -15,30 +15,6 @@ import {
     faArrowsRotate,
 } from '@fortawesome/free-solid-svg-icons';
 
-const spendingsData: Spending[] = [
-    {
-        transactionUniqueId: 408,
-        transactionType: 1,
-        transactionDate: '20240401',
-        transactionSummary: '신라마라탕',
-        transactionBalance: '12000',
-    },
-    {
-        transactionUniqueId: 409,
-        transactionType: 2,
-        transactionDate: '20240401',
-        transactionSummary: '백제마라탕',
-        transactionBalance: '12000',
-    },
-    {
-        transactionUniqueId: 410,
-        transactionType: 2,
-        transactionDate: '20240401',
-        transactionSummary: '고구려마라탕',
-        transactionBalance: '14000',
-    },
-];
-
 const getCurrentDate = (): string => {
     const now = new Date();
     const month = now.getMonth() + 1; // getMonth()는 0부터 시작하므로 +1
