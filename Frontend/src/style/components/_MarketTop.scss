@@ -76,6 +76,7 @@ $LETTER_SPACING: 2px;
     &__record {
         display: flex;
         align-items: center;
+
         &-item {
             background-color: $gray;
             padding: $PADDING;
@@ -83,6 +84,13 @@ $LETTER_SPACING: 2px;
             color: $bright;
             border: none;
             cursor: pointer;
+            display: flex;
+            gap: 0.5rem;
+
+            div {
+                font-family: 'Wanted-Bold';
+                color: $bright;
+            }
         }
     }
 }

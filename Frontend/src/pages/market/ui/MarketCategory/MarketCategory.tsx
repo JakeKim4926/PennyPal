@@ -11,7 +11,7 @@ export function MarketCategory() {
     const categories = [
         {
             icon: '아이콘',
-            title: '전체',
+            title: '전체 상품',
             category: '',
         },
         {
@@ -54,7 +54,7 @@ export function MarketCategory() {
                     className={`marketCategory__item ${category === it.category ? 'bold' : ''}`}
                     onClick={() => setCategory(it.category)}
                 >
-                    <div className="marketCategory__item-icon">{it.icon}</div>
+                    {/* <div className="marketCategory__item-icon">{it.icon}</div> */}
                     <div className="marketCategory__item-title">{it.title}</div>
                 </button>
             ))}

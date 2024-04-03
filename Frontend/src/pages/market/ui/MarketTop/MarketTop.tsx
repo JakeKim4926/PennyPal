@@ -47,7 +47,10 @@ export function MarketTop({ point }: MarketTopProps) {
             </div>
             <div className="marketTop__record">
                 <Link to="/receipt">
-                    <button className="marketTop__record-item button">사용 내역[I]</button>
+                    <button className="marketTop__record-item button">
+                        <div>사용 내역</div>
+                        <img src="assets/image/receipt.svg" />
+                    </button>
                 </Link>
             </div>
         </div>

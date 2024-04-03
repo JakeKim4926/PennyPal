@@ -29,7 +29,7 @@ export function MarketList() {
 
     return (
         <div className="marketList">
-            {productList &&
+            {productList.length > 0 &&
                 productList.map((it: Product) => (
                     <MarketListItem
                         productBrand={it.productBrand}

@@ -5,10 +5,13 @@ import { MarketCategory } from '@/pages/market/ui/MarketCategory/MarketCategory'
 import { MarketList } from '@/pages/market/ui/MarketList/MarketList';
 import { useState, useEffect } from 'react';
 import { getUserPoint } from '../api/getUserPoint';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/app/appProvider';
 
 export function Market() {
     const page = useLocation();
     const [point, setPoint] = useState(0);
+    const forceRender = useSelector((state: RootState) => state.forceRenderReducer.data);
 
     useEffect(() => {
         getUserPoint(Number(getCookie('memberId')))
@@ -18,7 +21,7 @@ export function Market() {
                 }
             })
             .catch((err) => console.log(err));
-    }, []);
+    }, [forceRender]);
 
     return (
         <div className="container market__container">
