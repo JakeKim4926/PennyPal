@@ -19,7 +19,6 @@ export function MarketList() {
         getMarketItemList(0).then((res) => {
             if (res.status === 200) {
                 setProductList(res.data.content);
-                console.log(res.data.content);
             }
         });
     }, []);

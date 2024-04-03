@@ -2,7 +2,7 @@ import axios, { AxiosInstance } from 'axios';
 import { getCookie } from './cookieHelper';
 
 export const customAxios: AxiosInstance = axios.create({
-    baseURL: `${process.env.REACT_APP_LOCAL_FLASK_URL}`,
+    baseURL: `${process.env.REACT_APP_API_URL}`,
 });
 
 // 요청 인터셉터를 추가하여 요청을 보내기 전에 실행되는 로직을 정의합니다.

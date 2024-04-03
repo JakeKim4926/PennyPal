@@ -45,7 +45,7 @@ export function MarketItemModal({
             <div className="marketItemModal contentCard">
                 <div className="marketItemModal__top">
                     <div className="marketItemModal__top-image">
-                        <img src={productImg}></img>
+                        <img src={productImg} height={300}></img>
                     </div>
                 </div>
                 <div className="marketItemModal__middle">
@@ -54,11 +54,20 @@ export function MarketItemModal({
                         <div className="marketItemModal__middle-left-name">{productName}</div>
                     </div>
 
-                    <div className="marketItemModal__middle-right">[P] {productPrice.toLocaleString()}</div>
+                    <div className="marketItemModal__middle-right">
+                        <img src={'assets/image/point.svg'} height={25} />
+                        <div> {productPrice.toLocaleString()}</div>
+                    </div>
                 </div>
                 <div className="marketItemModal__bottom">
-                    <div className="marketItemModal__bottom-type">유형 모바일교환권(기프티콘)</div>
-                    <div className="marketItemModal__bottom-exp">유효기간 1개월</div>
+                    <div className="marketItemModal__bottom-type">
+                        <img src={'assets/image/barcode.svg'} />
+                        <div>유형 모바일교환권(기프티콘)</div>
+                    </div>
+                    <div className="marketItemModal__bottom-exp">
+                        <img src={'assets/image/calander.svg'} />
+                        <div>유효기간 1개월</div>
+                    </div>
                 </div>
                 <button
                     className="marketItemModal__button button"
@@ -69,7 +78,6 @@ export function MarketItemModal({
                             buyQuantity: 1,
                         };
                         const res = await purchaseItem(dto).catch((err) => err);
-                        console.log(res);
                     }}
                 >
                     PURCHASE

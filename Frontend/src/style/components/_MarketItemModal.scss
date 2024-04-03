@@ -13,6 +13,8 @@ $GAP: 20px;
             background-color: $sub;
             height: 300px;
             border-radius: 20px;
+            display: flex;
+            justify-content: center;
         }
     }
 
@@ -28,12 +30,28 @@ $GAP: 20px;
             flex-direction: column;
             gap: 5px;
         }
+
+        &-right {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
     }
 
     &__bottom {
         display: flex;
         flex-direction: column;
         gap: 5px;
+
+        &-type {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        &-exp {
+            display: flex;
+            gap: 0.5rem;
+        }
     }
 
     &__button {
@@ -42,5 +60,6 @@ $GAP: 20px;
         padding: 5px;
         border-radius: 10px;
         font-size: 20px;
+        text-align: center;
     }
 }
