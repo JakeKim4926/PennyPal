@@ -96,7 +96,7 @@ export function ExpenditureAnalyze({ setReady }: Props) {
                 <div className="expenditureAnalyze__content-title">카테고리별 총 지출</div>
                 <div className="expenditureAnalyze__content-data">
                     {isLoading ? ( // isLoading 상태에 따라 조건부 렌더링
-                        <div className="loading">
+                        <div className="loadingDiv">
                             <p>LOADING...</p>
                             <FontAwesomeIcon icon={faSpinner} spinPulse />
                         </div>

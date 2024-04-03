@@ -50,7 +50,7 @@ export function ExpenditureRecommend({ ready }: IBigDataRecommendingProps) {
             <div className="expenditureRecommend__content">
                 <div className="expenditureRecommend__content-slider">
                     {isLoading ? (
-                        <div className="loading">
+                        <div className="loadingDiv">
                             <p>LOADING...</p>
                             <FontAwesomeIcon icon={faSpinner} spinPulse />
                         </div>

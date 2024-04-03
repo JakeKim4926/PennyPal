@@ -2,3 +2,58 @@
 @mixin wantedURL {
     src: url('https://cdn.jsdelivr.net/gh/wanteddev/wanted-sans@v1.0.1/packages/wanted-sans/fonts/webfonts/variable/split/WantedSansVariable.min.css');
 }
+
+@mixin welcomebox {
+    &__top {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.3rem;
+
+        &-title {
+            color: $sub;
+            letter-spacing: 0.3rem;
+            font-family: 'Wanted-Bold';
+        }
+
+        &-sub {
+            color: $main;
+            font-family: 'Wanted-Bold';
+            font-size: 1.7rem;
+            letter-spacing: 0.3rem;
+        }
+    }
+}
+
+@mixin inputArea {
+    &-title {
+        font-family: 'Wanted-ExtraBlack';
+        color: $gray;
+    }
+
+    &-sub {
+        display: flex;
+        position: relative;
+
+        img {
+            position: absolute;
+            left: 0.7rem;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 1rem;
+        }
+
+        input {
+            padding-left: 2rem;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-family: 'Wanted-Bold';
+            height: 3rem;
+            width: 22rem;
+
+            &:focus {
+                background-color: $light;
+            }
+        }
+    }
+}

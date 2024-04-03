@@ -1,11 +1,23 @@
-import { useState, useRef } from 'react';
-import { Button } from '../../../shared';
+import { useState, useRef, useEffect } from 'react';
+import { Button, setIsInitPage } from '../../../shared';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
 export function FindPassword() {
     const [isDone, setIsDone] = useState<boolean>(false);
     const emailRef = useRef<HTMLInputElement>(null);
+
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(setIsInitPage(true));
+
+        return () => {
+            dispatch(setIsInitPage(false));
+        };
+    }, []);
+
     function handleNext(e: React.MouseEvent<HTMLButtonElement>) {
         //비밀번호 재설정 API
         console.log(emailRef.current?.value);

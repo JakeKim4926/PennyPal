@@ -1,0 +1,31 @@
+.signupDone {
+    display: flex;
+    flex-direction: column;
+
+    &__box {
+        &-title {
+            text-align: center;
+            font-family: 'Wanted-ExtraBold';
+        }
+        &-sub {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-family: 'Wanted-Bold';
+        }
+    }
+
+    p {
+        text-align: center;
+    }
+
+    &__button {
+        background-color: $main;
+        font-family: 'Wanted-ExtraBold';
+        width: 100%;
+        height: 3rem;
+        text-align: center;
+        color: $bright;
+        letter-spacing: 0.3rem;
+        font-size: 1.5rem;
+    }
+}
