@@ -9,7 +9,6 @@ import java.util.List;
 @Setter
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class TeamRankRealtimeResponse {
 
     List<TeamRankRealtimeResponse> teamRanks;

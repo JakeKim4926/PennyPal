@@ -15,6 +15,7 @@ import com.ssafy.pennypal.domain.chat.repository.IChatRoomRepository;
 import com.ssafy.pennypal.domain.member.dto.response.*;
 import com.ssafy.pennypal.domain.member.entity.Member;
 import com.ssafy.pennypal.domain.member.entity.Expense;
+import com.ssafy.pennypal.domain.member.repository.IExpenseRepository;
 import com.ssafy.pennypal.domain.member.repository.IMemberRepository;
 import com.ssafy.pennypal.domain.team.dto.request.*;
 import com.ssafy.pennypal.domain.team.dto.SimpleTeamDto;
@@ -49,17 +50,23 @@ public class TeamService {
     private final IMemberRepository memberRepository;
     private final IChatRoomRepository chatRoomRepository;
     private final ITeamRankHistoryRepository teamRankHistoryRepository;
+    private final IExpenseRepository expenseRepository;
 
     private static final String SSAFY_BANK_API_KEY = System.getenv("SSAFY_BANK_API_KEY");
     private final BankServiceAPIImpl bankServiceAPI;
 
     private static final LocalDate TODAY = LocalDate.now();
+
     private static final LocalDate MONDAY_OF_THIS_WEEK = TODAY.with(DayOfWeek.MONDAY);
     private static final LocalDate MONDAY_OF_LAST_WEEK = MONDAY_OF_THIS_WEEK.minusDays(7);
-    private static final LocalDate SUNDAY_OF_LAST_WEEK = MONDAY_OF_THIS_WEEK.minusDays(1);
+    private static final LocalDate MONDAY_OF_TWO_LAST_WEEK = MONDAY_OF_THIS_WEEK.minusDays(14);
+
     private static final LocalDate SUNDAY_OF_THIS_WEEK = TODAY.with(DayOfWeek.SUNDAY);
+    private static final LocalDate SUNDAY_OF_LAST_WEEK = MONDAY_OF_THIS_WEEK.minusDays(1);
+    private static final LocalDate SUNDAY_OF_TWO_LAST_WEEK = MONDAY_OF_LAST_WEEK.minusDays(1);
+    private static final LocalDate SUNDAY_OF_THREE_LAST_WEEK = MONDAY_OF_TWO_LAST_WEEK.minusDays(1);
+
     private static final LocalDate MONDAY_OF_NEXT_WEEK = MONDAY_OF_THIS_WEEK.plusDays(7);
-    private static final LocalDate SUNDAY_OF_TWO_LAST_WEEK = SUNDAY_OF_THIS_WEEK.minusDays(14);
 
     private static final LocalDate TUESDAY_OF_THIS_WEEK = TODAY.with(DayOfWeek.TUESDAY);
 
@@ -302,6 +309,123 @@ public class TeamService {
     }
 
     @Transactional
+    public void calculateTeamScoreWeekly() {
+
+        List<Team> teams = teamRepository.findAll();
+
+        for (Team team : teams) {
+
+            // 4인 미만인 팀은 점수를 계산하지 않는다.
+            if (team.getMembers().size() < 4) {
+                continue;
+            } else {
+
+                List<Member> members = team.getMembers().stream()
+                        .filter(Objects::nonNull)
+                        .toList();
+
+                // 멤버의 계좌 목록 조회
+                for (Member member : members) {
+
+                    String memberEmail = member.getMemberEmail();
+
+                    UserAccountResponseControllerDTO userAccountResponseControllerDTO = getUserBankApi(memberEmail);
+
+                    // 공통 헤더 정보 설정
+                    CommonHeaderRequestDTO headerForGetAccountList = CommonHeaderRequestDTO.builder()
+                            .apiName("inquireAccountList")
+                            .apiKey(SSAFY_BANK_API_KEY)
+                            .userKey(userAccountResponseControllerDTO.getUserKey())
+                            .build();
+                    CommonHeaderRequestDTO headerForGetTransaction = CommonHeaderRequestDTO.builder()
+                            .apiName("inquireAccountTransactionHistory")
+                            .apiKey(SSAFY_BANK_API_KEY)
+                            .userKey(userAccountResponseControllerDTO.getUserKey())
+                            .build();
+
+                    // 계좌 목록 조회 요청 객체 생성
+                    GetUserAccountListServiceRequestDTO requestDTO = GetUserAccountListServiceRequestDTO.builder()
+                            .header(headerForGetAccountList)
+                            .build();
+
+                    // 계좌 목록 조회 API 호출
+                    UserBankAccountsResponseServiceDTO responseDTO = bankServiceAPI.getUserAccountList(requestDTO);
+
+                    // 각 계좌의 지난 주, 이번 주 거래 내역 조회
+                    for (UserAccountListResponseServiceDTO account : responseDTO.getREC()) {
+                        // 계좌 거래 내역 조회를 위한 요청 객체 생성
+                        AccountTransactionRequestServiceDTO transactionRequestDTO = AccountTransactionRequestServiceDTO.builder()
+                                .header(headerForGetTransaction)
+                                .bankCode(account.getBankCode()) // 은행 코드
+                                .accountNo(account.getAccountNo()) // 계좌 번호
+
+                                // 2주전 ~ 지난주
+                                .startDate(MONDAY_OF_TWO_LAST_WEEK.format(DateTimeFormatter.ofPattern("yyyyMMdd")))
+                                .endDate(SUNDAY_OF_LAST_WEEK.format(DateTimeFormatter.ofPattern("yyyyMMdd")))
+
+                                .transactionType("D") // 출금 내역만
+                                .orderByType("ASC")
+                                .build();
+
+                        // 계좌 거래 내역 조회 API 호출
+                        AccountTransactionListResponseServiceDTO transactionListResponseDTO
+                                = bankServiceAPI.getUserAccountTransaction(transactionRequestDTO);
+
+                        // 유저의 2주 동안의 지출 날짜, 지출 금액, 해당 유저를 리스트로 담기
+                        List<Expense> allExpenses = new ArrayList<>();
+
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+
+                        for (AccountTransactionResponseServiceDTO transaction : transactionListResponseDTO.getREC().getList()) {
+                            allExpenses.add(new Expense(LocalDate.parse(transaction.getTransactionDate(), formatter),
+                                    Integer.parseInt(transaction.getTransactionBalance()), member));
+                        }
+
+                        // 2주 전, 지난 주 지출 내역 분류
+                        List<Expense> expensesOfTwoLastWeek = calculateTwoLastWeekExpenses(allExpenses);
+                        List<Expense> expensesOfLastWeek = calculateLastWeekExpenses(allExpenses);
+
+                        member.setMemberExpensesOfTwoLastWeek(expensesOfTwoLastWeek);
+                        member.setMemberExpensesOfLastWeek(expensesOfLastWeek);
+
+                        memberRepository.save(member);
+                    }
+
+                } // member
+
+                // 팀원들의 지지난 주와 지난 주 지출 내역을 모두 더하기
+                Double twoLastWeekTotalExpenses = team.getMembers().stream()
+                        .filter(Objects::nonNull)
+                        .flatMap(member -> member.getMemberExpensesOfTwoLastWeek().stream()) // 지지난 주 지출 내역을 가져옴
+                        .mapToDouble(Expense::getExpenseAmount) // 지출 금액을 가져와서 double 형태로 매핑
+                        .sum();
+
+                Double lastWeekTotalExpenses = team.getMembers().stream()
+                        .filter(Objects::nonNull)
+                        .flatMap(member -> member.getMemberExpensesOfLastWeek().stream()) // 지난 주 지출 내역
+                        .mapToDouble(Expense::getExpenseAmount)
+                        .sum();
+
+                // 팀원들의 출석 횟수 모두 더하기
+                Double totalAttendance = team.getMembers().stream()
+                        .filter(Objects::nonNull)
+                        .mapToDouble(Member::getMemberAttendance)
+                        .sum();
+
+                // 절약 점수 계산 (메서드에는 지난주, 이번주라고 돼있는데 어쨌든 똑같은 로직이라 구분 안함 )
+                Integer savingScore = calculateSavingScore(twoLastWeekTotalExpenses, lastWeekTotalExpenses);
+
+                // 출석 점수 계산
+                Integer attendanceScore = calculateAttendanceScore(totalAttendance, team.getMembers().size());
+
+                // 팀 점수 저장
+                team.setTeamScore(savingScore + attendanceScore);
+
+            }
+        }
+    }
+
+    @Transactional
     public void calculateTeamScore() {
 
         List<Team> teams = teamRepository.findAll();
@@ -413,13 +537,14 @@ public class TeamService {
 
                 // 팀 점수 저장
                 team.setTeamScore(savingScore + attendanceScore);
+
             }
         }
 
     }
 
     @Transactional
-    public void RankTeamScore() {
+    public void RankTeamScoreWeekly() {
 
         List<Team> teams = teamRepository.findAll();
 
@@ -436,7 +561,7 @@ public class TeamService {
         // 등수 계산
 
         // 등수
-        int rankNum = 1;
+        int rankNum = 0;
         // 이전 팀의 점수
         int previousScore = 0;
         // 동점인 팀이 있는지?
@@ -496,9 +621,6 @@ public class TeamService {
 
             currentTeam.getTeamRankHistories().add(newRankHistory);
             teamRepository.save(currentTeam);
-
-
-
         }
 
     }
@@ -514,7 +636,7 @@ public class TeamService {
         }
 
         // 원하는 조건(이번주 월요일)에 해당하는 모든 팀의 랭킹 기록 조회
-        List<TeamRankHistory> histories = teamRankHistoryRepository.findByRankDate(MONDAY_OF_THIS_WEEK);
+        List<TeamRankHistory> histories = teamRankHistoryRepository.findByRankDate(TUESDAY_OF_THIS_WEEK);
 
         // 조회된 히스토리를 rankNum 기준으로 오름차순 정렬하고 TeamRankHistoryResponse로 변환
         List<TeamRankHistoryResponse> sortedResponses = histories.stream()
@@ -530,15 +652,15 @@ public class TeamService {
 
         TeamRankWeeklyResponse teamRankWeeklyResponse = null;
 
-        // 내 팀의 랭킹 정보 추출
-        if(myTeam != null) {
+        if (myTeam != null) {
 
+            // 속한 팀이 있는 경우
             TeamRankHistoryResponse myTeamRank = sortedResponses.stream()
                     .filter(response -> response.getTeamName().equals(myTeam.getTeamName()))
                     .findFirst()
                     .orElse(TeamRankHistoryResponse.builder()
                             .teamName(myTeam.getTeamName())
-                            .rankNum(0) // 팀 랭킹이 없는 경우 0로 설정
+                            .rankNum(0) // 팀 랭킹이 없는 경우 0으로 반환
                             .teamScore(myTeam.getTeamScore())
                             .build());
 
@@ -550,9 +672,9 @@ public class TeamService {
                     .myTeamRankNum(myTeamRank.getRankNum())
                     .myTeamRewardPoint(myTeamRank.getRewardPoint())
                     .build();
-        }else{
+        } else {
 
-            // 팀이 없는 유저
+            // 속한 팀이 없는 경우
             teamRankWeeklyResponse = TeamRankWeeklyResponse.builder()
                     .teamRanks(sortedResponses)
                     .myTeamName(null)
@@ -563,11 +685,11 @@ public class TeamService {
 
         }
         // 결과를 페이지화하여 반환
-        return new PageImpl<>(Collections.singletonList(teamRankWeeklyResponse), pageable, 1);
+        return new PageImpl<>(Collections.singletonList(teamRankWeeklyResponse), pageable, teamRankWeeklyResponse.getTeamRanks().size());
     }
 
     @Transactional
-    public void RankRealTimeScore() {
+    public void rankRealTimeScore() {
 
         // 그 전의 랭킹은 리셋
         List<Team> teamList = teamRepository.findAll();
@@ -606,7 +728,13 @@ public class TeamService {
 
     public Page<TeamRankRealtimeResponse> rankOfRealtime(Long teamId, Pageable pageable) {
 
-        Team myTeam = getTeam(teamId);
+        Team myTeam;
+
+        if (teamId != -1) {
+            myTeam = getTeam(teamId);
+        } else {
+            myTeam = null;
+        }
 
         Page<Team> teamsPage = teamRepository.findAll(pageable);
 
@@ -620,26 +748,38 @@ public class TeamService {
                         .build())
                 .collect(Collectors.toList());
 
-        TeamRankRealtimeResponse myTeamRank = teamRanks.stream()
-                .filter(teamRank -> teamRank.getTeamName().equals(myTeam.getTeamName()))
-                .findFirst()
-                .orElse(null);
+        TeamRankRealtimeResponse myTeamRank = null;
+        TeamRankRealtimeResponse response = null;
 
-        if (myTeamRank == null) {
-            myTeamRank = TeamRankRealtimeResponse.builder()
-                    .teamName(myTeam.getTeamName())
-                    .teamRankRealtime(0)
-                    .teamScoreRealtime(myTeam.getTeamScore())
+        if (myTeam != null) {
+
+            // 속한 팀이 있는 경우
+            myTeamRank = teamRanks.stream()
+                    .filter(teamRank -> teamRank.getTeamName().equals(myTeam.getTeamName()))
+                    .findFirst()
+                    .orElse(TeamRankRealtimeResponse.builder()
+                            .teamName(myTeam.getTeamName())
+                            .teamRankRealtime(0) // 내 팀이 순위에 없으면 0으로 번환
+                            .teamScoreRealtime(myTeam.getTeamScore())
+                            .build());
+
+            response = TeamRankRealtimeResponse.builder()
+                    .teamRanks(teamRanks)
+                    .teamName(myTeamRank.getTeamName())
+                    .teamRankRealtime(myTeamRank.getTeamRankRealtime())
+                    .teamScoreRealtime(myTeamRank.getTeamScoreRealtime())
                     .build();
+        } else {
+            // 속한 팀 없는 경우
+
+            response = TeamRankRealtimeResponse.builder()
+                    .teamRanks(teamRanks)
+                    .teamName(null)
+                    .teamRankRealtime(null)
+                    .teamScoreRealtime(null)
+                    .build();
+
         }
-
-        TeamRankRealtimeResponse response = TeamRankRealtimeResponse.builder()
-                .teamRanks(teamRanks)
-                .teamName(myTeamRank.getTeamName())
-                .teamRankRealtime(myTeamRank.getTeamRankRealtime())
-                .teamScoreRealtime(myTeamRank.getTeamScoreRealtime())
-                .build();
-
         return new PageImpl<>(Collections.singletonList(response), pageable, teamsPage.getTotalElements());
     }
 
@@ -907,6 +1047,12 @@ public class TeamService {
                 member.setMemberChatRoom(null);
             }
 
+            // 차단 당한 팀 목록에서 해당 팀을 참조하는 모든 Member의 참조를 null로 설정
+            for (Member banishedMember : team.getTeamBanishedList()) {
+                banishedMember.setMemberBanishedTeam(null);
+                memberRepository.save(banishedMember);
+            }
+
             // 팀, 채팅방 삭제
             teamRepository.delete(team);
             chatRoomRepository.delete(chatRoom);
@@ -1058,6 +1204,26 @@ public class TeamService {
 
     }
 
+    public List<Expense> calculateTwoLastWeekExpenses(List<Expense> allExpenses) {
+
+        Map<LocalDate, Expense> expensesByDate = new HashMap<>();
+
+        for (Expense expense : allExpenses) {
+            LocalDate expenseDate = expense.getExpenseDate();
+            // 지지난주 월요일 ~ 지지난주 일요일
+            if (expenseDate.isAfter(SUNDAY_OF_THREE_LAST_WEEK) && expenseDate.isBefore(MONDAY_OF_LAST_WEEK)) {
+                expensesByDate.merge(expenseDate, expense, (existingExpense, newExpense) ->
+                        new Expense(
+                                expenseDate,
+                                existingExpense.getExpenseAmount() + newExpense.getExpenseAmount(),
+                                expense.getMember()
+                        ));
+            }
+        }
+        return new ArrayList<>(expensesByDate.values());
+
+    }
+
     private Team getTeam(Long teamId) {
         return teamRepository.findByTeamId(teamId)
                 .orElseThrow(() -> new IllegalArgumentException("팀 정보를 찾을 수 없습니다."));
@@ -1076,6 +1242,148 @@ public class TeamService {
         return UserAccountResponseControllerDTO.of(
                 bankServiceAPI.getUserAccount(userAccountRequestServiceDTO)
         );
+    }
+
+    @Transactional
+    public void test() {
+
+        List<Team> teams = teamRepository.findAll();
+
+        for (Team team : teams) {
+
+            // 4인 미만인 팀은 점수를 계산하지 않는다.
+            if (team.getMembers().size() < 4) {
+                continue;
+            } else {
+
+                List<Member> members = team.getMembers().stream()
+                        .filter(Objects::nonNull)
+                        .toList();
+
+                for (Member member : members) {
+
+                    // 유저의 모든 지출 내역을 가져옴
+                    List<Expense> allExpenses = expenseRepository.findByMember(member);
+
+                    // 2주 전, 지난 주 지출 내역 분류
+                    List<Expense> expensesOfTwoLastWeek = calculateTwoLastWeekExpenses(allExpenses);
+                    List<Expense> expensesOfLastWeek = calculateLastWeekExpenses(allExpenses);
+
+                    member.setMemberExpensesOfTwoLastWeek(expensesOfTwoLastWeek);
+                    member.setMemberExpensesOfLastWeek(expensesOfLastWeek);
+
+                    memberRepository.save(member);
+                }
+
+            } // member
+
+            // 팀원들의 지지난 주와 지난 주 지출 내역을 모두 더하기
+            Double twoLastWeekTotalExpenses = team.getMembers().stream()
+                    .filter(Objects::nonNull)
+                    .flatMap(member -> member.getMemberExpensesOfTwoLastWeek().stream()) // 지지난 주 지출 내역을 가져옴
+                    .mapToDouble(Expense::getExpenseAmount) // 지출 금액을 가져와서 double 형태로 매핑
+                    .sum();
+
+            Double lastWeekTotalExpenses = team.getMembers().stream()
+                    .filter(Objects::nonNull)
+                    .flatMap(member -> member.getMemberExpensesOfLastWeek().stream()) // 지난 주 지출 내역
+                    .mapToDouble(Expense::getExpenseAmount)
+                    .sum();
+
+            // 팀원들의 출석 횟수 모두 더하기
+            Double totalAttendance = team.getMembers().stream()
+                    .filter(Objects::nonNull)
+                    .mapToDouble(Member::getMemberAttendance)
+                    .sum();
+
+            // 절약 점수 계산 (메서드에는 지난주, 이번주라고 돼있는데 어쨌든 똑같은 로직이라 구분 안함 )
+            Integer savingScore = calculateSavingScore(twoLastWeekTotalExpenses, lastWeekTotalExpenses);
+
+            // 출석 점수 계산
+            Integer attendanceScore = calculateAttendanceScore(totalAttendance, team.getMembers().size());
+
+            System.out.println("/////////////////////////////////////////////////////");
+            System.out.println("team Id = " + team.getTeamId());
+            System.out.println("savingScore = " + savingScore);
+            System.out.println("attendanceScore= " + attendanceScore);
+            System.out.println("/////////////////////////////////////////////////////");
+
+
+            // 팀 점수 저장
+            team.setTeamScore(savingScore + attendanceScore);
+
+        }
+    }
+
+    @Transactional
+    public void test2() {
+
+        List<Team> teams = teamRepository.findAll();
+
+        for (Team team : teams) {
+
+            // 4인 미만인 팀은 점수를 계산하지 않는다.
+            if (team.getMembers().size() < 4) {
+                continue;
+            } else {
+
+                List<Member> members = team.getMembers().stream()
+                        .filter(Objects::nonNull)
+                        .toList();
+
+                for (Member member : members) {
+
+                    // 유저의 모든 지출 내역을 가져옴
+                    List<Expense> allExpenses = expenseRepository.findByMember(member);
+
+                    // 2주 전, 지난 주 지출 내역 분류
+                    List<Expense> expensesOfLastWeek = calculateLastWeekExpenses(allExpenses);
+                    List<Expense> expensesOfThisWeek = calculateThisWeekExpenses(allExpenses);
+
+                    member.setMemberExpensesOfLastWeek(expensesOfLastWeek);
+                    member.setMemberExpensesOfThisWeek(expensesOfThisWeek);
+
+                    memberRepository.save(member);
+                }
+
+            } // member
+
+            // 팀원들의 지난 주와 이번 주 지출 내역을 모두 더하기
+            Double lastWeekTotalExpenses = team.getMembers().stream()
+                    .filter(Objects::nonNull)
+                    .flatMap(member -> member.getMemberExpensesOfLastWeek().stream()) // 지지난 주 지출 내역을 가져옴
+                    .mapToDouble(Expense::getExpenseAmount) // 지출 금액을 가져와서 double 형태로 매핑
+                    .sum();
+
+            Double thisWeekTotalExpenses = team.getMembers().stream()
+                    .filter(Objects::nonNull)
+                    .flatMap(member -> member.getMemberExpensesOfThisWeek().stream()) // 지난 주 지출 내역
+                    .mapToDouble(Expense::getExpenseAmount)
+                    .sum();
+
+            // 팀원들의 출석 횟수 모두 더하기
+            Double totalAttendance = team.getMembers().stream()
+                    .filter(Objects::nonNull)
+                    .mapToDouble(Member::getMemberAttendance)
+                    .sum();
+
+            // 절약 점수 계산 (메서드에는 지난주, 이번주라고 돼있는데 어쨌든 똑같은 로직이라 구분 안함 )
+            Integer savingScore = calculateSavingScore(lastWeekTotalExpenses, thisWeekTotalExpenses);
+
+            // 출석 점수 계산
+            Integer attendanceScore = calculateAttendanceScore(totalAttendance, team.getMembers().size());
+
+            System.out.println("/////////////////////////////////////////////////////");
+            System.out.println("team Id = " + team.getTeamId());
+            System.out.println("savingScore = " + savingScore);
+            System.out.println("attendanceScore= " + attendanceScore);
+            System.out.println("/////////////////////////////////////////////////////");
+
+
+            // 팀 점수 저장
+            team.setTeamScore(savingScore + attendanceScore);
+
+        }
     }
 
 }

@@ -88,6 +88,15 @@ public class Member extends BaseEntity implements UserDetails {
             cascade = CascadeType.ALL,
             mappedBy = "member"
     )
+    @Column(name = "member_expenses_of_two_last_week")
+    @Setter
+    private List<Expense> memberExpensesOfTwoLastWeek = new ArrayList<>();           // 지지난 주 지출 내역
+
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            mappedBy = "member"
+    )
     @Column(name = "member_expenses_of_last_week")
     @Setter
     private List<Expense> memberExpensesOfLastWeek = new ArrayList<>();           // 지난 주 지출 내역

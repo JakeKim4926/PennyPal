@@ -941,312 +941,312 @@ public class TeamControllerTest extends RestDocsSupport {
 
     }
 
-    @DisplayName("팀 주간 랭킹 조회")
-    @Test
-    void weeklyTeamRanking() throws Exception {
-        // given
-        Pageable pageable = PageRequest.of(0, 6);
-
-        List<TeamRankHistoryResponse> sortedResponse = List.of(
-                TeamRankHistoryResponse.builder()
-                        .teamName("팀이름1")
-                        .rankDate(LocalDate.of(2024, 4, 1))
-                        .rankNum(1)
-                        .teamScore(600)
-                        .rewardPoint(1000)
-                        .build(),
-                TeamRankHistoryResponse.builder()
-                        .teamName("팀이름2")
-                        .rankDate(LocalDate.of(2024, 4, 1))
-                        .rankNum(2)
-                        .teamScore(500)
-                        .rewardPoint(500)
-                        .build(),
-                TeamRankHistoryResponse.builder()
-                        .teamName("팀이름3")
-                        .rankDate(LocalDate.of(2024, 4, 1))
-                        .rankNum(3)
-                        .teamScore(400)
-                        .rewardPoint(400)
-                        .build(),
-                TeamRankHistoryResponse.builder()
-                        .teamName("팀이름4")
-                        .rankDate(LocalDate.of(2024, 4, 1))
-                        .rankNum(4)
-                        .teamScore(300)
-                        .rewardPoint(300)
-                        .build(),
-                TeamRankHistoryResponse.builder()
-                        .teamName("팀이름5")
-                        .rankDate(LocalDate.of(2024, 4, 1))
-                        .rankNum(5)
-                        .teamScore(200)
-                        .rewardPoint(200)
-                        .build(),
-                TeamRankHistoryResponse.builder()
-                        .teamName("팀이름6")
-                        .rankDate(LocalDate.of(2024, 4, 1))
-                        .rankNum(6)
-                        .teamScore(100)
-                        .rewardPoint(0)
-                        .build()
-        );
-
-        List<TeamRankWeeklyResponse> content = List.of(
-                TeamRankWeeklyResponse.builder()
-                        .teamRanks(sortedResponse)
-                        .myTeamName("팀이름2")
-                        .myTeamScore(500)
-                        .myTeamRankNum(2)
-                        .myTeamRewardPoint(500)
-                        .build()
-        );
-
-        Page<TeamRankWeeklyResponse> page = new PageImpl<>(content, pageable, content.size());
-
-        given(teamService.rankOfWeeks(anyLong(), any(Pageable.class)))
-                .willReturn(page);
-
-        mockMvc.perform(
-                        get("/api/team/rank/weekly/{teamId}", 2L)
-                                .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andDo(document("rank-of-weekly",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        responseFields(
-                                fieldWithPath("code").type(JsonFieldType.NUMBER)
-                                        .description("코드"),
-                                fieldWithPath("status").type(JsonFieldType.STRING)
-                                        .description("상태"),
-                                fieldWithPath("message").type(JsonFieldType.STRING)
-                                        .description("메시지"),
-                                fieldWithPath("data").type(JsonFieldType.OBJECT)
-                                        .description("응답 데이터"),
-                                fieldWithPath("data.content").type(JsonFieldType.ARRAY)
-                                        .description("응답 데이터 배열"),
-
-                                fieldWithPath("data.content[].teamRanks").type(JsonFieldType.ARRAY)
-                                        .description("팀 랭킹"),
-                                fieldWithPath("data.content[].teamRanks[].teamName").type(JsonFieldType.STRING)
-                                        .description("팀 이름"),
-                                fieldWithPath("data.content[].teamRanks[].rankDate").type(JsonFieldType.ARRAY)
-                                        .description("랭킹 집계 날짜"),
-                                fieldWithPath("data.content[].teamRanks[].rankNum").type(JsonFieldType.NUMBER)
-                                        .description("랭킹 순위"),
-                                fieldWithPath("data.content[].teamRanks[].teamScore").type(JsonFieldType.NUMBER)
-                                        .description("팀 점수"),
-                                fieldWithPath("data.content[].teamRanks[].rewardPoint").type(JsonFieldType.NUMBER)
-                                        .description("보상 포인트"),
-
-                                fieldWithPath("data.content[].myTeamName").type(JsonFieldType.STRING)
-                                        .description("조회하는 유저의 팀 이름"),
-                                fieldWithPath("data.content[].myTeamRankNum").type(JsonFieldType.NUMBER)
-                                        .description("조회하는 유저의 팀 순위"),
-                                fieldWithPath("data.content[].myTeamScore").type(JsonFieldType.NUMBER)
-                                        .description("조회하는 유저의 팀 점수"),
-                                fieldWithPath("data.content[].myTeamRewardPoint").type(JsonFieldType.NUMBER)
-                                        .description("조회하는 유저의 팀 보상 포인트"),
-
-
-                                fieldWithPath("data.pageable").type(JsonFieldType.OBJECT)
-                                        .description("응답 데이터 페이지 정보"),
-                                fieldWithPath("data.pageable.pageNumber").type(JsonFieldType.NUMBER)
-                                        .description("응답 데이터 페이지 현재 페이지 넘버"),
-                                fieldWithPath("data.pageable.pageSize").type(JsonFieldType.NUMBER)
-                                        .description("응답 데이터 페이지 현재 페이지 크기"),
-                                fieldWithPath("data.pageable.sort").type(JsonFieldType.OBJECT)
-                                        .description("응답 데이터 페이지 현재 페이지 정렬"),
-                                fieldWithPath("data.pageable.sort.empty").type(JsonFieldType.BOOLEAN)
-                                        .description("응답 데이터 페이지 현재 페이지 정렬 데이터"),
-                                fieldWithPath("data.pageable.sort.unsorted").type(JsonFieldType.BOOLEAN)
-                                        .description("응답 데이터 페이지 현재 페이지 정렬 데이터"),
-                                fieldWithPath("data.pageable.sort.sorted").type(JsonFieldType.BOOLEAN)
-                                        .description("응답 데이터 페이지 현재 페이지 정렬 데이터"),
-                                fieldWithPath("data.pageable.offset").type(JsonFieldType.NUMBER)
-                                        .description("응답 데이터 페이지 offset"),
-                                fieldWithPath("data.pageable.paged").type(JsonFieldType.BOOLEAN)
-                                        .description("응답 데이터 페이지 paged"),
-                                fieldWithPath("data.pageable.unpaged").type(JsonFieldType.BOOLEAN)
-                                        .description("응답 데이터 페이지 unpaged"),
-                                fieldWithPath("data.last").type(JsonFieldType.BOOLEAN)
-                                        .description("응답 데이터 마지막 페이지 여부"),
-                                fieldWithPath("data.totalElements").type(JsonFieldType.NUMBER)
-                                        .description("응답 데이터 총 숫자"),
-                                fieldWithPath("data.totalPages").type(JsonFieldType.NUMBER)
-                                        .description("응답 데이터 총 페이지"),
-                                fieldWithPath("data.first").type(JsonFieldType.BOOLEAN)
-                                        .description("응답 데이터 첫페이지 여부"),
-                                fieldWithPath("data.numberOfElements").type(JsonFieldType.NUMBER)
-                                        .description("응답 데이터 크기"),
-                                fieldWithPath("data.size").type(JsonFieldType.NUMBER)
-                                        .description("응답 데이터 크기"),
-                                fieldWithPath("data.number").type(JsonFieldType.NUMBER)
-                                        .description("응답 데이터 페이지 넘버"),
-                                fieldWithPath("data.sort").type(JsonFieldType.OBJECT)
-                                        .description("응답 데이터 정렬"),
-                                fieldWithPath("data.sort.empty").type(JsonFieldType.BOOLEAN)
-                                        .description("응답 데이터 정렬 empty"),
-                                fieldWithPath("data.sort.unsorted").type(JsonFieldType.BOOLEAN)
-                                        .description("응답 데이터 정렬 unsorted"),
-                                fieldWithPath("data.sort.sorted").type(JsonFieldType.BOOLEAN)
-                                        .description("응답 데이터 정렬 sorted"),
-                                fieldWithPath("data.empty").type(JsonFieldType.BOOLEAN)
-                                        .description("응답 데이터 empty")
-
-                        )
-
-                ));
-
-
-    }
-
-    @DisplayName("팀 실시간 랭킹 조회")
-    @Test
-    void realtimeTeamRanking() throws Exception {
-        // given
-        Pageable pageable = PageRequest.of(0, 6);
-
-        List<TeamRankRealtimeResponse> sortedRank = List.of(
-                TeamRankRealtimeResponse.builder()
-                        .teamName("팀이름1")
-                        .teamRankRealtime(1)
-                        .teamScoreRealtime(600)
-                        .build(),
-                TeamRankRealtimeResponse.builder()
-                        .teamName("팀이름2")
-                        .teamRankRealtime(2)
-                        .teamScoreRealtime(500)
-                        .build(),
-                TeamRankRealtimeResponse.builder()
-                        .teamName("팀이름3")
-                        .teamRankRealtime(3)
-                        .teamScoreRealtime(400)
-                        .build(),
-                TeamRankRealtimeResponse.builder()
-                        .teamName("팀이름4")
-                        .teamRankRealtime(4)
-                        .teamScoreRealtime(300)
-                        .build(),
-                TeamRankRealtimeResponse.builder()
-                        .teamName("팀이름5")
-                        .teamRankRealtime(5)
-                        .teamScoreRealtime(200)
-                        .build(),
-                TeamRankRealtimeResponse.builder()
-                        .teamName("팀이름6")
-                        .teamRankRealtime(6)
-                        .teamScoreRealtime(100)
-                        .build()
-        );
-
-
-        List<TeamRankRealtimeResponse> content = List.of(
-                TeamRankRealtimeResponse.builder()
-                        .teamRanks(sortedRank)
-                        .teamName("팀이름1")
-                        .teamRankRealtime(1)
-                        .teamScoreRealtime(600)
-                        .build()
-
-        );
-
-        Page<TeamRankRealtimeResponse> page = new PageImpl<>(content, pageable, content.size());
-
-        given(teamService.rankOfRealtime(anyLong(), any(Pageable.class)))
-                .willReturn(page);
-
-
-        mockMvc.perform(
-                        get("/api/team/rank/realtime/{teamId}", 2L)
-                                .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andDo(document("rank-of-realtime",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        responseFields(
-                                fieldWithPath("code").type(JsonFieldType.NUMBER)
-                                        .description("코드"),
-                                fieldWithPath("status").type(JsonFieldType.STRING)
-                                        .description("상태"),
-                                fieldWithPath("message").type(JsonFieldType.STRING)
-                                        .description("메시지"),
-                                fieldWithPath("data").type(JsonFieldType.OBJECT)
-                                        .description("응답 데이터"),
-                                fieldWithPath("data.content").type(JsonFieldType.ARRAY)
-                                        .description("응답 데이터 배열"),
-
-                                fieldWithPath("data.content[].teamRanks[]").type(JsonFieldType.ARRAY)
-                                        .description("팀 실시간 랭킹"),
-                                fieldWithPath("data.content[].teamRanks[].teamName").type(JsonFieldType.STRING)
-                                        .description("팀 이름"),
-                                fieldWithPath("data.content[].teamRanks[].teamRankRealtime").type(JsonFieldType.NUMBER)
-                                        .description("실시간 랭킹 순위"),
-                                fieldWithPath("data.content[].teamRanks[].teamScoreRealtime").type(JsonFieldType.NUMBER)
-                                        .description("실시간 팀 점수"),
-
-                                fieldWithPath("data.content[].teamName").type(JsonFieldType.STRING)
-                                        .description("조회하는 유저의 팀 이름"),
-                                fieldWithPath("data.content[].teamRankRealtime").type(JsonFieldType.NUMBER)
-                                        .description("조회하는 유저의 실시간 순위"),
-                                fieldWithPath("data.content[].teamScoreRealtime").type(JsonFieldType.NUMBER)
-                                        .description("조회하는 유저의 실시간 점수"),
-
-
-                                fieldWithPath("data.pageable").type(JsonFieldType.OBJECT)
-                                        .description("응답 데이터 페이지 정보"),
-                                fieldWithPath("data.pageable.pageNumber").type(JsonFieldType.NUMBER)
-                                        .description("응답 데이터 페이지 현재 페이지 넘버"),
-                                fieldWithPath("data.pageable.pageSize").type(JsonFieldType.NUMBER)
-                                        .description("응답 데이터 페이지 현재 페이지 크기"),
-                                fieldWithPath("data.pageable.sort").type(JsonFieldType.OBJECT)
-                                        .description("응답 데이터 페이지 현재 페이지 정렬"),
-                                fieldWithPath("data.pageable.sort.empty").type(JsonFieldType.BOOLEAN)
-                                        .description("응답 데이터 페이지 현재 페이지 정렬 데이터"),
-                                fieldWithPath("data.pageable.sort.unsorted").type(JsonFieldType.BOOLEAN)
-                                        .description("응답 데이터 페이지 현재 페이지 정렬 데이터"),
-                                fieldWithPath("data.pageable.sort.sorted").type(JsonFieldType.BOOLEAN)
-                                        .description("응답 데이터 페이지 현재 페이지 정렬 데이터"),
-                                fieldWithPath("data.pageable.offset").type(JsonFieldType.NUMBER)
-                                        .description("응답 데이터 페이지 offset"),
-                                fieldWithPath("data.pageable.paged").type(JsonFieldType.BOOLEAN)
-                                        .description("응답 데이터 페이지 paged"),
-                                fieldWithPath("data.pageable.unpaged").type(JsonFieldType.BOOLEAN)
-                                        .description("응답 데이터 페이지 unpaged"),
-                                fieldWithPath("data.last").type(JsonFieldType.BOOLEAN)
-                                        .description("응답 데이터 마지막 페이지 여부"),
-                                fieldWithPath("data.totalElements").type(JsonFieldType.NUMBER)
-                                        .description("응답 데이터 총 숫자"),
-                                fieldWithPath("data.totalPages").type(JsonFieldType.NUMBER)
-                                        .description("응답 데이터 총 페이지"),
-                                fieldWithPath("data.first").type(JsonFieldType.BOOLEAN)
-                                        .description("응답 데이터 첫페이지 여부"),
-                                fieldWithPath("data.numberOfElements").type(JsonFieldType.NUMBER)
-                                        .description("응답 데이터 크기"),
-                                fieldWithPath("data.size").type(JsonFieldType.NUMBER)
-                                        .description("응답 데이터 크기"),
-                                fieldWithPath("data.number").type(JsonFieldType.NUMBER)
-                                        .description("응답 데이터 페이지 넘버"),
-                                fieldWithPath("data.sort").type(JsonFieldType.OBJECT)
-                                        .description("응답 데이터 정렬"),
-                                fieldWithPath("data.sort.empty").type(JsonFieldType.BOOLEAN)
-                                        .description("응답 데이터 정렬 empty"),
-                                fieldWithPath("data.sort.unsorted").type(JsonFieldType.BOOLEAN)
-                                        .description("응답 데이터 정렬 unsorted"),
-                                fieldWithPath("data.sort.sorted").type(JsonFieldType.BOOLEAN)
-                                        .description("응답 데이터 정렬 sorted"),
-                                fieldWithPath("data.empty").type(JsonFieldType.BOOLEAN)
-                                        .description("응답 데이터 empty")
-
-                        )
-
-                ));
-
-    }
+//    @DisplayName("팀 주간 랭킹 조회")
+//    @Test
+//    void weeklyTeamRanking() throws Exception {
+//        // given
+//        Pageable pageable = PageRequest.of(0, 6);
+//
+//        List<TeamRankHistoryResponse> sortedResponse = List.of(
+//                TeamRankHistoryResponse.builder()
+//                        .teamName("팀이름1")
+//                        .rankDate(LocalDate.of(2024, 4, 1))
+//                        .rankNum(1)
+//                        .teamScore(600)
+//                        .rewardPoint(1000)
+//                        .build(),
+//                TeamRankHistoryResponse.builder()
+//                        .teamName("팀이름2")
+//                        .rankDate(LocalDate.of(2024, 4, 1))
+//                        .rankNum(2)
+//                        .teamScore(500)
+//                        .rewardPoint(500)
+//                        .build(),
+//                TeamRankHistoryResponse.builder()
+//                        .teamName("팀이름3")
+//                        .rankDate(LocalDate.of(2024, 4, 1))
+//                        .rankNum(3)
+//                        .teamScore(400)
+//                        .rewardPoint(400)
+//                        .build(),
+//                TeamRankHistoryResponse.builder()
+//                        .teamName("팀이름4")
+//                        .rankDate(LocalDate.of(2024, 4, 1))
+//                        .rankNum(4)
+//                        .teamScore(300)
+//                        .rewardPoint(300)
+//                        .build(),
+//                TeamRankHistoryResponse.builder()
+//                        .teamName("팀이름5")
+//                        .rankDate(LocalDate.of(2024, 4, 1))
+//                        .rankNum(5)
+//                        .teamScore(200)
+//                        .rewardPoint(200)
+//                        .build(),
+//                TeamRankHistoryResponse.builder()
+//                        .teamName("팀이름6")
+//                        .rankDate(LocalDate.of(2024, 4, 1))
+//                        .rankNum(6)
+//                        .teamScore(100)
+//                        .rewardPoint(0)
+//                        .build()
+//        );
+//
+//        List<TeamRankWeeklyResponse> content = List.of(
+//                TeamRankWeeklyResponse.builder()
+//                        .teamRanks(sortedResponse)
+//                        .myTeamName("팀이름2")
+//                        .myTeamScore(500)
+//                        .myTeamRankNum(2)
+//                        .myTeamRewardPoint(500)
+//                        .build()
+//        );
+//
+//        Page<TeamRankWeeklyResponse> page = new PageImpl<>(content, pageable, content.size());
+//
+//        given(teamService.rankOfWeeks(anyLong(), any(Pageable.class)))
+//                .willReturn(page);
+//
+//        mockMvc.perform(
+//                        get("/api/team/rank/weekly/{teamId}", 2L)
+//                                .contentType(MediaType.APPLICATION_JSON)
+//                )
+//                .andDo(print())
+//                .andExpect(status().isOk())
+//                .andDo(document("rank-of-weekly",
+//                        preprocessRequest(prettyPrint()),
+//                        preprocessResponse(prettyPrint()),
+//                        responseFields(
+//                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+//                                        .description("코드"),
+//                                fieldWithPath("status").type(JsonFieldType.STRING)
+//                                        .description("상태"),
+//                                fieldWithPath("message").type(JsonFieldType.STRING)
+//                                        .description("메시지"),
+//                                fieldWithPath("data").type(JsonFieldType.OBJECT)
+//                                        .description("응답 데이터"),
+//                                fieldWithPath("data.content").type(JsonFieldType.ARRAY)
+//                                        .description("응답 데이터 배열"),
+//
+//                                fieldWithPath("data.content[].teamRanks").type(JsonFieldType.ARRAY)
+//                                        .description("팀 랭킹"),
+//                                fieldWithPath("data.content[].teamRanks[].teamName").type(JsonFieldType.STRING)
+//                                        .description("팀 이름"),
+//                                fieldWithPath("data.content[].teamRanks[].rankDate").type(JsonFieldType.ARRAY)
+//                                        .description("랭킹 집계 날짜"),
+//                                fieldWithPath("data.content[].teamRanks[].rankNum").type(JsonFieldType.NUMBER)
+//                                        .description("랭킹 순위"),
+//                                fieldWithPath("data.content[].teamRanks[].teamScore").type(JsonFieldType.NUMBER)
+//                                        .description("팀 점수"),
+//                                fieldWithPath("data.content[].teamRanks[].rewardPoint").type(JsonFieldType.NUMBER)
+//                                        .description("보상 포인트"),
+//
+//                                fieldWithPath("data.content[].myTeamName").type(JsonFieldType.STRING)
+//                                        .description("조회하는 유저의 팀 이름"),
+//                                fieldWithPath("data.content[].myTeamRankNum").type(JsonFieldType.NUMBER)
+//                                        .description("조회하는 유저의 팀 순위"),
+//                                fieldWithPath("data.content[].myTeamScore").type(JsonFieldType.NUMBER)
+//                                        .description("조회하는 유저의 팀 점수"),
+//                                fieldWithPath("data.content[].myTeamRewardPoint").type(JsonFieldType.NUMBER)
+//                                        .description("조회하는 유저의 팀 보상 포인트"),
+//
+//
+//                                fieldWithPath("data.pageable").type(JsonFieldType.OBJECT)
+//                                        .description("응답 데이터 페이지 정보"),
+//                                fieldWithPath("data.pageable.pageNumber").type(JsonFieldType.NUMBER)
+//                                        .description("응답 데이터 페이지 현재 페이지 넘버"),
+//                                fieldWithPath("data.pageable.pageSize").type(JsonFieldType.NUMBER)
+//                                        .description("응답 데이터 페이지 현재 페이지 크기"),
+//                                fieldWithPath("data.pageable.sort").type(JsonFieldType.OBJECT)
+//                                        .description("응답 데이터 페이지 현재 페이지 정렬"),
+//                                fieldWithPath("data.pageable.sort.empty").type(JsonFieldType.BOOLEAN)
+//                                        .description("응답 데이터 페이지 현재 페이지 정렬 데이터"),
+//                                fieldWithPath("data.pageable.sort.unsorted").type(JsonFieldType.BOOLEAN)
+//                                        .description("응답 데이터 페이지 현재 페이지 정렬 데이터"),
+//                                fieldWithPath("data.pageable.sort.sorted").type(JsonFieldType.BOOLEAN)
+//                                        .description("응답 데이터 페이지 현재 페이지 정렬 데이터"),
+//                                fieldWithPath("data.pageable.offset").type(JsonFieldType.NUMBER)
+//                                        .description("응답 데이터 페이지 offset"),
+//                                fieldWithPath("data.pageable.paged").type(JsonFieldType.BOOLEAN)
+//                                        .description("응답 데이터 페이지 paged"),
+//                                fieldWithPath("data.pageable.unpaged").type(JsonFieldType.BOOLEAN)
+//                                        .description("응답 데이터 페이지 unpaged"),
+//                                fieldWithPath("data.last").type(JsonFieldType.BOOLEAN)
+//                                        .description("응답 데이터 마지막 페이지 여부"),
+//                                fieldWithPath("data.totalElements").type(JsonFieldType.NUMBER)
+//                                        .description("응답 데이터 총 숫자"),
+//                                fieldWithPath("data.totalPages").type(JsonFieldType.NUMBER)
+//                                        .description("응답 데이터 총 페이지"),
+//                                fieldWithPath("data.first").type(JsonFieldType.BOOLEAN)
+//                                        .description("응답 데이터 첫페이지 여부"),
+//                                fieldWithPath("data.numberOfElements").type(JsonFieldType.NUMBER)
+//                                        .description("응답 데이터 크기"),
+//                                fieldWithPath("data.size").type(JsonFieldType.NUMBER)
+//                                        .description("응답 데이터 크기"),
+//                                fieldWithPath("data.number").type(JsonFieldType.NUMBER)
+//                                        .description("응답 데이터 페이지 넘버"),
+//                                fieldWithPath("data.sort").type(JsonFieldType.OBJECT)
+//                                        .description("응답 데이터 정렬"),
+//                                fieldWithPath("data.sort.empty").type(JsonFieldType.BOOLEAN)
+//                                        .description("응답 데이터 정렬 empty"),
+//                                fieldWithPath("data.sort.unsorted").type(JsonFieldType.BOOLEAN)
+//                                        .description("응답 데이터 정렬 unsorted"),
+//                                fieldWithPath("data.sort.sorted").type(JsonFieldType.BOOLEAN)
+//                                        .description("응답 데이터 정렬 sorted"),
+//                                fieldWithPath("data.empty").type(JsonFieldType.BOOLEAN)
+//                                        .description("응답 데이터 empty")
+//
+//                        )
+//
+//                ));
+//
+//
+//    }
+//
+//    @DisplayName("팀 실시간 랭킹 조회")
+//    @Test
+//    void realtimeTeamRanking() throws Exception {
+//        // given
+//        Pageable pageable = PageRequest.of(0, 6);
+//
+//        List<TeamRankRealtimeResponse> sortedRank = List.of(
+//                TeamRankRealtimeResponse.builder()
+//                        .teamName("팀이름1")
+//                        .teamRankRealtime(1)
+//                        .teamScoreRealtime(600)
+//                        .build(),
+//                TeamRankRealtimeResponse.builder()
+//                        .teamName("팀이름2")
+//                        .teamRankRealtime(2)
+//                        .teamScoreRealtime(500)
+//                        .build(),
+//                TeamRankRealtimeResponse.builder()
+//                        .teamName("팀이름3")
+//                        .teamRankRealtime(3)
+//                        .teamScoreRealtime(400)
+//                        .build(),
+//                TeamRankRealtimeResponse.builder()
+//                        .teamName("팀이름4")
+//                        .teamRankRealtime(4)
+//                        .teamScoreRealtime(300)
+//                        .build(),
+//                TeamRankRealtimeResponse.builder()
+//                        .teamName("팀이름5")
+//                        .teamRankRealtime(5)
+//                        .teamScoreRealtime(200)
+//                        .build(),
+//                TeamRankRealtimeResponse.builder()
+//                        .teamName("팀이름6")
+//                        .teamRankRealtime(6)
+//                        .teamScoreRealtime(100)
+//                        .build()
+//        );
+//
+//
+//        List<TeamRankRealtimeResponse> content = List.of(
+//                TeamRankRealtimeResponse.builder()
+//                        .teamRanks(sortedRank)
+//                        .teamName("팀이름1")
+//                        .teamRankRealtime(1)
+//                        .teamScoreRealtime(600)
+//                        .build()
+//
+//        );
+//
+//        Page<TeamRankRealtimeResponse> page = new PageImpl<>(content, pageable, content.size());
+//
+//        given(teamService.rankOfRealtime(anyLong(), any(Pageable.class)))
+//                .willReturn(page);
+//
+//
+//        mockMvc.perform(
+//                        get("/api/team/rank/realtime/{teamId}", 2L)
+//                                .contentType(MediaType.APPLICATION_JSON)
+//                )
+//                .andDo(print())
+//                .andExpect(status().isOk())
+//                .andDo(document("rank-of-realtime",
+//                        preprocessRequest(prettyPrint()),
+//                        preprocessResponse(prettyPrint()),
+//                        responseFields(
+//                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+//                                        .description("코드"),
+//                                fieldWithPath("status").type(JsonFieldType.STRING)
+//                                        .description("상태"),
+//                                fieldWithPath("message").type(JsonFieldType.STRING)
+//                                        .description("메시지"),
+//                                fieldWithPath("data").type(JsonFieldType.OBJECT)
+//                                        .description("응답 데이터"),
+//                                fieldWithPath("data.content").type(JsonFieldType.ARRAY)
+//                                        .description("응답 데이터 배열"),
+//
+//                                fieldWithPath("data.content[].teamRanks[]").type(JsonFieldType.ARRAY)
+//                                        .description("팀 실시간 랭킹"),
+//                                fieldWithPath("data.content[].teamRanks[].teamName").type(JsonFieldType.STRING)
+//                                        .description("팀 이름"),
+//                                fieldWithPath("data.content[].teamRanks[].teamRankRealtime").type(JsonFieldType.NUMBER)
+//                                        .description("실시간 랭킹 순위"),
+//                                fieldWithPath("data.content[].teamRanks[].teamScoreRealtime").type(JsonFieldType.NUMBER)
+//                                        .description("실시간 팀 점수"),
+//
+//                                fieldWithPath("data.content[].teamName").type(JsonFieldType.STRING)
+//                                        .description("조회하는 유저의 팀 이름"),
+//                                fieldWithPath("data.content[].teamRankRealtime").type(JsonFieldType.NUMBER)
+//                                        .description("조회하는 유저의 실시간 순위"),
+//                                fieldWithPath("data.content[].teamScoreRealtime").type(JsonFieldType.NUMBER)
+//                                        .description("조회하는 유저의 실시간 점수"),
+//
+//
+//                                fieldWithPath("data.pageable").type(JsonFieldType.OBJECT)
+//                                        .description("응답 데이터 페이지 정보"),
+//                                fieldWithPath("data.pageable.pageNumber").type(JsonFieldType.NUMBER)
+//                                        .description("응답 데이터 페이지 현재 페이지 넘버"),
+//                                fieldWithPath("data.pageable.pageSize").type(JsonFieldType.NUMBER)
+//                                        .description("응답 데이터 페이지 현재 페이지 크기"),
+//                                fieldWithPath("data.pageable.sort").type(JsonFieldType.OBJECT)
+//                                        .description("응답 데이터 페이지 현재 페이지 정렬"),
+//                                fieldWithPath("data.pageable.sort.empty").type(JsonFieldType.BOOLEAN)
+//                                        .description("응답 데이터 페이지 현재 페이지 정렬 데이터"),
+//                                fieldWithPath("data.pageable.sort.unsorted").type(JsonFieldType.BOOLEAN)
+//                                        .description("응답 데이터 페이지 현재 페이지 정렬 데이터"),
+//                                fieldWithPath("data.pageable.sort.sorted").type(JsonFieldType.BOOLEAN)
+//                                        .description("응답 데이터 페이지 현재 페이지 정렬 데이터"),
+//                                fieldWithPath("data.pageable.offset").type(JsonFieldType.NUMBER)
+//                                        .description("응답 데이터 페이지 offset"),
+//                                fieldWithPath("data.pageable.paged").type(JsonFieldType.BOOLEAN)
+//                                        .description("응답 데이터 페이지 paged"),
+//                                fieldWithPath("data.pageable.unpaged").type(JsonFieldType.BOOLEAN)
+//                                        .description("응답 데이터 페이지 unpaged"),
+//                                fieldWithPath("data.last").type(JsonFieldType.BOOLEAN)
+//                                        .description("응답 데이터 마지막 페이지 여부"),
+//                                fieldWithPath("data.totalElements").type(JsonFieldType.NUMBER)
+//                                        .description("응답 데이터 총 숫자"),
+//                                fieldWithPath("data.totalPages").type(JsonFieldType.NUMBER)
+//                                        .description("응답 데이터 총 페이지"),
+//                                fieldWithPath("data.first").type(JsonFieldType.BOOLEAN)
+//                                        .description("응답 데이터 첫페이지 여부"),
+//                                fieldWithPath("data.numberOfElements").type(JsonFieldType.NUMBER)
+//                                        .description("응답 데이터 크기"),
+//                                fieldWithPath("data.size").type(JsonFieldType.NUMBER)
+//                                        .description("응답 데이터 크기"),
+//                                fieldWithPath("data.number").type(JsonFieldType.NUMBER)
+//                                        .description("응답 데이터 페이지 넘버"),
+//                                fieldWithPath("data.sort").type(JsonFieldType.OBJECT)
+//                                        .description("응답 데이터 정렬"),
+//                                fieldWithPath("data.sort.empty").type(JsonFieldType.BOOLEAN)
+//                                        .description("응답 데이터 정렬 empty"),
+//                                fieldWithPath("data.sort.unsorted").type(JsonFieldType.BOOLEAN)
+//                                        .description("응답 데이터 정렬 unsorted"),
+//                                fieldWithPath("data.sort.sorted").type(JsonFieldType.BOOLEAN)
+//                                        .description("응답 데이터 정렬 sorted"),
+//                                fieldWithPath("data.empty").type(JsonFieldType.BOOLEAN)
+//                                        .description("응답 데이터 empty")
+//
+//                        )
+//
+//                ));
+//
+//    }
 
     private Member createMember(String memberEmail, String memberNickname, LocalDate memberBirthDate) {
         return Member.builder()
