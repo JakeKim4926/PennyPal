@@ -15,6 +15,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -53,26 +55,36 @@ public class MarketService {
     @Transactional
     public void createOrder(OrderRequestDTO orderRequest) {
         // 사용자 확인
-        Member member = memberRepository.findById(orderRequest.getMember().getMemberId())
+        Member member = memberRepository.findById(orderRequest.getMemberId())
                 .orElseThrow(() -> new IllegalArgumentException("Member not found"));
         // 상품 확인
-        Product product = productRepository.findById(orderRequest.getProduct().getProductId())
+        Product product = productRepository.findById(orderRequest.getProductId())
                 .orElseThrow(() -> new IllegalArgumentException("Product not found"));
 
-        // 주문 총액 계산
-        Integer priceSum = product.getProductPrice() * orderRequest.getBuyQuantity();
+        Order order = Order.builder()
+                .member(member)
+                .product(product)
+                .buyQuantity(orderRequest.getBuyQuantity())
+                .priceSum(product.getProductPrice() * orderRequest.getBuyQuantity())
+                .orderDate(LocalDateTime.now())
+                .build();
 
-        // 사용자의 보유 포인트 확인
-        if (member.getMemberPoint() < priceSum)
-            throw new IllegalArgumentException("Not enough points");
-        else {
-            // 포인트 차감
-            member.setMemberPoint(member.getMemberPoint() - priceSum);
+        orderRepository.save(order);
 
-            // 주문 생성 및 저장
-            Order order = orderRequest.createOrder(member, product);
-            orderRepository.save(order);
-        }
+//        // 주문 총액 계산
+//        Integer priceSum = product.getProductPrice() * orderRequest.getBuyQuantity();
+//
+//        // 사용자의 보유 포인트 확인
+//        if (member.getMemberPoint() < priceSum)
+//            throw new IllegalArgumentException("Not enough points");
+//        else {
+//            // 포인트 차감
+//            member.setMemberPoint(member.getMemberPoint() - priceSum);
+//
+//            // 주문 생성 및 저장
+//            Order order = orderRequest.createOrder(member, product);
+//            orderRepository.save(order);
+//        }
     }
 
     // 사용자 구매 내역 조회

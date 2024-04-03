@@ -14,7 +14,7 @@ function ExpenditureWeeklyDaily({ date, spendings }: ExpenditureWeeklyDailyProps
     const dayOfWeek = date.toLocaleDateString('ko-KR', { weekday: 'short' });
 
     const totalAmount = spendings.reduce((sum, spending) => {
-        const amountNumber = parseInt(spending.amount.replace(/,/g, '').replace('원', ''), 10);
+        const amountNumber = parseInt(spending.transactionBalance.replace(/,/g, '').replace('원', ''), 10);
         return sum + amountNumber;
     }, 0);
 
@@ -30,7 +30,7 @@ function ExpenditureWeeklyDaily({ date, spendings }: ExpenditureWeeklyDailyProps
 
             <div className="expenditureWeeklyDaily__spendings clickable-div">
                 {spendings.map((spending) => (
-                    <SpendingItem key={spending.id} spending={spending} />
+                    <SpendingItem key={spending.transactionUniqueId} spending={spending} />
                 ))}
             </div>
 

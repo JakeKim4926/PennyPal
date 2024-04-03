@@ -3,3 +3,8 @@
     // background-size: cover; /* 배경 이미지가 전체 화면을 채우도록 설정 */
     background-position: center; /* 배경 이미지를 화면 중앙에 배치 */
 }
+
+main {
+    background-image: url('@/../public/assets/image/landing1.png');
+    opacity: 0.2;
+}
