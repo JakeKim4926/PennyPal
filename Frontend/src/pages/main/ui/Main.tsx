@@ -12,40 +12,32 @@ export function Main() {
 
     return (
         <div className="container">
-            <div className="slide1">
-                <div className="slide1__content">
-                    <h1 className="slide1__content-mainPhase">Save Now, Fire Later!</h1>
-                    <FontAwesomeIcon icon={faFire} bounce />
-                    <div className="slide1__content-subPhase">
-                        <span>파이어족으로 가는 첫 걸음,</span>
-                        <span>PennyPal과 함께 시작해요!</span>
+            <div className="landing">
+                <div className="slide1">
+                    <div className="slide1__content">
+                        <div className="slide1__content-mainPhase">
+                            <h1 className="green">Save Now,</h1> <h1 className="yellow">Fire Later!</h1>
+                        </div>
+                        <div
+                            className="slide1__content-btn"
+                            onClick={() => {
+                                navigate('/signin');
+                            }}
+                        >
+                            <FontAwesomeIcon icon={faFire} bounce />
+                        </div>
+                        <div className="slide1__content-subPhase">
+                            <p>
+                                <span className="red">파이어족</span>으로 가는 첫 걸음,
+                            </p>
+                            <p>
+                                <span className="green">Penny</span>
+                                <span className="yellow">Pal</span>과 함께 시작해요!
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <Button
-                child="시작하기"
-                color="color-main"
-                onClick={() => {
-                    navigate('/signin');
-                }}
-            />
         </div>
     );
 }

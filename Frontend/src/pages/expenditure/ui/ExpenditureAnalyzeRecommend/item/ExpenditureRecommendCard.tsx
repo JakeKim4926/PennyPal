@@ -15,6 +15,8 @@ interface ExpenditureRecommendCardProps {
 function ExpenditureRecommendCard({ card }: ExpenditureRecommendCardProps) {
     if (!card) return null;
 
+    const benefits = card.cardTopCategory.split(',').filter((benefit) => benefit.trim() !== '');
+
     return (
         <div className="expenditureRecommend__content-slider-carousel-item">
             <div className="expenditureRecommend__content-slider-carousel-item-imgBg">
@@ -35,11 +37,15 @@ function ExpenditureRecommendCard({ card }: ExpenditureRecommendCardProps) {
                     </div>
                 </div>
                 <div className="expenditureRecommend__content-slider-carousel-item-info-benefits">
-                    <div className="expenditureRecommend__content-slider-carousel-item-info-benefits-benefit">
-                        <div className="expenditureRecommend__content-slider-carousel-item-info-benefits-benefit-category">
-                            {card.cardTopCategory}
+                    {/* 혜택명을 순회하면서 span 태그로 표시 */}
+                    {benefits.map((benefit, index) => (
+                        <div
+                            key={index}
+                            className="expenditureRecommend__content-slider-carousel-item-info-benefits-benefit"
+                        >
+                            <span>{benefit} 혜택!</span>
                         </div>
-                    </div>
+                    ))}
                 </div>
             </div>
         </div>

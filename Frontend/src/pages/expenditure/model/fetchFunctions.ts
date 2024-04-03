@@ -204,7 +204,7 @@ export const fetchDailyExpense = async (): Promise<{ expenseDate: string; expens
     const memberId = getCookie('memberId');
 
     if (!memberId) {
-        console.error('로그인이 필요합니다.');
+        console.error('일간지출조회는 로그인 필요.');
         return [];
     }
 
