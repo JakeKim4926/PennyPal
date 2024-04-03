@@ -15,7 +15,8 @@
         font-size: 14px;
 
         &-title {
-            font-family: 'Wanted-Bold';
+            font-family: 'Wanted-ExtraBold';
+            font-size: 16px;
         }
 
         &-data {
@@ -28,8 +29,10 @@
         }
 
         &-info {
+            font-size: 14px;
             span {
-                font-family: 'Wanted-ExtraBold';
+                font-family: 'Wanted-Black';
+                color: $main;
             }
         }
     }
