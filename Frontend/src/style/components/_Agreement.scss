@@ -1,4 +1,7 @@
 .agreement {
+    li {
+        margin-left: 2rem;
+    }
     &__top {
         display: flex;
         flex-direction: column;
@@ -16,8 +19,10 @@
             &-top {
             }
             &-middle {
+                display: flex;
             }
             &-bottom {
+                display: flex;
             }
         }
 

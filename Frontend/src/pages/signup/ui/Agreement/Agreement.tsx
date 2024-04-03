@@ -25,18 +25,22 @@ export function Agreement() {
                         <div>사용자의 계좌내역 수집 및 활용에 동의합니다.</div>
                     </div>
                     <div className="agreement__top-content-middle">
-                        <img src="assets/image/icons_mini/handShake.svg" />
                         <div>
-                            <p>수집항목</p>
+                            <p>
+                                <img src="assets/image/icons_mini/handShake.svg" />
+                                수집항목
+                            </p>
                             <ul>
                                 <li>카드 계좌 및 사용내역</li>
                             </ul>
                         </div>
                     </div>
                     <div className="agreement__top-content-bottom">
-                        <img src="assets/image/icons_mini/handShake.svg" />
                         <div>
-                            <p>이용목적</p>
+                            <p>
+                                <img src="assets/image/icons_mini/handShake.svg" />
+                                이용목적
+                            </p>
                             <ul>
                                 <li>
                                     서비스 사용에 필요한 지출내역 분석을 위해 활용하며, 목적 외의 용도로는 사용하지

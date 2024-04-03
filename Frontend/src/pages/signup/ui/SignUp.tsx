@@ -30,7 +30,7 @@ export function SignUp() {
         };
     }, []);
     return (
-        <div className="welcomebox__container container">
+        <div className="welcomebox__container container" style={{ height: '100%' }}>
             <div className="welcomebox">
                 <div className="welcomebox__top">
                     <p className="welcomebox__top-title">WELCOME TO PENNYPAL !</p>
