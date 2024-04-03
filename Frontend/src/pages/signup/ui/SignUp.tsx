@@ -6,6 +6,7 @@ import { RootState } from '@/app/appProvider';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { setSignUpStep } from '../model/signUpStepReducer';
+import { setIsInitPage } from '@/shared';
 
 export function SignUp() {
     const dispatch = useDispatch();
@@ -22,6 +23,11 @@ export function SignUp() {
     };
     useEffect(() => {
         dispatch(setSignUpStep(0));
+
+        dispatch(setIsInitPage(true));
+        return () => {
+            dispatch(setIsInitPage(false));
+        };
     }, []);
     return (
         <div className="signup container">

@@ -1,8 +1,10 @@
 import { useNavigate } from 'react-router-dom';
-import { Button } from '@/shared';
+import { Button, setIsInitPage } from '@/shared';
 import { doLogin } from '@/pages/signin/model/doLogin';
 import { useState, useEffect, useRef } from 'react';
 import { setCookie } from '@/shared/lib'; // cookieHelper에서 setCookie 함수를 가져옵니다.
+import { useDispatch } from 'react-redux';
+
 interface LoginData {
     memberEmail: string;
     memberPassword: string;
@@ -29,6 +31,7 @@ export function SignIn() {
     const [password, setPassword] = useState<string>('');
     const emailRef = useRef<HTMLInputElement>(null); // autofocus용
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(event.target.value);
@@ -78,6 +81,12 @@ export function SignIn() {
         if (emailRef.current) {
             emailRef.current.focus();
         }
+
+        dispatch(setIsInitPage(true));
+
+        return () => {
+            dispatch(setIsInitPage(false));
+        };
     }, []);
 
     return (
@@ -114,7 +123,8 @@ export function SignIn() {
                         <button onClick={handlePassword}>Forgot Password ? &#9654;</button>
                     </div>
                     <div className="signin__bottom-login">
-                        <Button child={'LOGIN'} color={'color-sub'} onClick={handleSignIn} />
+                        {/* <Button child={'LOGIN'} color={'color-sub'} onClick={handleSignIn} /> */}
+                        <button className="button">LOGIN</button>
                     </div>
                     <div className="signin__bottom-account">
                         <div>No Account ? </div>

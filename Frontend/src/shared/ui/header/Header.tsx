@@ -2,8 +2,12 @@ import React from 'react';
 import { Logo } from '../logo/Logo';
 import { Menubar } from './menubar/Menubar';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/app/appProvider';
 
 export function Header() {
+    const isInitPage = useSelector((state: RootState) => state.setIsInitPageReducer.data);
+
     return (
         <div className="header__container">
             <div className="header">

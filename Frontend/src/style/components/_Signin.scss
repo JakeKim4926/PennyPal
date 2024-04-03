@@ -22,7 +22,7 @@
             font-size: 1rem;
             font-family: 'Wanted-Bold';
             height: 3rem;
-            width: 100%;
+            width: 22rem;
 
             &:focus {
                 background-color: $light;
@@ -41,7 +41,21 @@
     gap: 1rem;
 
     &__container {
-        background-color: $black;
+        background-image: url('@/style/abstract/background.svg');
+        isolation: isolate;
+        position: relative;
+
+        ::after {
+            position: absolute;
+            background-color: $bright;
+            z-index: -1;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0.05;
+            content: '';
+        }
         height: 100%;
         display: flex;
         align-items: center;
@@ -93,6 +107,18 @@
         &-forgot {
             align-self: end;
             font-family: 'Wanted-ExtraBold';
+        }
+
+        &-login {
+            text-align: center;
+            font-family: 'Wanted-ExtraBold';
+            letter-spacing: 0.4rem;
+
+            button {
+                background-color: $sub;
+                width: 22rem;
+                height: 3rem;
+            }
         }
 
         &-account {
