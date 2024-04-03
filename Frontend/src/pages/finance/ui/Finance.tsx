@@ -206,10 +206,13 @@ export function Finance() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await StockListUp();
+                const res = await StockListUp(15, 5);
                 if (res.data.code === 200) {
+                    const res2 = await StockSubDetail(res.data.data.content.isinCd);
+                    console.log(res2);
                     const stocks: StockWithDetail[] = res.data.data.content.map((stock: Stock) => ({
                         stock: stock,
+                        subDetail: res2.data.item[0],
                     }));
                     setData(stocks);
                 }
@@ -228,20 +231,6 @@ export function Finance() {
 
         fetchData();
     }, []);
-    useEffect(() => {
-        const fetchSubDetail = async () => {
-            try {
-                for (const el of data) {
-                    const res = await StockSubDetail(el.stock.isinCd);
-                    console.log(res);
-                }
-            } catch (err) {
-                console.log(err);
-            }
-        };
-
-        fetchSubDetail();
-    }, [data]);
     return (
         <div className="container bg-grey">
             <div className="finance">
@@ -282,23 +271,28 @@ export function Finance() {
                             <img src="@/../assets/image/arrowHorizontal.svg" />
                         </a>
                     </div>
-                    <div className="stock__content">
+                    <table className="stock__content">
+                        <tr>
+                            <th>기업명</th>
+                            <th>배당금</th>
+                            <th>시가</th>
+                            <th>시가총액</th>
+                        </tr>
                         {data.map((stock) => (
-                            <div
+                            <tr
                                 key={stock.stock.stockId}
                                 className="stock__content--item"
                                 onMouseEnter={() => handleMouseEnter(stock.stock.stockId)} // 마우스 호버 이벤트 핸들러
                             >
-                                <div className="stock__content--companyName">{stock.stock.stckIssuCmpyNm}</div>
-                                <div className="stock__content--info">
-                                    <span>배당금: {stock.stock.stckGenrDvdnAmt.toLocaleString()} 원</span>
-                                </div>
-                                <div className="stock__content--info">
-                                    <span>기준일: {stock.stock.basDt}</span>
-                                </div>
-                            </div>
+                                <td className="stock__content--companyName">{stock.stock.stckIssuCmpyNm}</td>
+                                <td className="stock__content--info">
+                                    {stock.stock.stckGenrDvdnAmt.toLocaleString()} 원
+                                </td>
+                                <td className="stock__content--info">{stock.subDetail?.mkp}</td>
+                                <td className="stock__content--info">{stock.subDetail?.mrktTotAmt}</td>
+                            </tr>
                         ))}
-                    </div>
+                    </table>
                 </div>
                 <div>
                     <canvas ref={canvasRef} id="myChart" width="600" height="250"></canvas>
