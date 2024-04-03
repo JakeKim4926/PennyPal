@@ -18,7 +18,7 @@ $LETTER_SPACING: 2px;
 
         &-title {
             padding: $PADDING;
-            background-color: $gray;
+            background-color: $main;
             border-top-left-radius: $BORDER_RADIUS;
             border-bottom-left-radius: $BORDER_RADIUS;
             box-shadow: 0 0.2rem 0 $black;
@@ -62,7 +62,7 @@ $LETTER_SPACING: 2px;
         }
 
         &-button {
-            background-color: $gray;
+            background-color: $main;
             border: none;
             padding: $PADDING;
             border-top-right-radius: $BORDER_RADIUS;
@@ -78,7 +78,7 @@ $LETTER_SPACING: 2px;
         align-items: center;
 
         &-item {
-            background-color: $gray;
+            background-color: $main;
             padding: $PADDING;
             border-radius: $BORDER_RADIUS;
             color: $bright;
