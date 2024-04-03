@@ -31,7 +31,6 @@ export function SignUpForm() {
         try {
             const response = await doSignUp(data);
             const response2 = await createUserKey(data.memberEmail);
-            console.log(response2.data); // 테스트용
             if (response.data.status === 'OK' && response2.data.code === 200) {
                 dispatch(setSignUpStep(2));
             } else alert(response.data.message); // 서버로부터 받은 응답 message 데이터 출력

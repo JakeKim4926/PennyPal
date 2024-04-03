@@ -1,6 +1,20 @@
-.infinite-scroll-component {
-    // all: initial;
+#infiniteScroll {
     overflow-y: scroll; /* y축으로 스크롤 가능 */
-    height: 500px; /* 스크롤 컨테이너의 높이를 지정, 적절한 값으로 조정 필요 */
-    overflow-x: hidden; /* x축 스크롤 방지 */
+    height: 100px; /* 스크롤 컨테이너의 높이를 지정, 적절한 값으로 조정 필요 */
+    // 스크롤바 스타일링 (웹킷 기반 브라우저용)
+    &::-webkit-scrollbar {
+        width: 10px; // 스크롤바의 너비
+    }
+
+    &::-webkit-scrollbar-track {
+        background: #f1f1f1; // 스크롤바 트랙의 배경 색상
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: #888; // 스크롤바 썸(움직이는 부분)의 배경 색상
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background: #555; // 스크롤바 썸에 마우스 호버 시 색상
+    }
 }

@@ -99,6 +99,7 @@ export function SignIn() {
                             ref={emailRef}
                             value={email}
                             onChange={handleEmailChange}
+                            onKeyDown={handleKeyDown}
                         />
                     </div>
                     <p>Password</p>
