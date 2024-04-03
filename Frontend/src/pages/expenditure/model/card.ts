@@ -3,6 +3,7 @@ export interface DataStat {
 }
 
 export interface CardData {
+    cardId: number;
     cardCompany: string;
     cardImg: string;
     cardName: string;

@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface CardData {
-    id: number;
+    cardId: number;
     cardCompany: string;
     cardImg: string;
     cardName: string;

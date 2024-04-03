@@ -28,7 +28,10 @@ const categoryLabels = {
     category_travel: '항공/여행',
 };
 
-export function ExpenditureAnalyze() {
+type Props = {
+    setReady: any;
+};
+export function ExpenditureAnalyze({ setReady }: Props) {
     const [memberCategoryPercentage, setMemberCategoryPercentage] = useState<MemberCategoryPercentage | undefined>();
     const [isLoading, setIsLoading] = useState(true); // 로딩 상태를 추적하는 상태 추가
 
@@ -36,6 +39,8 @@ export function ExpenditureAnalyze() {
         const getExpensePie = async () => {
             setIsLoading(true); // 데이터 로딩 시작
             const result = await fetchExpensePie();
+            setReady(true);
+
             if (result && isMemberCategoryPercentage(result.memberCategoryPercentage)) {
                 setMemberCategoryPercentage(result.memberCategoryPercentage);
             } else {
@@ -45,6 +50,10 @@ export function ExpenditureAnalyze() {
         };
 
         getExpensePie();
+
+        return () => {
+            setReady(false);
+        };
     }, []);
 
     const sortedCategories = memberCategoryPercentage

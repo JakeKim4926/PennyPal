@@ -4,87 +4,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { Card, fetchRecommendedCards } from '../../model/fetchFunctions';
 
-const exampleData = {
-    favCategory: '식료품',
-    items: [
-        {
-            id: 1,
-            cardName: '카드명',
-            cardCompany: '카드사명',
-            cardImg: 'https://api.card-gorilla.com:8080/storage/card/508/card_img/21197/508card.png',
-            cardTopCategory: [
-                {
-                    label: '교통',
-                },
-                {
-                    label: '교통',
-                },
-                {
-                    label: '교통',
-                },
-            ],
-        },
-        {
-            id: 2,
-            cardName: '카드명',
-            cardCompany: '카드사명',
-            cardImg: 'https://api.card-gorilla.com:8080/storage/card/508/card_img/21197/508card.png',
-            cardTopCategory: [
-                {
-                    label: '교통',
-                },
-                {
-                    label: '교통',
-                },
-                {
-                    label: '교통',
-                },
-            ],
-        },
-        {
-            id: 3,
-            cardName: '카드명',
-            cardCompany: '카드사명',
-            cardImg: 'https://api.card-gorilla.com:8080/storage/card/508/card_img/21197/508card.png',
-            cardTopCategory: [
-                {
-                    label: '교통',
-                },
-                {
-                    label: '교통',
-                },
-                {
-                    label: '교통',
-                },
-            ],
-        },
-        {
-            id: 4,
-            cardName: '카드명',
-            cardCompany: '카드사명',
-            cardImg: 'https://api.card-gorilla.com:8080/storage/card/508/card_img/21197/508card.png',
-            cardTopCategory: [
-                {
-                    label: '교통',
-                },
-                {
-                    label: '교통',
-                },
-                {
-                    label: '교통',
-                },
-            ],
-        },
-    ],
-};
-
 interface IBigDataRecommendingProps {
-    favCategory: String;
-    items: CardData[];
+    // items: CardData[];
+    ready: boolean;
 }
 
 interface CardData {
-    id: number;
+    cardId: number;
     cardCompany: string;
     cardImg: string;
     cardName: string;
@@ -95,25 +21,102 @@ interface DataStat {
     label: string;
 }
 
-export function ExpenditureRecommend({ favCategory, items }: IBigDataRecommendingProps) {
+// export function ExpenditureRecommend({ items, ready }: IBigDataRecommendingProps) {
+export function ExpenditureRecommend({ ready }: IBigDataRecommendingProps) {
+    const exampleData = {
+        items: [
+            {
+                cardId: 1,
+                cardName: '카드명',
+                cardCompany: '카드사명',
+                cardImg: 'https://api.card-gorilla.com:8080/storage/card/508/card_img/21197/508card.png',
+                cardTopCategory: [
+                    {
+                        label: '교통',
+                    },
+                    {
+                        label: '교통',
+                    },
+                    {
+                        label: '교통',
+                    },
+                ],
+            },
+            {
+                cardId: 2,
+                cardName: '카드명',
+                cardCompany: '카드사명',
+                cardImg: 'https://api.card-gorilla.com:8080/storage/card/508/card_img/21197/508card.png',
+                cardTopCategory: [
+                    {
+                        label: '교통',
+                    },
+                    {
+                        label: '교통',
+                    },
+                    {
+                        label: '교통',
+                    },
+                ],
+            },
+            {
+                cardId: 3,
+                cardName: '카드명',
+                cardCompany: '카드사명',
+                cardImg: 'https://api.card-gorilla.com:8080/storage/card/508/card_img/21197/508card.png',
+                cardTopCategory: [
+                    {
+                        label: '교통',
+                    },
+                    {
+                        label: '교통',
+                    },
+                    {
+                        label: '교통',
+                    },
+                ],
+            },
+            {
+                cardId: 4,
+                cardName: '카드명',
+                cardCompany: '카드사명',
+                cardImg: 'https://api.card-gorilla.com:8080/storage/card/508/card_img/21197/508card.png',
+                cardTopCategory: [
+                    {
+                        label: '교통',
+                    },
+                    {
+                        label: '교통',
+                    },
+                    {
+                        label: '교통',
+                    },
+                ],
+            },
+        ],
+    };
+
     const [cards, setCards] = useState<Card[]>([]);
 
     useEffect(() => {
-        const loadCards = async () => {
-            const fetchedCards = await fetchRecommendedCards();
-            setCards(fetchedCards);
-        };
+        if (ready) {
+            const loadCards = async () => {
+                const fetchedCards = await fetchRecommendedCards();
 
-        loadCards();
-    }, []);
+                setCards(fetchedCards);
+            };
+
+            loadCards();
+        }
+    }, [ready]);
 
     const [carouselIndex, setCarouselIndex] = useState(0);
 
     const goToNext = () => {
-        setCarouselIndex((prevIndex) => (prevIndex + 1) % items.length);
+        setCarouselIndex((prevIndex) => (prevIndex + 1) % exampleData.items.length);
     };
     const goToPrevious = () => {
-        setCarouselIndex((prevIndex) => (prevIndex - 1 + items.length) % items.length);
+        setCarouselIndex((prevIndex) => (prevIndex - 1 + exampleData.items.length) % exampleData.items.length);
     };
 
     return (
@@ -147,15 +150,15 @@ export function ExpenditureRecommend({ favCategory, items }: IBigDataRecommendin
                         <button onClick={goToPrevious} aria-label="Previous" className="clickable-icon">
                             <FontAwesomeIcon icon={faChevronLeft} size="xl" />
                         </button>
-                        <ExpenditureRecommendCard card={items[carouselIndex]} />
+                        <ExpenditureRecommendCard card={exampleData.items[carouselIndex]} />
                         <button onClick={goToNext} aria-label="Next" className="clickable-icon">
                             <FontAwesomeIcon icon={faChevronRight} size="xl" />
                         </button>
                     </div>
                     <div className="expenditureRecommend__content-slider-indicator">
-                        {items.map((item, index) => (
+                        {exampleData.items.map((item, index) => (
                             <div
-                                key={item.id}
+                                key={item.cardId}
                                 className={`dot ${index === carouselIndex ? 'active' : ''}`}
                                 onClick={() => setCarouselIndex(index)}
                             ></div>
@@ -164,7 +167,7 @@ export function ExpenditureRecommend({ favCategory, items }: IBigDataRecommendin
                 </div>
             </div>
             <div className="expenditureRecommend__comment">
-                <span>{favCategory}</span> 좋아하는 00님을 위한 맞춤 카드 추천
+                <span>00님</span>을 위한 맞춤 카드 추천!
             </div>
         </div>
     );
