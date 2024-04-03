@@ -29,6 +29,11 @@ $GAP: 20px;
             display: flex;
             flex-direction: column;
             gap: 5px;
+
+            &-name {
+                font-family: 'Wanted-Black';
+                font-size: 1.3rem;
+            }
         }
 
         &-right {
