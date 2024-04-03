@@ -22,10 +22,7 @@ public class Order extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member member;                                    // 주문자
 
-    @OneToOne(
-            fetch = FetchType.LAZY,
-            cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REMOVE}
-    )
+    @ManyToOne(fetch = FetchType.LAZY) // 변경된 부분
     @JoinColumn(name = "product_id")
     private Product product;                                  // 주문 상품
 
