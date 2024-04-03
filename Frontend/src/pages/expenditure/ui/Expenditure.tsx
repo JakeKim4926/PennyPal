@@ -8,10 +8,13 @@ import { ExpenditureAnalyze } from './ExpenditureAnalyzeRecommend/ExpenditureAna
 import { ExpenditureRecommend } from './ExpenditureAnalyzeRecommend/ExpenditureRecommend';
 
 import {
-    fetchRecommendedCards,
     fetchBankKey,
     fetchAccountList,
     fetchAccountTransactions,
+    fetchDailyExpense,
+    fetchExpensePie,
+    fetchFavCategory,
+    fetchRecommendedCards,
 } from '../model/fetchFunctions';
 
 export function Expenditure() {
@@ -102,10 +105,13 @@ export function Expenditure() {
                     <ExpenditureRecommend {...exampleData} />
                 </div>
                 <div className="contentCard">
-                    <button onClick={fetchRecommendedCards}>유저추천카드조회</button>|
-                    <button onClick={fetchBankKey}>은행키조회</button>|
-                    <button onClick={fetchAccountList}>계좌목록조회</button>|
-                    <button onClick={fetchAccountTransactions}>계좌거래내역조회</button>
+                    <button onClick={fetchBankKey}>은행키조회</button>|||
+                    <button onClick={fetchAccountList}>계좌목록조회</button>|||
+                    <button onClick={fetchAccountTransactions}>계좌거래내역조회</button>|||
+                    <button onClick={fetchDailyExpense}>일간지출조회</button>|||
+                    <button onClick={fetchExpensePie}>지출비율조회</button>|||
+                    <button onClick={fetchFavCategory}>최애카테고리조회</button>|||
+                    <button onClick={fetchRecommendedCards}>유저추천카드조회</button>|||
                 </div>
             </div>
         </div>

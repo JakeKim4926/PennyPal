@@ -1,4 +1,4 @@
-$BORDER_RADIUS: 10px; 
+$BORDER_RADIUS: 1.5rem;
 $PADDING: 10px;
 $LETTER_SPACING: 2px;
 
@@ -6,33 +6,50 @@ $LETTER_SPACING: 2px;
     display: flex;
     justify-content: space-between;
 
-    div, button {
+    div,
+    button {
         font-family: 'Wanted-Medium';
         letter-spacing: $LETTER_SPACING;
     }
 
     &__point {
         display: flex;
-        
+        align-items: center;
+
         &-title {
             padding: $PADDING;
-            background-color: $gray;
+            background-color: $main;
             border-top-left-radius: $BORDER_RADIUS;
             border-bottom-left-radius: $BORDER_RADIUS;
+            box-shadow: 0 0.2rem 0 $black;
+            height: 100%;
+
             color: $bright;
+
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+
+            div {
+                color: $bright;
+            }
         }
-        
+
         &-value {
+            display: flex;
+            align-items: center;
             padding: $PADDING;
             background-color: $bright;
             border-top-right-radius: $BORDER_RADIUS;
             border-bottom-right-radius: $BORDER_RADIUS;
+            height: 100%;
+            box-shadow: 0 0.2rem 0 $black;
         }
     }
-    
+
     &__search {
         display: flex;
-        
+
         &-input {
             background-color: $bright;
             border: none;
@@ -40,29 +57,40 @@ $LETTER_SPACING: 2px;
             border-top-left-radius: $BORDER_RADIUS;
             border-bottom-left-radius: $BORDER_RADIUS;
             font-size: 16px;
+            box-shadow: 0 0.2rem 0 $black;
+            outline: none;
         }
-        
+
         &-button {
-            background-color: $gray;
+            background-color: $main;
             border: none;
             padding: $PADDING;
             border-top-right-radius: $BORDER_RADIUS;
             border-bottom-right-radius: $BORDER_RADIUS;
             cursor: pointer;
             color: $bright;
+            box-shadow: 0 0.2rem 0 $black;
         }
     }
 
     &__record {
-        
+        display: flex;
+        align-items: center;
+
         &-item {
-            background-color: $gray;
+            background-color: $main;
             padding: $PADDING;
             border-radius: $BORDER_RADIUS;
             color: $bright;
             border: none;
-            height: 100%;
             cursor: pointer;
+            display: flex;
+            gap: 0.5rem;
+
+            div {
+                font-family: 'Wanted-Bold';
+                color: $bright;
+            }
         }
     }
 }

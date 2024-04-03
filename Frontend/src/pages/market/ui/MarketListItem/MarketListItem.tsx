@@ -41,13 +41,18 @@ export function MarketListItem({
             }
         >
             <div className="marketList__item-image">
-                <img src={productImg} />
+                <img src={productImg} height={150} />
             </div>
             <div className="marketList__item-desc">
                 <div className="marketList__item-desc-title">{productName}</div>
                 <div className="marketList__item-desc-point">
-                    <div>[P]{productPrice.toLocaleString()}</div>
-                    <div>[I]</div>
+                    <div className="marketList__item-desc-point-point">
+                        <img src={'assets/image/point.svg'} width={20} />
+                        <div>{productPrice.toLocaleString()}</div>
+                    </div>
+                    <div>
+                        <img src={'assets/image/exchange.svg'} width={20} />
+                    </div>
                 </div>
             </div>
         </div>

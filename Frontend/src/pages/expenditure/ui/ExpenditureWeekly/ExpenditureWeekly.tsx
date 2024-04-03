@@ -5,11 +5,7 @@ import { getCookie } from '@/shared/lib/cookieHelper';
 import ExpenditureWeeklyDaily from './item/ExpenditureWeeklyDaily';
 import { Spending } from '../../model/spending';
 
-import {
-    fetchTodayAccountTransactions,
-    fetchMemberAttendance,
-    fetchAccountTransactions,
-} from '../../model/fetchFunctions';
+import { Expense, fetchMemberAttendance, fetchAccountTransactions } from '../../model/fetchFunctions';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -17,16 +13,7 @@ import {
     faCircleChevronRight,
     faCircleExclamation,
     faArrowsRotate,
-    faXmark,
 } from '@fortawesome/free-solid-svg-icons';
-
-const spendingsData: Spending[] = [
-    { id: 1, date: '2024-04-01', label: '교통비', amount: '10,000원' },
-    { id: 1, date: '2024-04-01', label: '교통비', amount: '10,000원' },
-    { id: 2, date: '2024-04-02', label: '식료품', amount: '25,000원' },
-    { id: 2, date: '2024-04-02', label: '식료품', amount: '25,000원' },
-    // 추가 지출 데이터...
-];
 
 const getCurrentDate = (): string => {
     const now = new Date();
@@ -57,11 +44,29 @@ const getWeekDates = (currentWeekStart: Date): { rangeText: string; dates: Date[
 };
 
 export function ExpenditureWeekly() {
+    const [transactions, setTransactions] = useState<Expense[]>([]);
+
+    useEffect(() => {
+        const loadExpense = async () => {
+            const fetchedExpense = await fetchAccountTransactions();
+            console.log(fetchedExpense); // 로그로 출력하여 확인
+            if (Array.isArray(fetchedExpense)) {
+                setTransactions(fetchedExpense);
+            } else {
+                console.error('fetchAccountTransactions did not return an array');
+                setTransactions([]); // 호출 실패 시 빈 배열 설정
+            }
+        };
+
+        loadExpense();
+        checkAttendanceState();
+    }, []);
+
     const [coverVisible, setCoverVisible] = useState(true); // 가림막 div의 표시 상태
 
     const checkAttendanceState = async () => {
-        const memberIndex = getCookie('memberId'); // 쿠키에서 memberId를 가져옵니다.
-        if (!memberIndex) {
+        const memberId = getCookie('memberId'); // 쿠키에서 memberId를 가져옵니다.
+        if (!memberId) {
             console.error('로그인이 필요합니다.');
             alert('로그인이 필요합니다');
             return;
@@ -69,18 +74,21 @@ export function ExpenditureWeekly() {
 
         try {
             const response = await customAxios.get(`/member/attend/state`, {
-                params: { memberIndex },
+                params: { memberId },
             });
 
             if (response.data && response.data.data === false) {
                 // 금일 출석을 진행하지 않았을 경우
                 setCoverVisible(true);
+                console.log('출석여부 : false');
             } else {
                 // 이미 출석을 한 경우
                 setCoverVisible(false);
+                console.log('출석여부 : true');
             }
         } catch (error) {
             console.error('출석 여부 확인 중 오류가 발생했습니다:', error);
+            alert('출석 여부 확인 오류');
         }
     };
 
@@ -88,7 +96,7 @@ export function ExpenditureWeekly() {
         try {
             await fetchMemberAttendance();
             removeCover();
-            await fetchTodayAccountTransactions();
+            await fetchAccountTransactions();
         } catch (error) {
             // 오류 처리
             console.error('오류가 발생했습니다:', error);
@@ -118,57 +126,6 @@ export function ExpenditureWeekly() {
         setCurrentWeekStart(new Date(new Date(currentWeekStart).setDate(currentWeekStart.getDate() + 7)));
     };
 
-    const [isModalVisible, setIsModalVisible] = useState(false);
-    const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-
-    const formatDate = (date: Date): string => {
-        const year = date.getFullYear();
-        const month = date.getMonth() + 1; // getMonth()는 0부터 시작하므로 1을 더해줍니다.
-        const day = date.getDate();
-        return `${year}년 ${month < 10 ? `0${month}` : month}월 ${day < 10 ? `0${day}` : day}일`;
-    };
-
-    const Modal = ({ onClose, date }: { onClose: () => void; date: Date | null }) => (
-        <div
-            className="modal"
-            style={{
-                position: 'fixed',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '20px',
-
-                width: '500px',
-                height: '700px',
-                border: '1px solid lightgray',
-                borderRadius: '20px',
-                backgroundColor: 'white',
-                zIndex: 1000,
-            }}
-        >
-            <button
-                onClick={onClose}
-                style={{
-                    position: 'fixed',
-                    top: '50px',
-                    left: '450px',
-                    transform: 'translate(-50%, -50%)',
-                }}
-            >
-                <FontAwesomeIcon icon={faXmark} className="clickable-icon" size="lg" />
-            </button>
-
-            <div className="modal__title">{date ? formatDate(date) : '날짜 정보 없음'}</div>
-            <div className="modal__content">
-                <div className="modal__content-list">소비내역</div>
-                <div className="modal__content-sum">합계</div>
-            </div>
-        </div>
-    );
-
     return (
         <div className={`expenditureWeekly contentCard`} style={{ position: 'relative' }}>
             {coverVisible && (
@@ -183,8 +140,6 @@ export function ExpenditureWeekly() {
                     </button>
                 </div>
             )}
-
-            {isModalVisible && <Modal onClose={() => setIsModalVisible(false)} date={selectedDate} />}
 
             <div className="contentCard__title">
                 <div className="contentCard__title-text">WEEKLY SPENDINGS</div>
@@ -205,8 +160,15 @@ export function ExpenditureWeekly() {
 
             <div className="expenditureWeekly__content">
                 {dates.map((date, index) => {
-                    const dateStr = date.toISOString().slice(0, 10); // 'YYYY-MM-DD' 형식으로 변환
-                    const dailySpendings = spendingsData.filter((spending) => spending.date === dateStr);
+                    // 날짜를 'YYYYMMDD' 형식의 문자열로 변환하는 로직
+                    const dateStr = `${date.getFullYear()}${
+                        date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1
+                    }${date.getDate() < 10 ? `0${date.getDate()}` : date.getDate()}`;
+
+                    // 이 로직을 사용하여 spendingsData.filter(...) 호출 시 비교하는 부분에 적용합니다.
+                    const dailySpendings = transactions.filter(
+                        (transaction) => transaction.transactionDate === dateStr && transaction.transactionType === 2,
+                    );
 
                     return <ExpenditureWeeklyDaily key={index} date={date} spendings={dailySpendings} />;
                 })}
@@ -215,7 +177,7 @@ export function ExpenditureWeekly() {
             <div className="expenditureWeekly__footer">
                 <div className="expenditureWeekly__footer-alert">
                     <FontAwesomeIcon icon={faCircleExclamation} size="lg" />
-                    <span>열심히 활동해봅시다!</span>
+                    <span>지출이 늘어나지 않도록 관리하세요!</span>
                 </div>
                 <div className="expenditureWeekly__footer-reload clickable" onClick={fetchAccountTransactions}>
                     <span className="expenditureWeekly__footer-reload-text">지출내역 불러오기!</span>

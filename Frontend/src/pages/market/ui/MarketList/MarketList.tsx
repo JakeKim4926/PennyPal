@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { MarketListItem } from '../MarketListItem/MarketListItem';
 import { getMarketItemList } from '../../model/getMarketItemList';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '@/app/appProvider';
+import { setMarketItemList } from '../../model';
 
 type Product = {
     productBrand: string;
@@ -13,21 +16,21 @@ type Product = {
 };
 
 export function MarketList() {
-    const [productList, setProductList] = useState<Product[]>([]);
+    const dispatch = useDispatch();
+    const productList: any = useSelector((state: RootState) => state.setMarketItemListReducer.data);
 
     useEffect(() => {
         getMarketItemList(0).then((res) => {
             if (res.status === 200) {
-                setProductList(res.data.content);
-                console.log(res.data.content);
+                dispatch(setMarketItemList(res.data.content));
             }
         });
     }, []);
 
     return (
         <div className="marketList">
-            {productList &&
-                productList.map((it) => (
+            {productList.length > 0 &&
+                productList.map((it: Product) => (
                     <MarketListItem
                         productBrand={it.productBrand}
                         productCategory={it.productCategory}

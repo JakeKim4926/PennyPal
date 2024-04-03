@@ -56,7 +56,7 @@ export function TeamInfoTeamExpenditure() {
 
             dayOfWeekIdx = new Date(dateArr.join(',')).getDay();
 
-            arr[dayOfWeekIdx] += history.totalAmount;
+            arr[(dayOfWeekIdx - 1) % 7] += history.totalAmount;
         }
 
         return arr;
