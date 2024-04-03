@@ -1,4 +1,5 @@
 import { customAxios } from '@/shared';
+import axios from 'axios';
 
 export async function StockListUp(page?: number, size?: number, word?: string, startPrice?: number, endPrice?: number) {
     // 쿼리 파라미터를 구성하는 로직
@@ -17,5 +18,9 @@ export async function StockListUp(page?: number, size?: number, word?: string, s
 }
 
 export async function StockDetail(stockId: number) {
-    return await customAxios.get(`/stock/${stockId}`).catch((err) => err); // baseUrl확인
+    return await customAxios.get(`/stock/${stockId}`).catch((err) => err);
+}
+
+export async function StockSubDetail(isInCd: string) {
+    return await axios.get(`https://stock.pennypal.site/${isInCd}`).catch((err) => err);
 }
