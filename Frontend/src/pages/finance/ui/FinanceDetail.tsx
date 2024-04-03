@@ -1,22 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { CardListUp, StockListUp } from '@/pages/finance/model';
 import InfiniteScroll from 'react-infinite-scroll-component';
-// interface Stock {
-//     stockId: number;
-//     crno: string;
-//     isinCd: string;
-//     stckIssuCmpyNm: string;
-//     basDt: number[];
-//     stckGenrDvdnAmt: number;
-// }
-// interface Card {
-//     cardName: string;
-//     cardCompany: string;
-//     startCardRequired: number;
-//     endCardRequired: number;
-//     startCardDomestic: number;
-//     endCardDomestic: number;
-// }
 
 interface Card {
     cardId: number;

@@ -252,10 +252,8 @@ export function Finance() {
                             >
                                 <div className="stock__content--companyName">{stock.stckIssuCmpyNm}</div>
                                 <div className="stock__content--info">
-                                    <span>CRNO: {stock.crno}/</span>
-                                    <span>ISIN Code: {stock.isinCd}/</span>
                                     <span>배당금: {stock.stckGenrDvdnAmt.toLocaleString()} 원/</span>
-                                    <span>기준 날짜: {stock.basDt}</span>
+                                    <span>기준일: {stock.basDt}</span>
                                 </div>
                             </div>
                         ))}
