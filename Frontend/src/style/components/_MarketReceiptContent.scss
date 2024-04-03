@@ -41,6 +41,20 @@
                 list-style-type: none;
                 padding: 7px 0;
             }
+
+            &-none {
+                text-align: center;
+
+                &-icon {
+                    font-size: 10rem;
+                    color: $bright;
+                }
+
+                &-text {
+                    font-size: 2rem;
+                    font-family: 'Wanted-Bold';
+                }
+            }
         }
     }
 
@@ -51,6 +65,11 @@
             display: flex;
             justify-content: space-between;
             padding: 0 40px;
+
+            &-value {
+                display: flex;
+                gap: 0.5rem;
+            }
         }
     }
 
