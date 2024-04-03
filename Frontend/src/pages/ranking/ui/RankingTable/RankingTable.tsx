@@ -113,7 +113,8 @@ export function RankingTable() {
                                         className="rankingTable__content-list-none-icon"
                                     />
                                 </div>
-                                <div>아직 랭킹 산정이 이루어진 팀이 없어요!</div>
+                                {/* <div>아직 랭킹 산정이 이루어진 팀이 없어요!</div> */}
+                                <div>랭킹 내역 불러오는 중...</div>
                             </li>
                         </>
                     )}
