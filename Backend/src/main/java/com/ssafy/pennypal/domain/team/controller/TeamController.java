@@ -8,7 +8,6 @@ import com.ssafy.pennypal.domain.team.dto.request.TeamRequestDTO;
 import com.ssafy.pennypal.domain.team.dto.SimpleTeamDto;
 import com.ssafy.pennypal.domain.team.dto.request.TeamModifyRequest;
 import com.ssafy.pennypal.domain.team.dto.response.*;
-import com.ssafy.pennypal.domain.team.entity.Team;
 import com.ssafy.pennypal.domain.team.service.TeamService;
 import com.ssafy.pennypal.global.common.api.ApiResponse;
 import jakarta.validation.Valid;
@@ -18,7 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -67,16 +65,20 @@ public class TeamController {
 
     /**
      * note : 매주 월요일 오전 12시에 주간 랭킹 업데이트
+     * todo : 시연 끝나면 주석 풀기, rankOfWeeks MONDAY로 바꾸기, 테스트코드 주석 풀기
      */
-    @Scheduled(cron = "00 00 00 * * MON")
+//    @Scheduled(cron = "00 00 00 * * MON")
 //    @PostMapping("/rank")
-    public void autoRankWeekly() {
-        teamService.calculateTeamScore();
-        teamService.RankTeamScore();
-
-        // 모든 유저의 출석 일수 초기화
-        teamService.resetMemberAttendance();
-    }
+//    public void autoRankWeekly() {
+//        // 지지난주, 지난주 지출 내역으로 teamScore 변경
+//        teamService.calculateTeamScoreWeekly();
+//
+//        // 변경된 teamScore를 가지고 주간 랭킹 집계
+//        teamService.RankTeamScoreWeekly();
+//
+//        // 모든 유저의 출석 일수 초기화
+//        teamService.resetMemberAttendance();
+//    }
 
     /**
      * note : 2.2 팀 주간 랭킹 조회
@@ -87,21 +89,28 @@ public class TeamController {
             @PageableDefault(page = 0, size = 6, direction = Sort.Direction.ASC)
             Pageable pageable){
 
+        ///////////////////////////////////////////////////////
+        // 지지난주, 지난주 팀 Score 계산 메서드
+        teamService.test();
+        // 변경된 teamScore를 가지고 주간 랭킹 집계
+        teamService.RankTeamScoreWeekly();
+        ///////////////////////////////////////////////////////
+
         return ApiResponse.ok(teamService.rankOfWeeks(teamId, pageable));
     }
 
     /**
      * note : 매 시 정각에 실시간 랭킹 업데이트
      */
-    @Scheduled(cron = "0 0 * * * *")
-//    @PostMapping("/rankRealtime")
+//    @Scheduled(cron = "0 0 * * * *")
+    @PostMapping("/rankRealtime")
     public void autoRankRealtime() {
 
         // 팀 점수 계산
         teamService.calculateTeamScore();
 
         // 팀 실시간 등수 계산
-        teamService.RankRealTimeScore();
+        teamService.rankRealTimeScore();
     }
 
     /**
@@ -112,6 +121,12 @@ public class TeamController {
             @PathVariable("teamId") Long teamId,
             @PageableDefault(page = 0, size = 6, direction = Sort.Direction.ASC)
             Pageable pageable) {
+        ////////////////////////////////////////////////////////////////
+        // 지난주, 이번주 지출 계산 메서드
+        teamService.test2();
+        // 변경된 팀 score를 가지고 실시간 랭킹 집계
+        teamService.rankRealTimeScore();
+        ////////////////////////////////////////////////////////////////
 
         return ApiResponse.ok(teamService.rankOfRealtime(teamId, pageable));
     }
