@@ -5,11 +5,7 @@ interface CardData {
     cardCompany: string;
     cardImg: string;
     cardName: string;
-    cardTopCategory: DataStat[];
-}
-
-interface DataStat {
-    label: string;
+    cardTopCategory: string;
 }
 
 interface ExpenditureRecommendCardProps {
@@ -17,6 +13,8 @@ interface ExpenditureRecommendCardProps {
 }
 
 function ExpenditureRecommendCard({ card }: ExpenditureRecommendCardProps) {
+    if (!card) return null;
+
     return (
         <div className="expenditureRecommend__content-slider-carousel-item">
             <div className="expenditureRecommend__content-slider-carousel-item-imgBg">
@@ -37,16 +35,11 @@ function ExpenditureRecommendCard({ card }: ExpenditureRecommendCardProps) {
                     </div>
                 </div>
                 <div className="expenditureRecommend__content-slider-carousel-item-info-benefits">
-                    {card.cardTopCategory.map((stat, index) => (
-                        <div
-                            key={index}
-                            className="expenditureRecommend__content-slider-carousel-item-info-benefits-benefit"
-                        >
-                            <div className="expenditureRecommend__content-slider-carousel-item-info-benefits-benefit-category">
-                                {stat.label}
-                            </div>
+                    <div className="expenditureRecommend__content-slider-carousel-item-info-benefits-benefit">
+                        <div className="expenditureRecommend__content-slider-carousel-item-info-benefits-benefit-category">
+                            {card.cardTopCategory}
                         </div>
-                    ))}
+                    </div>
                 </div>
             </div>
         </div>
