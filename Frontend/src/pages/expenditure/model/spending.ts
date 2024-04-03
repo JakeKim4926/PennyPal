@@ -1,8 +1,9 @@
 export interface Spending {
-    id: number;
-    date: string; // 'YYYY-MM-DD' 형식
-    label: string;
-    amount: string; // 예: '10,000원'
+    transactionUniqueId: number;
+    transactionType: number;
+    transactionDate: string;
+    transactionSummary: string;
+    transactionBalance: string;
 }
 
 export interface SpendingItemProps {

@@ -10,6 +10,9 @@ import { connectTeamChatRoom } from '../api/connectTeamChatRoom';
 import { CompatClient } from '@stomp/stompjs';
 import { useDispatch } from 'react-redux';
 import { setTeamInfo } from '@/pages/teamRouting';
+import { closeTeamChattingModal } from '../model/openTeamChattingModal';
+import { closeTeamSettingModal } from '../model/openTeamSettingModal';
+import { closeTeamLeaveModal } from '../model/openTeamLeaveModal';
 
 export function TeamInfo() {
     const teamData: any = useSelector((state: RootState) => state.setTeamInfoReducer.data);
@@ -20,6 +23,9 @@ export function TeamInfo() {
     useEffect(() => {
         return () => {
             dispatch(setTeamInfo(null));
+            dispatch(closeTeamChattingModal());
+            dispatch(closeTeamSettingModal());
+            dispatch(closeTeamLeaveModal());
         };
     }, []);
     return (
