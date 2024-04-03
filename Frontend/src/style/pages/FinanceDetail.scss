@@ -1,6 +1,75 @@
-.infinite-scroll-component {
-    // all: initial;
+#infiniteScroll {
     overflow-y: scroll; /* y축으로 스크롤 가능 */
-    height: 500px; /* 스크롤 컨테이너의 높이를 지정, 적절한 값으로 조정 필요 */
-    overflow-x: hidden; /* x축 스크롤 방지 */
+    height: 700px; /* 스크롤 컨테이너의 높이를 지정, 적절한 값으로 조정 필요 */
+    // 스크롤바 스타일링 (웹킷 기반 브라우저용)
+    &::-webkit-scrollbar {
+        width: 10px; // 스크롤바의 너비
+    }
+
+    &::-webkit-scrollbar-track {
+        background: #f1f1f1; // 스크롤바 트랙의 배경 색상
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: #888; // 스크롤바 썸(움직이는 부분)의 배경 색상
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background: #555; // 스크롤바 썸에 마우스 호버 시 색상
+    }
+}
+.item {
+    display: flex;
+    align-items: flex-start; /* 항목들을 상단 정렬 */
+    gap: 20px; /* 이미지와 텍스트 사이의 간격 */
+}
+
+// .item img {
+//     //     width: 200px; /* 너비를 200px로 고정 */
+//     //     height: auto; /* 높이를 자동으로 조절하여 비율 유지 */
+//     // object-fit: cover; /* 이미지 비율을 유지하면서 요소의 크기에 맞춤 */
+// }
+.image-container {
+    width: 200px; /* 원하는 크기로 설정 */
+    height: 200px; /* 원하는 크기로 설정, 원 모양을 만들기 위해 너비와 높이가 같아야 함 */
+    border-radius: 50%; /* 원형으로 만듦 */
+    background-color: #f0f0f0; /* 옅은 회색 배경 */
+    display: flex;
+    align-items: center; /* 세로 중앙 정렬 */
+    justify-content: center; /* 가로 중앙 정렬 */
+    overflow: hidden; /* 컨테이너 밖으로 넘치는 이미지 숨김 */
+}
+
+.image-container img {
+    max-width: 100%; /* 이미지가 컨테이너를 넘지 않도록 최대 너비 제한 */
+    max-height: 100%; /* 이미지가 컨테이너를 넘지 않도록 최대 높이 제한 */
+    object-fit: cover; /* 이미지 비율을 유지하면서 요소의 크기에 맞춤 */
+}
+
+.item div {
+    display: flex;
+    flex-direction: column; /* 내부 요소들을 세로로 배치 */
+}
+
+.item h3,
+.item span,
+.item div {
+    margin: 5px 0; /* 제목, 스팬, div 간의 간격 */
+}
+
+.item ul {
+    padding: 0; /* 기본 padding 제거 */
+    list-style: none; /* 리스트 스타일 제거 */
+}
+
+.item li {
+    margin: 5px 0; /* 리스트 아이템 간 간격 */
+}
+
+.card__content {
+    display: flex; /* 플렉스박스 레이아웃 적용 */
+    flex-wrap: wrap; /* 내용이 넘칠 경우 다음 줄로 넘김 */
+    gap: 20px; /* 아이템 간격 설정 */
+    justify-content: center; /* 가운데 정렬 */
+    align-items: center; /* 세로 방향 가운데 정렬 */
 }

@@ -46,7 +46,11 @@ export function MyPage() {
                     <p>Nickname</p>
                     <div className="input-container">
                         <img src="assets/image/icons_mini/Name.svg" />
-                        <input type="text" placeholder={'기존닉넴임'} onChange={(e) => handleChange(e, 'nickName')} />
+                        <input
+                            type="text"
+                            placeholder={'새로운 닉네임'}
+                            onChange={(e) => handleChange(e, 'nickName')}
+                        />
                         <div className="message-container">
                             {nickNameValid === true ? (
                                 <p className="message-container--valid">유효한 닉네임입니다.</p>
