@@ -93,7 +93,7 @@ export function RankingTable() {
                             <li
                                 className={`rankingTable__content-list-item ${it.rankNum === 1 ? 'first' : ''} ${
                                     it.rankNum === 2 ? 'second' : ''
-                                }`}
+                                } ${it.rankNum === 3 ? 'third' : ''}`}
                             >
                                 <div>{it.rankNum === 0 ? '-' : it.rankNum}</div>
                                 <div>{it.teamName}</div>

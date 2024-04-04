@@ -136,8 +136,9 @@
         padding: 10px 20px;
         transition: background-color 0.3s ease-in-out;
         border-radius: 20px;
+
         &:hover {
-            background-color: #88ba53;
+            background-color: lighten($main, 30%);
             cursor: pointer;
         }
     }
