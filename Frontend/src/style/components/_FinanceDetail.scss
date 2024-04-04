@@ -1,5 +1,5 @@
 .financeDetail {
-    width: 40rem;
+    width: 55rem;
 
     &__container {
         display: flex;
@@ -21,7 +21,8 @@
             justify-content: space-around;
 
             input {
-                width: 5rem;
+                width: 7rem;
+                padding: 0 0.1rem;
             }
         }
     }
@@ -62,9 +63,33 @@
 
     .cardItem {
         display: flex;
+        gap: 2rem;
+
+        &__container {
+            display: flex;
+            flex-direction: column;
+        }
 
         &__content {
             display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+
+            &-category {
+                display: flex;
+                gap: 1rem;
+            }
+
+            &-bottom {
+                display: flex;
+                gap: 2rem;
+            }
         }
     }
+}
+
+.infinite-scroll-component {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
 }

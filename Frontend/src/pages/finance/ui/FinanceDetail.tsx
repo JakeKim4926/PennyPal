@@ -205,6 +205,11 @@ export function FinanceDetail() {
                                 placeholder="카드명 · 카드사 · 혜택 등을 검색해보세요!"
                                 value={searchOptions.cardName}
                                 onChange={(e) => setSearchOptions({ ...searchOptions, cardName: e.target.value })}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        handleSearch();
+                                    }
+                                }}
                             />
                         </div>
                         <div className="financeDetail__inputList-sub">
@@ -212,7 +217,7 @@ export function FinanceDetail() {
                                 <div className="financeDetail__inputList-sub-company-title">카드사</div>
                                 <input
                                     type="text"
-                                    placeholder="카드 회사..."
+                                    placeholder="카드 회사"
                                     value={searchOptions.cardCompany}
                                     onChange={(e) =>
                                         setSearchOptions({ ...searchOptions, cardCompany: e.target.value })
@@ -223,7 +228,7 @@ export function FinanceDetail() {
                                 <div className="financeDetail__inputList-sub-req-title">전월 실적</div>
                                 <input
                                     type="number"
-                                    placeholder="최소 실적 요구액..."
+                                    placeholder="최소 실적 요구액"
                                     value={searchOptions.startCardRequired || ''}
                                     onChange={(e) =>
                                         setSearchOptions({
@@ -234,7 +239,7 @@ export function FinanceDetail() {
                                 />
                                 <input
                                     type="number"
-                                    placeholder="최대 실적 요구액..."
+                                    placeholder="최대 실적 요구액"
                                     value={searchOptions.endCardRequired || ''}
                                     onChange={(e) =>
                                         setSearchOptions({
@@ -248,7 +253,7 @@ export function FinanceDetail() {
                                 <div className="financeDetail__inputList-sub-fee-title">연회비</div>
                                 <input
                                     type="number"
-                                    placeholder="최소 연회비..."
+                                    placeholder="최소 연회비"
                                     value={searchOptions.startCardDomestic || ''}
                                     onChange={(e) =>
                                         setSearchOptions({
@@ -259,7 +264,7 @@ export function FinanceDetail() {
                                 />
                                 <input
                                     type="number"
-                                    placeholder="최대 연회비..."
+                                    placeholder="최대 연회비"
                                     value={searchOptions.endCardDomestic || ''}
                                     onChange={(e) =>
                                         setSearchOptions({
@@ -272,8 +277,8 @@ export function FinanceDetail() {
                         </div>
                     </div>
                 )}
-                <button onClick={handleSearch}>검색</button>
-                <button onClick={resetSearchOptions}>검색 옵션 초기화</button>
+                {/* <button onClick={handleSearch}>검색</button>
+                <button onClick={resetSearchOptions}>검색 옵션 초기화</button> */}
                 {/* 무한 스크롤 */}
                 <div id="infiniteScroll">
                     <InfiniteScroll
@@ -305,9 +310,9 @@ export function FinanceDetail() {
                         )}
                         {category === 'card' &&
                             cardItems.map((item, index) => (
-                                <div key={index}>
-                                    <div className="item">
-                                        <div className="image-container">
+                                <div key={index} className="cardItem__container">
+                                    <div className="cardItem">
+                                        <div className="cardItem__img">
                                             <img src={item.cardImg} onLoad={adjustImageStyle} />
                                         </div>
                                         <div className="cardItem__content">
@@ -315,16 +320,17 @@ export function FinanceDetail() {
                                                 <h3>{item.cardName}</h3>
                                                 <span>{item.cardCompany}</span>
                                             </div>
-                                            <div className='className="cardItem__content"'>
+                                            <div className="cardItem__content-category">
                                                 {item.cardTopCategory.split(', ').map((category, index) => (
                                                     <div key={index}>{category}</div>
                                                 ))}
                                             </div>
-                                            <div className='className="cardItem__bottom"'>
-                                                <span>전월실적: {item.cardRequired}이상</span>
-                                                <br />
-                                                연회비 <span>: 국내전용: {item.cardDomestic}원 / </span>
-                                                <span>해외겸용: {item.cardAbroad}원</span>
+                                            <div className="cardItem__content-bottom">
+                                                <div>전월실적: {item.cardRequired}이상</div>
+                                                <div>
+                                                    연회비: 국내전용: {item.cardDomestic}원 / 해외겸용:{' '}
+                                                    {item.cardAbroad}원
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
