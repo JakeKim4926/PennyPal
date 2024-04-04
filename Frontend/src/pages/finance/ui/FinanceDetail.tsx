@@ -173,14 +173,19 @@ export function FinanceDetail() {
                 </div>
                 {/* 검색 바 */}
                 {category === 'stock' && (
-                    <div>
+                    <div className="financeDetail_input">
                         <input
                             type="text"
                             placeholder="단어 검색..."
                             value={searchOptions.word}
                             onChange={(e) => setSearchOptions({ ...searchOptions, word: e.target.value })}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    handleSearch();
+                                }
+                            }}
                         />
-                        <input
+                        {/* <input
                             type="number"
                             placeholder="최소 가격..."
                             value={searchOptions.startPrice || ''}
@@ -201,7 +206,7 @@ export function FinanceDetail() {
                                     endPrice: e.target.value ? parseInt(e.target.value) : undefined,
                                 })
                             }
-                        />
+                        /> */}
                     </div>
                 )}
                 {category === 'card' && (
@@ -302,14 +307,15 @@ export function FinanceDetail() {
                             <div className="stock__content">
                                 {stockItems.map((stock, index) => (
                                     <div key={index} className="stock__content--item">
-                                        <div className="stock__content--companyName">{stock.stock.stckIssuCmpyNm}</div>
+                                        <h2 className="stock__content--companyName">{stock.stock.stckIssuCmpyNm}</h2>
                                         <div className="stock__content--info">
-                                            {stock.stock.stckGenrDvdnAmt.toLocaleString()} 원
+                                            배당금 : {stock.stock.stckGenrDvdnAmt.toLocaleString()} 원
                                         </div>
                                         <div className="stock__content--info">
-                                            {parseInt(stock.subDetail?.mkp ?? '0', 10).toLocaleString()}원
+                                            가격 : {parseInt(stock.subDetail?.mkp ?? '0', 10).toLocaleString()}원
                                         </div>
                                         <div className="stock__content--info">
+                                            시가총액 :
                                             {parseInt(stock.subDetail?.mrktTotAmt ?? '0', 10).toLocaleString()}원
                                         </div>
                                     </div>
