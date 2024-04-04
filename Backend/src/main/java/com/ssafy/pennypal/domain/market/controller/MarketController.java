@@ -43,7 +43,6 @@ public class MarketController {
         return ResponseEntity.ok(productDetails);
     }
 
-
     // 상품 구매
     @PostMapping("/purchase")
     @ResponseStatus(HttpStatus.CREATED)
@@ -56,4 +55,12 @@ public class MarketController {
     public Page<OrderResponseDTO> listOrdersByMemberId(@PathVariable Long memberId, Pageable pageable) {
         return marketService.listOrdersByMemberId(memberId, pageable);
     }
+
+    // 유저 포인트 조회
+    @GetMapping("/points/{memberId}")
+    public ResponseEntity<Integer> getMemberPoints(@PathVariable Long memberId) {
+        int memberPoints = marketService.getMemberPoints(memberId);
+        return ResponseEntity.ok(memberPoints);
+    }
+
 }
