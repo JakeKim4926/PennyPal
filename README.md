@@ -104,7 +104,7 @@ Python, Flask, Anaconda
 
 ## 🎨 시스템 아키텍처
 
-<img src="/uploads/b4c2c8a929f297cd929325f5d96eb180/Architecture.png" width="800px" >
+<img src="/uploads/f6da2f4b90829994c8602be130f696ee/image.png" width="800px" >
 
 <br />
 
