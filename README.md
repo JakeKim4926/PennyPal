@@ -80,31 +80,31 @@ Python, Flask, Anaconda
 # 기능 상세 소개
 
 <h3>회원가입</h3>
-<img src="/uploads/3478dddda261856141a4d00975d4ddc3/회원가입.gif" width="800px" >
+<img src="/uploads/3478dddda261856141a4d00975d4ddc3/회원가입.gif" >
 <h3>로그인 및 출석</h3>
-<img src="/uploads/7c863a79d650be5ee525981abc53c810/로그인_및_출석.gif" width="800px" >
+<img src="/uploads/7c863a79d650be5ee525981abc53c810/로그인_및_출석.gif">
 <h3>개인지출내역 확인 및 카드 추천</h3>
-<img src="/uploads/15e3a685574cc334b342f1b71cb93691/개인_지출_내역_확인__카드_추천.gif" width="800px" >
+<img src="/uploads/15e3a685574cc334b342f1b71cb93691/개인_지출_내역_확인__카드_추천.gif">
 <h3>팀 정보 확인</h3>
-<img src="/uploads/e3f47e538c390bc518ac9d28a7c789b9/팀_정보_확인.gif" width="800px" >
+<img src="/uploads/e3f47e538c390bc518ac9d28a7c789b9/팀_정보_확인.gif">
 <h3>팀 랭킹</h3>
-<img src="/uploads/7b63d3d054b40e2bb5402486bdeb9b4c/팀_랭킹.gif" width="800px" >
+<img src="/uploads/7b63d3d054b40e2bb5402486bdeb9b4c/팀_랭킹.gif" >
 <h3>마켓 구매 및 내역 확인</h3>
-<img src="/uploads/d1b9d159e62e887eeb7f7389205487d2/마켓_구매_및_내역_확인.gif" width="800px" >
+<img src="/uploads/d1b9d159e62e887eeb7f7389205487d2/마켓_구매_및_내역_확인.gif" >
 <h3>카드 정보 확인 및 검색</h3>
-<img src="/uploads/41e98e959641acf8143e39fffde56000/카드_정보_확인_및_검색.gif" width="800px" >
+<img src="/uploads/41e98e959641acf8143e39fffde56000/카드_정보_확인_및_검색.gif"  >
 <h3>주식 정보 확인</h3>
-<img src="/uploads/f8ba6f1db684a04cc8a77fa757159d4f/주식_정보_확인.gif" width="800px" >
+<img src="/uploads/f8ba6f1db684a04cc8a77fa757159d4f/주식_정보_확인.gif" >
 
 <br />
 
 ## 🕹️ ERD
 
-<img src="/uploads/279ae1b26b05913f6b9ba4867952b31d/erd.png">
+<img src="/uploads/279ae1b26b05913f6b9ba4867952b31d/erd.png" width="900px" >
 
 ## 🎨 시스템 아키텍처
 
-<img src="/uploads/b4c2c8a929f297cd929325f5d96eb180/Architecture.png">
+<img src="/uploads/b4c2c8a929f297cd929325f5d96eb180/Architecture.png" width="800px" >
 
 <br />
 
