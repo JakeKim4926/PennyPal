@@ -6,6 +6,7 @@ import { RootState } from '@/app/appProvider';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { setSignUpStep } from '../model/signUpStepReducer';
+import { setIsInitPage } from '@/shared';
 
 export function SignUp() {
     const dispatch = useDispatch();
@@ -22,17 +23,22 @@ export function SignUp() {
     };
     useEffect(() => {
         dispatch(setSignUpStep(0));
+
+        dispatch(setIsInitPage(true));
+        return () => {
+            dispatch(setIsInitPage(false));
+        };
     }, []);
     return (
-        <div className="signup container">
+        <div className="welcomebox__container container" style={{ height: '100%' }}>
             <div className="welcomebox">
-                <p className="welcomebox__text">WELCOME TO PENNYPAL !</p>
-                <div className="welcomebox__logo">
+                <div className="welcomebox__top">
+                    <p className="welcomebox__top-title">WELCOME TO PENNYPAL !</p>
                     <img src="assets/image/main-logo-colored.svg" />
+                    <p className="welcomebox__top-sub">SIGN UP</p>
                 </div>
-                <p className="welcomebox__singup">SIGN UP</p>
+                <div className="signupStep">{renderCurrentStep()}</div>
             </div>
-            <div className="signup-process container">{renderCurrentStep()}</div>
         </div>
     );
 }

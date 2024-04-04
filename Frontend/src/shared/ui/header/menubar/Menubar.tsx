@@ -1,7 +1,10 @@
 // import React from 'react';
 
+import { RootState } from '@/app/appProvider';
 import { deleteCookie } from '@/shared/lib';
 import { Link, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import Swal from 'sweetalert2';
 
 type MenubarProps = {
     size: number;
@@ -12,9 +15,13 @@ export function Menubar({ size }: MenubarProps) {
         deleteCookie('memberId');
         deleteCookie('memberToken');
         deleteCookie('memberNickname');
-        alert('로그아웃 되었습니다.');
+        Swal.fire({ title: '로그아웃', text: '로그아웃 되었습니다.' });
         navigate('/main');
     }
+    const isInitPage = useSelector((state: RootState) => state.setIsInitPageReducer.data);
+
+    if (isInitPage) return null;
+
     return (
         <>
             <div className="header__menubar-mission">

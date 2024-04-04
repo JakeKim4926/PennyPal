@@ -1,15 +1,11 @@
 import React from 'react';
 
 interface CardData {
-    id: number;
+    cardId: number;
     cardCompany: string;
     cardImg: string;
     cardName: string;
-    cardTopCategory: DataStat[];
-}
-
-interface DataStat {
-    label: string;
+    cardTopCategory: string;
 }
 
 interface ExpenditureRecommendCardProps {
@@ -17,6 +13,10 @@ interface ExpenditureRecommendCardProps {
 }
 
 function ExpenditureRecommendCard({ card }: ExpenditureRecommendCardProps) {
+    if (!card) return null;
+
+    const benefits = card.cardTopCategory.split(',').filter((benefit) => benefit.trim() !== '');
+
     return (
         <div className="expenditureRecommend__content-slider-carousel-item">
             <div className="expenditureRecommend__content-slider-carousel-item-imgBg">
@@ -37,14 +37,13 @@ function ExpenditureRecommendCard({ card }: ExpenditureRecommendCardProps) {
                     </div>
                 </div>
                 <div className="expenditureRecommend__content-slider-carousel-item-info-benefits">
-                    {card.cardTopCategory.map((stat, index) => (
+                    {/* 혜택명을 순회하면서 span 태그로 표시 */}
+                    {benefits.map((benefit, index) => (
                         <div
                             key={index}
                             className="expenditureRecommend__content-slider-carousel-item-info-benefits-benefit"
                         >
-                            <div className="expenditureRecommend__content-slider-carousel-item-info-benefits-benefit-category">
-                                {stat.label}
-                            </div>
+                            <span>{benefit} 혜택!</span>
                         </div>
                     ))}
                 </div>
