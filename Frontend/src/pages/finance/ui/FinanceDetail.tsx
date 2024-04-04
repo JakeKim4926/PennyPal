@@ -205,6 +205,11 @@ export function FinanceDetail() {
                                 placeholder="카드명 · 카드사 · 혜택 등을 검색해보세요!"
                                 value={searchOptions.cardName}
                                 onChange={(e) => setSearchOptions({ ...searchOptions, cardName: e.target.value })}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        handleSearch();
+                                    }
+                                }}
                             />
                         </div>
                         <div className="financeDetail__inputList-sub">
@@ -272,8 +277,8 @@ export function FinanceDetail() {
                         </div>
                     </div>
                 )}
-                <button onClick={handleSearch}>검색</button>
-                <button onClick={resetSearchOptions}>검색 옵션 초기화</button>
+                {/* <button onClick={handleSearch}>검색</button>
+                <button onClick={resetSearchOptions}>검색 옵션 초기화</button> */}
                 {/* 무한 스크롤 */}
                 <div id="infiniteScroll">
                     <InfiniteScroll
@@ -305,7 +310,7 @@ export function FinanceDetail() {
                         )}
                         {category === 'card' &&
                             cardItems.map((item, index) => (
-                                <div key={index}>
+                                <div key={index} className="cardItem__container">
                                     <div className="cardItem">
                                         <div className="cardItem__img">
                                             <img src={item.cardImg} onLoad={adjustImageStyle} />
