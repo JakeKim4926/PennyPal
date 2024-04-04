@@ -50,7 +50,6 @@ public class MarketService {
         return new ProductResponseDTO(product);
     }
 
-
     // 상품 구매
     @Transactional
     public void createOrder(OrderRequestDTO orderRequest) {
@@ -69,27 +68,35 @@ public class MarketService {
                 .orderDate(LocalDateTime.now())
                 .build();
 
-        orderRepository.save(order);
+        // 주문 총액 계산
+        Integer priceSum = product.getProductPrice() * orderRequest.getBuyQuantity();
 
-//        // 주문 총액 계산
-//        Integer priceSum = product.getProductPrice() * orderRequest.getBuyQuantity();
-//
-//        // 사용자의 보유 포인트 확인
-//        if (member.getMemberPoint() < priceSum)
-//            throw new IllegalArgumentException("Not enough points");
-//        else {
-//            // 포인트 차감
-//            member.setMemberPoint(member.getMemberPoint() - priceSum);
-//
-//            // 주문 생성 및 저장
+        // 사용자의 보유 포인트 확인
+        if (member.getMemberPoint() < priceSum)
+            throw new IllegalArgumentException("Not enough points");
+        else {
+            // 포인트 차감
+            member.setMemberPoint(member.getMemberPoint() - priceSum);
+
+            // 주문 생성 및 저장
 //            Order order = orderRequest.createOrder(member, product);
-//            orderRepository.save(order);
-//        }
+            orderRepository.save(order);
+        }
     }
 
     // 사용자 구매 내역 조회
     public Page<OrderResponseDTO> listOrdersByMemberId(Long memberId, Pageable pageable) {
         Page<Order> orders = orderRepository.findByMemberMemberId(memberId, pageable);
         return orders.map(OrderResponseDTO::new);
+    }
+
+    // 회원 포인트 조회 메서드
+    public int getMemberPoints(Long memberId) {
+        // memberId를 이용하여 회원 정보를 조회합니다.
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 회원을 찾을 수 없습니다."));
+
+        // 회원의 포인트를 반환합니다.
+        return member.getMemberPoint();
     }
 }
