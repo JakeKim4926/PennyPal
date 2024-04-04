@@ -29,35 +29,35 @@ export function RankingTable() {
 
         getTeamInfo(REQUEST_URL).then((res) => {
             if (res.data.code === 200) {
-                // if (!res.data.data.members) {
-                //     getRanking(`/team/rank/weekly/-1?page=${curPage}&size=5`).then((res) => {
-                //         const data = res.data.data.content[0];
-                //         setRanking(data.teamRanks);
-                //         setMyRanking({
-                //             myTeamName: '소속된 팀이 없습니다.',
-                //             myTeamRankNum: '-',
-                //             myTeamScore: '-',
-                //             myTeamRewardPoint: '-',
-                //         });
-                //     });
-                //     getRealtimeRanking(`/team/rank/realtime/${res.data.data.teamId}?page=${curPage}&size=5`).then(
-                //         (res) => console.log('리얼타임 랭킹: ', res.data),
-                //     );
-                // } else if (res.data.data.members.some((it: any) => it.memberId === memberId)) {
-                //     getRanking(`/team/rank/weekly/${res.data.data.teamId}?page=${curPage}&size=5`).then((res) => {
-                //         const data = res.data.data.content[0];
-                //         setRanking(data.teamRanks);
-                //         setMyRanking({
-                //             myTeamName: data.myTeamName,
-                //             myTeamRankNum: data.myTeamRankNum,
-                //             myTeamScore: data.myTeamScore,
-                //             myTeamRewardPoint: data.myTeamRewardPoint,
-                //         });
-                //     });
-                //     getRealtimeRanking(`/team/rank/realtime/${res.data.data.teamId}?page=${curPage}&size=5`).then(
-                //         (res) => console.log('리얼타임 랭킹: ', res.data),
-                //     );
-                // }
+                if (!res.data.data.members) {
+                    getRanking(`/team/rank/weekly/-1?page=${curPage}&size=5`).then((res) => {
+                        const data = res.data.data.content[0];
+                        setRanking(data.teamRanks);
+                        setMyRanking({
+                            myTeamName: '소속된 팀이 없습니다.',
+                            myTeamRankNum: '-',
+                            myTeamScore: '-',
+                            myTeamRewardPoint: '-',
+                        });
+                    });
+                    getRealtimeRanking(`/team/rank/realtime/${res.data.data.teamId}?page=${curPage}&size=5`).then(
+                        (res) => console.log('리얼타임 랭킹: ', res.data),
+                    );
+                } else if (res.data.data.members.some((it: any) => it.memberId === memberId)) {
+                    getRanking(`/team/rank/weekly/${res.data.data.teamId}?page=${curPage}&size=5`).then((res) => {
+                        const data = res.data.data.content[0];
+                        setRanking(data.teamRanks);
+                        setMyRanking({
+                            myTeamName: data.myTeamName,
+                            myTeamRankNum: data.myTeamRankNum,
+                            myTeamScore: data.myTeamScore,
+                            myTeamRewardPoint: data.myTeamRewardPoint,
+                        });
+                    });
+                    getRealtimeRanking(`/team/rank/realtime/${res.data.data.teamId}?page=${curPage}&size=5`).then(
+                        (res) => console.log('리얼타임 랭킹: ', res.data),
+                    );
+                }
             }
         });
         // } else {
