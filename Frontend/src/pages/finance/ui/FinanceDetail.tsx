@@ -161,8 +161,15 @@ export function FinanceDetail() {
             <div className="financeDetail">
                 {/* 탭 버튼 */}
                 <div className="financeDetail__tabButton">
-                    <button onClick={() => setCategory('card')}>혜택 좋은 카드 추천</button>
-                    <button onClick={() => setCategory('stock')}>배당률 좋은 주식 추천</button>
+                    <button className={`${category === 'card' ? 'selected' : ''}`} onClick={() => setCategory('card')}>
+                        혜택 좋은 카드 추천
+                    </button>
+                    <button
+                        className={`${category === 'stock' ? 'selected' : ''}`}
+                        onClick={() => setCategory('stock')}
+                    >
+                        배당률 좋은 주식 추천
+                    </button>
                 </div>
                 {/* 검색 바 */}
                 {category === 'stock' && (
@@ -318,7 +325,7 @@ export function FinanceDetail() {
                                         </div>
                                         <div className="cardItem__content">
                                             <div className="cardItem__content-title">
-                                                <h3>{item.cardName}</h3>
+                                                <h1>{item.cardName}</h1>
                                                 <span>{item.cardCompany}</span>
                                             </div>
                                             <div className="cardItem__content-category">
@@ -327,10 +334,14 @@ export function FinanceDetail() {
                                                 ))}
                                             </div>
                                             <div className="cardItem__content-bottom">
-                                                <div>전월실적: {item.cardRequired}이상</div>
                                                 <div>
-                                                    연회비: 국내전용: {item.cardDomestic}원 / 해외겸용:{' '}
-                                                    {item.cardAbroad}원
+                                                    {item.cardRequired > 0
+                                                        ? `전월실적 : ${item.cardRequired.toLocaleString()}원 이상`
+                                                        : `전월 실적 무관`}
+                                                </div>
+                                                <div>
+                                                    연회비 : 국내전용 : {item.cardDomestic.toLocaleString()}원 /
+                                                    해외겸용: {item.cardAbroad.toLocaleString()}원
                                                 </div>
                                             </div>
                                         </div>
