@@ -49,6 +49,7 @@ export function FinanceDetail() {
     const [category, setCategory] = useState<'card' | 'stock'>('card');
     const [stockItems, setStockItems] = useState<StockWithDetail[]>([]);
     const [cardItems, setCardItems] = useState<Card[]>([]);
+    const [loading, setLoading] = useState(true); // 로딩 상태 추가
     const [page, setPage] = useState(0);
     const [hasMore, setHasMore] = useState(true);
     const [searchOptions, setSearchOptions] = useState({
@@ -77,7 +78,7 @@ export function FinanceDetail() {
 
         if (category === 'stock') {
             try {
-                const res = await StockListUp(0, 20, word, startPrice, endPrice);
+                const res = await StockListUp(page, 20, word, startPrice, endPrice);
                 if (res.data.code === 200) {
                     let stocks: StockWithDetail[] = res.data.data.content.map((stock: Stock) => ({
                         stock: stock,
@@ -99,7 +100,7 @@ export function FinanceDetail() {
         } else if (category === 'card') {
             try {
                 const response = await CardListUp(
-                    0,
+                    page,
                     10,
                     cardName,
                     cardCompany,
