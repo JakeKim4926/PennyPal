@@ -2,9 +2,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import CardComponent from '@/pages/finance/ui/CardComponent/CardComponent';
 import StockComponent from '@/pages/finance/ui/StockComponent/StockComponent';
 import SavingsComponent from '@/pages/finance/ui/SavingsComponent/SavingsComponent';
-import { CardListUp, StockDetail, StockListUp } from '@/pages/finance/model';
+import { CardListUp, StockDetail, StockListUp, StockSubDetail } from '@/pages/finance/model';
 import { useNavigate } from 'react-router-dom';
 import { Chart, ChartConfiguration } from 'chart.js';
+import { PageHeader } from '@/shared';
 interface Stock {
     stockId: number;
     crno: string;
@@ -12,6 +13,28 @@ interface Stock {
     stckIssuCmpyNm: string;
     basDt: number[];
     stckGenrDvdnAmt: number;
+}
+interface SubDetail {
+    basDt: string; // 기준일
+    srtnCd: string; // 단축코드
+    isinCd: string; // 국제증권식별번호
+    itmsNm: string; // 항목명, 예: "한국앤컴퍼니"
+    mrktCtg: string; // 시장 카테고리, 예: "KOSPI"
+    clpr: string; // 종가
+    vs: string; // 변동
+    fltRt: string; // 변동률
+    mkp: string; // 시가
+    hipr: string; // 고가
+    lopr: string; // 저가
+    trqu: string; // 거래량
+    trPrc: string; // 거래 가격
+    lstgStCnt: string; // 상장 주식 수
+    mrktTotAmt: string; // 시장 총액
+}
+
+interface StockWithDetail {
+    stock: Stock;
+    subDetail?: SubDetail; // 세부 정보는 선택적으로 존재할 수 있습니다.
 }
 interface StockTransaction {
     basDt: string;
@@ -32,7 +55,7 @@ interface Card {
 }
 
 export function Finance() {
-    const [data, setData] = useState<Stock[]>([]);
+    const [data, setData] = useState<StockWithDetail[]>([]);
     const [data1, setData1] = useState<Card[]>([]);
     const navigate = useNavigate();
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -123,20 +146,49 @@ export function Finance() {
                             fill: false,
                             borderColor: 'rgb(75, 192, 192)',
                             tension: 0.1,
+                            pointBackgroundColor: '#fff', // 데이터 포인트 배경 색상
+                            pointBorderColor: '#007bff', // 데이터 포인트 테두리 색상
+                            pointHoverBackgroundColor: '#007bff', // 호버 시 데이터 포인트 배경 색상
+                            pointHoverBorderColor: '#fff', // 호버 시 데이터 포인트 테두리 색상
                         },
                     ],
                 },
                 options: {
-                    // 애니메이션 옵션 추가
-                    animation: {
-                        onComplete: () => {}, // 애니메이션이 완료된 후 실행될 함수 (필요한 경우 사용)
-                        duration: 2000, // 애니메이션 지속 시간 (밀리초 단위)
-                    },
                     scales: {
                         y: {
-                            beginAtZero: true,
+                            display: false, // y축 단위값 숨김
+                        },
+                        x: {
+                            grid: {
+                                display: false, // x축 격자 무늬 숨김
+                            },
                         },
                     },
+                    plugins: {
+                        tooltip: {
+                            enabled: true, // 데이터 호버링 시 툴팁 활성화
+                            mode: 'index',
+                            intersect: false,
+                        },
+                        legend: {
+                            display: false, // 범례 숨김
+                        },
+                    },
+                    elements: {
+                        line: {
+                            borderWidth: 2, // 선 두께 조정
+                        },
+                        point: {
+                            radius: 5, // 데이터 포인트 반지름
+                            hoverRadius: 7, // 호버 시 데이터 포인트 반지름
+                        },
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'nearest',
+                    },
+                    responsive: true, // 반응형 차트 설정
+                    maintainAspectRatio: false, // 차트의 종횡비 유지 여부
                 },
             };
 
@@ -154,15 +206,27 @@ export function Finance() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await StockListUp();
+                const res = await StockListUp(15, 5);
                 if (res.data.code === 200) {
-                    setData(res.data.data.content);
+                    let stocks: StockWithDetail[] = res.data.data.content.map((stock: Stock) => ({
+                        stock: stock,
+                    }));
+                    // stocks 배열의 각 요소에 대해 비동기 요청을 수행
+                    for (let i = 0; i < stocks.length; i++) {
+                        const res2 = await StockSubDetail(stocks[i].stock.isinCd);
+                        if (res2.data && res2.data.item.length > 0) {
+                            // 구조분해 할당을 사용해 stocks 배열의 i번째 요소의 subDetail 프로퍼티에 할당
+                            stocks[i].subDetail = res2.data.item[0];
+                        }
+                    }
+                    // 모든 요청이 완료된 후, 업데이트된 stocks 배열로 상태를 업데이트
+                    setData(stocks);
                 }
             } catch (err) {
                 console.error(err);
             }
             try {
-                const res = await CardListUp();
+                const res = await CardListUp(0, 4);
                 if (res.data.code === 200) {
                     setData1(res.data.data.content);
                 }
@@ -173,34 +237,29 @@ export function Finance() {
 
         fetchData();
     }, []);
-    useEffect(() => {
-        const fetchDetail = async () => {
-            try {
-                for (const el of data) {
-                    const res = await StockDetail(el.stockId);
-                    console.log(res.data);
-                }
-            } catch (err) {
-                console.log(err);
-            }
-        };
-        fetchDetail();
-    }, [data]);
+
     return (
-        <div className="container">
-            <div className="container">
-                <div className="contentCard">
-                    <div className="contentCard__title">소비도 투자도 저축도 현명하게</div>
-                </div>
+        <div className="container bg-grey">
+            <div className="finance">
+                <PageHeader page="finance"></PageHeader>
+                <br />
                 <div className="card">
-                    <a onClick={() => navigate('/financedetail')}>더보기</a>
+                    <div className="stock__header">
+                        <p>다양한 혜택 분야!</p>
+                        <h2>혜택 좋은 카드 어때요?</h2>
+                    </div>
+                    <div className="finance__morebutton">
+                        <a onClick={() => navigate('/financedetail')}>
+                            <img src="@/../assets/image/arrowHorizontal.svg" />
+                        </a>
+                    </div>
                     <div className="card__content">
                         {data1.map((card) => (
                             <div key={card.cardId} className="card__content--item">
                                 <div className="image-container">
                                     <img src={card.cardImg} onLoad={adjustImageStyle} />
                                 </div>
-                                <div>
+                                <div className="namebox">
                                     <h3>{card.cardName}</h3>
                                     <span>{card.cardCompany}</span>
                                 </div>
@@ -208,31 +267,47 @@ export function Finance() {
                         ))}
                     </div>
                 </div>
+                <br />
                 <div className="stock">
                     <div className="stock__header">
                         <p>주식은 단타가 아냐</p>
                         <h2>배당률 좋은 주식 어때요?</h2>
-                        <a onClick={() => navigate('/financedetail')}>더보기</a>
                     </div>
-                    <div className="stock__content">
+                    <div className="finance__morebutton">
+                        <a onClick={() => navigate('/financedetail')}>
+                            <img src="@/../assets/image/arrowHorizontal.svg" />
+                        </a>
+                    </div>
+                    <table className="stock__content">
+                        <tr>
+                            <th>기업명</th>
+                            <th>배당금</th>
+                            <th>시가</th>
+                            <th>시가총액</th>
+                        </tr>
                         {data.map((stock) => (
-                            <div
-                                key={stock.stockId}
+                            <tr
+                                key={stock.stock.stockId}
                                 className="stock__content--item"
-                                onMouseEnter={() => handleMouseEnter(stock.stockId)} // 마우스 호버 이벤트 핸들러
+                                onMouseEnter={() => handleMouseEnter(stock.stock.stockId)} // 마우스 호버 이벤트 핸들러
                             >
-                                <div className="stock__content--companyName">{stock.stckIssuCmpyNm}</div>
-                                <div className="stock__content--info">
-                                    <span>CRNO: {stock.crno}/</span>
-                                    <span>ISIN Code: {stock.isinCd}/</span>
-                                    <span>배당금: {stock.stckGenrDvdnAmt.toLocaleString()} 원/</span>
-                                    <span>기준 날짜: {stock.basDt}</span>
-                                </div>
-                            </div>
+                                <td className="stock__content--companyName">{stock.stock.stckIssuCmpyNm}</td>
+                                <td className="stock__content--info">
+                                    {stock.stock.stckGenrDvdnAmt.toLocaleString()} 원
+                                </td>
+                                <td className="stock__content--info">
+                                    {parseInt(stock.subDetail?.mkp ?? '0', 10).toLocaleString()}원
+                                </td>
+                                <td className="stock__content--info">
+                                    {parseInt(stock.subDetail?.mrktTotAmt ?? '0', 10).toLocaleString()}원
+                                </td>
+                            </tr>
                         ))}
-                    </div>
+                    </table>
                 </div>
-                <canvas ref={canvasRef} id="myChart" width="600" height="250"></canvas>
+                <div>
+                    <canvas ref={canvasRef} id="myChart" width="600" height="250"></canvas>
+                </div>
             </div>
         </div>
     );

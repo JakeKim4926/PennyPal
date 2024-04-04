@@ -23,13 +23,21 @@ export function SignUpDone() {
     }, [countdown]);
 
     return (
-        <div>
-            <div>
-                <h1>회원가입 성공 !</h1>
-                <p>당신도 이젠 절약칭구 PennyPal !</p>
+        <div className="signupDone">
+            <div className="signupDone__box">
+                <h1 className="signupDone__box-title">회원가입 성공 !</h1>
+                <p className="signupDone__box-sub">당신도 이젠 절약칭구 PennyPal !</p>
             </div>
             <p>{countdown}초 뒤 메인으로 이동합니다...</p>
-            <Button child={'MOVE NOW'} color={'color-main'} onClick={() => setCountdown(0)} />
+            <button
+                className="signupDone__button button"
+                onClick={() => {
+                    setCountdown(0);
+                }}
+            >
+                MOVE NOW
+            </button>
+            {/* <Button child={'MOVE NOW'} color={'color-main'} onClick={() => setCountdown(0)} /> */}
         </div>
     );
 }

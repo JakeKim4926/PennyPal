@@ -68,7 +68,6 @@ export function ExpenditureWeekly() {
         const memberId = getCookie('memberId'); // 쿠키에서 memberId를 가져옵니다.
         if (!memberId) {
             console.error('로그인이 필요합니다.');
-            alert('로그인이 필요합니다');
             return;
         }
 
@@ -88,7 +87,6 @@ export function ExpenditureWeekly() {
             }
         } catch (error) {
             console.error('출석 여부 확인 중 오류가 발생했습니다:', error);
-            alert('출석 여부 확인 오류');
         }
     };
 

@@ -1,8 +1,10 @@
 import { useNavigate } from 'react-router-dom';
-import { Button } from '@/shared';
+import { Button, setIsInitPage } from '@/shared';
 import { doLogin } from '@/pages/signin/model/doLogin';
 import { useState, useEffect, useRef } from 'react';
 import { setCookie } from '@/shared/lib'; // cookieHelper에서 setCookie 함수를 가져옵니다.
+import { useDispatch } from 'react-redux';
+
 interface LoginData {
     memberEmail: string;
     memberPassword: string;
@@ -29,6 +31,7 @@ export function SignIn() {
     const [password, setPassword] = useState<string>('');
     const emailRef = useRef<HTMLInputElement>(null); // autofocus용
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(event.target.value);
@@ -78,27 +81,33 @@ export function SignIn() {
         if (emailRef.current) {
             emailRef.current.focus();
         }
+
+        dispatch(setIsInitPage(true));
+
+        return () => {
+            dispatch(setIsInitPage(false));
+        };
     }, []);
 
     return (
-        <div className="signin__container ">
-            <div className="signin">
-                <div className="signin__top">
-                    <div className="signin__top-title">WELCOME TO PENNYPAL !</div>
+        <div className="welcomebox__container ">
+            <div className="welcomebox">
+                <div className="welcomebox__top">
+                    <div className="welcomebox__top-title">WELCOME TO PENNYPAL !</div>
                     <img src="assets/image/main-logo-colored.svg" height={80} />
-                    <div className="signin__top-sub">SIGN IN</div>
+                    <div className="welcomebox__top-sub">SIGN IN</div>
                 </div>
-                <div className="signin__middle">
-                    <div className="signin__middle-email">
-                        <div className="signin__middle-email-title">E-mail</div>
-                        <div className="signin__middle-email-sub">
+                <div className="welcomebox__middle">
+                    <div className="welcomebox__middle-email">
+                        <div className="welcomebox__middle-email-title">E-mail</div>
+                        <div className="welcomebox__middle-email-sub">
                             <img src="assets/image/icons_mini/Email.svg" height={20} />
                             <input type="text" ref={emailRef} value={email} onChange={handleEmailChange} />
                         </div>
                     </div>
-                    <div className="signin__middle-pw">
-                        <div className="signin__middle-pw-title">Password</div>
-                        <div className="signin__middle-pw-sub">
+                    <div className="welcomebox__middle-pw">
+                        <div className="welcomebox__middle-pw-title">Password</div>
+                        <div className="welcomebox__middle-pw-sub">
                             <img src="assets/image/icons_mini/password.svg" />
                             <input
                                 type="password"
@@ -109,14 +118,15 @@ export function SignIn() {
                         </div>
                     </div>
                 </div>
-                <div className="signin__bottom">
-                    <div className="signin__bottom-forgot">
+                <div className="welcomebox__bottom">
+                    <div className="welcomebox__bottom-forgot">
                         <button onClick={handlePassword}>Forgot Password ? &#9654;</button>
                     </div>
-                    <div className="signin__bottom-login">
-                        <Button child={'LOGIN'} color={'color-sub'} onClick={handleSignIn} />
+                    <div className="welcomebox__bottom-login">
+                        {/* <Button child={'LOGIN'} color={'color-sub'} onClick={handlesignin} /> */}
+                        <button className="button">LOGIN</button>
                     </div>
-                    <div className="signin__bottom-account">
+                    <div className="welcomebox__bottom-account">
                         <div>No Account ? </div>
                         <button
                             onClick={(e: React.MouseEvent<HTMLButtonElement>) => {

@@ -9,13 +9,18 @@ type PieChartProps = {
 
 const PieChart = ({ datas, labels, backgroundColors }: PieChartProps) => {
     const chartContainer = useRef<HTMLCanvasElement | null>(null);
+    const chartInstance = useRef<Chart | null>(null); // 차트 인스턴스를 저장하기 위한 ref
 
     useEffect(() => {
         if (!chartContainer.current) return;
 
         const ctx = chartContainer.current.getContext('2d')!;
 
-        new Chart(ctx, {
+        if (chartInstance.current) {
+            chartInstance.current.destroy();
+        }
+
+        chartInstance.current = new Chart(ctx, {
             type: 'pie',
             data: {
                 labels: labels,
@@ -42,7 +47,7 @@ const PieChart = ({ datas, labels, backgroundColors }: PieChartProps) => {
                     },
                 },
             },
-        });
+        } as any);
     }, [datas, labels, backgroundColors]);
 
     return (

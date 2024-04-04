@@ -40,12 +40,14 @@ export function SignUpForm() {
     };
 
     return (
-        <div>
-            <div>
-                <p>E-mail</p>
-                <div className="input-container">
-                    <img src="assets/image/icons_mini/Email.svg" />
-                    <input type="text" placeholder="이메일" onChange={(e) => handleChange(e, 'email')} />
+        <div className="signupForm">
+            <div className="signupForm__top">
+                <div className="signupForm__top-email">
+                    <div className="signupForm__top-email-title">E-mail</div>
+                    <div className="signupForm__top-email-sub">
+                        <img src="assets/image/icons_mini/Email.svg" />
+                        <input type="text" placeholder="이메일" onChange={(e) => handleChange(e, 'email')} />
+                    </div>
                 </div>
                 <div className="message-container">
                     {emailValid === true ? (
@@ -55,9 +57,9 @@ export function SignUpForm() {
                     ) : null}
                 </div>
             </div>
-            <div>
-                <p>Password</p>
-                <div className="input-container">
+            <div className="signupForm__pw">
+                <div className="signupForm__pw-title">Password</div>
+                <div className="signupForm__pw-sub">
                     <img src="assets/image/icons_mini/password.svg" />
                     <input type="password" placeholder="패스워드" onChange={(e) => handleChange(e, 'password')} />
                 </div>
@@ -69,9 +71,9 @@ export function SignUpForm() {
                     ) : null}
                 </div>
             </div>
-            <div>
-                <p>Password Check</p>
-                <div className="input-container">
+            <div className="singupForm__pwcheck">
+                <div className="signupForm__pwcheck-title">Password Check</div>
+                <div className="signupForm__pwcheck-sub">
                     <img src="assets/image/icons_mini/password.svg" />
                     <input
                         type="password"
@@ -87,9 +89,9 @@ export function SignUpForm() {
                     ) : null}
                 </div>
             </div>
-            <div>
-                <p>Name</p>
-                <div className="input-container">
+            <div className="signupForm__name">
+                <div className="signupForm__name-title">Name</div>
+                <div className="signupForm__name-sub">
                     <img src="assets/image/icons_mini/User.svg" />
                     <input type="text" placeholder="이름" onChange={(e) => handleChange(e, 'name')} />
                 </div>
@@ -101,9 +103,9 @@ export function SignUpForm() {
                     ) : null}
                 </div>
             </div>
-            <div>
-                <p>Birthdate</p>
-                <div className="input-container">
+            <div className="signupForm__birth">
+                <div className="signupForm__birth-title">Birthdate</div>
+                <div className="signupForm__birth-sub">
                     <img src="assets/image/icons_mini/BirthDate.svg" />
                     <input type="text" placeholder="생일" onChange={(e) => handleChange(e, 'birthday')} />
                 </div>
@@ -115,9 +117,9 @@ export function SignUpForm() {
                     ) : null}
                 </div>
             </div>
-            <div>
-                <p>Nickname</p>
-                <div className="input-container">
+            <div className="signupForm__nickname">
+                <div className="signupForm__nickname-title">Nickname</div>
+                <div className="signupForm__nickname-sub">
                     <img src="assets/image/icons_mini/Name.svg" />
                     <input type="text" placeholder="닉네임" onChange={(e) => handleChange(e, 'nickName')} />
                 </div>
@@ -130,7 +132,17 @@ export function SignUpForm() {
                 </div>
             </div>
             <div className="nextButton">
-                <Button child={'REGISTER'} color={'color-main'} disabled={!allFieldsValid} onClick={handleNext} />
+                <button
+                    className="nextButton__button button"
+                    onClick={() => {
+                        if (allFieldsValid) {
+                            handleNext();
+                        }
+                    }}
+                >
+                    REGIST
+                </button>
+                {/* <Button child={'REGISTER'} color={'color-main'} disabled={!allFieldsValid} onClick={handleNext} /> */}
             </div>
         </div>
     );
