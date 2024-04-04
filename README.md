@@ -82,11 +82,11 @@ Python, Flask, Anaconda
 <h3>회원가입</h3>
 <img src="/uploads/3478dddda261856141a4d00975d4ddc3/회원가입.gif">
 <h3>로그인 및 출석</h3>
-<img src="/uploads/7c863a79d650be5ee525981abc53c810/로그인 및 출석.gif">
+<img src="/uploads/7c863a79d650be5ee525981abc53c810/로그인_및_출석.gif">
 <h3>개인지출내역 확인 및 카드 추천</h3>
-<img src="/uploads/15e3a685574cc334b342f1b71cb93691/개인 지출 내역 확인 및 카드 추천.gif">
+<img src="/uploads/15e3a685574cc334b342f1b71cb93691/개인_지출_내역_확인_및_카드_추천.gif">
 <h3>팀 정보 확인</h3>
-<img src="/uploads/e3f47e538c390bc518ac9d28a7c789b9/팀 정보 확인.gif">
+<img src="/uploads/e3f47e538c390bc518ac9d28a7c789b9/팀_정보_확인.gif">
 <h3>팀 랭킹</h3>
 <img src="/uploads/7b63d3d054b40e2bb5402486bdeb9b4c/팀_랭킹.gif">
 <h3>마켓 구매 및 내역 확인</h3>
