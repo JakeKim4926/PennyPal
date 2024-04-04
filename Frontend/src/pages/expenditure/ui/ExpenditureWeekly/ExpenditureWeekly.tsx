@@ -4,6 +4,7 @@ import { getCookie } from '@/shared/lib/cookieHelper';
 
 import ExpenditureWeeklyDaily from './item/ExpenditureWeeklyDaily';
 import { Spending } from '../../model/spending';
+import Swal from 'sweetalert2';
 
 import { Expense, fetchMemberAttendance, fetchAccountTransactions } from '../../model/fetchFunctions';
 
@@ -101,7 +102,10 @@ export function ExpenditureWeekly() {
             alert('오류가 발생했습니다. 다시 시도해주세요.');
         }
     };
-
+    const handleReload = () => {
+        fetchAccountTransactions();
+        Swal.fire('지출내역 업데이트 성공!');
+    };
     const removeCover = () => {
         setCoverVisible(false);
     };
@@ -177,7 +181,7 @@ export function ExpenditureWeekly() {
                     <FontAwesomeIcon icon={faCircleExclamation} size="lg" />
                     <span>지출이 늘어나지 않도록 관리하세요!</span>
                 </div>
-                <div className="expenditureWeekly__footer-reload clickable" onClick={fetchAccountTransactions}>
+                <div className="expenditureWeekly__footer-reload clickable" onClick={handleReload}>
                     <span className="expenditureWeekly__footer-reload-text">지출내역 불러오기!</span>
                     <div className="expenditureWeekly__footer-reload-button">
                         <div className="expenditureWeekly__footer-reload-button-img">
