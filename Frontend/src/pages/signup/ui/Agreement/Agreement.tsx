@@ -16,27 +16,31 @@ export function Agreement() {
     };
 
     return (
-        <div>
-            <div>
-                Agreement
-                <div className="contentCard">
-                    <div>
-                        <p>서비스 이용을 위한</p>
-                        <p>사용자의 계좌내역 수집 및 활용에 동의합니다.</p>
+        <div className="agreement">
+            <div className="agreement__top">
+                <div className="agreement__top-title">Agreement</div>
+                <div className="agreement__top-content">
+                    <div className="agreement__top-content-top">
+                        <div>서비스 이용을 위한</div>
+                        <div>사용자의 계좌내역 수집 및 활용에 동의합니다.</div>
                     </div>
-                    <div>
-                        <img src="assets/image/icons_mini/handShake.svg" />
+                    <div className="agreement__top-content-middle">
                         <div>
-                            <p>수집항목</p>
+                            <p>
+                                <img src="assets/image/icons_mini/handShake.svg" />
+                                수집항목
+                            </p>
                             <ul>
                                 <li>카드 계좌 및 사용내역</li>
                             </ul>
                         </div>
                     </div>
-                    <div>
-                        <img src="assets/image/icons_mini/handShake.svg" />
+                    <div className="agreement__top-content-bottom">
                         <div>
-                            <p>이용목적</p>
+                            <p>
+                                <img src="assets/image/icons_mini/handShake.svg" />
+                                이용목적
+                            </p>
                             <ul>
                                 <li>
                                     서비스 사용에 필요한 지출내역 분석을 위해 활용하며, 목적 외의 용도로는 사용하지
@@ -46,10 +50,23 @@ export function Agreement() {
                         </div>
                     </div>
                 </div>
-                <input type="checkbox" id="myCheckbox" checked={isChecked} onChange={handleChange} />
-                <label htmlFor="myCheckbox">개인정보 수집 및 활용을 위한 위 사항에 동의합니다.</label>
+                <div className="agreement__top-input">
+                    <input type="checkbox" id="myCheckbox" checked={isChecked} onChange={handleChange} />
+                    <label htmlFor="myCheckbox">개인정보 수집 및 활용을 위한 위 사항에 동의합니다.</label>
+                </div>
             </div>
-            <Button child={'NEXT'} color={'light'} disabled={!isChecked} onClick={handleNext} />
+            <button
+                className="agreement-button button"
+                disabled={!isChecked}
+                onClick={() => {
+                    if (isChecked) {
+                        handleNext();
+                    }
+                }}
+            >
+                NEXT
+            </button>
+            {/* <Button child={'NEXT'} color={'light'} disabled={!isChecked} onClick={handleNext} /> */}
         </div>
     );
 }

@@ -1,0 +1,42 @@
+@import '@/style/abstract/mixin';
+
+.signupForm {
+    &__top {
+        &-email {
+            @include inputArea();
+        }
+    }
+
+    &__pw {
+        @include inputArea();
+    }
+
+    &__pwcheck {
+        @include inputArea();
+    }
+
+    &__name {
+        @include inputArea();
+    }
+
+    &__birth {
+        @include inputArea();
+    }
+
+    &__nickname {
+        @include inputArea();
+    }
+}
+
+.nextButton {
+    &__button {
+        background-color: $main;
+        font-family: 'Wanted-ExtraBold';
+        width: 100%;
+        height: 3rem;
+        text-align: center;
+        color: $bright;
+        letter-spacing: 0.3rem;
+        font-size: 1.5rem;
+    }
+}

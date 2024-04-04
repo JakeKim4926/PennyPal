@@ -4,7 +4,89 @@
     background-position: center; /* 배경 이미지를 화면 중앙에 배치 */
 }
 
-main {
-    background-image: url('@/../public/assets/image/landing1.png');
-    opacity: 0.2;
+.landing {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 100%;
+    min-height: 880px;
+    overflow: scroll;
+
+    background-image: url('@/../public/assets/image/Background.png');
+}
+
+.slide1 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    min-height: 880px;
+
+    &__content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 70px;
+
+        &-mainPhase {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+
+            * {
+                font-family: 'Wanted-ExtraBlack';
+                font-size: 100px;
+            }
+
+            .green {
+                color: $main;
+            }
+            .yellow {
+                color: $sub;
+            }
+        }
+
+        &-btn {
+            font-size: 70px;
+            cursor: pointer;
+            * {
+                color: #fc5555;
+            }
+
+            &:hover {
+                * {
+                    color: red;
+                }
+            }
+        }
+
+        &-subPhase {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+
+            * {
+                font-family: 'Wanted-ExtraBlack';
+                font-size: 40px;
+                color: $dark;
+            }
+
+            .red {
+                color: #fc5555;
+            }
+            .green {
+                color: $main;
+            }
+            .yellow {
+                color: $sub;
+            }
+        }
+    }
 }
