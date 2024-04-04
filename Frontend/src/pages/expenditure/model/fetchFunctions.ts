@@ -1,5 +1,6 @@
 import { customAxios, dataAxios } from '../../../shared';
 import { getCookie } from '../../../shared/lib/cookieHelper';
+import Swal from 'sweetalert2';
 
 // 이메일 조회
 export const fetchMemberEmail = async (memberId: string): Promise<string> => {
@@ -34,7 +35,7 @@ export const fetchMemberAttendance = async (): Promise<void> => {
 
         console.log(today);
         console.log(response.data); // 성공 응답 처리
-        alert('출석 인증에 성공하셨습니다! 포인트가 지급됩니다!');
+        Swal.fire('출석 인증 성공!\n 포인트가 지급됩니다!');
         // setCoverVisible은 React useState에서 정의된 상태 설정 함수를 가정
         // setCoverVisible(false); // 이 줄은 setCoverVisible이 정의된 컴포넌트의 컨텍스트 내에서 실행되어야 함
     } catch (error) {
