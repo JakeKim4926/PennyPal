@@ -124,7 +124,9 @@ export function SignIn() {
                     </div>
                     <div className="welcomebox__bottom-login">
                         {/* <Button child={'LOGIN'} color={'color-sub'} onClick={handlesignin} /> */}
-                        <button className="button">LOGIN</button>
+                        <button className="button" onClick={handleSignIn}>
+                            LOGIN
+                        </button>
                     </div>
                     <div className="welcomebox__bottom-account">
                         <div>No Account ? </div>

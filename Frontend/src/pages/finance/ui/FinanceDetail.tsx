@@ -49,6 +49,7 @@ export function FinanceDetail() {
     const [category, setCategory] = useState<'card' | 'stock'>('card');
     const [stockItems, setStockItems] = useState<StockWithDetail[]>([]);
     const [cardItems, setCardItems] = useState<Card[]>([]);
+    const [loading, setLoading] = useState(true); // 로딩 상태 추가
     const [page, setPage] = useState(0);
     const [hasMore, setHasMore] = useState(true);
     const [searchOptions, setSearchOptions] = useState({
@@ -77,7 +78,7 @@ export function FinanceDetail() {
 
         if (category === 'stock') {
             try {
-                const res = await StockListUp(0, 20, word, startPrice, endPrice);
+                const res = await StockListUp(page, 20, word, startPrice, endPrice);
                 if (res.data.code === 200) {
                     let stocks: StockWithDetail[] = res.data.data.content.map((stock: Stock) => ({
                         stock: stock,
@@ -99,7 +100,7 @@ export function FinanceDetail() {
         } else if (category === 'card') {
             try {
                 const response = await CardListUp(
-                    0,
+                    page,
                     10,
                     cardName,
                     cardCompany,
@@ -160,19 +161,31 @@ export function FinanceDetail() {
             <div className="financeDetail">
                 {/* 탭 버튼 */}
                 <div className="financeDetail__tabButton">
-                    <button onClick={() => setCategory('card')}>혜택 좋은 카드 추천</button>
-                    <button onClick={() => setCategory('stock')}>배당률 좋은 주식 추천</button>
+                    <button className={`${category === 'card' ? 'selected' : ''}`} onClick={() => setCategory('card')}>
+                        혜택 좋은 카드 추천
+                    </button>
+                    <button
+                        className={`${category === 'stock' ? 'selected' : ''}`}
+                        onClick={() => setCategory('stock')}
+                    >
+                        배당률 좋은 주식 추천
+                    </button>
                 </div>
                 {/* 검색 바 */}
                 {category === 'stock' && (
-                    <div>
+                    <div className="financeDetail_input">
                         <input
                             type="text"
                             placeholder="단어 검색..."
                             value={searchOptions.word}
                             onChange={(e) => setSearchOptions({ ...searchOptions, word: e.target.value })}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    handleSearch();
+                                }
+                            }}
                         />
-                        <input
+                        {/* <input
                             type="number"
                             placeholder="최소 가격..."
                             value={searchOptions.startPrice || ''}
@@ -193,7 +206,7 @@ export function FinanceDetail() {
                                     endPrice: e.target.value ? parseInt(e.target.value) : undefined,
                                 })
                             }
-                        />
+                        /> */}
                     </div>
                 )}
                 {category === 'card' && (
@@ -294,14 +307,15 @@ export function FinanceDetail() {
                             <div className="stock__content">
                                 {stockItems.map((stock, index) => (
                                     <div key={index} className="stock__content--item">
-                                        <div className="stock__content--companyName">{stock.stock.stckIssuCmpyNm}</div>
+                                        <h2 className="stock__content--companyName">{stock.stock.stckIssuCmpyNm}</h2>
                                         <div className="stock__content--info">
-                                            {stock.stock.stckGenrDvdnAmt.toLocaleString()} 원
+                                            배당금 : {stock.stock.stckGenrDvdnAmt.toLocaleString()} 원
                                         </div>
                                         <div className="stock__content--info">
-                                            {parseInt(stock.subDetail?.mkp ?? '0', 10).toLocaleString()}원
+                                            가격 : {parseInt(stock.subDetail?.mkp ?? '0', 10).toLocaleString()}원
                                         </div>
                                         <div className="stock__content--info">
+                                            시가총액 :
                                             {parseInt(stock.subDetail?.mrktTotAmt ?? '0', 10).toLocaleString()}원
                                         </div>
                                     </div>
@@ -317,7 +331,7 @@ export function FinanceDetail() {
                                         </div>
                                         <div className="cardItem__content">
                                             <div className="cardItem__content-title">
-                                                <h3>{item.cardName}</h3>
+                                                <h1>{item.cardName}</h1>
                                                 <span>{item.cardCompany}</span>
                                             </div>
                                             <div className="cardItem__content-category">
@@ -326,10 +340,14 @@ export function FinanceDetail() {
                                                 ))}
                                             </div>
                                             <div className="cardItem__content-bottom">
-                                                <div>전월실적: {item.cardRequired}이상</div>
                                                 <div>
-                                                    연회비: 국내전용: {item.cardDomestic}원 / 해외겸용:{' '}
-                                                    {item.cardAbroad}원
+                                                    {item.cardRequired > 0
+                                                        ? `전월실적 : ${item.cardRequired.toLocaleString()}원 이상`
+                                                        : `전월 실적 무관`}
+                                                </div>
+                                                <div>
+                                                    연회비 : 국내전용 : {item.cardDomestic.toLocaleString()}원 /
+                                                    해외겸용: {item.cardAbroad.toLocaleString()}원
                                                 </div>
                                             </div>
                                         </div>
