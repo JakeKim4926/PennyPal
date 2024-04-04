@@ -98,6 +98,10 @@ Python, Flask, Anaconda
 
 <br />
 
+## ERD
+
+<img src="/uploads/279ae1b26b05913f6b9ba4867952b31d/erd.png">
+
 ## 🎨 시스템 아키텍처
 
 
