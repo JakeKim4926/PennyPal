@@ -45,21 +45,7 @@ YOLO족 유행이 줄어들고 FIRE족 유행이 늘어나는 상황 속, 소비
 
 ## ⚙ 기술스택
 
-
-### ☑ Backend
-
-Java, Spring Boot, Spring Data JPA, MySQL, Spring REST Docs
-
-### ☑ Frontend
-
-React.js, Typescript, SCSS, Node.js, Redux
-
-### ☑ Infra
-
-AWS EC2, Nginx-proxy-manager, Docker, Docker-compose
-
-### ☑ Data
-Python, Flask, Anaconda
+<img src="/uploads/5230249d3c3d48a4f67fed9d0654f9ea/기술_스택.png">
 
 <br />
 
