@@ -67,6 +67,8 @@ YOLO족 유행이 줄어들고 FIRE족 유행이 늘어나는 상황 속, 소비
 
 <h3>회원가입</h3>
 <img src="/uploads/3478dddda261856141a4d00975d4ddc3/회원가입.gif" >
+<h3>마이페이지</h3>
+<img src="/uploads/4ddeb226915d468ed92d9895fff8f0e7/마이페이지.gif">
 <h3>로그인 및 출석</h3>
 <img src="/uploads/7c863a79d650be5ee525981abc53c810/로그인_및_출석.gif">
 <h3>개인지출내역 확인 및 카드 추천</h3>
