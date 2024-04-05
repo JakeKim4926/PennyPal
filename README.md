@@ -85,6 +85,10 @@ Python, Flask, Anaconda
 <img src="/uploads/7c863a79d650be5ee525981abc53c810/로그인_및_출석.gif">
 <h3>개인지출내역 확인 및 카드 추천</h3>
 <img src="/uploads/15e3a685574cc334b342f1b71cb93691/개인_지출_내역_확인__카드_추천.gif">
+<h3>팀 생성</h3>
+<img src="/uploads/af6991941cefe8240d7ea9fe2a6310fd/팀생성.gif">
+<h3>팀 참여</h3>
+<img src="/uploads/e62053be215a8994518a162ed7f97a72/팀정보.gif">
 <h3>팀 정보 확인</h3>
 <img src="/uploads/e3f47e538c390bc518ac9d28a7c789b9/팀_정보_확인.gif">
 <h3>팀 랭킹</h3>
