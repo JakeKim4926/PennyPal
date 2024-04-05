@@ -1,5 +1,4 @@
 import { useSignUpFormModel } from '@/pages/signup/model/useSignupFormmodel';
-import { Button } from '@/shared';
 import { useDispatch } from 'react-redux';
 import { setSignUpStep } from '@/pages/signup/model/signUpStepReducer';
 import { doSignUp, createUserKey } from '@/pages/signup/model/doSignUp';
@@ -134,6 +133,7 @@ export function SignUpForm() {
             <div className="nextButton">
                 <button
                     className="nextButton__button button"
+                    disabled={!allFieldsValid}
                     onClick={() => {
                         if (allFieldsValid) {
                             handleNext();

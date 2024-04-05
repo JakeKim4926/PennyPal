@@ -2,11 +2,13 @@ import { Button, getCookie } from '@/shared';
 import { useSignUpFormModel } from '@/pages/signup/model/useSignupFormmodel';
 import { ChangeEvent, useState } from 'react';
 import { doSubmit } from '../model/doSubmit';
+import Swal from 'sweetalert2';
 
 export function MyPage() {
-    const { userData, passwordValid, confirmPasswordValid, nickNameValid, handleChange } = useSignUpFormModel();
+    const { userData, setUserData, passwordValid, confirmPasswordValid, nickNameValid, handleChange } =
+        useSignUpFormModel();
     const [nowpassword, setNowPassword] = useState<string>('');
-    // const nowNick :string = getCookie('memberNickname') === ;
+    const nowNick = getCookie('memberNickname')?.toString();
     async function handleSubmit(type: 'nickname' | 'password') {
         let data = {};
         if (type === 'nickname') {
@@ -15,7 +17,6 @@ export function MyPage() {
                 memberId: getCookie('memberId'),
                 memberNickname: userData.nickName,
             };
-            console.log(data);
         } else {
             //password 수정 api
             data = {
@@ -23,10 +24,10 @@ export function MyPage() {
                 memberOriginPassword: nowpassword,
                 memberChangePassword: userData.password,
             };
-            console.log(data);
         }
         const res = await doSubmit(type, data);
         console.log(res);
+        Swal.fire(res.data.message);
     }
 
     function handleWithdraw() {
@@ -45,7 +46,11 @@ export function MyPage() {
                     <div className="signupForm__nickname-title">Nickname</div>
                     <div className="signupForm__nickname-sub">
                         <img src="assets/image/icons_mini/Name.svg" />
-                        <input type="text" placeholder="닉네임" onChange={(e) => handleChange(e, 'nickName')} />
+                        <input
+                            type="text"
+                            placeholder={`현재닉네임 : ${nowNick}`}
+                            onChange={(e) => handleChange(e, 'nickName')}
+                        />
                     </div>
                     <div className="message-container">
                         {nickNameValid === true ? (
