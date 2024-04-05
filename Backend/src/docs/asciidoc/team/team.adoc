@@ -1,31 +1,31 @@
 [[Team-API]]
-=== 2.1 팀 생성
+=== 팀 생성
 include::api/createTeam.adoc[]
 === 팀명 중복 체크
 include::api/validTeamName.adoc[]
-=== 2.2 팀 주간 랭킹 조회
+=== 팀 주간 랭킹 조회
 include::api/rankOfWeekly.adoc[]
-=== 2.2.1 팀 실시간 랭킹 조회
+=== 팀 실시간 랭킹 조회
 include::api/rankOfRealtime.adoc[]
-=== 2.3 팀 전체 조회 + 검색
+=== 팀 전체 조회 + 검색
 include::api/searchTeamList.adoc[]
-=== 2.4 팀 상세 조회
+=== 팀 상세 조회
 include::api/detailTeam.adoc[]
 === 다른 팀 상세 조회
 include::api/detailOtherTeam.adoc[]
 === 팀 가입 승인 대기 리스트 조회
 include::api/waitingList.adoc[]
-=== 2.5 팀 정보 수정
+=== 팀 정보 수정
 include::api/modifyTeam.adoc[]
-=== 2.5.1 팀원 추방
+=== 팀원 추방
 include::api/banishMember.adoc[]
-=== 2.5.2 팀 가입
+=== 팀 가입
 include::api/joinTeam.adoc[]
 === 팀 가입 승인
 include::api/approveMember.adoc[]
 === 팀 가입 거절
 include::api/rejectMember.adoc[]
-=== 2.5.3 팀 탈퇴
+=== 팀 탈퇴
 include::api/leaveTeam.adoc[]
-=== 2.6 팀 삭제
+=== 팀 삭제
 include::api/deleteTeam.adoc[]
