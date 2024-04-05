@@ -32,6 +32,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String jwt;
         final String memberEmail;
         if(authHeader == null || !authHeader.startsWith("Bearer ")) {
+            response.setStatus(486);
+            response.getWriter().write("토큰을 확인해주세요.");
             filterChain.doFilter(request, response);
             return;
         }
@@ -54,6 +56,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         new WebAuthenticationDetailsSource().buildDetails(request)
                 );
                 SecurityContextHolder.getContext().setAuthentication(authToken);
+            } else {
+                response.setStatus(486);
+                response.getWriter().write("토큰을 확인해주세요.");
             }
         }
         filterChain.doFilter(request, response);
