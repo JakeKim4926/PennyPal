@@ -34,49 +34,44 @@ export function MyPage() {
     }
 
     return (
-        <div className="container contentCard">
-            <div className="contentCard__title">
-                <h1 className="contentCard__title-text">MyPage</h1>
-            </div>
-            <div className="container contentCard">
-                <div className="contentCard__title">
-                    <h3 className="contentCard__title-text">회원 정보</h3>
+        <div className="welcomebox container">
+            <div className="welcomebox">
+                <div className="welcomebox__top">
+                    <p className="welcomebox__top-title">PENNYPAL</p>
+                    <img src="assets/image/main-logo-colored.svg" />
+                    <p className="welcomebox__top-sub">MY PAGE</p>
                 </div>
-                <div>
-                    <p>Nickname</p>
-                    <div className="input-container">
+                <div className="signupForm__nickname">
+                    <div className="signupForm__nickname-title">Nickname</div>
+                    <div className="signupForm__nickname-sub">
                         <img src="assets/image/icons_mini/Name.svg" />
-                        <input
-                            type="text"
-                            placeholder={'새로운 닉네임'}
-                            onChange={(e) => handleChange(e, 'nickName')}
-                        />
-                        <div className="message-container">
-                            {nickNameValid === true ? (
-                                <p className="message-container--valid">유효한 닉네임입니다.</p>
-                            ) : nickNameValid === false ? (
-                                <p className="message-container--invalid">유효하지 않은 닉네임입니다.</p>
-                            ) : null}
-                        </div>
+                        <input type="text" placeholder="닉네임" onChange={(e) => handleChange(e, 'nickName')} />
                     </div>
-                    <div className="">
-                        <Button
-                            child={'닉네임 변경'}
-                            color={'color-main'}
-                            disabled={!nickNameValid}
-                            onClick={() => {
-                                handleSubmit('nickname');
-                            }}
-                        />
+                    <div className="message-container">
+                        {nickNameValid === true ? (
+                            <p className="message-container--valid">유효한 닉네임입니다.</p>
+                        ) : nickNameValid === false ? (
+                            <p className="message-container--invalid">유효하지 않은 닉네임입니다.</p>
+                        ) : null}
                     </div>
                 </div>
-                <div>
-                    <p>현재 Password</p>
-                    <div className="input-container">
+                <div className="">
+                    <Button
+                        child={'닉네임 변경'}
+                        color={'color-main nextButton__button'}
+                        disabled={!nickNameValid}
+                        onClick={() => {
+                            handleSubmit('nickname');
+                        }}
+                    />
+                </div>
+                <div className="signupForm__pw">
+                    <div className="signupForm__pw-title">현재 Password</div>
+                    <div className="signupForm__pw-sub">
                         <img src="assets/image/icons_mini/password.svg" />
                         <input
                             type="password"
-                            placeholder="현재패스워드"
+                            placeholder="현재 패스워드"
                             value={nowpassword}
                             onChange={(event: ChangeEvent<HTMLInputElement>) => {
                                 setNowPassword(event.target.value);
@@ -84,9 +79,9 @@ export function MyPage() {
                         />
                     </div>
                 </div>
-                <div>
-                    <p>새로운 Password</p>
-                    <div className="input-container">
+                <div className="signupForm__pw">
+                    <div className="signupForm__pw-title">새로운 Password</div>
+                    <div className="signupForm__pw-sub">
                         <img src="assets/image/icons_mini/password.svg" />
                         <input
                             type="password"
@@ -102,9 +97,9 @@ export function MyPage() {
                         ) : null}
                     </div>
                 </div>
-                <div>
-                    <p>Password Check</p>
-                    <div className="input-container">
+                <div className="singupForm__pwcheck">
+                    <div className="signupForm__pwcheck-title">Password Check</div>
+                    <div className="signupForm__pwcheck-sub">
                         <img src="assets/image/icons_mini/password.svg" />
                         <input
                             type="password"
@@ -119,10 +114,10 @@ export function MyPage() {
                             <p className="message-container--invalid">패스워드가 일치하지 않습니다.</p>
                         ) : null}
                     </div>
-                    <div className="">
+                    <div className="nextButton">
                         <Button
                             child={'비밀번호 변경'}
-                            color={'color-main'}
+                            color={'color-main nextButton__button'}
                             disabled={!(passwordValid && confirmPasswordValid)}
                             onClick={() => {
                                 handleSubmit('password');
@@ -130,16 +125,16 @@ export function MyPage() {
                         />
                     </div>
                     <br />
-                    <div className="">
-                        <Button
-                            child={'회원탈퇴'}
-                            color={'color-sub'}
-                            disabled={!(passwordValid && confirmPasswordValid)}
-                            onClick={() => {
-                                handleWithdraw;
-                            }}
-                        />
-                    </div>
+                    {/* <div className="">
+                    <Button
+                    child={'회원탈퇴'}
+                    color={'color-sub'}
+                    disabled={!(passwordValid && confirmPasswordValid)}
+                    onClick={() => {
+                        handleWithdraw;
+                    }}
+                    />
+                </div> */}
                 </div>
             </div>
         </div>
