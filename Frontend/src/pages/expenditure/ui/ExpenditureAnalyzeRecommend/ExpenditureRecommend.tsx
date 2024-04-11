@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import ExpenditureRecommendCard from './item/ExpenditureRecommendCard';
+import { useState, useEffect } from 'react';
+
 import { getCookie } from '@/shared';
+import {
+    ExpenditureRecommendCard,
+    IBigDataRecommendingProps,
+    Card,
+    fetchRecommendedCards,
+} from '@/pages/expenditure/index';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { Card, fetchRecommendedCards } from '../../model/fetchFunctions';
 
-interface IBigDataRecommendingProps {
-    ready: boolean;
-}
-
-// export function ExpenditureRecommend({ items, ready }: IBigDataRecommendingProps) {
 export function ExpenditureRecommend({ ready }: IBigDataRecommendingProps) {
     const [cards, setCards] = useState<Card[]>([]);
     const [isLoading, setIsLoading] = useState(true); // 로딩 상태 관리를 위한 상태 추가

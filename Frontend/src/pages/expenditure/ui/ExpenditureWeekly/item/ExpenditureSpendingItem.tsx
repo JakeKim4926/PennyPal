@@ -1,9 +1,9 @@
-import React from 'react';
-import { Spending, SpendingItemProps, ExpenditureWeeklyDailyProps } from '@/pages/expenditure/model/spending';
+import { SpendingItemProps } from '@/pages/expenditure/index';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMoneyBill1Wave } from '@fortawesome/free-solid-svg-icons';
 
-function SpendingItem({ spending }: SpendingItemProps) {
+export function SpendingItem({ spending }: SpendingItemProps) {
     const formattedBalance = new Intl.NumberFormat('ko-KR').format(parseInt(spending.transactionBalance));
 
     return (
@@ -16,5 +16,3 @@ function SpendingItem({ spending }: SpendingItemProps) {
         </div>
     );
 }
-
-export default SpendingItem;

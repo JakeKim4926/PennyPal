@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { customAxios } from '@/shared/lib/customAxios';
-import { getCookie } from '@/shared/lib/cookieHelper';
+import { useState, useEffect } from 'react';
 
-import ExpenditureWeeklyDaily from './item/ExpenditureWeeklyDaily';
-import { Spending } from '../../model/spending';
-import Swal from 'sweetalert2';
-
-import { Expense, fetchMemberAttendance, fetchAccountTransactions } from '../../model/fetchFunctions';
+import { ExpenditureWeeklyDaily } from './item/ExpenditureDailyItem';
+import {
+    fetchMemberAttendance,
+    fetchCheckMemberAttendance,
+    fetchDailyAccountTransactions,
+    fetchAccountTransactions,
+    Spending,
+    getCurrentDate,
+    getWeekDates,
+} from '@/pages/expenditure/index';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -16,41 +19,17 @@ import {
     faArrowsRotate,
 } from '@fortawesome/free-solid-svg-icons';
 
-const getCurrentDate = (): string => {
-    const now = new Date();
-    const month = now.getMonth() + 1; // getMonth()는 0부터 시작하므로 +1
-    const date = now.getDate();
-    const day = now.toLocaleDateString('ko-KR', { weekday: 'short' });
-
-    return `${month < 10 ? `0${month}` : month}.${date < 10 ? `0${date}` : date} ${day.toUpperCase()}`;
-};
-
-const getWeekDates = (currentWeekStart: Date): { rangeText: string; dates: Date[] } => {
-    const dates = Array.from({ length: 7 }).map((_, i) => {
-        const utcDate = new Date(
-            Date.UTC(
-                currentWeekStart.getUTCFullYear(),
-                currentWeekStart.getUTCMonth(),
-                currentWeekStart.getUTCDate() + i,
-            ),
-        );
-        return utcDate;
-    });
-
-    const format = (date: Date): string =>
-        `${date.getUTCFullYear()}년 ${date.getUTCMonth() + 1}월 ${date.getUTCDate()}일`;
-    const rangeText = `${format(dates[0])} - ${format(dates[6])}`;
-
-    return { rangeText, dates };
-};
-
 export function ExpenditureWeekly() {
-    const [transactions, setTransactions] = useState<Expense[]>([]);
-
+    // * 거래내역 자동 로드
+    const [transactions, setTransactions] = useState<Spending[]>([]);
+    const [currentWeekStart, setCurrentWeekStart] = useState(
+        new Date(new Date().setDate(new Date().getDate() - new Date().getDay() + 1)),
+    );
     useEffect(() => {
         const loadExpense = async () => {
-            const fetchedExpense = await fetchAccountTransactions();
-            console.log(fetchedExpense); // 로그로 출력하여 확인
+            const fetchedExpense = await fetchDailyAccountTransactions();
+            console.log(fetchedExpense);
+
             if (Array.isArray(fetchedExpense)) {
                 setTransactions(fetchedExpense);
             } else {
@@ -61,62 +40,31 @@ export function ExpenditureWeekly() {
 
         loadExpense();
         checkAttendanceState();
-    }, []);
+    }, [currentWeekStart]);
 
+    // * 출석여부 조회
     const [coverVisible, setCoverVisible] = useState(true); // 가림막 div의 표시 상태
 
     const checkAttendanceState = async () => {
-        const memberId = getCookie('memberId'); // 쿠키에서 memberId를 가져옵니다.
-        if (!memberId) {
-            console.error('로그인이 필요합니다.');
-            return;
-        }
-
-        try {
-            const response = await customAxios.get(`/member/attend/state`, {
-                params: { memberId },
-            });
-
-            if (response.data && response.data.data === false) {
-                // 금일 출석을 진행하지 않았을 경우
-                setCoverVisible(true);
-                console.log('출석여부 : false');
-            } else {
-                // 이미 출석을 한 경우
-                setCoverVisible(false);
-                console.log('출석여부 : true');
-            }
-        } catch (error) {
-            console.error('출석 여부 확인 중 오류가 발생했습니다:', error);
-        }
+        const attendanceState = await fetchCheckMemberAttendance();
+        setCoverVisible(!attendanceState);
     };
 
     const handleShowContentButtonClick = async () => {
         try {
             await fetchMemberAttendance();
             removeCover();
-            await fetchAccountTransactions();
+            await fetchDailyAccountTransactions();
         } catch (error) {
-            // 오류 처리
             console.error('오류가 발생했습니다:', error);
-            alert('오류가 발생했습니다. 다시 시도해주세요.');
         }
     };
-    const handleReload = () => {
-        fetchAccountTransactions();
-        Swal.fire('지출내역 업데이트 성공!');
-    };
+
     const removeCover = () => {
         setCoverVisible(false);
     };
 
-    const [currentWeekStart, setCurrentWeekStart] = useState(
-        new Date(new Date().setDate(new Date().getDate() - new Date().getDay() + 1)),
-    );
-
-    useEffect(() => {
-        checkAttendanceState();
-    }, [currentWeekStart]);
+    // * 캘린더 날짜 이동
 
     const { rangeText, dates } = getWeekDates(currentWeekStart);
 
@@ -181,7 +129,7 @@ export function ExpenditureWeekly() {
                     <FontAwesomeIcon icon={faCircleExclamation} size="lg" />
                     <span>지출이 늘어나지 않도록 관리하세요!</span>
                 </div>
-                <div className="expenditureWeekly__footer-reload clickable" onClick={handleReload}>
+                <div className="expenditureWeekly__footer-reload clickable" onClick={fetchAccountTransactions}>
                     <span className="expenditureWeekly__footer-reload-text">지출내역 불러오기!</span>
                     <div className="expenditureWeekly__footer-reload-button">
                         <div className="expenditureWeekly__footer-reload-button-img">

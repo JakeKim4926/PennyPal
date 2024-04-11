@@ -1,18 +1,6 @@
-import React from 'react';
+import { ExpenditureRecommendCardProps } from '@/pages/expenditure/index';
 
-interface CardData {
-    cardId: number;
-    cardCompany: string;
-    cardImg: string;
-    cardName: string;
-    cardTopCategory: string;
-}
-
-interface ExpenditureRecommendCardProps {
-    card: CardData;
-}
-
-function ExpenditureRecommendCard({ card }: ExpenditureRecommendCardProps) {
+export function ExpenditureRecommendCard({ card }: ExpenditureRecommendCardProps) {
     if (!card) return null;
 
     const benefits = card.cardTopCategory.split(',').filter((benefit) => benefit.trim() !== '');
@@ -51,5 +39,3 @@ function ExpenditureRecommendCard({ card }: ExpenditureRecommendCardProps) {
         </div>
     );
 }
-
-export default ExpenditureRecommendCard;

@@ -1,11 +1,9 @@
-import React from 'react';
-import SpendingItem from './SpendingItem';
-import { Spending, SpendingItemProps, ExpenditureWeeklyDailyProps } from '@/pages/expenditure/model/spending';
+import { SpendingItem, ExpenditureWeeklyDailyProps } from '@/pages/expenditure/index';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBus, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
-function ExpenditureWeeklyDaily({ date, spendings }: ExpenditureWeeklyDailyProps) {
+export function ExpenditureWeeklyDaily({ date, spendings }: ExpenditureWeeklyDailyProps) {
     const format = (date: Date): string => {
         const month = date.getMonth() + 1;
         const day = date.getDate();
@@ -41,5 +39,3 @@ function ExpenditureWeeklyDaily({ date, spendings }: ExpenditureWeeklyDailyProps
         </div>
     );
 }
-
-export default ExpenditureWeeklyDaily;

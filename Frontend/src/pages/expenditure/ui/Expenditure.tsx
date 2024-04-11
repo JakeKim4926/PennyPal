@@ -1,21 +1,13 @@
-import { useLocation } from 'react-router-dom';
-import { customAxios, PageHeader } from '../../../shared';
-import { getCookie } from '../../../shared/lib/cookieHelper';
 import { useState } from 'react';
-import { ExpenditureWeekly } from './ExpenditureWeekly/ExpenditureWeekly';
-import { ExpenditureGraph } from './ExpenditureGraph/ExpenditureGraph';
-import { ExpenditureAnalyze } from './ExpenditureAnalyzeRecommend/ExpenditureAnalyze';
-import { ExpenditureRecommend } from './ExpenditureAnalyzeRecommend/ExpenditureRecommend';
+import { useLocation } from 'react-router-dom';
 
+import { PageHeader } from '@/shared';
 import {
-    fetchBankKey,
-    fetchAccountList,
-    fetchAccountTransactions,
-    fetchDailyExpense,
-    fetchExpensePie,
-    fetchFavCategory,
-    fetchRecommendedCards,
-} from '../model/fetchFunctions';
+    ExpenditureWeekly,
+    ExpenditureGraph,
+    ExpenditureAnalyze,
+    ExpenditureRecommend,
+} from '@/pages/expenditure/index';
 
 export function Expenditure() {
     const page = useLocation();
